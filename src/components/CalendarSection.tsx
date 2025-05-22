@@ -13,7 +13,8 @@ const APPOINTMENTS = [
     category: 'senior-living',
     color: 'bg-rose-500',
     organization: 'Golden Years Living',
-    textColor: 'text-rose-700'
+    textColor: 'text-rose-700',
+    time: '10:30 AM'
   },
   {
     id: 2,
@@ -22,7 +23,8 @@ const APPOINTMENTS = [
     category: 'home-care',
     color: 'bg-blue-500',
     organization: 'Comfort Home Services',
-    textColor: 'text-blue-700'
+    textColor: 'text-blue-700',
+    time: '2:15 PM'
   },
   {
     id: 3,
@@ -31,7 +33,8 @@ const APPOINTMENTS = [
     category: 'federal-benefits',
     color: 'bg-emerald-500',
     organization: 'Medicare Services Office',
-    textColor: 'text-emerald-700'
+    textColor: 'text-emerald-700',
+    time: '9:00 AM'
   },
   {
     id: 4,
@@ -40,7 +43,8 @@ const APPOINTMENTS = [
     category: 'attorneys',
     color: 'bg-amber-500',
     organization: 'Elder Law Associates',
-    textColor: 'text-amber-700'
+    textColor: 'text-amber-700',
+    time: '3:30 PM'
   }
 ];
 
@@ -90,12 +94,12 @@ const CalendarSection = () => {
               <CardTitle className="text-xl font-medium text-gray-700">Calendar</CardTitle>
               <CardDescription className="text-gray-500">Select a date to view appointments</CardDescription>
             </CardHeader>
-            <CardContent className="flex justify-center p-0 pb-6 pt-2">
+            <CardContent className="flex justify-center p-0 pb-8 pt-4">
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={handleSelect}
-                className="pointer-events-auto p-4 w-full max-w-md"
+                className="pointer-events-auto p-6 w-full"
                 modifiers={{
                   hasAppointment: (date) => isDayWithAppointment(date),
                 }}
@@ -104,24 +108,33 @@ const CalendarSection = () => {
                 }}
                 styles={{
                   day: {
-                    width: '42px',
-                    height: '42px', 
+                    width: '48px',
+                    height: '48px', 
                     fontSize: '16px',
-                    margin: '2px',
+                    margin: '4px',
+                    color: '#4B5563', // Lighter text color
+                    borderRadius: '100%', // Ensure circular shape
                   },
                   caption: {
                     fontSize: '18px',
-                    padding: '12px 0',
+                    padding: '16px 0',
                   },
                   head_cell: {
-                    width: '42px',
-                    height: '42px',
+                    width: '48px',
+                    height: '32px',
                     fontSize: '14px',
-                    color: '#6B7280',
+                    color: '#9CA3AF', // Even lighter color for day names
                   },
                   nav_button: {
-                    width: '32px',
-                    height: '32px',
+                    width: '36px',
+                    height: '36px',
+                  },
+                  table: {
+                    padding: '8px',
+                    width: '100%',
+                  },
+                  row: {
+                    padding: '4px 0',
                   }
                 }}
               />
@@ -142,36 +155,49 @@ const CalendarSection = () => {
                 }
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              <div className="space-y-1">
+            <CardContent className="p-4">
+              <div className="space-y-3">
                 {selectedDateAppointments.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 px-6">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                      <div className="w-8 h-8 border-2 border-gray-300 rounded-full border-dashed"></div>
+                      <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
                     </div>
                     <p className="text-gray-500 text-center">No appointments for this date</p>
                   </div>
                 ) : (
-                  <div className="pt-2">
+                  <div>
                     {selectedDateAppointments.map(appointment => (
                       <div 
                         key={appointment.id} 
-                        className="p-4 hover:bg-gray-50 transition-colors border-l-4 border-transparent hover:border-l-4"
-                        style={{ borderLeftColor: appointment.color.replace('bg-', '').includes('rose') ? '#F43F5E' : 
-                                                appointment.color.replace('bg-', '').includes('blue') ? '#3B82F6' : 
-                                                appointment.color.replace('bg-', '').includes('emerald') ? '#10B981' : 
-                                                appointment.color.replace('bg-', '').includes('amber') ? '#F59E0B' : '#6366F1' }}
+                        className="mb-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
                       >
-                        <div className="flex items-center mb-2">
-                          <div className={`w-3 h-3 rounded-full ${appointment.color} mr-2`}></div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-3 h-3 rounded-full ${appointment.color}`}></div>
                           <h4 className={`font-medium ${appointment.textColor}`}>
                             {appointment.title}
                           </h4>
                         </div>
-                        <div className="ml-5 space-y-1">
-                          <p className="text-sm text-gray-500">{format(appointment.date, 'h:mm a')}</p>
-                          <p className="text-sm text-gray-700">{appointment.organization}</p>
+                        <div className="pl-5 space-y-2">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{appointment.time}</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span>{appointment.organization}</span>
+                          </div>
                         </div>
+                        <div 
+                          className="mt-2 h-1 w-full rounded-full"
+                          style={{ backgroundColor: appointment.color.replace('bg-', '').includes('rose') ? '#FECDD3' : 
+                                                appointment.color.replace('bg-', '').includes('blue') ? '#BFDBFE' : 
+                                                appointment.color.replace('bg-', '').includes('emerald') ? '#A7F3D0' : 
+                                                appointment.color.replace('bg-', '').includes('amber') ? '#FDE68A' : '#C7D2FE' }}
+                        ></div>
                       </div>
                     ))}
                   </div>
