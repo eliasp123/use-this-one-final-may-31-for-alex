@@ -85,80 +85,49 @@ const CalendarSection = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-light text-gray-800 text-center mb-6">Upcoming Appointments</h2>
+      <h2 className="text-2xl font-light text-gray-800 text-center mb-8">Upcoming Appointments</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="md:col-span-8">
           <Card className="overflow-hidden shadow-sm border border-gray-100">
-            <CardHeader className="bg-white pb-2">
+            <CardHeader className="bg-white pb-0">
               <CardTitle className="text-xl font-medium text-gray-700">Calendar</CardTitle>
               <CardDescription className="text-gray-500">Select a date to view appointments</CardDescription>
             </CardHeader>
-            <CardContent className="flex justify-center p-0 pb-8 pt-4">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleSelect}
-                className="pointer-events-auto p-6 w-full"
-                modifiers={{
-                  hasAppointment: (date) => isDayWithAppointment(date),
-                }}
-                modifiersClassNames={{
-                  hasAppointment: 'bg-green-100 text-green-800 rounded-full',
-                }}
-                styles={{
-                  day: {
-                    width: '48px',
-                    height: '48px', 
-                    fontSize: '16px',
-                    margin: '4px',
-                    color: '#4B5563', // Lighter text color
-                    borderRadius: '100%', // Ensure circular shape
-                  },
-                  caption: {
-                    fontSize: '18px',
-                    padding: '16px 0',
-                  },
-                  head_cell: {
-                    width: '48px',
-                    height: '32px',
-                    fontSize: '14px',
-                    color: '#9CA3AF', // Even lighter color for day names
-                  },
-                  nav_button: {
-                    width: '36px',
-                    height: '36px',
-                  },
-                  table: {
-                    padding: '8px',
-                    width: '100%',
-                  },
-                  row: {
-                    padding: '4px 0',
-                  }
-                }}
-              />
+            <CardContent className="p-0 pb-6 pt-2">
+              <div className="flex justify-center items-center h-full">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={handleSelect}
+                  className="pointer-events-auto p-6 w-full max-w-md"
+                  modifiers={{
+                    hasAppointment: (date) => isDayWithAppointment(date),
+                  }}
+                  modifiersClassNames={{
+                    hasAppointment: 'bg-blue-500 text-white rounded-full',
+                  }}
+                />
+              </div>
             </CardContent>
           </Card>
         </div>
         
-        <div>
+        <div className="md:col-span-4">
           <Card className="h-full shadow-sm border border-gray-100">
             <CardHeader className="bg-white border-b border-gray-100 pb-4">
               <CardTitle className="text-xl font-medium text-gray-700">
-                {date ? format(date, 'MMMM d, yyyy') : 'No date selected'}
+                {date ? format(date, 'EEEE') : 'No date selected'}
               </CardTitle>
               <CardDescription className="text-gray-500">
-                {selectedDateAppointments.length === 0 
-                  ? 'No appointments scheduled' 
-                  : `${selectedDateAppointments.length} appointment${selectedDateAppointments.length > 1 ? 's' : ''}`
-                }
+                {date ? format(date, 'MMMM d, yyyy') : ''}
+                {selectedDateAppointments.length > 0 && ` • ${selectedDateAppointments.length} appointment${selectedDateAppointments.length > 1 ? 's' : ''}`}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4">
               <div className="space-y-3">
                 {selectedDateAppointments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 px-6">
+                  <div className="flex flex-col items-center justify-center py-12 px-4">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                       <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
                     </div>
@@ -169,7 +138,7 @@ const CalendarSection = () => {
                     {selectedDateAppointments.map(appointment => (
                       <div 
                         key={appointment.id} 
-                        className="mb-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                        className="mb-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-3 h-3 rounded-full ${appointment.color}`}></div>
@@ -177,14 +146,14 @@ const CalendarSection = () => {
                             {appointment.title}
                           </h4>
                         </div>
-                        <div className="pl-5 space-y-2">
-                          <div className="flex items-center text-sm text-gray-600">
+                        <div className="pl-5 space-y-2 text-gray-600">
+                          <div className="flex items-center text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>{appointment.time}</span>
                           </div>
-                          <div className="flex items-center text-sm text-gray-700">
+                          <div className="flex items-center text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
