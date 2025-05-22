@@ -3,7 +3,11 @@ import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
 
-const EmailDashboard = () => {
+interface EmailDashboardProps {
+  searchQuery?: string;
+}
+
+const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => {
   const emailCategories = [
     {
       id: 'senior-living',
@@ -73,8 +77,13 @@ const EmailDashboard = () => {
     }
   ];
 
-  const totalUnread = emailCategories.reduce((sum, category) => sum + category.unread, 0);
-  const totalPending = emailCategories.reduce((sum, category) => sum + category.pending, 0);
+  // Filter categories based on search query
+  const filteredCategories = emailCategories.filter(category => 
+    category.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalUnread = filteredCategories.reduce((sum, category) => sum + category.unread, 0);
+  const totalPending = filteredCategories.reduce((sum, category) => sum + category.pending, 0);
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -108,7 +117,7 @@ const EmailDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-500 text-sm font-medium">Active Categories</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{emailCategories.length}</p>
+              <p className="text-3xl font-light text-gray-800 mt-1">{filteredCategories.length}</p>
             </div>
             <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
@@ -118,9 +127,9 @@ const EmailDashboard = () => {
         </div>
       </div>
 
-      {/* Email Category Grid - Updated with smaller cards and more spacing */}
+      {/* Email Category Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {emailCategories.map((category) => (
+        {filteredCategories.map((category) => (
           <EmailCategoryCard
             key={category.id}
             category={category}

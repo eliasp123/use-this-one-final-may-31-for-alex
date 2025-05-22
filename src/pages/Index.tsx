@@ -1,10 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import EmailDashboard from '../components/EmailDashboard';
-import { Info } from 'lucide-react';
+import CalendarSection from '../components/CalendarSection';
+import { Info, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import { Input } from '../components/ui/input';
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
@@ -42,7 +46,26 @@ const Index = () => {
           </div>
         </div>
         
-        <EmailDashboard />
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search conversations..."
+              className="pl-10 bg-white border-gray-200 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+        
+        <EmailDashboard searchQuery={searchQuery} />
+
+        {/* Calendar Section with margin top for separation */}
+        <div className="mt-16">
+          <CalendarSection />
+        </div>
       </div>
     </div>
   );
