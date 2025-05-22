@@ -22,17 +22,17 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const { title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer group">
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className={`w-14 h-14 ${bgColor} rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
           <Icon className={`w-7 h-7 ${textColor}`} />
         </div>
         
-        {/* Status indicators */}
+        {/* Status indicators - Changed unread indicator to purple */}
         <div className="flex space-x-2">
           {unread > 0 && (
-            <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full min-w-[24px] text-center">
+            <div className="bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-full min-w-[24px] text-center">
               {unread}
             </div>
           )}
@@ -52,7 +52,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         {unread > 0 && (
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Unread messages</span>
-            <span className="font-medium text-red-600">{unread}</span>
+            <span className="font-medium text-purple-600">{unread}</span>
           </div>
         )}
         
@@ -63,7 +63,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           </div>
         )}
         
-        <div className="flex items-center justify-between text-sm pt-2 border-t border-gray-100">
+        <div className="flex items-center justify-between text-sm pt-2 border-t border-gray-300">
           <span className="text-gray-600">Total conversations</span>
           <span className="font-medium text-gray-800">{total}</span>
         </div>

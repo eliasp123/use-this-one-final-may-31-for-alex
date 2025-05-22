@@ -86,7 +86,7 @@ const EmailDashboard = () => {
               <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
               <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
             </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-red-400 to-red-500 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
               <div className="w-3 h-3 bg-white rounded-full"></div>
             </div>
           </div>
@@ -118,8 +118,8 @@ const EmailDashboard = () => {
         </div>
       </div>
 
-      {/* Email Category Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Email Category Grid - Updated with smaller cards and more spacing */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {emailCategories.map((category) => (
           <EmailCategoryCard
             key={category.id}
