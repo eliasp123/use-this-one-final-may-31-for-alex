@@ -8,8 +8,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-light text-gray-800 mb-2">Communication Hub</h1>
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-light text-gray-800 mb-4">Communication Hub</h1>
           <div className="flex items-center justify-center gap-2">
             <p className="text-gray-600 font-light">Stay on top of your important conversations</p>
             <Popover>
