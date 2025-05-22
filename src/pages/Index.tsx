@@ -2,7 +2,6 @@
 import React from 'react';
 import EmailDashboard from '../components/EmailDashboard';
 import { Info } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 
 const Index = () => {
@@ -11,15 +10,12 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-light text-gray-800 mb-2">Communication Hub</h1>
-          <p className="text-gray-600 font-light mb-2">Stay on top of your important conversations</p>
-          
-          {/* New info popover replacing the explanation card */}
-          <div className="flex items-center justify-center gap-2 text-gray-700">
-            <p>We've organized your communications into <span className="font-medium">Conversations</span> so you can cut through the clutter.</p>
+          <div className="flex items-center justify-center gap-2">
+            <p className="text-gray-600 font-light">Stay on top of your important conversations</p>
             <Popover>
               <PopoverTrigger asChild>
-                <button className="inline-flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
-                  <Info className="h-5 w-5" />
+                <button className="inline-flex items-center justify-center rounded-full w-5 h-5 bg-gradient-to-br from-green-400 to-green-500 text-white hover:from-green-500 hover:to-green-600 transition-colors">
+                  <Info className="h-3 w-3" />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4">
