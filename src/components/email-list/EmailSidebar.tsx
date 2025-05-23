@@ -22,11 +22,11 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
   activeTab 
 }) => {
   return (
-    <Sidebar variant="sidebar" className="min-w-[220px] max-w-[260px]" collapsible="icon">
+    <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-6">  
         <SidebarGroup>
-          <SidebarGroupLabel className="px-6 mb-2">Categories</SidebarGroupLabel>
-          <SidebarMenu>
+          <SidebarGroupLabel className="px-6 mb-3">Categories</SidebarGroupLabel>
+          <SidebarMenu className="space-y-1.5">
             {emailCategories.map((cat) => (
               <EmailCategoryItem 
                 key={cat.id} 

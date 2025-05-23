@@ -48,8 +48,8 @@ const EmailList = () => {
         />
         
         {/* Main Content */}
-        <div className="flex-1 pl-6">
-          <div className="container mx-auto px-6 py-8">
+        <div className="flex-1 pl-4">
+          <div className="container mx-auto px-4 py-8">
             <EmailHeader 
               currentCategory={currentCategory}
               emailCount={filteredEmails.length}

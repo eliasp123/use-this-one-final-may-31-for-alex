@@ -19,7 +19,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
   const navigate = useNavigate();
   
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem className="mb-1.5">
       <SidebarMenuButton 
         isActive={category.id === activeCategory}
         tooltip={category.title}
@@ -33,7 +33,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
         {category.unread > 0 && (
           <Badge 
             variant="circle" 
-            className="absolute right-2 bg-purple-500"
+            className={`absolute right-2 ${category.bgColor}`}
           >
             {category.unread}
           </Badge>
@@ -41,7 +41,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
         {category.pending > 0 && category.unread === 0 && (
           <Badge 
             variant="circle" 
-            className="absolute right-2 bg-amber-500"
+            className={`absolute right-2 ${category.bgColor} bg-opacity-80`}
           >
             {category.pending}
           </Badge>
