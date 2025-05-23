@@ -63,10 +63,12 @@ const EmailList = () => {
               onSearch={handleSearch}
             />
             
-            <EmailTable 
-              emails={filteredEmails}
-              formatDate={formatDate}
-            />
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-50">
+              <EmailTable 
+                emails={filteredEmails}
+                formatDate={formatDate}
+              />
+            </div>
           </div>
         </div>
       </div>

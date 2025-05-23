@@ -20,11 +20,31 @@ const EmailListToolbar: React.FC<EmailListToolbarProps> = ({
     <div className="mb-6">
       <div className="flex justify-between items-center">
         <Tabs defaultValue={activeTab} onValueChange={onTabChange}>
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="unread">Unread</TabsTrigger>
-            <TabsTrigger value="pending">Pending</TabsTrigger>
-            <TabsTrigger value="unresponded">Not Responded</TabsTrigger>
+          <TabsList className="bg-slate-100/70 p-1 rounded-xl shadow-sm">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 rounded-lg transition-all"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger 
+              value="unread" 
+              className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-800 rounded-lg transition-all"
+            >
+              Unread
+            </TabsTrigger>
+            <TabsTrigger 
+              value="pending" 
+              className="data-[state=active]:bg-amber-100 data-[state=active]:text-amber-800 rounded-lg transition-all"
+            >
+              Pending
+            </TabsTrigger>
+            <TabsTrigger 
+              value="unresponded" 
+              className="data-[state=active]:bg-rose-100 data-[state=active]:text-rose-800 rounded-lg transition-all"
+            >
+              Not Responded
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         
