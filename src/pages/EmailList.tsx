@@ -18,8 +18,8 @@ import {
 } from '../components/ui/table';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Mail, CheckCircle, AlertCircle, Clock } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
+import { ArrowLeft, Mail } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
 import AutocompleteSearch from '../components/AutocompleteSearch';
 
 const EmailList = () => {
