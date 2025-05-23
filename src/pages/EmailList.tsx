@@ -227,7 +227,7 @@ const EmailList = () => {
             
             <div className="flex">
               {/* Sidebar */}
-              <Sidebar variant="inline" className="mr-6 min-w-[200px] max-w-[240px]" collapsible="icon">
+              <Sidebar variant="sidebar" className="mr-6 min-w-[200px] max-w-[240px]" collapsible="icon">
                 <SidebarContent className="pt-0">
                   <SidebarGroup>
                     <SidebarGroupLabel>Categories</SidebarGroupLabel>
