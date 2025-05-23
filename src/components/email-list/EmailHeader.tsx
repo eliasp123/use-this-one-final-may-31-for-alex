@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Pencil } from 'lucide-react';
+import { ArrowLeft, Pencil, FileText } from 'lucide-react';
 
 interface EmailHeaderProps {
   currentCategory: { 
@@ -25,14 +25,25 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
   
   return (
     <div className="mb-8">
-      <Button 
-        variant="default" 
-        size="sm" 
-        className="mb-4 bg-teal-700 hover:bg-teal-800 text-white shadow-sm transition-all duration-300"
-        onClick={() => navigate('/')}
-      >
-        <ArrowLeft className="mr-1 h-4 w-4" /> Back to Dashboard
-      </Button>
+      <div className="flex gap-2 mb-4">
+        <Button 
+          variant="default" 
+          size="sm" 
+          className="bg-teal-700 hover:bg-teal-800 text-white shadow-sm transition-all duration-300"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft className="mr-1 h-4 w-4" /> Back to Dashboard
+        </Button>
+        
+        <Button 
+          variant="default" 
+          size="sm" 
+          className="bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition-all duration-300"
+          onClick={() => navigate('/documents')}
+        >
+          <FileText className="mr-1 h-4 w-4" /> Document Hub
+        </Button>
+      </div>
       
       <div className="flex items-center justify-between bg-white p-6 rounded-xl shadow-sm border border-gray-50">
         <div>

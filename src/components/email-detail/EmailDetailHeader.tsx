@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ArrowLeft, Home, Pencil } from 'lucide-react';
+import { ArrowLeft, Home, Pencil, FileText } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 
@@ -58,6 +58,15 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
         >
           <Pencil className="mr-2 h-4 w-4" />
           Compose New Email
+        </Button>
+
+        <Button 
+          variant="default" 
+          size="sm" 
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+          onClick={() => navigate('/documents')}
+        >
+          <FileText className="mr-1 h-4 w-4" /> Document Hub
         </Button>
       </div>
       
