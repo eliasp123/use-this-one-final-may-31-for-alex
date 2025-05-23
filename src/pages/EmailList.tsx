@@ -47,8 +47,8 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content */}
-        <div className="flex-1 pl-4">
+        {/* Main Content - Added pl-8 instead of pl-4 to increase buffer space */}
+        <div className="flex-1 pl-8">
           <div className="container mx-auto px-4 py-8">
             <EmailHeader 
               currentCategory={currentCategory}
