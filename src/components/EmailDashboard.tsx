@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
@@ -101,40 +102,40 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         {/* Unread Messages Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mb-3">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-              </div>
+            <div className="flex justify-between items-center">
               <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Awaiting Your Reply Card */}
-        <Card className="border border-gray-100 shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <p className="text-gray-500 text-sm font-medium">Awaiting Your Reply</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{totalPending}</p>
             </div>
+            <p className="text-3xl font-medium text-gray-800 mt-2">{totalUnread}</p>
           </CardContent>
         </Card>
         
-        {/* Has Not Responded Yet Card */}
+        {/* Pending Replies Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center mb-3">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm font-medium">Pending Replies</p>
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+            </div>
+            <p className="text-3xl font-medium text-gray-800 mt-2">{totalPending}</p>
+          </CardContent>
+        </Card>
+        
+        {/* Active Categories Card */}
+        <Card className="border border-gray-100 shadow-sm">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm font-medium">Active Categories</p>
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{totalAwaitingResponse}</p>
             </div>
+            <p className="text-3xl font-medium text-gray-800 mt-2">{activeCategories}</p>
           </CardContent>
         </Card>
       </div>
