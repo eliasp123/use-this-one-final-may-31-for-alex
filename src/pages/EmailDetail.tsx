@@ -8,11 +8,13 @@ import { Card, CardContent } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
 import { Badge } from '../components/ui/badge';
 import { ArrowLeft, Reply, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import EmailReplyForm from '../components/EmailReplyForm';
 
 const EmailDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [email, setEmail] = useState<EmailData | null>(null);
+  const [showReplyForm, setShowReplyForm] = useState(false);
   
   useEffect(() => {
     if (id) {
@@ -80,6 +82,27 @@ const EmailDetail = () => {
       // Force a re-render
       setEmail({...email});
     }
+  };
+
+  const handleReplyClick = () => {
+    setShowReplyForm(true);
+  };
+
+  const handleReplyClose = () => {
+    setShowReplyForm(false);
+  };
+
+  const handleReplySend = (replyData: any) => {
+    // This will be connected to Nylas later
+    console.log('Reply sent:', replyData);
+    
+    // Update email status
+    if (email) {
+      email.replied = true;
+      setEmail({...email});
+    }
+    
+    setShowReplyForm(false);
   };
 
   // Categories with their display names and colors
@@ -180,7 +203,11 @@ const EmailDetail = () => {
         
         {/* Action buttons */}
         <div className="flex flex-wrap gap-3 justify-start">
-          <Button className="bg-green-500 hover:bg-green-600">
+          <Button 
+            className="bg-green-500 hover:bg-green-600"
+            onClick={handleReplyClick}
+            disabled={showReplyForm}
+          >
             <Reply className="mr-1 h-4 w-4" /> Reply
           </Button>
           
@@ -200,6 +227,15 @@ const EmailDetail = () => {
             View All {currentCategory.title} Emails
           </Button>
         </div>
+        
+        {/* Reply Form */}
+        {showReplyForm && (
+          <EmailReplyForm
+            originalEmail={email}
+            onClose={handleReplyClose}
+            onSend={handleReplySend}
+          />
+        )}
       </div>
     </div>
   );
