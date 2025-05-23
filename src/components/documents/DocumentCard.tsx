@@ -31,9 +31,10 @@ interface AttachmentWithContext {
 
 interface DocumentCardProps {
   attachment: AttachmentWithContext;
+  isGridView?: boolean;
 }
 
-const DocumentCard = ({ attachment }: DocumentCardProps) => {
+const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => {
   const navigate = useNavigate();
 
   // Get file type icon and colors
@@ -95,6 +96,68 @@ const DocumentCard = ({ attachment }: DocumentCardProps) => {
   const fileInfo = getFileTypeInfo(attachment.type);
   const FileIcon = fileInfo.icon;
 
+  if (isGridView) {
+    return (
+      <Card className="hover:shadow-lg transition-all duration-200 bg-white/90 backdrop-blur-sm border border-gray-200/60 h-full">
+        <CardContent className="p-6 flex flex-col h-full">
+          {/* File Icon and Name */}
+          <div className="flex flex-col items-center text-center mb-4">
+            <div className={`w-16 h-16 rounded-2xl ${fileInfo.bgColor} flex items-center justify-center mb-3 shadow-sm`}>
+              <FileIcon className={`h-8 w-8 ${fileInfo.textColor}`} />
+            </div>
+            <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2 line-clamp-2">
+              {attachment.name}
+            </h3>
+          </div>
+
+          {/* Metadata */}
+          <div className="flex-1 space-y-2 mb-4">
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-600">
+              <User className="h-3 w-3" />
+              <span className="truncate">{attachment.senderName}</span>
+            </div>
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+              <Building className="h-3 w-3" />
+              <span className="truncate">{attachment.senderOrganization}</span>
+            </div>
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+              <Calendar className="h-3 w-3" />
+              <span>{formatDate(attachment.emailDate)}</span>
+            </div>
+          </div>
+
+          {/* Size and Direction Badge */}
+          <div className="flex justify-between items-center mb-4">
+            <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+            <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+              {attachment.direction === 'received' ? 'Received' : 'Sent'}
+            </Badge>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/email/${attachment.emailId}`)}
+              className="flex-1 text-xs"
+            >
+              View Email
+            </Button>
+            <Button
+              size="sm"
+              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-xs`}
+            >
+              <Download className="h-3 w-3 mr-1" />
+              Download
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Original horizontal layout for other views
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">

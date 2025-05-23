@@ -7,6 +7,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import DocumentCard from '../documents/DocumentCard';
 import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
+import { AttachmentWithContext } from '../../utils/attachmentUtils';
 
 interface DocumentHubPopupProps {
   isOpen: boolean;
@@ -21,9 +22,45 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const filteredAttachments = filterAttachments(allAttachments, searchQuery, selectedFilter);
   const stats = getAttachmentStats(allAttachments);
 
+  // Group attachments by file type
+  const groupAttachmentsByType = (attachments: AttachmentWithContext[]) => {
+    const groups = {
+      documents: attachments.filter(a => a.type.includes('pdf') || a.type.includes('document') || a.type.includes('text')),
+      images: attachments.filter(a => a.type.startsWith('image/')),
+      spreadsheets: attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv') || a.type.includes('excel')),
+      other: attachments.filter(a => 
+        !a.type.startsWith('image/') && 
+        !a.type.includes('pdf') && 
+        !a.type.includes('document') && 
+        !a.type.includes('text') && 
+        !a.type.includes('sheet') && 
+        !a.type.includes('csv') && 
+        !a.type.includes('excel')
+      )
+    };
+
+    // Filter out empty groups
+    return Object.entries(groups).filter(([_, items]) => items.length > 0);
+  };
+
+  const groupedAttachments = selectedFilter === 'all' 
+    ? groupAttachmentsByType(filteredAttachments)
+    : [['filtered', filteredAttachments]];
+
+  const getGroupTitle = (groupKey: string) => {
+    const titles = {
+      documents: 'Documents',
+      images: 'Images', 
+      spreadsheets: 'Spreadsheets',
+      other: 'Other Files',
+      filtered: selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)
+    };
+    return titles[groupKey as keyof typeof titles] || groupKey;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl w-full max-h-[85vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-6xl w-full max-h-[85vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -98,14 +135,28 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             </div>
           </div>
 
-          {/* Documents List with improved spacing */}
+          {/* Documents Grid with Smart Grouping */}
           <div className="flex-1 overflow-y-auto bg-white/30 backdrop-blur-sm rounded-2xl border border-gray-200/60">
             <div className="p-6">
               {filteredAttachments.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredAttachments.map((attachment) => (
-                    <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.01]">
-                      <DocumentCard attachment={attachment} />
+                <div className="space-y-8">
+                  {groupedAttachments.map(([groupKey, attachments]) => (
+                    <div key={groupKey} className="space-y-4">
+                      {selectedFilter === 'all' && (
+                        <div className="flex items-center gap-3 pb-2 border-b border-gray-200/60">
+                          <h3 className="text-lg font-semibold text-gray-700">{getGroupTitle(groupKey)}</h3>
+                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                            {attachments.length} file{attachments.length !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {attachments.map((attachment) => (
+                          <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
+                            <DocumentCard attachment={attachment} isGridView={true} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
