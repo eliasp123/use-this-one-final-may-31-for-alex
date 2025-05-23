@@ -13,9 +13,9 @@ const APPOINTMENTS = [
     title: 'Review Senior Living Options',
     date: new Date(2025, 4, 25), // May 25, 2025
     category: 'senior-living',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Golden Years Living',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '10:30 AM'
   },
   {
@@ -23,9 +23,9 @@ const APPOINTMENTS = [
     title: 'Home Care Assessment',
     date: new Date(2025, 4, 28), // May 28, 2025
     category: 'home-care',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Comfort Home Services',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '2:15 PM'
   },
   {
@@ -33,9 +33,9 @@ const APPOINTMENTS = [
     title: 'Medicare Benefits Review',
     date: new Date(2025, 5, 2), // June 2, 2025
     category: 'federal-benefits',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Medicare Services Office',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '9:00 AM'
   },
   {
@@ -43,9 +43,9 @@ const APPOINTMENTS = [
     title: 'Legal Consultation',
     date: new Date(2025, 5, 10), // June 10, 2025
     category: 'attorneys',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Elder Law Associates',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '3:30 PM'
   },
   {
@@ -53,9 +53,9 @@ const APPOINTMENTS = [
     title: 'Physical Therapy Session',
     date: new Date(2025, 5, 15), // June 15, 2025
     category: 'health-services',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Wellness Rehabilitation Center',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '11:00 AM'
   },
   {
@@ -63,9 +63,9 @@ const APPOINTMENTS = [
     title: 'Medication Review',
     date: new Date(2025, 5, 18), // June 18, 2025
     category: 'health-services',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Community Pharmacy',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '2:00 PM'
   },
   {
@@ -73,9 +73,9 @@ const APPOINTMENTS = [
     title: 'Estate Planning Follow-up',
     date: new Date(2025, 5, 22), // June 22, 2025
     category: 'attorneys',
-    color: 'bg-teal-500',
+    color: 'bg-amber-500',
     organization: 'Elder Law Associates',
-    textColor: 'text-teal-700',
+    textColor: 'text-amber-700',
     time: '10:00 AM'
   }
 ];
@@ -126,7 +126,7 @@ const CalendarSection = () => {
           <Card className="overflow-hidden shadow-sm border border-gray-100">
             <CardContent className="p-0">
               <div className="flex">
-                <div className="bg-gradient-to-br from-teal-400 to-teal-600 p-8 w-full md:w-1/3 flex flex-col justify-center">
+                <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-8 w-full md:w-1/3 flex flex-col justify-center">
                   <p className="text-white text-xl font-light uppercase mb-1">{date ? format(date, 'EEEE') : ''}</p>
                   <p className="text-white text-4xl font-light uppercase mb-10">{date ? format(date, 'MMMM do') : ''}</p>
                   <p className="text-white/70 text-sm font-light">{date ? format(date, 'yyyy') : ''}</p>
@@ -142,7 +142,7 @@ const CalendarSection = () => {
                       hasAppointment: (date) => isDayWithAppointment(date),
                     }}
                     modifiersClassNames={{
-                      hasAppointment: 'bg-gradient-to-br from-teal-400 to-teal-600 text-white rounded-full',
+                      hasAppointment: 'bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full',
                     }}
                   />
                 </div>
@@ -153,7 +153,7 @@ const CalendarSection = () => {
         
         <div className="md:col-span-4">
           <Card className="h-full shadow-sm border border-gray-100 overflow-hidden">
-            <CardHeader className="bg-gradient-to-br from-teal-400 to-teal-600 border-b border-gray-100 p-6">
+            <CardHeader className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-6">
               <div className="text-white">
                 <h3 className="text-xl font-light uppercase mb-1">
                   {date ? format(date, 'EEEE') : 'No date selected'}
@@ -182,7 +182,7 @@ const CalendarSection = () => {
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-3 h-3 rounded-full ${appointment.color}`}></div>
-                          <h4 className="font-medium text-teal-700">
+                          <h4 className="font-medium text-amber-700">
                             {appointment.title}
                           </h4>
                         </div>
@@ -237,7 +237,7 @@ const CalendarSection = () => {
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <div className={`w-3 h-3 rounded-full ${appointment.color}`}></div>
-                        <h4 className="font-medium text-teal-700">
+                        <h4 className="font-medium text-amber-700">
                           {appointment.title}
                         </h4>
                       </div>
