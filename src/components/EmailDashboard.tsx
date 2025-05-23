@@ -1,7 +1,8 @@
 
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
-import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
+import { Heart, Home, Shield, Building, Scale, Users, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Card, CardContent } from './ui/card';
 
 interface EmailDashboardProps {
   searchQuery?: string;
@@ -84,48 +85,67 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
 
   const totalUnread = filteredCategories.reduce((sum, category) => sum + category.unread, 0);
   const totalPending = filteredCategories.reduce((sum, category) => sum + category.pending, 0);
+  const totalAwaitingResponse = filteredCategories.reduce((sum, category) => {
+    // Count categories that have unread messages but no pending replies
+    return sum + (category.unread > 0 && category.pending === 0 ? 1 : 0);
+  }, 0);
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
+      {/* Unified Summary Card */}
+      <Card className="mb-8 border border-gray-100 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-3 h-3 bg-white rounded-full"></div>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
+                <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
+              </div>
             </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
+            
+            <div className="h-12 border-r border-gray-200 hidden md:block"></div>
+            
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm font-medium">Awaiting Your Reply</p>
+                <p className="text-3xl font-light text-gray-800 mt-1">{totalPending}</p>
+              </div>
+            </div>
+            
+            <div className="h-12 border-r border-gray-200 hidden md:block"></div>
+            
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
+                <p className="text-3xl font-light text-gray-800 mt-1">{totalAwaitingResponse}</p>
+              </div>
+            </div>
+            
+            <div className="h-12 border-r border-gray-200 hidden md:block"></div>
+            
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm font-medium">Active Categories</p>
+                <p className="text-3xl font-light text-gray-800 mt-1">{filteredCategories.length}</p>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Pending Replies</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{totalPending}</p>
-            </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Active Categories</p>
-              <p className="text-3xl font-light text-gray-800 mt-1">{filteredCategories.length}</p>
-            </div>
-            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Email Category Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
