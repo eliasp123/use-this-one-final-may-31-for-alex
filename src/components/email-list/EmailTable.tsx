@@ -11,12 +11,25 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Paperclip } from 'lucide-react';
+import { Mail, Paperclip, FileText, Image, FileSpreadsheet, File } from 'lucide-react';
 
 interface EmailTableProps {
   emails: EmailData[];
   formatDate: (dateString: string) => string;
 }
+
+const getFileIcon = (type: string) => {
+  if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
+    return <FileText className="w-4 h-4" />;
+  }
+  if (type.startsWith('image/')) {
+    return <Image className="w-4 h-4" />;
+  }
+  if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
+    return <FileSpreadsheet className="w-4 h-4" />;
+  }
+  return <File className="w-4 h-4" />;
+};
 
 const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
   const navigate = useNavigate();
@@ -30,8 +43,9 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[300px]">Sender</TableHead>
-            <TableHead>Subject</TableHead>
+            <TableHead className="w-[280px]">Sender</TableHead>
+            <TableHead className="w-[300px]">Subject</TableHead>
+            <TableHead className="w-[200px]">Attachments</TableHead>
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
           </TableRow>
@@ -54,19 +68,33 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <div className="flex items-center gap-3">
-                      <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
-                      {email.attachments && email.attachments.length > 0 && (
-                        <div className="flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-sm">
-                          <Paperclip className="w-3 h-3" />
-                          <span>{email.attachments.length}</span>
-                        </div>
-                      )}
-                    </div>
+                    <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
                     <span className="text-sm text-gray-500 truncate max-w-xs">
                       {email.content.substring(0, 60)}...
                     </span>
                   </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  {email.attachments && email.attachments.length > 0 ? (
+                    <div className="flex flex-col gap-1">
+                      {email.attachments.slice(0, 2).map((attachment, index) => (
+                        <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
+                          {getFileIcon(attachment.type)}
+                          <span className="truncate max-w-[140px]" title={attachment.name}>
+                            {attachment.name}
+                          </span>
+                        </div>
+                      ))}
+                      {email.attachments.length > 2 && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Paperclip className="w-3 h-3" />
+                          <span>+{email.attachments.length - 2} more</span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400 text-sm">—</span>
+                  )}
                 </TableCell>
                 <TableCell className="text-right text-gray-500">{formatDate(email.date)}</TableCell>
                 <TableCell className="text-center">
@@ -84,7 +112,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="h-32 text-center">
+              <TableCell colSpan={5} className="h-32 text-center">
                 <div className="flex flex-col items-center justify-center text-gray-500">
                   <Mail className="h-8 w-8 mb-2 opacity-30" />
                   <p>No emails found</p>
