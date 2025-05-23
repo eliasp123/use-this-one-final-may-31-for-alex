@@ -37,21 +37,21 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   
   return (
     <div 
-      className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
+      className="bg-white rounded-2xl p-3 sm:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px] max-w-sm mx-auto"
       onClick={handleCardClick}
     >
       {/* Header - Restructured to have icon and title on the same row */}
-      <div className="flex items-center mb-6 sm:mb-8">
-        <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor} group-hover:animate-pulse`} />
+      <div className="flex items-center mb-5 sm:mb-6">
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+          <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${textColor} group-hover:animate-pulse`} />
         </div>
         
         {/* Title next to the icon */}
-        <h3 className="text-base sm:text-lg font-medium text-gray-800 ml-3 sm:ml-4 group-hover:text-gray-900 transition-colors">{title}</h3>
+        <h3 className="text-sm sm:text-base font-medium text-gray-800 ml-3 group-hover:text-gray-900 transition-colors">{title}</h3>
       </div>
 
       {/* Stats - Now with colored circles in the rows - adjusted to be 15% larger than the reduced size */}
-      <div className="space-y-4 sm:space-y-5">
+      <div className="space-y-3 sm:space-y-4">
         <div 
           className="flex items-center justify-between text-xs sm:text-sm"
           onClick={(e) => handleStatusClick('unread', e)}
@@ -84,7 +84,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       </div>
 
       {/* Progress indicator */}
-      <div className="mt-6">
+      <div className="mt-5">
         <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
           <div 
             className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
@@ -97,7 +97,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       </div>
       
       {/* Total conversations - styled with category color and white text */}
-      <div className={`flex items-center justify-between text-xs sm:text-sm mt-6 sm:mt-8 p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
+      <div className={`flex items-center justify-between text-xs sm:text-sm mt-5 sm:mt-6 p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
         <span className="text-white font-medium">Total conversations</span>
         <span className="text-white font-bold">{total}</span>
       </div>
