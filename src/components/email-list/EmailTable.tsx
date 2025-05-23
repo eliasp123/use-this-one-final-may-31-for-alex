@@ -50,17 +50,19 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                       <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
                       <span className="text-sm text-gray-500">{email.sender.organization}</span>
                     </div>
-                    {email.attachments && email.attachments.length > 0 && (
-                      <div className="flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-sm">
-                        <Paperclip className="w-3 h-3" />
-                        <span>{email.attachments.length}</span>
-                      </div>
-                    )}
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
+                    <div className="flex items-center gap-3">
+                      <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
+                      {email.attachments && email.attachments.length > 0 && (
+                        <div className="flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-sm">
+                          <Paperclip className="w-3 h-3" />
+                          <span>{email.attachments.length}</span>
+                        </div>
+                      )}
+                    </div>
                     <span className="text-sm text-gray-500 truncate max-w-xs">
                       {email.content.substring(0, 60)}...
                     </span>
