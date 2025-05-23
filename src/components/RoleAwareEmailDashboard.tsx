@@ -6,10 +6,89 @@ import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import { Badge } from './ui/badge';
 import { Eye, EyeOff } from 'lucide-react';
+import { 
+  Heart, Home, Shield, Building, Scale, 
+  Users, Award, Activity, CreditCard 
+} from 'lucide-react';
 
 interface RoleAwareEmailDashboardProps {
   searchQuery?: string;
 }
+
+// Map category IDs to their respective icons
+const categoryIconMap: Record<string, React.ElementType> = {
+  'senior-living': Heart,
+  'home-care': Home,
+  'federal-benefits': Shield,
+  'local-government': Building,
+  'attorneys': Scale,
+  'other-professionals': Users,
+  'va': Award,
+  'physical-therapy': Activity,
+  'paying-for-care': CreditCard
+};
+
+// Map category IDs to their colors
+const categoryColorMap: Record<string, { color: string, bgColor: string, textColor: string }> = {
+  'senior-living': {
+    color: 'from-rose-400 to-pink-500',
+    bgColor: 'bg-rose-50',
+    textColor: 'text-rose-700'
+  },
+  'home-care': {
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-50',
+    textColor: 'text-blue-700'
+  },
+  'federal-benefits': {
+    color: 'from-emerald-400 to-emerald-500',
+    bgColor: 'bg-emerald-50',
+    textColor: 'text-emerald-700'
+  },
+  'local-government': {
+    color: 'from-purple-400 to-purple-500',
+    bgColor: 'bg-purple-50',
+    textColor: 'text-purple-700'
+  },
+  'attorneys': {
+    color: 'from-amber-400 to-orange-500',
+    bgColor: 'bg-amber-50',
+    textColor: 'text-amber-700'
+  },
+  'other-professionals': {
+    color: 'from-indigo-400 to-indigo-500',
+    bgColor: 'bg-indigo-50',
+    textColor: 'text-indigo-700'
+  },
+  'va': {
+    color: 'from-teal-400 to-teal-500',
+    bgColor: 'bg-teal-50',
+    textColor: 'text-teal-700'
+  },
+  'physical-therapy': {
+    color: 'from-cyan-400 to-cyan-500',
+    bgColor: 'bg-cyan-50',
+    textColor: 'text-cyan-700'
+  },
+  'paying-for-care': {
+    color: 'from-lime-400 to-lime-500',
+    bgColor: 'bg-lime-50',
+    textColor: 'text-lime-700'
+  }
+};
+
+// Map category IDs to their display titles
+const categoryTitleMap: Record<string, string> = {
+  'senior-living': 'Senior Living',
+  'home-care': 'Home Care',
+  'federal-benefits': 'Federal Benefits',
+  'local-government': 'Local Government',
+  'attorneys': 'Attorneys',
+  'other-professionals': 'Other Professionals',
+  'va': 'VA',
+  'physical-therapy': 'Physical Therapy',
+  'paying-for-care': 'Paying for Care'
+};
 
 const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({ 
   searchQuery = '' 
@@ -27,13 +106,23 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   const totalUnresponded = getFilteredUnrespondedEmails().length;
 
   // Transform filtered emails by category into the format expected by EmailCategoryGrid
-  const emailCategories = Object.entries(filteredEmailsByCategory).map(([category, emails]) => ({
-    category,
-    emails,
-    unread: emails.filter(email => !email.read).length,
-    pending: emails.filter(email => !email.replied && email.read).length,
-    unresponded: emails.filter(email => email.replied && !email.responseReceived).length
-  }));
+  const emailCategories = Object.entries(filteredEmailsByCategory).map(([category, emails]) => {
+    const unreadCount = emails.filter(email => !email.read).length;
+    const pendingCount = emails.filter(email => !email.replied && email.read).length;
+    const unrespondedCount = emails.filter(email => email.replied && !email.responseReceived).length;
+    
+    return {
+      id: category,
+      title: categoryTitleMap[category] || category,
+      icon: categoryIconMap[category] || Users,
+      unread: unreadCount,
+      pending: pendingCount,
+      total: emails.length,
+      color: categoryColorMap[category]?.color || 'from-gray-400 to-gray-500',
+      bgColor: categoryColorMap[category]?.bgColor || 'bg-gray-50',
+      textColor: categoryColorMap[category]?.textColor || 'text-gray-700'
+    };
+  });
 
   const itemsPerPage = 6; // 2 rows of 3 cards
   
