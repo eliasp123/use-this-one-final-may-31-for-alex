@@ -4,8 +4,6 @@ import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
-import { Badge } from './ui/badge';
-import { Eye, EyeOff } from 'lucide-react';
 import { 
   Heart, Home, Shield, Building, Scale, 
   Users, Award, Activity, CreditCard 
@@ -128,25 +126,7 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Role Indicator */}
-      <div className="mb-6 flex justify-center">
-        <Badge 
-          variant={userRole === 'primary-caregiver' ? 'default' : 'secondary'}
-          className="flex items-center gap-2"
-        >
-          {userRole === 'primary-caregiver' ? (
-            <>
-              <Eye className="h-3 w-3" />
-              Primary Caregiver View
-            </>
-          ) : (
-            <>
-              <EyeOff className="h-3 w-3" />
-              Family Member View (Private emails hidden)
-            </>
-          )}
-        </Badge>
-      </div>
+      {/* Role Indicator section removed */}
 
       {/* Summary Cards Section */}
       <SummarySection 
