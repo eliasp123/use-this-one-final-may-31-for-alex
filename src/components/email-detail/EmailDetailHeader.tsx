@@ -46,7 +46,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
           <Button 
             size="sm"
             onClick={() => navigate('/')}
-            className="bg-green-500 hover:bg-green-600 text-white"
+            className="bg-teal-700 hover:bg-teal-800 text-white"
           >
             <Home className="mr-1 h-4 w-4" /> Back to Dashboard
           </Button>
