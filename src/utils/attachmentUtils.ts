@@ -1,5 +1,5 @@
 
-import { getAllEmails } from '../data/emailData';
+import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
 export interface AttachmentWithContext extends EmailAttachment {
@@ -12,7 +12,7 @@ export interface AttachmentWithContext extends EmailAttachment {
 }
 
 export const getAllAttachments = (): AttachmentWithContext[] => {
-  const emails = getAllEmails();
+  const emails = getAllEmailsWithAttachments();
   const attachments: AttachmentWithContext[] = [];
 
   emails.forEach(email => {

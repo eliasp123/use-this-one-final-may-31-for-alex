@@ -1,14 +1,7 @@
 
-import { useState, useEffect } from 'react';
-import { EmailData } from '@/types/email';
-import { useUserRole } from './useUserRole';
-import { 
-  getEmailsByCategory, 
-  getUnreadEmails, 
-  getPendingEmails, 
-  getUnrespondedEmails, 
-  getAllEmails 
-} from '@/data/emailData';
+import { useMemo } from 'react';
+import { getAllEmailsWithAttachments } from '../utils/emailDataUtils';
+import { EmailData } from '../types/email';
 
 interface UseEmailFilteringProps {
   category?: string;
@@ -17,81 +10,48 @@ interface UseEmailFilteringProps {
 }
 
 export const useEmailFiltering = ({ category, activeTab, searchQuery }: UseEmailFilteringProps) => {
-  const { userRole } = useUserRole();
-  const [emails, setEmails] = useState<EmailData[]>([]);
-  const [filteredEmails, setFilteredEmails] = useState<EmailData[]>([]);
-  
-  // Filter private emails based on user role
-  const filterPrivateEmails = (emailList: EmailData[]): EmailData[] => {
-    if (userRole === 'primary-caregiver') {
-      return emailList; // Primary caregivers see all emails
+  const filteredEmails = useMemo(() => {
+    let emails = getAllEmailsWithAttachments();
+    
+    // Filter by category
+    if (category && category !== 'all') {
+      emails = emails.filter(email => email.category === category);
     }
-    return emailList.filter(email => !email.private); // Family members only see non-private emails
-  };
-  
-  // Load emails based on category and activeTab
-  useEffect(() => {
-    loadEmails();
-  }, [category, activeTab, userRole]);
-
-  // Filter emails based on search query
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = emails.filter(email => 
-        email.subject.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        email.sender.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        email.sender.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        email.content.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    // Filter by status (activeTab)
+    if (activeTab !== 'all') {
+      switch (activeTab) {
+        case 'unread':
+          emails = emails.filter(email => !email.read);
+          break;
+        case 'pending':
+          emails = emails.filter(email => email.read && !email.replied);
+          break;
+        case 'no-response':
+          emails = emails.filter(email => email.replied && !email.responseReceived);
+          break;
+        case 'complete':
+          emails = emails.filter(email => email.responseReceived);
+          break;
+        case 'private':
+          emails = emails.filter(email => email.private);
+          break;
+      }
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      emails = emails.filter(email => 
+        email.subject.toLowerCase().includes(query) ||
+        email.sender.name.toLowerCase().includes(query) ||
+        email.sender.organization.toLowerCase().includes(query) ||
+        email.content.toLowerCase().includes(query)
       );
-      setFilteredEmails(filtered);
-    } else {
-      setFilteredEmails(emails);
-    }
-  }, [searchQuery, emails]);
-
-  const loadEmails = () => {
-    let fetchedEmails: EmailData[] = [];
-    
-    if (category) {
-      // If category is specified, filter by category first
-      switch (activeTab) {
-        case 'unread':
-          fetchedEmails = getUnreadEmails(category);
-          break;
-        case 'pending':
-          fetchedEmails = getPendingEmails(category);
-          break;
-        case 'unresponded':
-          fetchedEmails = getUnrespondedEmails(category);
-          break;
-        default:
-          fetchedEmails = getEmailsByCategory(category);
-      }
-    } else {
-      // If no category, just filter by status
-      switch (activeTab) {
-        case 'unread':
-          fetchedEmails = getUnreadEmails();
-          break;
-        case 'pending':
-          fetchedEmails = getPendingEmails();
-          break;
-        case 'unresponded':
-          fetchedEmails = getUnrespondedEmails();
-          break;
-        default:
-          fetchedEmails = getAllEmails();
-      }
     }
     
-    // Filter private emails based on user role
-    fetchedEmails = filterPrivateEmails(fetchedEmails);
-    
-    // Sort by date (newest first)
-    fetchedEmails.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    setEmails(fetchedEmails);
-    setFilteredEmails(fetchedEmails);
-  };
-
-  return { emails, filteredEmails };
+    return emails;
+  }, [category, activeTab, searchQuery]);
+  
+  return { filteredEmails };
 };

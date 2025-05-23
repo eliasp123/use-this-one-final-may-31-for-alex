@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { getEmailById } from '../data/emailData';
+import { getEmailByIdWithAttachments } from '../utils/emailDataUtils';
 import { EmailData } from '../types/email';
 import EmailDetailHeader from '../components/email-detail/EmailDetailHeader';
 import EmailDetailCard from '../components/email-detail/EmailDetailCard';
@@ -21,7 +21,7 @@ const EmailDetail = () => {
   
   useEffect(() => {
     if (id) {
-      const foundEmail = getEmailById(id);
+      const foundEmail = getEmailByIdWithAttachments(id);
       if (foundEmail) {
         setEmail(foundEmail);
         
