@@ -97,7 +97,7 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
   return (
     <div className="max-w-7xl mx-auto">
       {/* Three Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {/* Unread Messages Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
