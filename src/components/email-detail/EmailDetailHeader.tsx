@@ -1,11 +1,11 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { ArrowLeft, Home, Pencil, FileText } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
+import DocumentHubPopup from './DocumentHubPopup';
 
 interface EmailDetailHeaderProps {
   email: EmailData;
@@ -14,6 +14,7 @@ interface EmailDetailHeaderProps {
 
 const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeClick }) => {
   const navigate = useNavigate();
+  const [showDocumentHub, setShowDocumentHub] = useState(false);
   
   // Determine status for display
   let statusBadge;
@@ -67,7 +68,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
             variant="default" 
             size="sm" 
             className="bg-orange-500 hover:bg-orange-600 text-white"
-            onClick={() => navigate('/documents')}
+            onClick={() => setShowDocumentHub(true)}
           >
             <FileText className="mr-1 h-4 w-4" /> Document Hub
           </Button>
@@ -87,6 +88,12 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
           </div>
         </div>
       </div>
+      
+      {/* Document Hub Popup */}
+      <DocumentHubPopup 
+        isOpen={showDocumentHub}
+        onClose={() => setShowDocumentHub(false)}
+      />
     </div>
   );
 };
