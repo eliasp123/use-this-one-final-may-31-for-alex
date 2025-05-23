@@ -13,7 +13,7 @@ const generateDate = (daysAgo: number) => {
 export const mockEmails: EmailData[] = [
   // Senior Living Category
   {
-    id: generateId(),
+    id: "ryoncku57t", // This ID matches sample attachments
     subject: "Follow-up on Golden Sunset Residence Tour",
     sender: {
       name: "Melissa Johnson",
@@ -30,7 +30,7 @@ export const mockEmails: EmailData[] = [
     category: "senior-living"
   },
   {
-    id: generateId(),
+    id: "0hz8p5u8ie", // This ID matches sample attachments
     subject: "Sunrise Village - Availability Update",
     sender: {
       name: "David Chen",
@@ -47,7 +47,7 @@ export const mockEmails: EmailData[] = [
     category: "senior-living"
   },
   {
-    id: generateId(),
+    id: "zez5gyxa55", // This ID matches sample attachments
     subject: "Payment Confirmation - Evergreen Retirement",
     sender: {
       name: "Finance Department",
@@ -66,7 +66,7 @@ export const mockEmails: EmailData[] = [
   
   // Home Care Category
   {
-    id: generateId(),
+    id: "2klhak25kz", // This ID matches sample attachments
     subject: "Caregiver Schedule Confirmation",
     sender: {
       name: "Lisa Martinez",
@@ -83,7 +83,7 @@ export const mockEmails: EmailData[] = [
     category: "home-care"
   },
   {
-    id: generateId(),
+    id: "2us8bbbm5x", // This ID matches sample attachments
     subject: "New Caregiver Introduction",
     sender: {
       name: "Robert Williams",
@@ -102,7 +102,7 @@ export const mockEmails: EmailData[] = [
   
   // Federal Benefits Category
   {
-    id: generateId(),
+    id: "byff0azjme", // This ID matches sample attachments
     subject: "Medicare Application Status Update",
     sender: {
       name: "Medicare Processing Center",
@@ -119,7 +119,7 @@ export const mockEmails: EmailData[] = [
     category: "federal-benefits"
   },
   {
-    id: generateId(),
+    id: "l8ob8e8p1k", // This ID matches sample attachments
     subject: "Social Security Benefit Review",
     sender: {
       name: "SSA Benefits Department",
@@ -136,7 +136,7 @@ export const mockEmails: EmailData[] = [
     category: "federal-benefits"
   },
   {
-    id: generateId(),
+    id: "av13yvz2vf", // This ID matches sample attachments
     subject: "Veterans Aid Application Confirmation",
     sender: {
       name: "VA Benefits Administration",
@@ -155,7 +155,7 @@ export const mockEmails: EmailData[] = [
   
   // Local Government Category
   {
-    id: generateId(),
+    id: "h8wj2ya19p",
     subject: "Property Tax Exemption Approval",
     sender: {
       name: "County Assessor's Office",
@@ -172,7 +172,7 @@ export const mockEmails: EmailData[] = [
     category: "local-government"
   },
   {
-    id: generateId(),
+    id: "s88pqu6xed",
     subject: "Community Transportation Program",
     sender: {
       name: "Senior Services Coordinator",
@@ -191,7 +191,7 @@ export const mockEmails: EmailData[] = [
   
   // Attorneys Category
   {
-    id: generateId(),
+    id: "r2gb75u7x6",
     subject: "Estate Planning Document Review",
     sender: {
       name: "Patricia Lawson",
@@ -208,7 +208,7 @@ export const mockEmails: EmailData[] = [
     category: "attorneys"
   },
   {
-    id: generateId(),
+    id: "l9fjpu36ff",
     subject: "Trust Amendment Draft",
     sender: {
       name: "James Wilson",
@@ -225,7 +225,7 @@ export const mockEmails: EmailData[] = [
     category: "attorneys"
   },
   {
-    id: generateId(),
+    id: "w92zavf48x",
     subject: "Guardianship Filing Confirmation",
     sender: {
       name: "Laura Mendez",
@@ -244,7 +244,7 @@ export const mockEmails: EmailData[] = [
   
   // Other Professionals Category
   {
-    id: generateId(),
+    id: "huhdr1euby",
     subject: "Financial Plan Review Meeting",
     sender: {
       name: "Thomas Grant",
@@ -261,7 +261,7 @@ export const mockEmails: EmailData[] = [
     category: "other-professionals"
   },
   {
-    id: generateId(),
+    id: "1ktbzlf2pf",
     subject: "Physical Therapy Assessment Results",
     sender: {
       name: "Dr. Samantha Wong",
@@ -278,7 +278,7 @@ export const mockEmails: EmailData[] = [
     category: "other-professionals"
   },
   {
-    id: generateId(),
+    id: "mubcqdho6q",
     subject: "Moving Services Quote",
     sender: {
       name: "Eric Johnson",
@@ -297,7 +297,7 @@ export const mockEmails: EmailData[] = [
   
   // VA (Veterans Affairs) Category
   {
-    id: generateId(),
+    id: "48cbug196x",
     subject: "VA Benefits Eligibility Review",
     sender: {
       name: "Thomas Reynolds",
@@ -314,7 +314,7 @@ export const mockEmails: EmailData[] = [
     category: "va"
   },
   {
-    id: generateId(),
+    id: "30rzrypb3t",
     subject: "Aid & Attendance Benefit Documentation",
     sender: {
       name: "Maria Sanchez",
@@ -331,7 +331,7 @@ export const mockEmails: EmailData[] = [
     category: "va"
   },
   {
-    id: generateId(),
+    id: "wvebdtgqk5",
     subject: "VA Caregiver Support Program",
     sender: {
       name: "James Wilson",
@@ -350,7 +350,7 @@ export const mockEmails: EmailData[] = [
   
   // Physical Therapy Category
   {
-    id: generateId(),
+    id: "pdz874evdk",
     subject: "Home Exercise Program Update",
     sender: {
       name: "Dr. Anita Patel",
@@ -367,7 +367,7 @@ export const mockEmails: EmailData[] = [
     category: "physical-therapy"
   },
   {
-    id: generateId(),
+    id: "mctgsi768q",
     subject: "Medicare Coverage for Physical Therapy",
     sender: {
       name: "Lisa Johnson",
@@ -384,7 +384,7 @@ export const mockEmails: EmailData[] = [
     category: "physical-therapy"
   },
   {
-    id: generateId(),
+    id: "4fsdo2s69g",
     subject: "Mobility Equipment Recommendations",
     sender: {
       name: "Marcus Chen",
@@ -403,7 +403,7 @@ export const mockEmails: EmailData[] = [
   
   // Paying for Care Category
   {
-    id: generateId(),
+    id: "fbgpvvfdb3",
     subject: "Long-Term Care Insurance Claim Update",
     sender: {
       name: "Patricia Morgan",
@@ -420,7 +420,7 @@ export const mockEmails: EmailData[] = [
     category: "paying-for-care"
   },
   {
-    id: generateId(),
+    id: "sw3m3vrr9k",
     subject: "Medicaid Application Status",
     sender: {
       name: "Robert Thompson",
@@ -437,7 +437,7 @@ export const mockEmails: EmailData[] = [
     category: "paying-for-care"
   },
   {
-    id: generateId(),
+    id: "gsws4vjsju",
     subject: "Financial Planning for Long-Term Care",
     sender: {
       name: "Sarah Williams",
