@@ -89,11 +89,6 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
     return sum + (category.unread > 0 && category.pending === 0 ? 1 : 0);
   }, 0);
   
-  const activeCategories = filteredCategories.reduce((sum, category) => {
-    // Count categories that have either unread messages or pending replies
-    return sum + (category.unread > 0 || category.pending > 0 ? 1 : 0);
-  }, 0);
-
   return (
     <div className="max-w-7xl mx-auto">
       {/* Three Summary Cards */}
@@ -128,14 +123,14 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
           </CardContent>
         </Card>
         
-        {/* Active Categories Card */}
+        {/* Has Not Responded Yet Card (renamed from Active Categories) */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm font-medium">Active Categories</p>
+              <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <p className="text-3xl font-medium text-gray-800">{activeCategories}</p>
+              <p className="text-3xl font-medium text-gray-800">{totalAwaitingResponse}</p>
               <div className="w-9 h-9 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full mr-1"></div>
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
