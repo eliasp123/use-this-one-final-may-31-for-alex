@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
-import { Send, Plus, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { EmailData } from '@/types/email';
 
@@ -91,6 +92,14 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
         title: "Category Added",
         description: `"${newCategoryName.trim()}" has been added as a new category.`,
       });
+    }
+  };
+
+  const handleCategoryChange = (value: string) => {
+    if (value === 'add-custom') {
+      setShowCustomCategoryDialog(true);
+    } else {
+      form.setValue('category', value);
     }
   };
 
@@ -295,51 +304,23 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category *</FormLabel>
-                      <div className="flex gap-2">
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {allCategories.map((category) => (
-                              <SelectItem key={category.id} value={category.id}>
-                                {category.title}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        
-                        <Dialog open={showCustomCategoryDialog} onOpenChange={setShowCustomCategoryDialog}>
-                          <DialogTrigger asChild>
-                            <Button type="button" variant="outline" size="sm">
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>Add Custom Category</DialogTitle>
-                            </DialogHeader>
-                            <div className="flex items-center space-x-2">
-                              <Input
-                                placeholder="Category name"
-                                value={newCategoryName}
-                                onChange={(e) => setNewCategoryName(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleAddCustomCategory();
-                                  }
-                                }}
-                              />
-                              <Button onClick={handleAddCustomCategory} size="sm">
-                                Add
-                              </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
+                      <Select onValueChange={handleCategoryChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className={field.value === 'add-custom' ? 'bg-purple-500 text-white border-purple-500' : ''}>
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {allCategories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.title}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="add-custom" className="text-purple-600 font-medium">
+                            Add your own category
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -413,6 +394,31 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
             </form>
           </Form>
         </CardContent>
+
+        {/* Custom Category Dialog */}
+        <Dialog open={showCustomCategoryDialog} onOpenChange={setShowCustomCategoryDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add Custom Category</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center space-x-2">
+              <Input
+                placeholder="Category name"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddCustomCategory();
+                  }
+                }}
+              />
+              <Button onClick={handleAddCustomCategory} size="sm">
+                Add
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </Card>
     </div>
   );
