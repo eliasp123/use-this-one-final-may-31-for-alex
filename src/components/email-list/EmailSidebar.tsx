@@ -23,10 +23,10 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
 }) => {
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
-      <SidebarContent className="pt-6">  
+      <SidebarContent className="pt-16">  
         <SidebarGroup>
-          <SidebarGroupLabel className="px-6 mb-5">Categories</SidebarGroupLabel> {/* Increased from mb-3 to mb-5 */}
-          <SidebarMenu className="space-y-3"> {/* Changed from space-y-1.5 to space-y-3 for consistent spacing */}
+          <SidebarGroupLabel className="px-6 mb-5">Categories</SidebarGroupLabel>
+          <SidebarMenu className="space-y-3">
             {emailCategories.map((cat) => (
               <EmailCategoryItem 
                 key={cat.id} 
