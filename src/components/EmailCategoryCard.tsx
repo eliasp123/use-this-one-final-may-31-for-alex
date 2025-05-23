@@ -36,25 +36,25 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         <h3 className="text-base sm:text-lg font-medium text-gray-800 ml-3 sm:ml-4 group-hover:text-gray-900 transition-colors">{title}</h3>
       </div>
 
-      {/* Stats - Now with colored circles in the rows */}
+      {/* Stats - Now with colored circles in the rows - reduced circle size by ~25% */}
       <div className="space-y-4 sm:space-y-5">
         <div className="flex items-center justify-between text-xs sm:text-sm">
           <span className="text-gray-600">Unread messages</span>
-          <div className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 ${unread > 0 ? 'bg-purple-500' : 'bg-gray-300'} rounded-full text-white font-medium transition-transform group-hover:scale-105`}>
+          <div className={`flex items-center justify-center w-4.5 h-4.5 sm:w-5 sm:h-5 ${unread > 0 ? 'bg-purple-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
             {unread > 0 ? unread : "-"}
           </div>
         </div>
         
         <div className="flex items-center justify-between text-xs sm:text-sm">
           <span className="text-gray-600">Pending replies</span>
-          <div className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 ${pending > 0 ? 'bg-amber-500' : 'bg-gray-300'} rounded-full text-white font-medium transition-transform group-hover:scale-105`}>
+          <div className={`flex items-center justify-center w-4.5 h-4.5 sm:w-5 sm:h-5 ${pending > 0 ? 'bg-amber-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
             {pending > 0 ? pending : "-"}
           </div>
         </div>
         
         <div className="flex items-center justify-between text-xs sm:text-sm">
           <span className="text-gray-600">Has not responded yet</span>
-          <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 bg-red-500 rounded-full text-white font-medium transition-transform group-hover:scale-105">
+          <div className="flex items-center justify-center w-4.5 h-4.5 sm:w-5 sm:h-5 bg-red-500 rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105">
             {notRespondedCount}
           </div>
         </div>
