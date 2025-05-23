@@ -19,7 +19,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
   const navigate = useNavigate();
   
   return (
-    <SidebarMenuItem className="mb-1.5">
+    <SidebarMenuItem className="mb-3"> {/* Increased from mb-1.5 to mb-3 for more spacing */}
       <SidebarMenuButton 
         isActive={category.id === activeCategory}
         tooltip={category.title}
