@@ -7,9 +7,10 @@ interface SummaryCardProps {
   count: number;
   color: string;
   onClick: () => void;
+  icon?: React.ReactNode;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ title, count, color, onClick }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ title, count, color, onClick, icon }) => {
   return (
     <Card 
       className="border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
@@ -18,6 +19,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ title, count, color, onClick 
       <CardContent className="p-4 sm:p-6">
         <div className="flex justify-between items-center">
           <p className="text-gray-500 text-xs sm:text-sm font-medium">{title}</p>
+          {icon && <div className="text-gray-400">{icon}</div>}
         </div>
         <div className="flex justify-between items-center mt-2">
           <p className="text-2xl sm:text-3xl font-medium text-gray-800">{count}</p>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
