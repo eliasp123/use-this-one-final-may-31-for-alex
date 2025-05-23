@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -46,9 +47,9 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Updated padding from pl-3 to pl-2 */}
+        {/* Main Content - Removing container px to let pl-2 be more effective */}
         <div className="flex-1 pl-2 pr-20">
-          <div className="container mx-auto px-4 py-8">
+          <div className="py-8">
             <EmailHeader 
               currentCategory={currentCategory}
               emailCount={filteredEmails.length}
