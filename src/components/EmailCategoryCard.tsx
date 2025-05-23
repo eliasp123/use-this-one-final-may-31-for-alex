@@ -26,6 +26,9 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const hasNotResponded = unread > 0 && pending === 0;
   // Number of messages without response
   const notRespondedCount = hasNotResponded ? unread : 0;
+  
+  // Calculate if we have any stats to display (to know if we need separators)
+  const hasAnyStats = unread > 0 || pending > 0 || hasNotResponded;
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
@@ -61,7 +64,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
               <span className="text-gray-600">Unread messages</span>
               <span className="font-medium text-purple-600">{unread}</span>
             </div>
-            <Separator className="my-1" />
+            {(pending > 0 || hasNotResponded) && <Separator className="my-1" />}
           </>
         )}
         
@@ -71,7 +74,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
               <span className="text-gray-600">Pending replies</span>
               <span className="font-medium text-amber-600">{pending}</span>
             </div>
-            <Separator className="my-1" />
+            {hasNotResponded && <Separator className="my-1" />}
           </>
         )}
         
@@ -81,11 +84,10 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
               <span className="text-gray-600">Has not responded yet</span>
               <span className="font-medium text-red-600">{notRespondedCount}</span>
             </div>
-            <Separator className="my-1" />
           </>
         )}
         
-        <div className="flex items-center justify-between text-sm pt-2 border-t-2 border-gray-300">
+        <div className={`flex items-center justify-between text-sm ${hasAnyStats ? 'pt-2 border-t-2 border-gray-300' : ''}`}>
           <span className="text-gray-600">Total conversations</span>
           <span className="font-medium text-gray-800">{total}</span>
         </div>
