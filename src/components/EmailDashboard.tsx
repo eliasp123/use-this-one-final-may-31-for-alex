@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmailCategoryCard from './EmailCategoryCard';
-import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
+import { Heart, Home, Shield, Building, Scale, Users, Award, Activity, CreditCard } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Separator } from './ui/separator';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
@@ -100,6 +99,39 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
       color: 'from-indigo-400 to-indigo-500',
       bgColor: 'bg-indigo-50',
       textColor: 'text-indigo-700'
+    },
+    {
+      id: 'va',
+      title: 'VA',
+      icon: Award,
+      unread: getUnreadEmails('va').length,
+      pending: getPendingEmails('va').length,
+      total: 7,
+      color: 'from-teal-400 to-teal-500',
+      bgColor: 'bg-teal-50',
+      textColor: 'text-teal-700'
+    },
+    {
+      id: 'physical-therapy',
+      title: 'Physical Therapy',
+      icon: Activity,
+      unread: getUnreadEmails('physical-therapy').length,
+      pending: getPendingEmails('physical-therapy').length,
+      total: 5,
+      color: 'from-cyan-400 to-cyan-500',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-700'
+    },
+    {
+      id: 'paying-for-care',
+      title: 'Paying for Care',
+      icon: CreditCard,
+      unread: getUnreadEmails('paying-for-care').length,
+      pending: getPendingEmails('paying-for-care').length,
+      total: 6,
+      color: 'from-lime-400 to-lime-500',
+      bgColor: 'bg-lime-50',
+      textColor: 'text-lime-700'
     }
   ];
 

@@ -277,6 +277,156 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: true,
     category: "other-professionals"
+  },
+  
+  // VA (Veterans Affairs) Category
+  {
+    id: generateId(),
+    subject: "VA Benefits Eligibility Review",
+    sender: {
+      name: "Thomas Reynolds",
+      email: "treynolds@va.gov",
+      organization: "Department of Veterans Affairs"
+    },
+    recipient: "you@example.com",
+    content: "Based on our recent assessment, your father may qualify for additional VA healthcare benefits. We'd like to schedule a comprehensive review of his service record and medical needs. Would next Tuesday at 10 AM work for a virtual appointment?",
+    date: generateDate(3),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    category: "va"
+  },
+  {
+    id: generateId(),
+    subject: "Aid & Attendance Benefit Documentation",
+    sender: {
+      name: "Maria Sanchez",
+      email: "msanchez@va.gov",
+      organization: "VA Benefits Administration"
+    },
+    recipient: "you@example.com",
+    content: "Thank you for submitting your application for the VA Aid & Attendance benefit. We require additional documentation regarding your mother's daily care needs. I've attached the necessary forms that need to be completed by her primary caregiver.",
+    date: generateDate(7),
+    read: true,
+    replied: true,
+    responseReceived: false,
+    category: "va"
+  },
+  {
+    id: generateId(),
+    subject: "VA Caregiver Support Program",
+    sender: {
+      name: "James Wilson",
+      email: "jwilson@va.gov",
+      organization: "VA Caregiver Support"
+    },
+    recipient: "you@example.com",
+    content: "Following our conversation about respite care options, I wanted to share information about our Caregiver Support Program. This program offers training, resources, and a monthly stipend for eligible veterans and their caregivers. Let me know if you'd like to discuss how to apply.",
+    date: generateDate(14),
+    read: true,
+    replied: false,
+    responseReceived: true,
+    category: "va"
+  },
+  
+  // Physical Therapy Category
+  {
+    id: generateId(),
+    subject: "Home Exercise Program Update",
+    sender: {
+      name: "Dr. Anita Patel",
+      email: "apatel@mobiletherapy.org",
+      organization: "Mobile Therapy Services"
+    },
+    recipient: "you@example.com",
+    content: "Based on your father's progress during our last session, I've updated his home exercise program. Please find the attached guide with illustrations. It's important that he completes these exercises twice daily to maintain the mobility gains we've achieved so far.",
+    date: generateDate(2),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    category: "physical-therapy"
+  },
+  {
+    id: generateId(),
+    subject: "Medicare Coverage for Physical Therapy",
+    sender: {
+      name: "Lisa Johnson",
+      email: "ljohnson@seniorrehab.com",
+      organization: "Senior Rehabilitation Center"
+    },
+    recipient: "you@example.com",
+    content: "I've reviewed your mother's Medicare coverage for physical therapy services. She has 8 more covered sessions available this year. Given her progress, I recommend scheduling these sessions once per week through the end of next month to maximize her recovery.",
+    date: generateDate(5),
+    read: true,
+    replied: true,
+    responseReceived: true,
+    category: "physical-therapy"
+  },
+  {
+    id: generateId(),
+    subject: "Mobility Equipment Recommendations",
+    sender: {
+      name: "Marcus Chen",
+      email: "mchen@adaptivemobility.com",
+      organization: "Adaptive Mobility Solutions"
+    },
+    recipient: "you@example.com",
+    content: "Following our assessment, I'm recommending several pieces of adaptive equipment to improve safety and independence at home. These include a shower transfer bench, bedside grab rails, and a rolling walker with a seat. Most of these items should be covered by insurance with the prescription I've attached.",
+    date: generateDate(9),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    category: "physical-therapy"
+  },
+  
+  // Paying for Care Category
+  {
+    id: generateId(),
+    subject: "Long-Term Care Insurance Claim Update",
+    sender: {
+      name: "Patricia Morgan",
+      email: "pmorgan@careinsurance.com",
+      organization: "Senior Care Insurance Group"
+    },
+    recipient: "you@example.com",
+    content: "We've processed the claim for your father's long-term care expenses. The approved benefits will cover 80% of his assisted living costs for up to 3 years. Payments will be sent directly to the facility starting next month. Please review the attached explanation of benefits.",
+    date: generateDate(4),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    category: "paying-for-care"
+  },
+  {
+    id: generateId(),
+    subject: "Medicaid Application Status",
+    sender: {
+      name: "Robert Thompson",
+      email: "rthompson@eldercarelegal.org",
+      organization: "Elder Care Legal Services"
+    },
+    recipient: "you@example.com",
+    content: "I wanted to update you on your mother's Medicaid application. We've submitted all required financial documentation, and the application is now under review. The typical processing time is 45-60 days. In the meantime, I recommend keeping all receipts for her care expenses as these may be reimbursable retroactively.",
+    date: generateDate(10),
+    read: true,
+    replied: false,
+    responseReceived: true,
+    category: "paying-for-care"
+  },
+  {
+    id: generateId(),
+    subject: "Financial Planning for Long-Term Care",
+    sender: {
+      name: "Sarah Williams",
+      email: "swilliams@seniorfinancial.com",
+      organization: "Senior Financial Planning"
+    },
+    recipient: "you@example.com",
+    content: "Thank you for sharing your concerns about future care costs. I've prepared several scenarios showing how your parents' assets might be structured to maximize eligibility for assistance programs while preserving some inheritance. Let's schedule a call next week to review these options in detail.",
+    date: generateDate(12),
+    read: true,
+    replied: true,
+    responseReceived: false,
+    category: "paying-for-care"
   }
 ];
 
