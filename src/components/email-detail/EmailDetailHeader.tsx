@@ -30,7 +30,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   const currentCategory = categoryInfo[email.category];
   
   return (
-    <div className="mb-8">
+    <div className="pt-3 mb-8">
       <div className="flex gap-2 mb-4">
         <Button 
           variant="outline" 
