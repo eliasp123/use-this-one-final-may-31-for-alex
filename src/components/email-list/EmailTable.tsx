@@ -51,7 +51,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                       <span className="text-sm text-gray-500">{email.sender.organization}</span>
                     </div>
                     {email.attachments && email.attachments.length > 0 && (
-                      <div className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+                      <div className="flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-sm">
                         <Paperclip className="w-3 h-3" />
                         <span>{email.attachments.length}</span>
                       </div>

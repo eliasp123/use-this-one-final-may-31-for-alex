@@ -92,5 +92,21 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       type: "application/pdf",
       url: "/documents/legal-checklist.pdf"
     }
+  ],
+  "kadiyi0yqc": [
+    {
+      id: "att_012",
+      name: "Senior_Living_Brochure.pdf",
+      size: 2048000,
+      type: "application/pdf",
+      url: "/documents/senior-living-brochure.pdf"
+    },
+    {
+      id: "att_013",
+      name: "Monthly_Activity_Schedule.docx",
+      size: 512000,
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      url: "/documents/activity-schedule.docx"
+    }
   ]
 };
