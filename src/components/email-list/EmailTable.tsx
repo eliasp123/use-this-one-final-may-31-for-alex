@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -19,15 +20,18 @@ interface EmailTableProps {
 
 const getFileIcon = (type: string) => {
   if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
-    return <FileText className="w-4 h-4" />;
+    return <FileText className="w-4 h-4 text-red-500" />;
   }
   if (type.startsWith('image/')) {
-    return <Image className="w-4 h-4" />;
+    return <Image className="w-4 h-4 text-green-500" />;
   }
   if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
-    return <FileSpreadsheet className="w-4 h-4" />;
+    return <FileSpreadsheet className="w-4 h-4 text-blue-500" />;
   }
-  return <File className="w-4 h-4" />;
+  if (type.includes('wordprocessingml') || type.includes('docx')) {
+    return <FileText className="w-4 h-4 text-purple-500" />;
+  }
+  return <File className="w-4 h-4 text-gray-500" />;
 };
 
 const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
