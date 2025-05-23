@@ -160,3 +160,23 @@ function YourComponent() {
 - The role indicator badge shows the current view mode
 - All filtering happens at the data level to ensure privacy
 - The EmailDetail page and other components will automatically respect the user's role when accessing individual emails
+
+## Attachment Functionality
+
+### Current Implementation
+- ✅ Visual attachment indicators in email lists (paperclip icons with counts)
+- ✅ Attachment display in email detail views
+- ✅ File type icons and formatting
+- ✅ File size display
+- ✅ Proper styling and layout
+
+### Integration Requirements
+When integrating with email systems like Nylas.com, developers will need to:
+
+1. **Replace mock data** with real attachment data from the email API
+2. **Implement download functionality** by connecting the download buttons to actual file URLs
+3. **Add file upload** components for composing emails with attachments
+4. **Connect to file storage** (AWS S3, Google Cloud Storage, etc.)
+5. **Update the EmailAttachment interface** if needed to match the email service's attachment format
+
+The UI framework is complete and ready for integration with backend email services and file handling functionality.
