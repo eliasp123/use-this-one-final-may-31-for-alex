@@ -36,6 +36,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           variant="outline" 
           size="sm"
           onClick={() => navigate(-1)}
+          className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300"
         >
           <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation
         </Button>
@@ -44,6 +45,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           variant="outline" 
           size="sm"
           onClick={() => navigate('/')}
+          className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
         >
           <Home className="mr-1 h-4 w-4" /> Back to Dashboard
         </Button>
