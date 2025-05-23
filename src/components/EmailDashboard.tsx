@@ -6,6 +6,14 @@ import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Separator } from './ui/separator';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from './ui/pagination';
 
 interface EmailDashboardProps {
   searchQuery?: string;
@@ -16,6 +24,8 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
   const [totalUnread, setTotalUnread] = useState(0);
   const [totalPending, setTotalPending] = useState(0);
   const [totalUnresponded, setTotalUnresponded] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // 2 rows of 3 cards
   
   // Load email counts
   useEffect(() => {
@@ -98,14 +108,33 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
     category.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
+  // Calculate pagination values
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, filteredCategories.length);
+  const currentCategories = filteredCategories.slice(startIndex, endIndex);
+  
   const handleSummaryCardClick = (status: string) => {
     navigate(`/emails/all/${status}`);
   };
 
-  // Split the categories into rows of 3 for consistent spacing
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of category section for better UX
+    document.getElementById('category-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Split the current categories into rows of 3 for consistent spacing
   const rows = [];
-  for (let i = 0; i < filteredCategories.length; i += 3) {
-    rows.push(filteredCategories.slice(i, i + 3));
+  for (let i = 0; i < currentCategories.length; i += 3) {
+    rows.push(currentCategories.slice(i, i + 3));
+  }
+  
+  // Generate page numbers for pagination
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
   }
   
   return (
@@ -169,7 +198,7 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
       </div>
 
       {/* Email Category Grid with consistent row spacing */}
-      <div className="space-y-8 sm:space-y-12">
+      <div id="category-section" className="space-y-8 sm:space-y-12">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {row.map((category) => (
@@ -181,6 +210,52 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
           </div>
         ))}
       </div>
+      
+      {/* Pagination - Only show if we have more than one page */}
+      {totalPages > 1 && (
+        <Pagination className="mt-8 sm:mt-12">
+          <PaginationContent>
+            {currentPage > 1 && (
+              <PaginationItem>
+                <PaginationPrevious 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage - 1);
+                  }} 
+                />
+              </PaginationItem>
+            )}
+            
+            {pageNumbers.map((page) => (
+              <PaginationItem key={page}>
+                <PaginationLink 
+                  href="#" 
+                  isActive={page === currentPage}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(page);
+                  }}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            {currentPage < totalPages && (
+              <PaginationItem>
+                <PaginationNext 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage + 1);
+                  }} 
+                />
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 };
