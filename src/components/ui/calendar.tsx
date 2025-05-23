@@ -22,7 +22,7 @@ function Calendar({
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-6",
         caption: "flex justify-center pt-1 relative items-center mb-4",
-        caption_label: "text-base font-light text-gray-500",
+        caption_label: "text-2xl font-light text-gray-500",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
@@ -31,19 +31,19 @@ function Calendar({
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-2",
-        head_row: "flex w-full mt-2",
+        head_row: "flex w-full mt-6",
         head_cell:
-          "text-gray-400 rounded-md w-12 font-normal text-[0.9rem] h-10 flex items-center justify-center",
-        row: "flex w-full mt-3",
-        cell: "h-12 w-12 text-center text-sm p-0 relative flex items-center justify-center",
+          "text-gray-400 rounded-md w-14 font-light text-[0.9rem] h-10 flex items-center justify-center uppercase",
+        row: "flex w-full mt-4",
+        cell: "h-14 w-14 text-center text-sm p-0 relative flex items-center justify-center",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-10 w-10 p-0 font-normal text-base rounded-full hover:bg-gray-100 text-gray-600"
+          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-purple-100 text-gray-600"
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-blue-500 text-white hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white rounded-full",
-        day_today: "border border-blue-300 text-blue-600 bg-blue-50 rounded-full",
+          "bg-purple-500 text-white hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white rounded-full",
+        day_today: "border border-purple-300 text-purple-600 bg-purple-50 rounded-full",
         day_outside:
           "day-outside text-gray-300 opacity-50",
         day_disabled: "text-gray-300 opacity-50",
@@ -61,14 +61,14 @@ function Calendar({
           margin: '2px',
         },
         caption: {
-          marginBottom: '16px',
+          marginBottom: '24px',
         },
         head_cell: {
-          width: '48px',
+          width: '56px',
         },
         cell: {
-          width: '48px',
-          height: '48px',
+          width: '56px',
+          height: '56px',
         }
       }}
       {...props}

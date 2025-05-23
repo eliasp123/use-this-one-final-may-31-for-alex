@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 // Sample appointment data - in a real app this would come from an API or state management
 const APPOINTMENTS = [
@@ -11,9 +11,9 @@ const APPOINTMENTS = [
     title: 'Review Senior Living Options',
     date: new Date(2025, 4, 25), // May 25, 2025
     category: 'senior-living',
-    color: 'bg-rose-500',
+    color: 'bg-purple-500',
     organization: 'Golden Years Living',
-    textColor: 'text-rose-700',
+    textColor: 'text-purple-700',
     time: '10:30 AM'
   },
   {
@@ -21,9 +21,9 @@ const APPOINTMENTS = [
     title: 'Home Care Assessment',
     date: new Date(2025, 4, 28), // May 28, 2025
     category: 'home-care',
-    color: 'bg-blue-500',
+    color: 'bg-purple-500',
     organization: 'Comfort Home Services',
-    textColor: 'text-blue-700',
+    textColor: 'text-purple-700',
     time: '2:15 PM'
   },
   {
@@ -31,9 +31,9 @@ const APPOINTMENTS = [
     title: 'Medicare Benefits Review',
     date: new Date(2025, 5, 2), // June 2, 2025
     category: 'federal-benefits',
-    color: 'bg-emerald-500',
+    color: 'bg-purple-500',
     organization: 'Medicare Services Office',
-    textColor: 'text-emerald-700',
+    textColor: 'text-purple-700',
     time: '9:00 AM'
   },
   {
@@ -41,9 +41,9 @@ const APPOINTMENTS = [
     title: 'Legal Consultation',
     date: new Date(2025, 5, 10), // June 10, 2025
     category: 'attorneys',
-    color: 'bg-amber-500',
+    color: 'bg-purple-500',
     organization: 'Elder Law Associates',
-    textColor: 'text-amber-700',
+    textColor: 'text-purple-700',
     time: '3:30 PM'
   }
 ];
@@ -90,39 +90,45 @@ const CalendarSection = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-8">
           <Card className="overflow-hidden shadow-sm border border-gray-100">
-            <CardHeader className="bg-white pb-0">
-              <CardTitle className="text-xl font-medium text-gray-700">Calendar</CardTitle>
-              <CardDescription className="text-gray-500">Select a date to view appointments</CardDescription>
-            </CardHeader>
-            <CardContent className="p-0 pb-6 pt-2">
-              <div className="flex justify-center items-center h-full">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={handleSelect}
-                  className="pointer-events-auto p-6 w-full max-w-md"
-                  modifiers={{
-                    hasAppointment: (date) => isDayWithAppointment(date),
-                  }}
-                  modifiersClassNames={{
-                    hasAppointment: 'bg-blue-500 text-white rounded-full',
-                  }}
-                />
+            <CardContent className="p-0">
+              <div className="flex">
+                <div className="bg-purple-400 p-8 w-full md:w-1/3 flex flex-col justify-center">
+                  <p className="text-white text-xl font-light uppercase mb-1">{date ? format(date, 'EEEE') : ''}</p>
+                  <p className="text-white text-4xl font-light uppercase mb-10">{date ? format(date, 'MMMM do') : ''}</p>
+                  <p className="text-white/70 text-sm font-light">{date ? format(date, 'yyyy') : ''}</p>
+                </div>
+                
+                <div className="w-full md:w-2/3 p-4 bg-white">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={handleSelect}
+                    className="pointer-events-auto w-full"
+                    modifiers={{
+                      hasAppointment: (date) => isDayWithAppointment(date),
+                    }}
+                    modifiersClassNames={{
+                      hasAppointment: 'bg-purple-400 text-white rounded-full',
+                    }}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
         
         <div className="md:col-span-4">
-          <Card className="h-full shadow-sm border border-gray-100">
-            <CardHeader className="bg-white border-b border-gray-100 pb-4">
-              <CardTitle className="text-xl font-medium text-gray-700">
-                {date ? format(date, 'EEEE') : 'No date selected'}
-              </CardTitle>
-              <CardDescription className="text-gray-500">
-                {date ? format(date, 'MMMM d, yyyy') : ''}
-                {selectedDateAppointments.length > 0 && ` • ${selectedDateAppointments.length} appointment${selectedDateAppointments.length > 1 ? 's' : ''}`}
-              </CardDescription>
+          <Card className="h-full shadow-sm border border-gray-100 overflow-hidden">
+            <CardHeader className="bg-purple-400 border-b border-gray-100 p-6">
+              <div className="text-white">
+                <h3 className="text-xl font-light uppercase mb-1">
+                  {date ? format(date, 'EEEE') : 'No date selected'}
+                </h3>
+                <p className="font-light">
+                  {date ? format(date, 'MMMM d, yyyy') : ''}
+                  {selectedDateAppointments.length > 0 && ` • ${selectedDateAppointments.length} appointment${selectedDateAppointments.length > 1 ? 's' : ''}`}
+                </p>
+              </div>
             </CardHeader>
             <CardContent className="p-4">
               <div className="space-y-3">
@@ -142,7 +148,7 @@ const CalendarSection = () => {
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-3 h-3 rounded-full ${appointment.color}`}></div>
-                          <h4 className={`font-medium ${appointment.textColor}`}>
+                          <h4 className="font-medium text-purple-700">
                             {appointment.title}
                           </h4>
                         </div>
@@ -160,13 +166,6 @@ const CalendarSection = () => {
                             <span>{appointment.organization}</span>
                           </div>
                         </div>
-                        <div 
-                          className="mt-2 h-1 w-full rounded-full"
-                          style={{ backgroundColor: appointment.color.replace('bg-', '').includes('rose') ? '#FECDD3' : 
-                                                appointment.color.replace('bg-', '').includes('blue') ? '#BFDBFE' : 
-                                                appointment.color.replace('bg-', '').includes('emerald') ? '#A7F3D0' : 
-                                                appointment.color.replace('bg-', '').includes('amber') ? '#FDE68A' : '#C7D2FE' }}
-                        ></div>
                       </div>
                     ))}
                   </div>
