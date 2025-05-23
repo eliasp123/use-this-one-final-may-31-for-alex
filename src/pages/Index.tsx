@@ -81,7 +81,7 @@ const Index = () => {
                 size="sm"
               >
                 <Pencil className="mr-2 h-4 w-4" />
-                Compose
+                Compose New Email
               </Button>
             </div>
           </div>
