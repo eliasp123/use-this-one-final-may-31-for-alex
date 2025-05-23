@@ -171,7 +171,7 @@ const CalendarSection = () => {
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                       <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
                     </div>
-                    <p className="text-gray-500 text-center">No appointments for this date</p>
+                    <p className="text-gray-500 text-center">No Care Appointments Today. You can breathe a little.</p>
                   </div>
                 ) : (
                   <div>
