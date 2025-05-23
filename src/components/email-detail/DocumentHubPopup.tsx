@@ -115,7 +115,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   placeholder="Search documents, senders, or organizations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200 lg:min-w-[600px] lg:max-w-[600px]"
+                  className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200 lg:min-w-[600px] lg:max-w-[600px]"
                   style={{ minWidth: '600px' }}
                 />
               </div>
