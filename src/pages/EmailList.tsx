@@ -46,8 +46,8 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Updated padding to pl-24 and pr-32 */}
-        <div className="flex-1 pl-24 pr-32">
+        {/* Main Content - Updated padding to include pt-16 for consistent top spacing */}
+        <div className="flex-1 pl-24 pr-32 pt-16">
           <div className="py-8">
             <EmailHeader 
               currentCategory={currentCategory}
