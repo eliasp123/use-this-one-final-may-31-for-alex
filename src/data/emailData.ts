@@ -26,6 +26,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "senior-living"
   },
   {
@@ -42,6 +43,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "senior-living"
   },
   {
@@ -58,6 +60,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: true,
+    private: false,
     category: "senior-living"
   },
   
@@ -76,6 +79,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "home-care"
   },
   {
@@ -92,6 +96,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "home-care"
   },
   
@@ -110,6 +115,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "federal-benefits"
   },
   {
@@ -126,6 +132,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "federal-benefits"
   },
   {
@@ -142,6 +149,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: true,
     responseReceived: true,
+    private: false,
     category: "federal-benefits"
   },
   
@@ -160,6 +168,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "local-government"
   },
   {
@@ -176,6 +185,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "local-government"
   },
   
@@ -194,6 +204,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "attorneys"
   },
   {
@@ -210,6 +221,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "attorneys"
   },
   {
@@ -226,6 +238,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "attorneys"
   },
   
@@ -244,6 +257,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "other-professionals"
   },
   {
@@ -260,6 +274,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "other-professionals"
   },
   {
@@ -276,6 +291,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: true,
     responseReceived: true,
+    private: false,
     category: "other-professionals"
   },
   
@@ -294,6 +310,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "va"
   },
   {
@@ -310,6 +327,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "va"
   },
   {
@@ -326,6 +344,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "va"
   },
   
@@ -344,6 +363,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "physical-therapy"
   },
   {
@@ -360,6 +380,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: true,
+    private: false,
     category: "physical-therapy"
   },
   {
@@ -376,6 +397,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "physical-therapy"
   },
   
@@ -394,6 +416,7 @@ export const mockEmails: EmailData[] = [
     read: false,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "paying-for-care"
   },
   {
@@ -410,6 +433,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: false,
     responseReceived: true,
+    private: false,
     category: "paying-for-care"
   },
   {
@@ -426,6 +450,7 @@ export const mockEmails: EmailData[] = [
     read: true,
     replied: true,
     responseReceived: false,
+    private: false,
     category: "paying-for-care"
   }
 ];
