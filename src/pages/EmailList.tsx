@@ -46,7 +46,7 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Reduced buffer space from pl-4 to pl-2 for better spacing */}
+        {/* Main Content - Updated padding from pl-3 to pl-2 */}
         <div className="flex-1 pl-2 pr-20">
           <div className="container mx-auto px-4 py-8">
             <EmailHeader 
