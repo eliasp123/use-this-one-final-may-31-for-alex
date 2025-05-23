@@ -1,18 +1,33 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
-import { Info } from 'lucide-react';
+import NewEmailForm from '../components/NewEmailForm';
+import { Info, Pencil } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import { Button } from '../components/ui/button';
 import AutocompleteSearch from '../components/AutocompleteSearch';
 import { useUserRole } from '../hooks/useUserRole';
-import { Button } from '../components/ui/button';
+import { useToast } from '../hooks/use-toast';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const { userRole, setUserRole } = useUserRole();
+  const { toast } = useToast();
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  const handleNewEmail = (emailData: any) => {
+    // This is where you'll integrate with actual email sending
+    console.log('New email to be sent:', emailData);
+    
+    toast({
+      title: "Email Sent",
+      description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
+    });
   };
 
   // Keep the toggle function available for programmer use
@@ -25,7 +40,17 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
         <div className="text-center mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Communication Hub</h1>
+          <div className="flex items-center justify-center gap-4 mb-2 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl font-light text-gray-800">Communication Hub</h1>
+            <Button
+              onClick={() => setShowNewEmailForm(true)}
+              className="bg-green-500 hover:bg-green-600 text-white"
+              size="sm"
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Compose
+            </Button>
+          </div>
           <div className="flex items-center justify-center gap-2">
             <p className="text-sm sm:text-base text-gray-600 font-light">Stay on top of your important conversations</p>
             <Popover>
@@ -83,6 +108,13 @@ const Index = () => {
         <div className="mt-10 sm:mt-16">
           <CalendarSection />
         </div>
+
+        {/* New Email Form */}
+        <NewEmailForm
+          isOpen={showNewEmailForm}
+          onClose={() => setShowNewEmailForm(false)}
+          onSend={handleNewEmail}
+        />
       </div>
     </div>
   );
