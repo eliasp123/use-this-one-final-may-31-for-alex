@@ -19,7 +19,10 @@ interface EmailTableProps {
 }
 
 const getFileIcon = (type: string) => {
-  if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
+  if (type.includes('wordprocessingml') || type.includes('docx')) {
+    return <FileText className="w-4 h-4 text-purple-500" />;
+  }
+  if (type.includes('pdf')) {
     return <FileText className="w-4 h-4 text-red-500" />;
   }
   if (type.startsWith('image/')) {
@@ -28,8 +31,8 @@ const getFileIcon = (type: string) => {
   if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
     return <FileSpreadsheet className="w-4 h-4 text-blue-500" />;
   }
-  if (type.includes('wordprocessingml') || type.includes('docx')) {
-    return <FileText className="w-4 h-4 text-purple-500" />;
+  if (type.includes('document') || type.includes('text')) {
+    return <FileText className="w-4 h-4 text-red-500" />;
   }
   return <File className="w-4 h-4 text-gray-500" />;
 };
