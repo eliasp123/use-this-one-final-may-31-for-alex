@@ -31,10 +31,10 @@ function Calendar({
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-2",
-        head_row: "flex w-full mt-6 justify-between",
+        head_row: "flex w-full mt-6 justify-between border-b border-gray-200 pb-2",
         head_cell:
           "text-gray-400 rounded-md font-light text-[0.9rem] h-10 flex items-center justify-center uppercase flex-1",
-        row: "flex w-full mt-4 justify-between",
+        row: "flex w-full mt-4 justify-between border-t border-gray-100 pt-2",
         cell: "h-14 text-center text-sm p-0 relative flex items-center justify-center flex-1",
         day: cn(
           buttonVariants({ variant: "ghost" }),
