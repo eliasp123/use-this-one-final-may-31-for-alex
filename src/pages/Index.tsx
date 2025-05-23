@@ -11,18 +11,18 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-light text-gray-800 mb-4">Communication Hub</h1>
+      <div className="container mx-auto px-4 py-4 sm:py-8">
+        <div className="text-center mb-8 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Communication Hub</h1>
           <div className="flex items-center justify-center gap-2">
-            <p className="text-gray-600 font-light">Stay on top of your important conversations</p>
+            <p className="text-sm sm:text-base text-gray-600 font-light">Stay on top of your important conversations</p>
             <Popover>
               <PopoverTrigger asChild>
                 <button className="inline-flex items-center justify-center rounded-full w-5 h-5 bg-gradient-to-br from-green-400 to-green-500 text-white hover:from-green-500 hover:to-green-600 transition-colors">
                   <Info className="h-3 w-3" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-80 p-4">
+              <PopoverContent className="w-72 sm:w-80 p-4">
                 <div className="space-y-4">
                   <h4 className="text-lg font-medium text-gray-800">What are Conversations?</h4>
                   <p className="text-gray-600 text-sm">
@@ -47,13 +47,13 @@ const Index = () => {
         </div>
         
         {/* Search Bar */}
-        <div className="max-w-md mx-auto mb-8">
+        <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 sm:h-5 w-4 sm:w-5" />
             <Input
               type="text"
               placeholder="Search conversations..."
-              className="pl-10 bg-white border-gray-200 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+              className="pl-10 text-sm sm:text-base bg-white border-gray-200 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -63,7 +63,7 @@ const Index = () => {
         <EmailDashboard searchQuery={searchQuery} />
 
         {/* Calendar Section with margin top for separation */}
-        <div className="mt-16">
+        <div className="mt-10 sm:mt-16">
           <CalendarSection />
         </div>
       </div>

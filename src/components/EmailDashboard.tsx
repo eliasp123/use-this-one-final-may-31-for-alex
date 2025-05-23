@@ -92,16 +92,16 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
   return (
     <div className="max-w-7xl mx-auto">
       {/* Three Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
         {/* Unread Messages Card */}
         <Card className="border border-gray-100 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
+              <p className="text-gray-500 text-xs sm:text-sm font-medium">Unread Messages</p>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <p className="text-3xl font-medium text-gray-800">{totalUnread}</p>
-              <div className="w-9 h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+              <p className="text-2xl sm:text-3xl font-medium text-gray-800">{totalUnread}</p>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
             </div>
@@ -110,13 +110,13 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         
         {/* Pending Replies Card */}
         <Card className="border border-gray-100 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm font-medium">Pending Replies</p>
+              <p className="text-gray-500 text-xs sm:text-sm font-medium">Pending Replies</p>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <p className="text-3xl font-medium text-gray-800">{totalPending}</p>
-              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+              <p className="text-2xl sm:text-3xl font-medium text-gray-800">{totalPending}</p>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
             </div>
@@ -125,13 +125,13 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         
         {/* Has Not Responded Yet Card (renamed from Active Categories) */}
         <Card className="border border-gray-100 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
+              <p className="text-gray-500 text-xs sm:text-sm font-medium">Has Not Responded Yet</p>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <p className="text-3xl font-medium text-gray-800">{totalAwaitingResponse}</p>
-              <div className="w-9 h-9 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center">
+              <p className="text-2xl sm:text-3xl font-medium text-gray-800">{totalAwaitingResponse}</p>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full mr-1"></div>
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
@@ -141,7 +141,7 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
       </div>
 
       {/* Email Category Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {filteredCategories.map((category) => (
           <EmailCategoryCard
             key={category.id}
