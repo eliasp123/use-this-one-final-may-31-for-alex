@@ -39,13 +39,13 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
       )
     };
 
-    // Filter out empty groups
+    // Filter out empty groups and return as array of [groupKey, attachments] tuples
     return Object.entries(groups).filter(([_, items]) => items.length > 0);
   };
 
   const groupedAttachments = selectedFilter === 'all' 
     ? groupAttachmentsByType(filteredAttachments)
-    : [['filtered', filteredAttachments]];
+    : [['filtered', filteredAttachments] as [string, AttachmentWithContext[]]];
 
   const getGroupTitle = (groupKey: string) => {
     const titles = {
