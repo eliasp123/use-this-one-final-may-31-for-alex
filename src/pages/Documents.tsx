@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -16,7 +15,8 @@ import {
   User,
   Building,
   ArrowLeft,
-  Filter
+  Filter,
+  Mail
 } from 'lucide-react';
 import { getAllEmails } from '../data/emailData';
 import { EmailAttachment, EmailData } from '../types/email';
@@ -50,7 +50,7 @@ const Documents = () => {
             senderName: email.sender.name,
             senderOrganization: email.sender.organization,
             emailDate: email.date,
-            direction: 'received' // In a real app, this would track sent vs received
+            direction: 'received'
           });
         });
       }
@@ -149,55 +149,65 @@ const Documents = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pt-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button
               onClick={() => navigate('/')}
-              variant="outline"
+              className="bg-green-500 hover:bg-green-600 text-white"
               size="sm"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Dashboard
             </Button>
-            <div>
-              <h1 className="text-3xl font-light text-gray-800">Documents Dashboard</h1>
-              <p className="text-gray-600">Manage all your email attachments in one place</p>
-            </div>
+            <Button
+              onClick={() => navigate('/emails/all/all')}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+              size="sm"
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Back to Conversations
+            </Button>
           </div>
+        </div>
+
+        {/* Centered Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-light text-gray-700 mb-2">Documents Dashboard</h1>
+          <p className="text-gray-500">Manage all your email attachments in one place</p>
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <Card className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-semibold text-gray-800">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total Files</div>
+              <div className="text-2xl font-semibold text-gray-700">{stats.total}</div>
+              <div className="text-sm text-gray-500">Total Files</div>
             </div>
           </Card>
           <Card className="p-4">
             <div className="text-center">
               <div className="text-2xl font-semibold text-blue-600">{stats.documents}</div>
-              <div className="text-sm text-gray-600">Documents</div>
+              <div className="text-sm text-gray-500">Documents</div>
             </div>
           </Card>
           <Card className="p-4">
             <div className="text-center">
               <div className="text-2xl font-semibold text-purple-600">{stats.images}</div>
-              <div className="text-sm text-gray-600">Images</div>
+              <div className="text-sm text-gray-500">Images</div>
             </div>
           </Card>
           <Card className="p-4">
             <div className="text-center">
               <div className="text-2xl font-semibold text-green-600">{stats.spreadsheets}</div>
-              <div className="text-sm text-gray-600">Spreadsheets</div>
+              <div className="text-sm text-gray-500">Spreadsheets</div>
             </div>
           </Card>
           <Card className="p-4">
             <div className="text-center">
               <div className="text-2xl font-semibold text-orange-600">{stats.other}</div>
-              <div className="text-sm text-gray-600">Other Files</div>
+              <div className="text-sm text-gray-500">Other Files</div>
             </div>
           </Card>
         </div>
@@ -226,6 +236,7 @@ const Documents = () => {
                 variant={selectedFilter === filter.key ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedFilter(filter.key as any)}
+                className={selectedFilter === filter.key ? 'bg-purple-500 hover:bg-purple-600 text-white' : ''}
               >
                 {filter.label}
               </Button>
@@ -250,7 +261,7 @@ const Documents = () => {
                         </div>
                         
                         <div className="flex-1">
-                          <h3 className="font-medium text-gray-900 mb-1">{attachment.name}</h3>
+                          <h3 className="font-medium text-gray-700 mb-1">{attachment.name}</h3>
                           <div className="flex items-center gap-4 text-sm text-gray-500">
                             <div className="flex items-center gap-1">
                               <User className="h-3 w-3" />
@@ -270,7 +281,7 @@ const Documents = () => {
 
                       <div className="flex items-center gap-4">
                         <div className="text-right">
-                          <div className="text-sm font-medium text-gray-700">{formatFileSize(attachment.size)}</div>
+                          <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
                           <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
                             {attachment.direction === 'received' ? 'Received' : 'Sent'}
                           </Badge>
@@ -301,7 +312,7 @@ const Documents = () => {
           ) : (
             <Card className="p-12 text-center">
               <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No attachments found</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">No attachments found</h3>
               <p className="text-gray-500">
                 {searchQuery ? 'Try adjusting your search terms' : 'No email attachments are available'}
               </p>
