@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -47,8 +46,8 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Reduced buffer space from pl-16 to pl-6 for better spacing */}
-        <div className="flex-1 pl-6 pr-16">
+        {/* Main Content - Reduced buffer space from pl-6 to pl-4 for better spacing */}
+        <div className="flex-1 pl-4 pr-16">
           <div className="container mx-auto px-4 py-8">
             <EmailHeader 
               currentCategory={currentCategory}
