@@ -59,6 +59,14 @@ const EmailDetail = () => {
     }
   };
 
+  const handleMarkAsPrivate = () => {
+    if (email) {
+      email.private = !email.private;
+      // Force a re-render
+      setEmail({...email});
+    }
+  };
+
   const handleReplyClick = () => {
     setShowReplyForm(true);
   };
@@ -92,6 +100,7 @@ const EmailDetail = () => {
           onReplyClick={handleReplyClick}
           onMarkAsReplied={handleMarkAsReplied}
           onMarkAsResponseReceived={handleMarkAsResponseReceived}
+          onMarkAsPrivate={handleMarkAsPrivate}
           showReplyForm={showReplyForm}
         />
         

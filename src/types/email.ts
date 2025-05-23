@@ -13,5 +13,6 @@ export interface EmailData {
   read: boolean;
   replied: boolean;
   responseReceived: boolean;
+  private: boolean;
   category: 'senior-living' | 'home-care' | 'federal-benefits' | 'local-government' | 'attorneys' | 'other-professionals' | 'va' | 'physical-therapy' | 'paying-for-care';
 }

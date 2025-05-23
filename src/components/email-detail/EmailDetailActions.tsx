@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Reply, CheckCircle, Clock } from 'lucide-react';
+import { Reply, CheckCircle, Clock, Lock, Unlock } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 
@@ -11,6 +11,7 @@ interface EmailDetailActionsProps {
   onReplyClick: () => void;
   onMarkAsReplied: () => void;
   onMarkAsResponseReceived: () => void;
+  onMarkAsPrivate: () => void;
   showReplyForm: boolean;
 }
 
@@ -19,6 +20,7 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   onReplyClick,
   onMarkAsReplied,
   onMarkAsResponseReceived,
+  onMarkAsPrivate,
   showReplyForm
 }) => {
   const navigate = useNavigate();
@@ -45,6 +47,21 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
           <Clock className="mr-1 h-4 w-4" /> Mark Response Received
         </Button>
       )}
+      
+      <Button 
+        className="bg-orange-500 hover:bg-orange-600 text-white"
+        onClick={onMarkAsPrivate}
+      >
+        {email.private ? (
+          <>
+            <Unlock className="mr-1 h-4 w-4" /> Remove Private
+          </>
+        ) : (
+          <>
+            <Lock className="mr-1 h-4 w-4" /> Mark Private
+          </>
+        )}
+      </Button>
       
       <Button variant="outline" onClick={() => navigate(`/emails/${email.category}/all`)}>
         View All {currentCategory.title} Emails
