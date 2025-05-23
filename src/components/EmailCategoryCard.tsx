@@ -20,6 +20,9 @@ interface EmailCategoryCardProps {
 
 const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const { title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
+  
+  // Determine if this category has not responded yet (unread > 0 but pending = 0)
+  const hasNotResponded = unread > 0 && pending === 0;
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
@@ -48,7 +51,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       <h3 className="text-lg font-medium text-gray-800 mb-3">{title}</h3>
 
       {/* Stats */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         {unread > 0 && (
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Unread messages</span>
@@ -60,6 +63,13 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Pending replies</span>
             <span className="font-medium text-amber-600">{pending}</span>
+          </div>
+        )}
+        
+        {hasNotResponded && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">Has not responded yet</span>
+            <span className="font-medium text-red-600">Yes</span>
           </div>
         )}
         

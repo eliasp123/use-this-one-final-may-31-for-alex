@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
@@ -131,7 +132,7 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
             </div>
             <div className="flex justify-between items-center mt-2">
               <p className="text-3xl font-medium text-gray-800">{totalAwaitingResponse}</p>
-              <div className="w-9 h-9 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
+              <div className="w-9 h-9 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full mr-1"></div>
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
