@@ -121,23 +121,23 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
               )}
             />
 
-            {/* CC/BCC Toggle */}
+            {/* CC/BCC Toggle - Made more prominent with purple styling */}
             <div className="flex justify-start">
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setShowCcBcc(!showCcBcc)}
-                className="text-sm text-gray-600 hover:text-gray-800"
+                className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 hover:text-purple-800 font-medium"
               >
                 {showCcBcc ? (
                   <>
-                    <ChevronUp className="mr-1 h-3 w-3" />
+                    <ChevronUp className="mr-1 h-4 w-4" />
                     Hide CC/BCC
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="mr-1 h-3 w-3" />
+                    <ChevronDown className="mr-1 h-4 w-4" />
                     Add CC/BCC
                   </>
                 )}

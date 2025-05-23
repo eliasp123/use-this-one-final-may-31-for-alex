@@ -2,7 +2,7 @@
 import { EmailAttachment } from '../types/email';
 
 export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
-  "1a2b3c4d": [
+  "ryoncku57t": [
     {
       id: "att_001",
       name: "Medicare_Benefits_Summary_2024.pdf",
@@ -25,7 +25,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/medical-history-archive.zip"
     }
   ],
-  "5e6f7g8h": [
+  "0hz8p5u8ie": [
     {
       id: "att_003",
       name: "Facility_Tour_Photos.jpg",
@@ -41,7 +41,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/healthcare-expenses-2024.xlsx"
     }
   ],
-  "9i0j1k2l": [
+  "zez5gyxa55": [
     {
       id: "att_004",
       name: "Insurance_Coverage_Spreadsheet.xlsx",
@@ -64,7 +64,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/ct-scan-results.dcm"
     }
   ],
-  "3m4n5o6p": [
+  "2klhak25kz": [
     {
       id: "att_006",
       name: "VA_Benefits_Application.pdf",
@@ -80,7 +80,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/service-records.pdf"
     }
   ],
-  "7q8r9s0t": [
+  "2us8bbbm5x": [
     {
       id: "att_007",
       name: "Physical_Therapy_Schedule.docx",
@@ -103,7 +103,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/recovery-timeline.svg"
     }
   ],
-  "1u2v3w4x": [
+  "byff0azjme": [
     {
       id: "att_009",
       name: "Home_Care_Contract.pdf",
@@ -119,7 +119,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/family-budget-summary.xlsx"
     }
   ],
-  "5y6z7a8b": [
+  "l8ob8e8p1k": [
     {
       id: "att_010",
       name: "Attorney_Consultation_Notes.txt",
@@ -142,7 +142,7 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       url: "/documents/power-of-attorney.pdf"
     }
   ],
-  "kadiyi0yqc": [
+  "av13yvz2vf": [
     {
       id: "att_012",
       name: "Senior_Living_Brochure.pdf",
