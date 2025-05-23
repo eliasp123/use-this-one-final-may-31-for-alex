@@ -132,7 +132,7 @@ const CalendarSection = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       <h2 className="text-2xl font-light text-gray-800 text-center mb-8">Upcoming Appointments</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
