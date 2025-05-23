@@ -47,7 +47,7 @@ const EmailList = () => {
         />
         
         {/* Main Content - Updated padding to pl-20 */}
-        <div className="flex-1 pl-20 pr-20">
+        <div className="flex-1 pl-22 pr-20">
           <div className="py-8">
             <EmailHeader 
               currentCategory={currentCategory}
