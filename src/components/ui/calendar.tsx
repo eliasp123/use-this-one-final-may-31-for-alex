@@ -38,12 +38,12 @@ function Calendar({
         cell: "h-14 w-14 text-center text-sm p-0 relative flex items-center justify-center",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-purple-100 text-gray-600"
+          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-teal-100 text-gray-600"
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:bg-purple-500 hover:text-white focus:bg-purple-600 focus:text-white rounded-full",
-        day_today: "border border-purple-300 text-purple-600 bg-purple-50 rounded-full",
+          "bg-gradient-to-br from-teal-400 to-teal-600 text-white hover:bg-teal-500 hover:text-white focus:bg-teal-600 focus:text-white rounded-full",
+        day_today: "border border-teal-300 text-teal-600 bg-teal-50 rounded-full",
         day_outside:
           "day-outside text-gray-300 opacity-50",
         day_disabled: "text-gray-300 opacity-50",
