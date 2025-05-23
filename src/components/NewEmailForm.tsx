@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
-import { Send, Plus, X } from 'lucide-react';
+import { Send, Plus, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { EmailData } from '@/types/email';
 
@@ -23,6 +23,8 @@ interface NewEmailData {
   to: string;
   toName: string;
   toOrganization: string;
+  cc: string;
+  bcc: string;
   subject: string;
   content: string;
   category: string;
@@ -56,12 +58,15 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
   const [customCategories, setCustomCategories] = useState<CustomCategoryData[]>([]);
   const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [showCcBcc, setShowCcBcc] = useState(false);
   
   const form = useForm<NewEmailData>({
     defaultValues: {
       to: '',
       toName: '',
       toOrganization: '',
+      cc: '',
+      bcc: '',
       subject: '',
       content: '',
       category: '',
@@ -95,7 +100,11 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
     
     try {
       // This is where you'll integrate with Nylas later
-      console.log('New email data to be sent via Nylas:', data);
+      console.log('New email data to be sent via Nylas:', {
+        ...data,
+        ccEmails: data.cc ? data.cc.split(',').map(email => email.trim()).filter(email => email) : [],
+        bccEmails: data.bcc ? data.bcc.split(',').map(email => email.trim()).filter(email => email) : []
+      });
       
       // Simulate sending (replace with actual Nylas integration)
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -196,6 +205,70 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                   </FormItem>
                 )}
               />
+
+              {/* CC/BCC Toggle */}
+              <div className="flex justify-start">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCcBcc(!showCcBcc)}
+                  className="text-sm text-gray-600 hover:text-gray-800"
+                >
+                  {showCcBcc ? (
+                    <>
+                      <ChevronUp className="mr-1 h-3 w-3" />
+                      Hide CC/BCC
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="mr-1 h-3 w-3" />
+                      Add CC/BCC
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* CC/BCC Fields */}
+              {showCcBcc && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="cc"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>CC</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="email"
+                            placeholder="email1@example.com, email2@example.com"
+                          />
+                        </FormControl>
+                        <p className="text-xs text-gray-500">Separate multiple emails with commas</p>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="bcc"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>BCC</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="email"
+                            placeholder="email1@example.com, email2@example.com"
+                          />
+                        </FormControl>
+                        <p className="text-xs text-gray-500">Separate multiple emails with commas</p>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
               
               <FormField
                 control={form.control}
