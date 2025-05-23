@@ -13,11 +13,15 @@ export interface AttachmentWithContext extends EmailAttachment {
 
 export const getAllAttachments = (): AttachmentWithContext[] => {
   const emails = getAllEmailsWithAttachments();
+  console.log('Total emails with potential attachments:', emails.length);
+  
   const attachments: AttachmentWithContext[] = [];
 
   emails.forEach(email => {
+    console.log(`Email ${email.id}: ${email.attachments ? email.attachments.length : 0} attachments`);
     if (email.attachments && email.attachments.length > 0) {
       email.attachments.forEach(attachment => {
+        console.log(`Adding attachment: ${attachment.name} from email ${email.id}`);
         attachments.push({
           ...attachment,
           emailId: email.id,
@@ -31,6 +35,9 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
     }
   });
 
+  console.log('Total attachments found:', attachments.length);
+  console.log('Attachments:', attachments.map(a => a.name));
+  
   return attachments.sort((a, b) => new Date(b.emailDate).getTime() - new Date(a.emailDate).getTime());
 };
 
