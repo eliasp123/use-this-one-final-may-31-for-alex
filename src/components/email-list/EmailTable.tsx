@@ -44,8 +44,8 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[280px]">Sender</TableHead>
-            <TableHead className="w-[300px]">Subject</TableHead>
-            <TableHead className="w-[200px]">Attachments</TableHead>
+            <TableHead className="w-[400px]">Subject</TableHead>
+            <TableHead className="w-[300px]">Attachments</TableHead>
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
           </TableRow>
@@ -68,27 +68,27 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
-                    <span className="text-sm text-gray-500 truncate max-w-xs">
-                      {email.content.substring(0, 60)}...
+                    <span className={`${!email.read ? 'font-medium' : ''} break-words`}>{email.subject}</span>
+                    <span className="text-sm text-gray-500 break-words">
+                      {email.content.substring(0, 120)}...
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   {email.attachments && email.attachments.length > 0 ? (
                     <div className="flex flex-col gap-1">
-                      {email.attachments.slice(0, 2).map((attachment, index) => (
+                      {email.attachments.slice(0, 3).map((attachment, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
                           {getFileIcon(attachment.type)}
-                          <span className="truncate max-w-[140px]" title={attachment.name}>
+                          <span className="break-words" title={attachment.name}>
                             {attachment.name}
                           </span>
                         </div>
                       ))}
-                      {email.attachments.length > 2 && (
+                      {email.attachments.length > 3 && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <Paperclip className="w-3 h-3" />
-                          <span>+{email.attachments.length - 2} more</span>
+                          <span>+{email.attachments.length - 3} more</span>
                         </div>
                       )}
                     </div>
