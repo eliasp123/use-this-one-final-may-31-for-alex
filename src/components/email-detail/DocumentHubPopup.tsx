@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -106,7 +105,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-400">
+          <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
             <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
               {/* Search Bar - Left Side (Wider) */}
               <div className="relative w-full lg:min-w-[600px] lg:max-w-[600px] lg:flex-shrink-0">
@@ -116,7 +115,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   placeholder="Search documents, senders, or organizations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-300/60 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200"
+                  className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200 lg:min-w-[600px] lg:max-w-[600px]"
                   style={{ minWidth: '600px' }}
                 />
               </div>
