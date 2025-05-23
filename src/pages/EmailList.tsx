@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -29,7 +30,8 @@ import {
   SidebarMenuItem, 
   SidebarMenuButton, 
   SidebarGroup, 
-  SidebarGroupLabel 
+  SidebarGroupLabel,
+  SidebarMenuBadge
 } from '../components/ui/sidebar';
 import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
 
@@ -190,7 +192,7 @@ const EmailList = () => {
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
         {/* Sidebar */}
-        <Sidebar variant="sidebar" className="min-w-[200px] max-w-[240px]" collapsible="icon">
+        <Sidebar variant="sidebar" className="min-w-[220px] max-w-[260px]" collapsible="icon">
           <SidebarContent className="pt-6">  
             <SidebarGroup>
               <SidebarGroupLabel className="px-6 mb-2">Categories</SidebarGroupLabel>
@@ -201,11 +203,28 @@ const EmailList = () => {
                       isActive={cat.id === category}
                       tooltip={cat.title}
                       onClick={() => navigate(`/emails/${cat.id}/${activeTab}`)}
+                      className="pr-10 relative"
                     >
                       <div className={`w-6 h-6 rounded-md ${cat.bgColor} flex items-center justify-center mr-2`}>
                         <cat.icon className={`w-4 h-4 ${cat.textColor}`} />
                       </div>
                       <span>{cat.title}</span>
+                      {cat.unread > 0 && (
+                        <Badge 
+                          variant="circle" 
+                          className="absolute right-2 bg-purple-500"
+                        >
+                          {cat.unread}
+                        </Badge>
+                      )}
+                      {cat.pending > 0 && cat.unread === 0 && (
+                        <Badge 
+                          variant="circle" 
+                          className="absolute right-2 bg-amber-500"
+                        >
+                          {cat.pending}
+                        </Badge>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -215,7 +234,7 @@ const EmailList = () => {
         </Sidebar>
         
         {/* Main Content */}
-        <div className="flex-1">
+        <div className="flex-1 pl-6">
           <div className="container mx-auto px-6 py-8">
             {/* Header with back button */}
             <div className="mb-8">
