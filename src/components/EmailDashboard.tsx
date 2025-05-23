@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
@@ -58,9 +57,9 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
       id: 'attorneys',
       title: 'Attorneys',
       icon: Scale,
-      unread: 4,
-      pending: 3,
-      total: 18,
+      unread: 1,
+      pending: 2,
+      total: 9,
       color: 'from-amber-400 to-orange-500',
       bgColor: 'bg-amber-50',
       textColor: 'text-amber-700'

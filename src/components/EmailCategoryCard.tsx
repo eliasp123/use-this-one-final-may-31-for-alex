@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { Separator } from './ui/separator';
 
 interface EmailCategory {
   id: string;
@@ -23,6 +24,8 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   
   // Determine if this category has not responded yet (unread > 0 but pending = 0)
   const hasNotResponded = unread > 0 && pending === 0;
+  // Number of messages without response
+  const notRespondedCount = hasNotResponded ? unread : 0;
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
@@ -53,27 +56,36 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       {/* Stats */}
       <div className="space-y-4">
         {unread > 0 && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Unread messages</span>
-            <span className="font-medium text-purple-600">{unread}</span>
-          </div>
+          <>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Unread messages</span>
+              <span className="font-medium text-purple-600">{unread}</span>
+            </div>
+            <Separator className="my-1" />
+          </>
         )}
         
         {pending > 0 && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Pending replies</span>
-            <span className="font-medium text-amber-600">{pending}</span>
-          </div>
+          <>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Pending replies</span>
+              <span className="font-medium text-amber-600">{pending}</span>
+            </div>
+            <Separator className="my-1" />
+          </>
         )}
         
         {hasNotResponded && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Has not responded yet</span>
-            <span className="font-medium text-red-600">Yes</span>
-          </div>
+          <>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Has not responded yet</span>
+              <span className="font-medium text-red-600">{notRespondedCount}</span>
+            </div>
+            <Separator className="my-1" />
+          </>
         )}
         
-        <div className="flex items-center justify-between text-sm pt-2 border-t border-gray-300">
+        <div className="flex items-center justify-between text-sm pt-2 border-t-2 border-gray-300">
           <span className="text-gray-600">Total conversations</span>
           <span className="font-medium text-gray-800">{total}</span>
         </div>
