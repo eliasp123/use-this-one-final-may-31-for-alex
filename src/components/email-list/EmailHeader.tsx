@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Pencil, FileText } from 'lucide-react';
+import DocumentHubPopup from '../email-detail/DocumentHubPopup';
 
 interface EmailHeaderProps {
   currentCategory: { 
@@ -22,6 +23,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
   onComposeClick 
 }) => {
   const navigate = useNavigate();
+  const [showDocumentHub, setShowDocumentHub] = useState(false);
   
   return (
     <div className="mb-8">
@@ -39,7 +41,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
           variant="default" 
           size="sm" 
           className="bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition-all duration-300"
-          onClick={() => navigate('/documents')}
+          onClick={() => setShowDocumentHub(true)}
         >
           <FileText className="mr-1 h-4 w-4" /> Document Hub
         </Button>
@@ -77,6 +79,12 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
           )}
         </div>
       </div>
+
+      {/* Document Hub Popup */}
+      <DocumentHubPopup 
+        isOpen={showDocumentHub}
+        onClose={() => setShowDocumentHub(false)}
+      />
     </div>
   );
 };

@@ -35,7 +35,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           {/* Stats Section */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             <Card className="p-3 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalAttachments}</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
               <div className="text-sm text-gray-600">Total Documents</div>
             </Card>
             <Card className="p-3 text-center">
@@ -71,7 +71,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   variant={selectedFilter === filter ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedFilter(filter)}
-                  className="capitalize"
+                  className={selectedFilter === filter ? "bg-purple-500 hover:bg-purple-600 text-white capitalize" : "capitalize"}
                 >
                   {filter}
                 </Button>
