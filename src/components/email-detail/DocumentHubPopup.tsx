@@ -109,7 +109,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
             <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
               {/* Search Bar - Left Side (Wider) */}
-              <div className="relative w-full lg:w-[500px]">
+              <div className="relative w-full lg:w-[512px]">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search documents, senders, or organizations..."
