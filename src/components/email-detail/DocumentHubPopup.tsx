@@ -107,7 +107,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
           {/* Search and Filters */}
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
-            <div className="flex flex-col lg:flex-row gap-8 items-start">
+            <div className="flex flex-col lg:flex-row gap-12 items-start">
               {/* Search Bar - Left Side (Narrower) */}
               <div className="relative w-full lg:w-96">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -120,7 +120,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
               </div>
               
               {/* Filter Grid - Right Side (3x2) */}
-              <div className="grid grid-cols-3 gap-2 flex-1">
+              <div className="grid grid-cols-3 gap-2">
                 {filterOptions.map((filter) => {
                   const IconComponent = filter.icon;
                   return (
