@@ -4,7 +4,6 @@ import {
   Sidebar, 
   SidebarContent, 
   SidebarGroup, 
-  SidebarGroupLabel, 
   SidebarMenu 
 } from '@/components/ui/sidebar';
 import { EmailCategory } from '@/hooks/useEmailCategoryData';
@@ -25,7 +24,6 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16">  
         <SidebarGroup>
-          <SidebarGroupLabel className="px-6 mb-5">Categories</SidebarGroupLabel>
           <SidebarMenu className="space-y-3">
             {emailCategories.map((cat) => (
               <EmailCategoryItem 
