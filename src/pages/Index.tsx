@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -16,6 +15,7 @@ const Index = () => {
     setSearchQuery(query);
   };
 
+  // Keep the toggle function available for programmer use
   const toggleUserRole = () => {
     const newRole = userRole === 'primary-caregiver' ? 'family-member' : 'primary-caregiver';
     setUserRole(newRole);
@@ -58,7 +58,8 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Role toggle button */}
+        {/* Role toggle button - Hidden from UI but available for programmer use */}
+        {/* Uncomment the block below for programmer testing:
         <div className="flex justify-center mb-4">
           <Button 
             onClick={toggleUserRole}
@@ -69,6 +70,7 @@ const Index = () => {
             Switch to {userRole === 'primary-caregiver' ? 'Family Member' : 'Primary Caregiver'} View
           </Button>
         </div>
+        */}
         
         {/* Search Bar with Autocomplete */}
         <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
