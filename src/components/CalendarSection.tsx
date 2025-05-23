@@ -82,7 +82,7 @@ const APPOINTMENTS = [
 // Array of encouraging messages to display on days with no appointments
 const ENCOURAGING_MESSAGES = [
   "You can breathe a little.",
-  "Remember to give yourself credit.",
+  "Remember you too deserve a little rest.",
   "Every day you care is appreciated."
 ];
 
