@@ -106,7 +106,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
+          <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-400">
             <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
               {/* Search Bar - Left Side (Wider) */}
               <div className="relative w-full lg:min-w-[600px] lg:max-w-[600px] lg:flex-shrink-0">
