@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
-import { Separator } from './ui/separator';
 
 interface EmailCategory {
   id: string;
@@ -51,19 +50,17 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       {/* Title */}
       <h3 className="text-lg font-medium text-gray-800 mb-6">{title}</h3>
 
-      {/* Stats - Always show all three lines */}
-      <div className="space-y-4">
+      {/* Stats - Always show all three lines with increased spacing and no separators */}
+      <div className="space-y-6">
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Unread messages</span>
           <span className="font-medium text-purple-600">{unread > 0 ? unread : "-"}</span>
         </div>
-        <Separator className="my-1" />
         
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Pending replies</span>
           <span className="font-medium text-amber-600">{pending > 0 ? pending : "-"}</span>
         </div>
-        <Separator className="my-1" />
         
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Has not responded yet</span>
@@ -72,7 +69,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       </div>
 
       {/* Progress indicator */}
-      <div className="mt-4">
+      <div className="mt-6">
         <div className="w-full bg-gray-100 rounded-full h-1">
           <div 
             className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300`}
@@ -84,10 +81,10 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         </p>
       </div>
       
-      {/* Total conversations - moved to bottom */}
-      <div className="flex items-center justify-between text-sm mt-4 pt-2 border-t-2 border-gray-300">
-        <span className="text-gray-600">Total conversations</span>
-        <span className="font-medium text-gray-800">{total}</span>
+      {/* Total conversations - styled with category color and white text */}
+      <div className={`flex items-center justify-between text-sm mt-10 p-2 rounded-lg bg-gradient-to-r ${color}`}>
+        <span className="text-white font-medium">Total conversations</span>
+        <span className="text-white font-bold">{total}</span>
       </div>
     </div>
   );
