@@ -41,26 +41,26 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
             emails.map((email) => (
               <TableRow 
                 key={email.id} 
-                className={`cursor-pointer ${!email.read ? 'font-medium' : ''}`}
+                className={`cursor-pointer hover:bg-gray-50 ${!email.read ? 'font-medium bg-blue-50/30' : ''}`}
                 onClick={() => handleRowClick(email.id)}
               >
                 <TableCell className="py-4">
-                  <div className="flex flex-col">
-                    <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
-                    <span className="text-sm text-gray-500">{email.sender.organization}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex flex-col">
+                      <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
+                      <span className="text-sm text-gray-500">{email.sender.organization}</span>
+                    </div>
+                    {email.attachments && email.attachments.length > 0 && (
+                      <div className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+                        <Paperclip className="w-3 h-3" />
+                        <span>{email.attachments.length}</span>
+                      </div>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
-                      {email.attachments && email.attachments.length > 0 && (
-                        <div className="flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-1 rounded-full text-xs">
-                          <Paperclip className="w-3 h-3" />
-                          <span>{email.attachments.length}</span>
-                        </div>
-                      )}
-                    </div>
+                    <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
                     <span className="text-sm text-gray-500 truncate max-w-xs">
                       {email.content.substring(0, 60)}...
                     </span>
