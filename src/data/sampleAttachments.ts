@@ -108,5 +108,23 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       url: "/documents/activity-schedule.docx"
     }
+  ],
+  "excel_received_001": [
+    {
+      id: "att_014",
+      name: "Healthcare_Expense_Tracking_2024.xlsx",
+      size: 945000,
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      url: "/documents/healthcare-expenses-2024.xlsx"
+    }
+  ],
+  "excel_sent_001": [
+    {
+      id: "att_015",
+      name: "Family_Budget_Summary.xlsx",
+      size: 672000,
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      url: "/documents/family-budget-summary.xlsx"
+    }
   ]
 };
