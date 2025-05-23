@@ -17,11 +17,11 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 pointer-events-auto", className)}
+      className={cn("p-3 pointer-events-auto w-full", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-6",
-        caption: "flex justify-center pt-1 relative items-center mb-4",
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full justify-center",
+        month: "space-y-6 w-full",
+        caption: "flex justify-center pt-1 relative items-center mb-4 w-full",
         caption_label: "text-2xl font-light text-gray-500",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
@@ -31,14 +31,14 @@ function Calendar({
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-2",
-        head_row: "flex w-full mt-6",
+        head_row: "flex w-full mt-6 justify-between",
         head_cell:
-          "text-gray-400 rounded-md w-14 font-light text-[0.9rem] h-10 flex items-center justify-center uppercase",
-        row: "flex w-full mt-4",
-        cell: "h-14 w-14 text-center text-sm p-0 relative flex items-center justify-center",
+          "text-gray-400 rounded-md font-light text-[0.9rem] h-10 flex items-center justify-center uppercase flex-1",
+        row: "flex w-full mt-4 justify-between",
+        cell: "h-14 text-center text-sm p-0 relative flex items-center justify-center flex-1",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600"
+          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600 mx-auto"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -63,11 +63,20 @@ function Calendar({
         caption: {
           marginBottom: '24px',
         },
+        month: {
+          width: '100%',
+        },
+        months: {
+          width: '100%',
+        },
+        table: {
+          width: '100%',
+        },
         head_cell: {
-          width: '56px',
+          width: 'auto',
         },
         cell: {
-          width: '56px',
+          width: 'auto',
           height: '56px',
         }
       }}
