@@ -33,7 +33,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
         {category.unread > 0 && (
           <Badge 
             variant="circle" 
-            className={`absolute right-2 ${category.bgColor}`}
+            className={`absolute right-2 bg-gradient-to-r ${category.color}`}
           >
             {category.unread}
           </Badge>
@@ -41,7 +41,7 @@ const EmailCategoryItem: React.FC<EmailCategoryItemProps> = ({
         {category.pending > 0 && category.unread === 0 && (
           <Badge 
             variant="circle" 
-            className={`absolute right-2 ${category.bgColor} bg-opacity-80`}
+            className={`absolute right-2 bg-gradient-to-r ${category.color} opacity-80`}
           >
             {category.pending}
           </Badge>
