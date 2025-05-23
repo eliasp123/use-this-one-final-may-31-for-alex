@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil } from 'lucide-react';
+import { Info, Pencil, FileText } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import AutocompleteSearch from '../components/AutocompleteSearch';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const { userRole, setUserRole } = useUserRole();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -73,8 +75,8 @@ const Index = () => {
               </Popover>
             </p>
             
-            {/* Compose button centered under the subheader with spacing */}
-            <div className="mt-6 sm:mt-8">
+            {/* Action buttons centered under the subheader with spacing */}
+            <div className="mt-6 sm:mt-8 flex gap-3">
               <Button
                 onClick={() => setShowNewEmailForm(true)}
                 className="bg-green-500 hover:bg-green-600 text-white"
@@ -82,6 +84,15 @@ const Index = () => {
               >
                 <Pencil className="mr-2 h-4 w-4" />
                 Compose New Email
+              </Button>
+              
+              <Button
+                onClick={() => navigate('/documents')}
+                variant="outline"
+                size="sm"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                View Documents
               </Button>
             </div>
           </div>
