@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
-import { FileText, X, Search, Filter, Grid, Users, Calendar, FolderOpen } from 'lucide-react';
+import { FileText, X, Search, Grid, Users, Calendar, FolderOpen } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import DocumentCard from '../documents/DocumentCard';
@@ -73,10 +73,18 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   const groupedAttachments = groupAttachments(filteredAttachments, groupBy);
 
+  const filterOptions = [
+    { key: 'all', label: 'All Files', icon: FolderOpen },
+    { key: 'documents', label: 'Documents', icon: FileText },
+    { key: 'images', label: 'Images', icon: Grid },
+    { key: 'spreadsheets', label: 'Spreadsheets', icon: Grid },
+    { key: 'other', label: 'Other', icon: Grid }
+  ];
+
   const groupingOptions = [
-    { key: 'type', label: 'File Type', icon: Grid },
-    { key: 'sender', label: 'Organization', icon: Users },
-    { key: 'date', label: 'Date', icon: Calendar },
+    { key: 'type', label: 'Group by Type', icon: Grid },
+    { key: 'sender', label: 'Group by Organization', icon: Users },
+    { key: 'date', label: 'Group by Date', icon: Calendar },
     { key: 'none', label: 'No Grouping', icon: FolderOpen }
   ];
 
@@ -122,70 +130,70 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             </Card>
           </div>
 
-          {/* Search and Filters */}
+          {/* Search and Unified Filters */}
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col lg:flex-row gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <Input
-                    placeholder="Search documents, senders, or organizations..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
-                  />
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  {(['all', 'documents', 'images', 'spreadsheets', 'other'] as const).map((filter) => (
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Input
+                  placeholder="Search documents, senders, or organizations..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
+                />
+              </div>
+              
+              {/* Unified Filter and Grouping Bar */}
+              <div className="flex flex-wrap gap-2">
+                {/* File Type Filters */}
+                {filterOptions.map((filter) => {
+                  const IconComponent = filter.icon;
+                  return (
                     <Button
-                      key={filter}
-                      variant={selectedFilter === filter ? "default" : "outline"}
+                      key={filter.key}
+                      variant={selectedFilter === filter.key ? "default" : "outline"}
                       size="default"
-                      onClick={() => setSelectedFilter(filter)}
+                      onClick={() => setSelectedFilter(filter.key as any)}
                       className={`
-                        px-4 py-3 rounded-xl font-medium transition-all duration-200 capitalize
-                        ${selectedFilter === filter 
+                        px-4 py-3 rounded-xl font-medium transition-all duration-200
+                        ${selectedFilter === filter.key 
                           ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/25" 
                           : "bg-white/80 hover:bg-white text-gray-700 border-gray-300/60 hover:border-purple-300"
                         }
                       `}
                     >
-                      {filter}
+                      <IconComponent className="h-4 w-4 mr-2" />
+                      {filter.label}
                     </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Grouping Options */}
-              <div className="flex items-center gap-3 pt-2 border-t border-gray-200/60">
-                <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Group by:
-                </span>
-                <div className="flex gap-2">
-                  {groupingOptions.map((option) => {
-                    const IconComponent = option.icon;
-                    return (
-                      <Button
-                        key={option.key}
-                        variant={groupBy === option.key ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setGroupBy(option.key as any)}
-                        className={`
-                          px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200
-                          ${groupBy === option.key 
-                            ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md" 
-                            : "bg-white/60 hover:bg-white text-gray-600 border-gray-300/60"
-                          }
-                        `}
-                      >
-                        <IconComponent className="h-3 w-3 mr-1" />
-                        {option.label}
-                      </Button>
-                    );
-                  })}
-                </div>
+                  );
+                })}
+                
+                {/* Separator */}
+                <div className="w-px bg-gray-300/60 mx-2"></div>
+                
+                {/* Grouping Options */}
+                {groupingOptions.map((option) => {
+                  const IconComponent = option.icon;
+                  return (
+                    <Button
+                      key={option.key}
+                      variant={groupBy === option.key ? "default" : "outline"}
+                      size="default"
+                      onClick={() => setGroupBy(option.key as any)}
+                      className={`
+                        px-4 py-3 rounded-xl font-medium transition-all duration-200
+                        ${groupBy === option.key 
+                          ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/25" 
+                          : "bg-white/80 hover:bg-white text-gray-700 border-gray-300/60 hover:border-purple-300"
+                        }
+                      `}
+                    >
+                      <IconComponent className="h-4 w-4 mr-2" />
+                      {option.label}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           </div>
