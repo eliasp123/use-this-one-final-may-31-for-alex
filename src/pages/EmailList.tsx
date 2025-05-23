@@ -46,8 +46,8 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Reduced buffer space from pl-6 to pl-4 for better spacing */}
-        <div className="flex-1 pl-4 pr-16">
+        {/* Main Content - Reduced buffer space from pl-4 to pl-3 for better spacing */}
+        <div className="flex-1 pl-3 pr-16">
           <div className="container mx-auto px-4 py-8">
             <EmailHeader 
               currentCategory={currentCategory}
