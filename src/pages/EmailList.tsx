@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -191,9 +192,9 @@ const EmailList = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
         {/* Main Content */}
         <div className="flex-1">
-          <div className="container mx-auto px-4 py-8">
-            {/* Header with back button */}
-            <div className="mb-8 flex items-start justify-between">
+          <div className="container mx-auto px-4 py-8 pl-6">
+            {/* Header with back button - Fixed spacing issue by adding padding */}
+            <div className="mb-8 flex items-start justify-between ml-4">
               <div>
                 <Button 
                   variant="outline" 
@@ -251,7 +252,7 @@ const EmailList = () => {
                 </SidebarContent>
               </Sidebar>
               
-              <div className="flex-1">
+              <div className="flex-1 ml-2">
                 {/* Tabs for email status filtering */}
                 <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="mb-6">
                   <div className="flex justify-between items-center">
