@@ -107,7 +107,6 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   const emailCategories = Object.entries(filteredEmailsByCategory).map(([category, emails]) => {
     const unreadCount = emails.filter(email => !email.read).length;
     const pendingCount = emails.filter(email => !email.replied && email.read).length;
-    const unrespondedCount = emails.filter(email => email.replied && !email.responseReceived).length;
     
     return {
       id: category,
