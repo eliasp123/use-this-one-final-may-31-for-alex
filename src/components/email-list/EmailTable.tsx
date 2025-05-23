@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -45,7 +44,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
           <TableRow>
             <TableHead className="w-[280px]">Sender</TableHead>
             <TableHead className="w-[400px]">Subject</TableHead>
-            <TableHead className="w-[300px]">Attachments</TableHead>
+            <TableHead className="w-[400px]">Attachments</TableHead>
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
           </TableRow>
