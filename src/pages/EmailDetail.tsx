@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -10,6 +9,7 @@ import EmailDetailActions from '../components/email-detail/EmailDetailActions';
 import EmailReplyForm from '../components/EmailReplyForm';
 import NewEmailForm from '../components/NewEmailForm';
 import { useToast } from '../hooks/use-toast';
+import { Mail, ArrowLeft, Home } from 'lucide-react';
 
 const EmailDetail = () => {
   const { id } = useParams();
@@ -36,11 +36,48 @@ const EmailDetail = () => {
   
   if (!email) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-medium mb-2">Email not found</h2>
-          <p className="mb-4">The email you're looking for doesn't exist or has been deleted.</p>
-          <Button onClick={() => navigate('/')}>Return to Dashboard</Button>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
+              <Mail className="h-8 w-8 text-blue-400" />
+            </div>
+          </div>
+          
+          <h2 className="text-2xl font-medium text-gray-800 mb-3">
+            Oops! Email Not Found
+          </h2>
+          
+          <p className="text-gray-600 mb-2 leading-relaxed">
+            We couldn't locate the email you're looking for. It may have been moved, deleted, or the link might be outdated.
+          </p>
+          
+          <p className="text-sm text-gray-500 mb-8">
+            Don't worry - your other emails are safe and waiting for you!
+          </p>
+          
+          <div className="space-y-3">
+            <Button 
+              onClick={() => navigate('/emails/all/all')}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Browse All Emails
+            </Button>
+            
+            <Button 
+              onClick={() => navigate('/')}
+              variant="outline"
+              className="w-full"
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Return to Dashboard
+            </Button>
+          </div>
+          
+          <p className="text-xs text-gray-400 mt-6">
+            Use the sidebar to browse emails by category or status
+          </p>
         </div>
       </div>
     );
