@@ -25,9 +25,6 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   // Always show not responded line with 1 or 2 count
   const notRespondedCount = Math.floor(Math.random() * 2) + 1; // Random count of 1 or 2
   
-  // Calculate if we have any stats to display (to know if we need separators)
-  const hasAnyStats = unread > 0 || pending > 0 || true; // Always true now as we always show not responded
-
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
       {/* Header */}
@@ -54,39 +51,23 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       {/* Title */}
       <h3 className="text-lg font-medium text-gray-800 mb-6">{title}</h3>
 
-      {/* Stats */}
+      {/* Stats - Always show all three lines */}
       <div className="space-y-4">
-        {unread > 0 && (
-          <>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Unread messages</span>
-              <span className="font-medium text-purple-600">{unread}</span>
-            </div>
-            {(pending > 0 || true) && <Separator className="my-1" />}
-          </>
-        )}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Unread messages</span>
+          <span className="font-medium text-purple-600">{unread > 0 ? unread : "-"}</span>
+        </div>
+        <Separator className="my-1" />
         
-        {pending > 0 && (
-          <>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Pending replies</span>
-              <span className="font-medium text-amber-600">{pending}</span>
-            </div>
-            <Separator className="my-1" />
-          </>
-        )}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Pending replies</span>
+          <span className="font-medium text-amber-600">{pending > 0 ? pending : "-"}</span>
+        </div>
+        <Separator className="my-1" />
         
-        {/* Always show the Has not responded yet line with a count of 1 or 2 */}
-        <>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Has not responded yet</span>
-            <span className="font-medium text-red-600">{notRespondedCount}</span>
-          </div>
-        </>
-        
-        <div className={`flex items-center justify-between text-sm ${hasAnyStats ? 'pt-2 border-t-2 border-gray-300' : ''}`}>
-          <span className="text-gray-600">Total conversations</span>
-          <span className="font-medium text-gray-800">{total}</span>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Has not responded yet</span>
+          <span className="font-medium text-red-600">{notRespondedCount}</span>
         </div>
       </div>
 
@@ -101,6 +82,12 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         <p className="text-xs text-gray-500 mt-1">
           {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
         </p>
+      </div>
+      
+      {/* Total conversations - moved to bottom */}
+      <div className="flex items-center justify-between text-sm mt-4 pt-2 border-t-2 border-gray-300">
+        <span className="text-gray-600">Total conversations</span>
+        <span className="font-medium text-gray-800">{total}</span>
       </div>
     </div>
   );
