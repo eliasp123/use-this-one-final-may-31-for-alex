@@ -32,42 +32,46 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
   
   return (
     <div className="pt-16 mb-8">
-      <div className="flex gap-2 mb-4">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => navigate(-1)}
-          className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300"
-        >
-          <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => navigate('/')}
-          className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
-        >
-          <Home className="mr-1 h-4 w-4" /> Back to Dashboard
-        </Button>
+      <div className="flex justify-between mb-4">
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300"
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => navigate('/')}
+            className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
+          >
+            <Home className="mr-1 h-4 w-4" /> Back to Dashboard
+          </Button>
+        </div>
 
-        <Button
-          onClick={onComposeClick}
-          className="bg-green-500 hover:bg-green-600 text-white"
-          size="sm"
-        >
-          <Pencil className="mr-2 h-4 w-4" />
-          Compose New Email
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={onComposeClick}
+            className="bg-green-500 hover:bg-green-600 text-white"
+            size="sm"
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            Compose New Email
+          </Button>
 
-        <Button 
-          variant="default" 
-          size="sm" 
-          className="bg-orange-500 hover:bg-orange-600 text-white"
-          onClick={() => navigate('/documents')}
-        >
-          <FileText className="mr-1 h-4 w-4" /> Document Hub
-        </Button>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="bg-orange-500 hover:bg-orange-600 text-white"
+            onClick={() => navigate('/documents')}
+          >
+            <FileText className="mr-1 h-4 w-4" /> Document Hub
+          </Button>
+        </div>
       </div>
       
       <div className="flex justify-between items-center">
