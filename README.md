@@ -1,3 +1,4 @@
+
 # Welcome to your Lovable project
 
 ## Project info
@@ -71,3 +72,91 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Communication Hub - Role-Based Access Integration Guide
+
+The Communication Hub includes role-based access functionality that allows different views for primary caregivers and family members.
+
+### Integration Steps
+
+#### 1. Wrap your application with UserRoleProvider
+
+```typescript
+import UserRoleProvider from './src/components/UserRoleProvider';
+
+// In your main app component or App.tsx:
+function App() {
+  return (
+    <UserRoleProvider defaultRole="primary-caregiver">
+      {/* Your existing app components */}
+    </UserRoleProvider>
+  );
+}
+```
+
+#### 2. Use RoleAwareEmailDashboard instead of EmailDashboard
+
+```typescript
+// Replace this:
+import EmailDashboard from './src/components/EmailDashboard';
+
+// With this:
+import RoleAwareEmailDashboard from './src/components/RoleAwareEmailDashboard';
+
+// In your component:
+<RoleAwareEmailDashboard searchQuery={searchQuery} />
+```
+
+#### 3. Set user role dynamically
+
+```typescript
+import { useUserRole } from './src/hooks/useUserRole';
+
+function YourComponent() {
+  const { userRole, setUserRole } = useUserRole();
+  
+  // Example: Set role based on authentication or user selection
+  const handleRoleChange = (role: 'primary-caregiver' | 'family-member') => {
+    setUserRole(role);
+  };
+  
+  return (
+    <div>
+      <button onClick={() => handleRoleChange('primary-caregiver')}>
+        Primary Caregiver View
+      </button>
+      <button onClick={() => handleRoleChange('family-member')}>
+        Family Member View
+      </button>
+      <p>Current role: {userRole}</p>
+    </div>
+  );
+}
+```
+
+### Features by Role
+
+#### Primary Caregiver
+- Can view ALL emails (including private ones)
+- Can mark emails as private/public
+- Full access to all functionality
+
+#### Family Member (Read-Only)
+- Can view only NON-PRIVATE emails
+- Cannot see emails marked as private
+- Limited to viewing functionality
+
+### Components Added
+
+- `UserRoleProvider`: Context provider for managing user roles
+- `RoleAwareEmailDashboard`: Role-aware version of the dashboard
+- `useUserRole`: Hook for accessing and setting user roles
+- `useFilteredEmailData`: Hook for filtering emails based on privacy settings
+- Updated `useEmailFiltering`: Now respects privacy settings based on user role
+
+### Notes
+
+- Private emails are completely hidden from family members (not just visually hidden)
+- The role indicator badge shows the current view mode
+- All filtering happens at the data level to ensure privacy
+- The EmailDetail page and other components will automatically respect the user's role when accessing individual emails

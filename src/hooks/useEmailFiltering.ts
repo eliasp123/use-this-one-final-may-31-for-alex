@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { EmailData } from '@/types/email';
+import { useUserRole } from './useUserRole';
 import { 
   getEmailsByCategory, 
   getUnreadEmails, 
@@ -16,13 +17,22 @@ interface UseEmailFilteringProps {
 }
 
 export const useEmailFiltering = ({ category, activeTab, searchQuery }: UseEmailFilteringProps) => {
+  const { userRole } = useUserRole();
   const [emails, setEmails] = useState<EmailData[]>([]);
   const [filteredEmails, setFilteredEmails] = useState<EmailData[]>([]);
+  
+  // Filter private emails based on user role
+  const filterPrivateEmails = (emailList: EmailData[]): EmailData[] => {
+    if (userRole === 'primary-caregiver') {
+      return emailList; // Primary caregivers see all emails
+    }
+    return emailList.filter(email => !email.private); // Family members only see non-private emails
+  };
   
   // Load emails based on category and activeTab
   useEffect(() => {
     loadEmails();
-  }, [category, activeTab]);
+  }, [category, activeTab, userRole]);
 
   // Filter emails based on search query
   useEffect(() => {
@@ -73,6 +83,9 @@ export const useEmailFiltering = ({ category, activeTab, searchQuery }: UseEmail
           fetchedEmails = getAllEmails();
       }
     }
+    
+    // Filter private emails based on user role
+    fetchedEmails = filterPrivateEmails(fetchedEmails);
     
     // Sort by date (newest first)
     fetchedEmails.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
