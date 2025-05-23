@@ -1,16 +1,24 @@
 
 import React, { useState } from 'react';
-import EmailDashboard from '../components/EmailDashboard';
+import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import { Info } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import AutocompleteSearch from '../components/AutocompleteSearch';
+import { useUserRole } from '../hooks/useUserRole';
+import { Button } from '../components/ui/button';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { userRole, setUserRole } = useUserRole();
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  const toggleUserRole = () => {
+    const newRole = userRole === 'primary-caregiver' ? 'family-member' : 'primary-caregiver';
+    setUserRole(newRole);
   };
   
   return (
@@ -50,12 +58,24 @@ const Index = () => {
           </div>
         </div>
         
+        {/* Role toggle button */}
+        <div className="flex justify-center mb-4">
+          <Button 
+            onClick={toggleUserRole}
+            variant="outline"
+            size="sm"
+            className="text-sm"
+          >
+            Switch to {userRole === 'primary-caregiver' ? 'Family Member' : 'Primary Caregiver'} View
+          </Button>
+        </div>
+        
         {/* Search Bar with Autocomplete */}
         <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
           <AutocompleteSearch onSearch={handleSearch} initialValue={searchQuery} />
         </div>
         
-        <EmailDashboard searchQuery={searchQuery} />
+        <RoleAwareEmailDashboard searchQuery={searchQuery} />
 
         {/* Calendar Section with margin top for separation */}
         <div className="mt-10 sm:mt-16">
