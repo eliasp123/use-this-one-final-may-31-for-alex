@@ -107,20 +107,20 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
           {/* Search and Filters */}
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Search Bar - Left Side */}
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
+              {/* Search Bar - Left Side (Narrower) */}
+              <div className="relative w-full lg:w-96">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search documents, senders, or organizations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
+                  className="pl-10 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
                 />
               </div>
               
               {/* Filter Grid - Right Side (3x2) */}
-              <div className="grid grid-cols-3 gap-2 lg:w-auto">
+              <div className="grid grid-cols-3 gap-2 flex-1">
                 {filterOptions.map((filter) => {
                   const IconComponent = filter.icon;
                   return (
