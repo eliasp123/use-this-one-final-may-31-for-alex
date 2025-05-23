@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import { 
@@ -67,10 +66,10 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   return (
     <>
-      {/* Email Category Grid with slightly more spacing */}
+      {/* Email Category Grid with increased spacing by 4px */}
       <div id="category-section" className="space-y-8 sm:space-y-12">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 lg:gap-9">
+          <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {row.map((category) => (
               <EmailCategoryCard
                 key={category.id}

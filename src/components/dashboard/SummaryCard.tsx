@@ -13,7 +13,7 @@ interface SummaryCardProps {
 const SummaryCard: React.FC<SummaryCardProps> = ({ title, count, color, onClick, icon }) => {
   return (
     <Card 
-      className="border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+      className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
       onClick={onClick}
     >
       <CardContent className="p-4 sm:p-6">
