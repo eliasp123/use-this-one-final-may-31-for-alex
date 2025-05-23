@@ -1,4 +1,12 @@
 
+export interface EmailAttachment {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  url?: string;
+}
+
 export interface EmailData {
   id: string;
   subject: string;
@@ -15,4 +23,5 @@ export interface EmailData {
   responseReceived: boolean;
   private: boolean;
   category: 'senior-living' | 'home-care' | 'federal-benefits' | 'local-government' | 'attorneys' | 'other-professionals' | 'va' | 'physical-therapy' | 'paying-for-care';
+  attachments?: EmailAttachment[];
 }

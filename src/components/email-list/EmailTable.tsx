@@ -11,7 +11,7 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Mail } from 'lucide-react';
+import { Mail, Paperclip } from 'lucide-react';
 
 interface EmailTableProps {
   emails: EmailData[];
@@ -52,7 +52,15 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
+                    <div className="flex items-center gap-2">
+                      <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
+                      {email.attachments && email.attachments.length > 0 && (
+                        <div className="flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-1 rounded-full text-xs">
+                          <Paperclip className="w-3 h-3" />
+                          <span>{email.attachments.length}</span>
+                        </div>
+                      )}
+                    </div>
                     <span className="text-sm text-gray-500 truncate max-w-xs">
                       {email.content.substring(0, 60)}...
                     </span>
