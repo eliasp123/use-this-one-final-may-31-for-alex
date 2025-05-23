@@ -16,6 +16,13 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       size: 512000,
       type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       url: "/documents/care-plan-updates.docx"
+    },
+    {
+      id: "att_016",
+      name: "Medical_History_Archive.zip",
+      size: 3840000,
+      type: "application/zip",
+      url: "/documents/medical-history-archive.zip"
     }
   ],
   "5e6f7g8h": [
@@ -48,6 +55,13 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       size: 1536000,
       type: "application/pdf", 
       url: "/documents/medical-records.pdf"
+    },
+    {
+      id: "att_017",
+      name: "CT_Scan_Results_2024.dcm",
+      size: 4096000,
+      type: "application/dicom",
+      url: "/documents/ct-scan-results.dcm"
     }
   ],
   "3m4n5o6p": [
@@ -57,6 +71,13 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       size: 896000,
       type: "application/pdf",
       url: "/documents/va-benefits-app.pdf"
+    },
+    {
+      id: "att_018",
+      name: "Service_Records_Complete.pdf",
+      size: 2550000,
+      type: "application/pdf",
+      url: "/documents/service-records.pdf"
     }
   ],
   "7q8r9s0t": [
@@ -73,6 +94,13 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       size: 1280000,
       type: "image/png",
       url: "/documents/exercise-chart.png"
+    },
+    {
+      id: "att_019",
+      name: "Recovery_Timeline_Infographic.svg",
+      size: 620000,
+      type: "image/svg+xml",
+      url: "/documents/recovery-timeline.svg"
     }
   ],
   "1u2v3w4x": [
@@ -105,6 +133,13 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       size: 640000,
       type: "application/pdf",
       url: "/documents/legal-checklist.pdf"
+    },
+    {
+      id: "att_020",
+      name: "Power_of_Attorney_Forms.pdf",
+      size: 890000,
+      type: "application/pdf",
+      url: "/documents/power-of-attorney.pdf"
     }
   ],
   "kadiyi0yqc": [
