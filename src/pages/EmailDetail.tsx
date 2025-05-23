@@ -8,12 +8,16 @@ import EmailDetailHeader from '../components/email-detail/EmailDetailHeader';
 import EmailDetailCard from '../components/email-detail/EmailDetailCard';
 import EmailDetailActions from '../components/email-detail/EmailDetailActions';
 import EmailReplyForm from '../components/EmailReplyForm';
+import NewEmailForm from '../components/NewEmailForm';
+import { useToast } from '../hooks/use-toast';
 
 const EmailDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [email, setEmail] = useState<EmailData | null>(null);
   const [showReplyForm, setShowReplyForm] = useState(false);
+  const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const { toast } = useToast();
   
   useEffect(() => {
     if (id) {
@@ -87,11 +91,24 @@ const EmailDetail = () => {
     
     setShowReplyForm(false);
   };
+
+  const handleNewEmail = (emailData: any) => {
+    // This is where you'll integrate with actual email sending
+    console.log('New email to be sent:', emailData);
+    
+    toast({
+      title: "Email Sent",
+      description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
+    });
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
-        <EmailDetailHeader email={email} />
+        <EmailDetailHeader 
+          email={email}
+          onComposeClick={() => setShowNewEmailForm(true)}
+        />
         
         <EmailDetailCard email={email} />
         
@@ -112,6 +129,13 @@ const EmailDetail = () => {
             onSend={handleReplySend}
           />
         )}
+
+        {/* New Email Form */}
+        <NewEmailForm
+          isOpen={showNewEmailForm}
+          onClose={() => setShowNewEmailForm(false)}
+          onSend={handleNewEmail}
+        />
       </div>
     </div>
   );

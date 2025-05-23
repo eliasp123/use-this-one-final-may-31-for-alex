@@ -1,16 +1,18 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ArrowLeft, Home } from 'lucide-react';
+import { ArrowLeft, Home, Pencil } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 
 interface EmailDetailHeaderProps {
   email: EmailData;
+  onComposeClick: () => void;
 }
 
-const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
+const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeClick }) => {
   const navigate = useNavigate();
   
   // Determine status for display
@@ -47,6 +49,15 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
         >
           <Home className="mr-1 h-4 w-4" /> Back to Dashboard
+        </Button>
+
+        <Button
+          onClick={onComposeClick}
+          className="bg-green-500 hover:bg-green-600 text-white"
+          size="sm"
+        >
+          <Pencil className="mr-2 h-4 w-4" />
+          Compose New Email
         </Button>
       </div>
       

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -9,12 +10,15 @@ import EmailSidebar from '@/components/email-list/EmailSidebar';
 import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
 import EmailTable from '@/components/email-list/EmailTable';
+import NewEmailForm from '@/components/NewEmailForm';
+import { useToast } from '@/hooks/use-toast';
 
 const EmailList = () => {
   const { category, status } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>(status || 'all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const { emailCategories } = useEmailCategoryData();
   const { formatDate } = useEmailFormatter();
   const { filteredEmails } = useEmailFiltering({ 
@@ -22,6 +26,7 @@ const EmailList = () => {
     activeTab, 
     searchQuery 
   });
+  const { toast } = useToast();
   
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -31,6 +36,16 @@ const EmailList = () => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  const handleNewEmail = (emailData: any) => {
+    // This is where you'll integrate with actual email sending
+    console.log('New email to be sent:', emailData);
+    
+    toast({
+      title: "Email Sent",
+      description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
+    });
   };
 
   // Get info for current category
@@ -53,6 +68,7 @@ const EmailList = () => {
               currentCategory={currentCategory}
               emailCount={filteredEmails.length}
               activeTab={activeTab}
+              onComposeClick={() => setShowNewEmailForm(true)}
             />
             
             <EmailListToolbar 
@@ -70,6 +86,13 @@ const EmailList = () => {
             </div>
           </div>
         </div>
+
+        {/* New Email Form */}
+        <NewEmailForm
+          isOpen={showNewEmailForm}
+          onClose={() => setShowNewEmailForm(false)}
+          onSend={handleNewEmail}
+        />
       </div>
     </SidebarProvider>
   );
