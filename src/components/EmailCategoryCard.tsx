@@ -54,7 +54,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       </div>
 
       {/* Title */}
-      <h3 className="text-lg font-medium text-gray-800 mb-8">{title}</h3>
+      <h3 className="text-lg font-medium text-gray-800 mb-12">{title}</h3>
 
       {/* Stats */}
       <div className="space-y-4">
