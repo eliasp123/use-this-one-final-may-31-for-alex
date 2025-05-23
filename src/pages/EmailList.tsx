@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -190,152 +189,152 @@ const EmailList = () => {
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
+        {/* Sidebar */}
+        <Sidebar variant="sidebar" className="min-w-[200px] max-w-[240px]" collapsible="icon">
+          <SidebarContent className="pt-6">  
+            <SidebarGroup>
+              <SidebarGroupLabel className="px-6 mb-2">Categories</SidebarGroupLabel>
+              <SidebarMenu>
+                {emailCategories.map((cat) => (
+                  <SidebarMenuItem key={cat.id}>
+                    <SidebarMenuButton 
+                      isActive={cat.id === category}
+                      tooltip={cat.title}
+                      onClick={() => navigate(`/emails/${cat.id}/${activeTab}`)}
+                    >
+                      <div className={`w-6 h-6 rounded-md ${cat.bgColor} flex items-center justify-center mr-2`}>
+                        <cat.icon className={`w-4 h-4 ${cat.textColor}`} />
+                      </div>
+                      <span>{cat.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+        
         {/* Main Content */}
         <div className="flex-1">
-          <div className="container mx-auto px-4 py-8 pl-6">
-            {/* Header with back button - Fixed spacing issue by adding padding */}
-            <div className="mb-8 flex items-start justify-between ml-4">
-              <div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mb-4"
-                  onClick={() => navigate('/')}
-                >
-                  <ArrowLeft className="mr-1 h-4 w-4" /> Back to Dashboard
-                </Button>
-                
-                <h1 className="text-3xl font-light text-gray-800 mb-2">
-                  {currentCategory 
-                    ? `${currentCategory.title} Conversations` 
-                    : 'All Conversations'}
-                </h1>
-                
-                <p className="text-sm text-gray-600 font-light">
-                  {filteredEmails.length} {filteredEmails.length === 1 ? 'conversation' : 'conversations'} 
-                  {activeTab !== 'all' ? ` - ${activeTab} messages` : ''}
-                </p>
-              </div>
+          <div className="container mx-auto px-6 py-8">
+            {/* Header with back button */}
+            <div className="mb-8">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mb-4"
+                onClick={() => navigate('/')}
+              >
+                <ArrowLeft className="mr-1 h-4 w-4" /> Back to Dashboard
+              </Button>
               
-              {/* Category indicator if we're viewing a specific category */}
-              {currentCategory && (
-                <div className={`px-4 py-2 rounded-xl ${currentCategory.bgColor} flex items-center`}>
-                  <span className={`w-3 h-3 rounded-full ${currentCategory.color.replace('bg-gradient-to-r', '')}`}></span>
-                  <span className="ml-2 text-sm font-medium text-gray-800">{currentCategory.title}</span>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-light text-gray-800 mb-2">
+                    {currentCategory 
+                      ? `${currentCategory.title} Conversations` 
+                      : 'All Conversations'}
+                  </h1>
+                  
+                  <p className="text-sm text-gray-600 font-light">
+                    {filteredEmails.length} {filteredEmails.length === 1 ? 'conversation' : 'conversations'} 
+                    {activeTab !== 'all' ? ` - ${activeTab} messages` : ''}
+                  </p>
                 </div>
-              )}
+                
+                {/* Category indicator if we're viewing a specific category */}
+                {currentCategory && (
+                  <div className={`px-4 py-2 rounded-xl ${currentCategory.bgColor} flex items-center`}>
+                    <span className={`w-3 h-3 rounded-full ${currentCategory.color.replace('bg-gradient-to-r', '')}`}></span>
+                    <span className="ml-2 text-sm font-medium text-gray-800">{currentCategory.title}</span>
+                  </div>
+                )}
+              </div>
             </div>
             
-            <div className="flex">
-              {/* Sidebar */}
-              <Sidebar variant="sidebar" className="mr-6 min-w-[200px] max-w-[240px]" collapsible="icon">
-                <SidebarContent className="pt-0">
-                  <SidebarGroup>
-                    <SidebarGroupLabel>Categories</SidebarGroupLabel>
-                    <SidebarMenu>
-                      {emailCategories.map((cat) => (
-                        <SidebarMenuItem key={cat.id}>
-                          <SidebarMenuButton 
-                            isActive={cat.id === category}
-                            tooltip={cat.title}
-                            onClick={() => navigate(`/emails/${cat.id}/${activeTab}`)}
-                          >
-                            <div className={`w-6 h-6 rounded-md ${cat.bgColor} flex items-center justify-center mr-2`}>
-                              <cat.icon className={`w-4 h-4 ${cat.textColor}`} />
-                            </div>
-                            <span>{cat.title}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroup>
-                </SidebarContent>
-              </Sidebar>
-              
-              <div className="flex-1 ml-2">
-                {/* Tabs for email status filtering */}
-                <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="mb-6">
-                  <div className="flex justify-between items-center">
-                    <TabsList>
-                      <TabsTrigger value="all">All</TabsTrigger>
-                      <TabsTrigger value="unread">Unread</TabsTrigger>
-                      <TabsTrigger value="pending">Pending</TabsTrigger>
-                      <TabsTrigger value="unresponded">Not Responded</TabsTrigger>
-                    </TabsList>
-                    
-                    {/* Search */}
-                    <div className="w-64">
-                      <AutocompleteSearch onSearch={handleSearch} initialValue={searchQuery} />
-                    </div>
-                  </div>
+            {/* Tabs for email status filtering */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
+                <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
+                  <TabsList>
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="unread">Unread</TabsTrigger>
+                    <TabsTrigger value="pending">Pending</TabsTrigger>
+                    <TabsTrigger value="unresponded">Not Responded</TabsTrigger>
+                  </TabsList>
                 </Tabs>
                 
-                {/* Email List Table */}
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[300px]">Sender</TableHead>
-                        <TableHead>Subject</TableHead>
-                        <TableHead className="text-right">Date</TableHead>
-                        <TableHead className="w-[100px] text-center">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredEmails.length > 0 ? (
-                        filteredEmails.map((email) => (
-                          <TableRow 
-                            key={email.id} 
-                            className={`cursor-pointer ${!email.read ? 'font-medium' : ''}`}
-                            onClick={() => handleRowClick(email.id)}
-                          >
-                            <TableCell className="py-4">
-                              <div className="flex flex-col">
-                                <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
-                                <span className="text-sm text-gray-500">{email.sender.organization}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="py-4">
-                              <div className="flex flex-col">
-                                <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
-                                <span className="text-sm text-gray-500 truncate max-w-xs">
-                                  {email.content.substring(0, 60)}...
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right text-gray-500">{formatDate(email.date)}</TableCell>
-                            <TableCell className="text-center">
-                              {!email.read ? (
-                                <Badge className="bg-purple-500 hover:bg-purple-600">Unread</Badge>
-                              ) : !email.replied ? (
-                                <Badge className="bg-amber-500 hover:bg-amber-600">Pending</Badge>
-                              ) : !email.responseReceived ? (
-                                <Badge className="bg-red-500 hover:bg-red-600">No Response</Badge>
-                              ) : (
-                                <Badge className="bg-green-500 hover:bg-green-600">Complete</Badge>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} className="h-32 text-center">
-                            <div className="flex flex-col items-center justify-center text-gray-500">
-                              <Mail className="h-8 w-8 mb-2 opacity-30" />
-                              <p>No emails found</p>
-                              <p className="text-sm">
-                                {searchQuery 
-                                  ? "Try changing your search terms" 
-                                  : "No emails match the selected filters"}
-                              </p>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                {/* Search */}
+                <div className="w-64">
+                  <AutocompleteSearch onSearch={handleSearch} initialValue={searchQuery} />
                 </div>
               </div>
+            </div>
+            
+            {/* Email List Table */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[300px]">Sender</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead className="text-right">Date</TableHead>
+                    <TableHead className="w-[100px] text-center">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredEmails.length > 0 ? (
+                    filteredEmails.map((email) => (
+                      <TableRow 
+                        key={email.id} 
+                        className={`cursor-pointer ${!email.read ? 'font-medium' : ''}`}
+                        onClick={() => handleRowClick(email.id)}
+                      >
+                        <TableCell className="py-4">
+                          <div className="flex flex-col">
+                            <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
+                            <span className="text-sm text-gray-500">{email.sender.organization}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex flex-col">
+                            <span className={!email.read ? 'font-medium' : ''}>{email.subject}</span>
+                            <span className="text-sm text-gray-500 truncate max-w-xs">
+                              {email.content.substring(0, 60)}...
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right text-gray-500">{formatDate(email.date)}</TableCell>
+                        <TableCell className="text-center">
+                          {!email.read ? (
+                            <Badge className="bg-purple-500 hover:bg-purple-600">Unread</Badge>
+                          ) : !email.replied ? (
+                            <Badge className="bg-amber-500 hover:bg-amber-600">Pending</Badge>
+                          ) : !email.responseReceived ? (
+                            <Badge className="bg-red-500 hover:bg-red-600">No Response</Badge>
+                          ) : (
+                            <Badge className="bg-green-500 hover:bg-green-600">Complete</Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="h-32 text-center">
+                        <div className="flex flex-col items-center justify-center text-gray-500">
+                          <Mail className="h-8 w-8 mb-2 opacity-30" />
+                          <p>No emails found</p>
+                          <p className="text-sm">
+                            {searchQuery 
+                              ? "Try changing your search terms" 
+                              : "No emails match the selected filters"}
+                          </p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>
