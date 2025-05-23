@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
-import { FileText, X, Search, Filter } from 'lucide-react';
+import { FileText, X, Search, Filter, Grid, Users, Calendar, FolderOpen } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import DocumentCard from '../documents/DocumentCard';
@@ -17,50 +17,72 @@ interface DocumentHubPopupProps {
 const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'other'>('all');
+  const [groupBy, setGroupBy] = useState<'none' | 'type' | 'sender' | 'date'>('type');
 
   const allAttachments = getAllAttachments();
   const filteredAttachments = filterAttachments(allAttachments, searchQuery, selectedFilter);
   const stats = getAttachmentStats(allAttachments);
 
-  // Group attachments by file type
-  const groupAttachmentsByType = (attachments: AttachmentWithContext[]) => {
-    const groups = {
-      documents: attachments.filter(a => a.type.includes('pdf') || a.type.includes('document') || a.type.includes('text')),
-      images: attachments.filter(a => a.type.startsWith('image/')),
-      spreadsheets: attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv') || a.type.includes('excel')),
-      other: attachments.filter(a => 
-        !a.type.startsWith('image/') && 
-        !a.type.includes('pdf') && 
-        !a.type.includes('document') && 
-        !a.type.includes('text') && 
-        !a.type.includes('sheet') && 
-        !a.type.includes('csv') && 
-        !a.type.includes('excel')
-      )
-    };
+  // Group attachments by different criteria
+  const groupAttachments = (attachments: AttachmentWithContext[], groupBy: string) => {
+    if (groupBy === 'none') {
+      return [['All Files', attachments] as [string, AttachmentWithContext[]]];
+    }
 
-    // Filter out empty groups and return as array of [groupKey, attachments] tuples
-    return Object.entries(groups).filter(([_, items]) => items.length > 0);
+    if (groupBy === 'type') {
+      const groups = {
+        'Documents': attachments.filter(a => a.type.includes('pdf') || a.type.includes('document') || a.type.includes('text')),
+        'Images': attachments.filter(a => a.type.startsWith('image/')),
+        'Spreadsheets': attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv') || a.type.includes('excel')),
+        'Other Files': attachments.filter(a => 
+          !a.type.startsWith('image/') && 
+          !a.type.includes('pdf') && 
+          !a.type.includes('document') && 
+          !a.type.includes('text') && 
+          !a.type.includes('sheet') && 
+          !a.type.includes('csv') && 
+          !a.type.includes('excel')
+        )
+      };
+      return Object.entries(groups).filter(([_, items]) => items.length > 0);
+    }
+
+    if (groupBy === 'sender') {
+      const groups: Record<string, AttachmentWithContext[]> = {};
+      attachments.forEach(attachment => {
+        const key = attachment.senderOrganization || 'Unknown Organization';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(attachment);
+      });
+      return Object.entries(groups);
+    }
+
+    if (groupBy === 'date') {
+      const groups: Record<string, AttachmentWithContext[]> = {};
+      attachments.forEach(attachment => {
+        const date = new Date(attachment.emailDate);
+        const key = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(attachment);
+      });
+      return Object.entries(groups).sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime());
+    }
+
+    return [['All Files', attachments] as [string, AttachmentWithContext[]]];
   };
 
-  const groupedAttachments = selectedFilter === 'all' 
-    ? groupAttachmentsByType(filteredAttachments)
-    : [['filtered', filteredAttachments] as [string, AttachmentWithContext[]]];
+  const groupedAttachments = groupAttachments(filteredAttachments, groupBy);
 
-  const getGroupTitle = (groupKey: string) => {
-    const titles = {
-      documents: 'Documents',
-      images: 'Images', 
-      spreadsheets: 'Spreadsheets',
-      other: 'Other Files',
-      filtered: selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)
-    };
-    return titles[groupKey as keyof typeof titles] || groupKey;
-  };
+  const groupingOptions = [
+    { key: 'type', label: 'File Type', icon: Grid },
+    { key: 'sender', label: 'Organization', icon: Users },
+    { key: 'date', label: 'Date', icon: Calendar },
+    { key: 'none', label: 'No Grouping', icon: FolderOpen }
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl w-full max-h-[85vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-7xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -71,8 +93,8 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           <p className="text-gray-600 mt-2">Browse and manage all your email attachments</p>
         </DialogHeader>
         
-        <div className="flex flex-col h-full space-y-8">
-          {/* Stats Section with improved design */}
+        <div className="flex flex-col h-full space-y-6">
+          {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
               <div className="text-center">
@@ -100,57 +122,90 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             </Card>
           </div>
 
-          {/* Search and Filters with improved spacing */}
+          {/* Search and Filters */}
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
-            <div className="flex flex-col lg:flex-row gap-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  placeholder="Search documents, senders, or organizations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
-                />
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search documents, senders, or organizations..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl"
+                  />
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {(['all', 'documents', 'images', 'spreadsheets', 'other'] as const).map((filter) => (
+                    <Button
+                      key={filter}
+                      variant={selectedFilter === filter ? "default" : "outline"}
+                      size="default"
+                      onClick={() => setSelectedFilter(filter)}
+                      className={`
+                        px-4 py-3 rounded-xl font-medium transition-all duration-200 capitalize
+                        ${selectedFilter === filter 
+                          ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/25" 
+                          : "bg-white/80 hover:bg-white text-gray-700 border-gray-300/60 hover:border-purple-300"
+                        }
+                      `}
+                    >
+                      {filter}
+                    </Button>
+                  ))}
+                </div>
               </div>
-              
-              <div className="flex flex-wrap gap-3">
-                {(['all', 'documents', 'images', 'spreadsheets', 'other'] as const).map((filter) => (
-                  <Button
-                    key={filter}
-                    variant={selectedFilter === filter ? "default" : "outline"}
-                    size="default"
-                    onClick={() => setSelectedFilter(filter)}
-                    className={`
-                      px-6 py-3 rounded-xl font-medium transition-all duration-200 capitalize
-                      ${selectedFilter === filter 
-                        ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/25" 
-                        : "bg-white/80 hover:bg-white text-gray-700 border-gray-300/60 hover:border-purple-300"
-                      }
-                    `}
-                  >
-                    {filter}
-                  </Button>
-                ))}
+
+              {/* Grouping Options */}
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-200/60">
+                <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  Group by:
+                </span>
+                <div className="flex gap-2">
+                  {groupingOptions.map((option) => {
+                    const IconComponent = option.icon;
+                    return (
+                      <Button
+                        key={option.key}
+                        variant={groupBy === option.key ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setGroupBy(option.key as any)}
+                        className={`
+                          px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200
+                          ${groupBy === option.key 
+                            ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md" 
+                            : "bg-white/60 hover:bg-white text-gray-600 border-gray-300/60"
+                          }
+                        `}
+                      >
+                        <IconComponent className="h-3 w-3 mr-1" />
+                        {option.label}
+                      </Button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Documents Grid with Smart Grouping */}
+          {/* Documents Grid */}
           <div className="flex-1 overflow-y-auto bg-white/30 backdrop-blur-sm rounded-2xl border border-gray-200/60">
             <div className="p-6">
               {filteredAttachments.length > 0 ? (
                 <div className="space-y-8">
                   {groupedAttachments.map(([groupKey, attachments]) => (
                     <div key={groupKey} className="space-y-4">
-                      {selectedFilter === 'all' && (
-                        <div className="flex items-center gap-3 pb-2 border-b border-gray-200/60">
-                          <h3 className="text-lg font-semibold text-gray-700">{getGroupTitle(groupKey)}</h3>
-                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {groupBy !== 'none' && (
+                        <div className="flex items-center gap-3 pb-3 border-b border-gray-200/60">
+                          <h3 className="text-lg font-semibold text-gray-700">{groupKey}</h3>
+                          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                             {attachments.length} file{attachments.length !== 1 ? 's' : ''}
                           </span>
                         </div>
                       )}
-                      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
                         {attachments.map((attachment) => (
                           <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                             <DocumentCard attachment={attachment} isGridView={true} />
@@ -161,13 +216,13 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   ))}
                 </div>
               ) : (
-                <Card className="p-12 text-center bg-white/60 backdrop-blur-sm border-gray-200/60">
-                  <div className="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <FileText className="h-8 w-8 text-gray-400" />
+                <Card className="p-16 text-center bg-white/60 backdrop-blur-sm border-gray-200/60">
+                  <div className="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <FileText className="h-10 w-10 text-gray-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-700 mb-3">No documents found</h3>
-                  <p className="text-gray-500 text-base leading-relaxed">
-                    {searchQuery ? 'Try adjusting your search terms or filters' : 'No email attachments are available at the moment'}
+                  <p className="text-gray-500 text-base leading-relaxed max-w-md mx-auto">
+                    {searchQuery ? 'Try adjusting your search terms or filters to find the documents you\'re looking for.' : 'No email attachments are available at the moment. Documents will appear here when emails with attachments are received.'}
                   </p>
                 </Card>
               )}
