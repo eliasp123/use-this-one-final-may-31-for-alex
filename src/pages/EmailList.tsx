@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -46,7 +47,7 @@ const EmailList = () => {
           activeTab={activeTab}
         />
         
-        {/* Main Content - Updated padding to pl-20 */}
+        {/* Main Content - Updated padding to pl-22 */}
         <div className="flex-1 pl-22 pr-20">
           <div className="py-8">
             <EmailHeader 
