@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
@@ -80,6 +79,13 @@ const APPOINTMENTS = [
   }
 ];
 
+// Array of encouraging messages to display on days with no appointments
+const ENCOURAGING_MESSAGES = [
+  "You can breathe a little.",
+  "Remember to give yourself credit.",
+  "Every day you care is appreciated."
+];
+
 const CalendarSection = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedDateAppointments, setSelectedDateAppointments] = useState(
@@ -90,6 +96,13 @@ const CalendarSection = () => {
     )
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  // Get a consistent message based on the day of week (0-6, where 0 is Sunday)
+  const getEncouragingMessage = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    // Use modulo to ensure we don't go out of bounds if we add more messages later
+    return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
+  };
 
   // Function to highlight dates with appointments
   const isDayWithAppointment = (day: Date) => {
@@ -171,7 +184,10 @@ const CalendarSection = () => {
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                       <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
                     </div>
-                    <p className="text-gray-500 text-center">No Care Appointments Today. You can breathe a little.</p>
+                    <div className="flex flex-col items-center text-center">
+                      <p className="text-gray-500">No Care Appointments Today.</p>
+                      <p className="text-gray-500 mt-1.5">{date ? getEncouragingMessage(date) : "You can breathe a little."}</p>
+                    </div>
                   </div>
                 ) : (
                   <div>
@@ -225,7 +241,10 @@ const CalendarSection = () => {
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
                 </div>
-                <p className="text-gray-500 text-center">No care appointments today</p>
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-gray-500">No care appointments today</p>
+                  <p className="text-gray-500 mt-1.5">{date ? getEncouragingMessage(date) : "You can breathe a little."}</p>
+                </div>
               </div>
             ) : (
               <ScrollArea className="h-[300px] pr-4">
