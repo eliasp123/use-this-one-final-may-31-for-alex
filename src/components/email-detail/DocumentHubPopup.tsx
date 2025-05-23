@@ -109,13 +109,15 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
             <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
               {/* Search Bar - Left Side (Wider) */}
-              <div className="relative w-full lg:w-[520px] lg:flex-shrink-0">
+              <div className="relative w-full lg:min-w-[600px] lg:max-w-[600px] lg:flex-shrink-0">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
+                <input
+                  type="text"
                   placeholder="Search documents, senders, or organizations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12 text-base bg-white/80 border-gray-300/60 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl w-full"
+                  className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-300/60 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200"
+                  style={{ minWidth: '600px' }}
                 />
               </div>
               
