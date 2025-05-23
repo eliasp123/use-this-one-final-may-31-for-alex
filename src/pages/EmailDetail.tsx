@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button } from '../components/ui/button';
 import { getEmailById } from '../data/emailData';
 import { EmailData } from '../types/email';
 import EmailDetailHeader from '../components/email-detail/EmailDetailHeader';
@@ -10,6 +11,7 @@ import EmailReplyForm from '../components/EmailReplyForm';
 
 const EmailDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [email, setEmail] = useState<EmailData | null>(null);
   const [showReplyForm, setShowReplyForm] = useState(false);
   
