@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
@@ -104,11 +103,13 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <p className="text-3xl font-medium text-gray-800">{totalUnread}</p>
+              <div className="w-9 h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
             </div>
-            <p className="text-3xl font-medium text-gray-800 mt-2">{totalUnread}</p>
           </CardContent>
         </Card>
         
@@ -117,11 +118,13 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <p className="text-gray-500 text-sm font-medium">Pending Replies</p>
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <p className="text-3xl font-medium text-gray-800">{totalPending}</p>
+              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
             </div>
-            <p className="text-3xl font-medium text-gray-800 mt-2">{totalPending}</p>
           </CardContent>
         </Card>
         
@@ -130,12 +133,14 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <p className="text-gray-500 text-sm font-medium">Active Categories</p>
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <p className="text-3xl font-medium text-gray-800">{activeCategories}</p>
+              <div className="w-9 h-9 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-white rounded-full mr-1"></div>
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
             </div>
-            <p className="text-3xl font-medium text-gray-800 mt-2">{activeCategories}</p>
           </CardContent>
         </Card>
       </div>
