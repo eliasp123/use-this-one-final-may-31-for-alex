@@ -36,19 +36,17 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
       <div className="flex justify-between mb-4">
         <div className="flex gap-2">
           <Button 
-            variant="outline" 
             size="sm"
             onClick={() => navigate(-1)}
-            className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300"
+            className="bg-purple-500 hover:bg-purple-600 text-white"
           >
             <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation
           </Button>
           
           <Button 
-            variant="outline" 
             size="sm"
             onClick={() => navigate('/')}
-            className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
+            className="bg-green-500 hover:bg-green-600 text-white"
           >
             <Home className="mr-1 h-4 w-4" /> Back to Dashboard
           </Button>
