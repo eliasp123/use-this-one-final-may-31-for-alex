@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface EmailCategory {
   id: string;
@@ -19,13 +20,26 @@ interface EmailCategoryCardProps {
 }
 
 const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
-  const { title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
+  const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
+  const navigate = useNavigate();
   
   // Always show not responded line with 1 or 2 count
   const notRespondedCount = Math.floor(Math.random() * 2) + 1; // Random count of 1 or 2
   
+  const handleCardClick = () => {
+    navigate(`/emails/${id}/all`);
+  };
+  
+  const handleStatusClick = (status: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click from triggering
+    navigate(`/emails/${id}/${status}`);
+  };
+  
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+    <div 
+      className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
+      onClick={handleCardClick}
+    >
       {/* Header - Restructured to have icon and title on the same row */}
       <div className="flex items-center mb-6 sm:mb-8">
         <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -38,21 +52,30 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
 
       {/* Stats - Now with colored circles in the rows - adjusted to be 15% larger than the reduced size */}
       <div className="space-y-4 sm:space-y-5">
-        <div className="flex items-center justify-between text-xs sm:text-sm">
+        <div 
+          className="flex items-center justify-between text-xs sm:text-sm"
+          onClick={(e) => handleStatusClick('unread', e)}
+        >
           <span className="text-gray-600">Unread messages</span>
           <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${unread > 0 ? 'bg-purple-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
             {unread > 0 ? unread : "-"}
           </div>
         </div>
         
-        <div className="flex items-center justify-between text-xs sm:text-sm">
+        <div 
+          className="flex items-center justify-between text-xs sm:text-sm"
+          onClick={(e) => handleStatusClick('pending', e)}
+        >
           <span className="text-gray-600">Pending replies</span>
           <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${pending > 0 ? 'bg-amber-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
             {pending > 0 ? pending : "-"}
           </div>
         </div>
         
-        <div className="flex items-center justify-between text-xs sm:text-sm">
+        <div 
+          className="flex items-center justify-between text-xs sm:text-sm"
+          onClick={(e) => handleStatusClick('unresponded', e)}
+        >
           <span className="text-gray-600">Has not responded yet</span>
           <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105">
             {notRespondedCount}
