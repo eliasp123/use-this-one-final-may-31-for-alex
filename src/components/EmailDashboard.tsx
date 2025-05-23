@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
@@ -102,21 +101,12 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         {/* Unread Messages Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mb-3">
                 <div className="w-3 h-3 bg-white rounded-full"></div>
               </div>
-              <div>
-                <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
-                <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
-              </div>
-            </div>
-            <div className="mt-2 text-sm text-gray-500">
-              {activeCategories > 0 ? (
-                <span>{activeCategories} active categories need attention</span>
-              ) : (
-                <span>All caught up!</span>
-              )}
+              <p className="text-gray-500 text-sm font-medium">Unread Messages</p>
+              <p className="text-3xl font-light text-gray-800 mt-1">{totalUnread}</p>
             </div>
           </CardContent>
         </Card>
@@ -124,21 +114,12 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         {/* Awaiting Your Reply Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mb-3">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <div>
-                <p className="text-gray-500 text-sm font-medium">Awaiting Your Reply</p>
-                <p className="text-3xl font-light text-gray-800 mt-1">{totalPending}</p>
-              </div>
-            </div>
-            <div className="mt-2 text-sm text-gray-500">
-              {totalPending > 0 ? (
-                <span>Replies needed across {filteredCategories.filter(c => c.pending > 0).length} categories</span>
-              ) : (
-                <span>No pending replies</span>
-              )}
+              <p className="text-gray-500 text-sm font-medium">Awaiting Your Reply</p>
+              <p className="text-3xl font-light text-gray-800 mt-1">{totalPending}</p>
             </div>
           </CardContent>
         </Card>
@@ -146,22 +127,13 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         {/* Has Not Responded Yet Card */}
         <Card className="border border-gray-100 shadow-sm">
           <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center mb-3">
                 <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
-              <div>
-                <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
-                <p className="text-3xl font-light text-gray-800 mt-1">{totalAwaitingResponse}</p>
-              </div>
-            </div>
-            <div className="mt-2 text-sm text-gray-500">
-              {totalAwaitingResponse > 0 ? (
-                <span>Waiting on responses from {totalAwaitingResponse} conversations</span>
-              ) : (
-                <span>All conversations are active</span>
-              )}
+              <p className="text-gray-500 text-sm font-medium">Has Not Responded Yet</p>
+              <p className="text-3xl font-light text-gray-800 mt-1">{totalAwaitingResponse}</p>
             </div>
           </CardContent>
         </Card>
