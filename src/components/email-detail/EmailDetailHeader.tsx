@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 
@@ -31,14 +31,23 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   
   return (
     <div className="mb-8">
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="mb-4"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="mr-1 h-4 w-4" /> Back
-      </Button>
+      <div className="flex gap-2 mb-4">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => navigate('/')}
+        >
+          <Home className="mr-1 h-4 w-4" /> Back to Dashboard
+        </Button>
+      </div>
       
       <div className="flex justify-between items-center">
         <h1 className="text-2xl sm:text-3xl font-light text-gray-800">
