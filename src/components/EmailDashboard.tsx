@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import EmailCategoryCard from './EmailCategoryCard';
 import { Heart, Home, Shield, Building, Scale, Users } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
+import { Separator } from './ui/separator';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
 
 interface EmailDashboardProps {
@@ -100,6 +101,12 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
   const handleSummaryCardClick = (status: string) => {
     navigate(`/emails/all/${status}`);
   };
+
+  // Split the categories into rows of 3 for consistent spacing
+  const rows = [];
+  for (let i = 0; i < filteredCategories.length; i += 3) {
+    rows.push(filteredCategories.slice(i, i + 3));
+  }
   
   return (
     <div className="max-w-7xl mx-auto">
@@ -161,13 +168,17 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         </Card>
       </div>
 
-      {/* Email Category Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-        {filteredCategories.map((category) => (
-          <EmailCategoryCard
-            key={category.id}
-            category={category}
-          />
+      {/* Email Category Grid with consistent row spacing */}
+      <div className="space-y-8 sm:space-y-12">
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {row.map((category) => (
+              <EmailCategoryCard
+                key={category.id}
+                category={category}
+              />
+            ))}
+          </div>
         ))}
       </div>
     </div>
