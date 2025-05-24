@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -19,6 +20,7 @@ const Documents = () => {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('received');
   const { toast } = useToast();
 
   const allAttachments = getAllAttachments();
@@ -34,7 +36,12 @@ const Documents = () => {
       })
     : allAttachments;
 
-  const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' || selectedFilter === 'person' ? 'all' : selectedFilter);
+  // Apply direction filter
+  const directionFilteredAttachments = directionFilter === 'all' 
+    ? folderFilteredAttachments 
+    : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
+
+  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' || selectedFilter === 'person' ? 'all' : selectedFilter);
   const stats = getAttachmentStats(allAttachments);
 
   const handleCreateFolder = (name: string) => {
@@ -96,20 +103,27 @@ const Documents = () => {
 
   // Calculate counts for each filter
   const getFilterCount = (filterType: string) => {
-    if (filterType === 'all') return stats.total;
-    if (filterType === 'documents') return stats.documents;
-    if (filterType === 'images') return stats.images;
-    if (filterType === 'spreadsheets') return stats.spreadsheets;
+    // Apply direction filter to stats as well
+    const directionFilteredForStats = directionFilter === 'all' 
+      ? allAttachments 
+      : allAttachments.filter(attachment => attachment.direction === directionFilter);
+    
+    const directionStats = getAttachmentStats(directionFilteredForStats);
+    
+    if (filterType === 'all') return directionStats.total;
+    if (filterType === 'documents') return directionStats.documents;
+    if (filterType === 'images') return directionStats.images;
+    if (filterType === 'spreadsheets') return directionStats.spreadsheets;
     if (filterType === 'organization') {
-      const uniqueOrgs = new Set(allAttachments.map(a => a.senderOrganization));
+      const uniqueOrgs = new Set(directionFilteredForStats.map(a => a.senderOrganization));
       return uniqueOrgs.size;
     }
     if (filterType === 'person') {
-      const uniquePersons = new Set(allAttachments.map(a => a.senderName));
+      const uniquePersons = new Set(directionFilteredForStats.map(a => a.senderName));
       return uniquePersons.size;
     }
     if (filterType === 'date') {
-      const uniqueMonths = new Set(allAttachments.map(a => {
+      const uniqueMonths = new Set(directionFilteredForStats.map(a => {
         const date = new Date(a.emailDate);
         return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
       }));
@@ -151,6 +165,8 @@ const Documents = () => {
               <DocumentsViewToggle 
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
+                directionFilter={directionFilter}
+                onDirectionFilterChange={setDirectionFilter}
               />
 
               <DocumentsContent 
