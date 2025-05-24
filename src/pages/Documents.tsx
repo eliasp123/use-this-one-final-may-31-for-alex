@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
 import DocumentsHeader from '../components/documents/DocumentsHeader';
 import DocumentsSearchBar from '../components/documents/DocumentsSearchBar';
 import DocumentsFilterButtons from '../components/documents/DocumentsFilterButtons';
+import DocumentsViewToggle from '../components/documents/DocumentsViewToggle';
 import DocumentsContent from '../components/documents/DocumentsContent';
 import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../utils/folderUtils';
@@ -18,6 +18,7 @@ const Documents = () => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { toast } = useToast();
 
   const allAttachments = getAllAttachments();
@@ -147,12 +148,18 @@ const Documents = () => {
                 getFilterCount={getFilterCount}
               />
 
+              <DocumentsViewToggle 
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+              />
+
               <DocumentsContent 
                 groupedAttachments={groupedAttachments}
                 selectedFilter={selectedFilter}
                 filteredAttachments={filteredAttachments}
                 searchQuery={searchQuery}
                 selectedFolderId={selectedFolderId}
+                viewMode={viewMode}
               />
             </div>
           </div>

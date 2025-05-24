@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { FileText } from 'lucide-react';
 import CompactDocumentCard from './CompactDocumentCard';
+import DocumentCard from './DocumentCard';
 import { AttachmentWithContext } from '../../utils/attachmentUtils';
 
 interface DocumentsContentProps {
@@ -9,6 +11,7 @@ interface DocumentsContentProps {
   filteredAttachments: AttachmentWithContext[];
   searchQuery: string;
   selectedFolderId: string | null;
+  viewMode: 'grid' | 'list';
 }
 
 const DocumentsContent = ({ 
@@ -16,7 +19,8 @@ const DocumentsContent = ({
   selectedFilter, 
   filteredAttachments, 
   searchQuery, 
-  selectedFolderId 
+  selectedFolderId,
+  viewMode 
 }: DocumentsContentProps) => {
   return (
     <div className="w-full max-w-7xl mx-auto">
@@ -29,13 +33,24 @@ const DocumentsContent = ({
                   <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                 </div>
               ) : null}
-              <div className="grid grid-cols-3 gap-6">
-                {attachments.map((attachment) => (
-                  <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02] px-1">
-                    <CompactDocumentCard attachment={attachment} layout="grid" />
-                  </div>
-                ))}
-              </div>
+              
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-3 gap-6">
+                  {attachments.map((attachment) => (
+                    <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02] px-1">
+                      <CompactDocumentCard attachment={attachment} layout="grid" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {attachments.map((attachment) => (
+                    <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:translate-x-1">
+                      <DocumentCard attachment={attachment} isGridView={false} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
