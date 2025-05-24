@@ -4,8 +4,6 @@ import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { APPOINTMENTS } from '../data/appointmentData';
 import { Appointment } from '../types/appointment';
-import { Button } from './ui/button';
-import { Plus } from 'lucide-react';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -79,21 +77,11 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     <div className="w-full max-w-5xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          {/* Add Appointment Button - at the top of left column */}
-          <div className="mb-4">
-            <Button
-              onClick={handleAddAppointment}
-              className="bg-white hover:bg-gray-50 text-amber-600 border border-amber-200 font-medium py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              Add Appointment
-            </Button>
-          </div>
-          
           <CalendarDateDisplay 
             date={date}
             onDateSelect={handleSelect}
             isDayWithAppointment={isDayWithAppointment}
+            onAddAppointment={handleAddAppointment}
           />
         </div>
         
