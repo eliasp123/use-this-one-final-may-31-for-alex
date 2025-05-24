@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
@@ -135,7 +134,7 @@ const Documents = () => {
           </div>
         </div>
 
-        {/* Stats cards - back to full width */}
+        {/* Stats cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
           <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
             <div className="p-4 sm:p-6">
@@ -182,8 +181,8 @@ const Documents = () => {
               onCreateFolder={handleCreateFolder}
             />
             
-            {/* Main content area - now full width minus sidebar */}
-            <div className="flex-1">
+            {/* Main content area - now matches header width */}
+            <div className="flex-1 min-w-0">
               {/* Filter buttons */}
               <div className="flex justify-center gap-3 mb-6 sm:mb-8">
                 {filterOptions.map((filter) => {
@@ -208,38 +207,40 @@ const Documents = () => {
                 })}
               </div>
 
-              {/* Documents Grid - now takes full available width */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 min-h-[500px]">
-                {filteredAttachments.length > 0 ? (
-                  <div className="space-y-6 sm:space-y-8">
-                    {groupedAttachments.map(([groupKey, attachments]) => (
-                      <div key={groupKey} className="space-y-4 sm:space-y-6">
-                        {selectedFilter === 'organization' || selectedFilter === 'date' ? (
-                          <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-                            <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
-                          </div>
-                        ) : null}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
-                          {attachments.map((attachment) => (
-                            <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
-                              <CompactDocumentCard attachment={attachment} layout="grid" />
+              {/* Documents Grid - now using container width with same buffers as header */}
+              <div className="w-full">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 min-h-[500px]">
+                  {filteredAttachments.length > 0 ? (
+                    <div className="space-y-6 sm:space-y-8">
+                      {groupedAttachments.map(([groupKey, attachments]) => (
+                        <div key={groupKey} className="space-y-4 sm:space-y-6">
+                          {selectedFilter === 'organization' || selectedFilter === 'date' ? (
+                            <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                              <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                             </div>
-                          ))}
+                          ) : null}
+                          <div className="grid grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+                            {attachments.map((attachment) => (
+                              <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
+                                <CompactDocumentCard attachment={attachment} layout="grid" />
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-24">
-                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                      <FileText className="h-10 w-10 text-gray-400" />
+                      ))}
                     </div>
-                    <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3">No documents found</h3>
-                    <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto leading-relaxed">
-                      {searchQuery ? 'Try adjusting your search terms or filters to find the documents you\'re looking for.' : selectedFolderId ? `No documents found in this folder.` : 'No email attachments are available at the moment. Documents will appear here when emails with attachments are received.'}
-                    </p>
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-center py-24">
+                      <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <FileText className="h-10 w-10 text-gray-400" />
+                      </div>
+                      <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3">No documents found</h3>
+                      <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto leading-relaxed">
+                        {searchQuery ? 'Try adjusting your search terms or filters to find the documents you\'re looking for.' : selectedFolderId ? `No documents found in this folder.` : 'No email attachments are available at the moment. Documents will appear here when emails with attachments are received.'}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
