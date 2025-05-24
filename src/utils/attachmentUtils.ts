@@ -1,5 +1,4 @@
 
-
 import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
@@ -47,7 +46,7 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
 };
 
 // Helper function to categorize file types with priority order
-const categorizeFileType = (type: string): 'documents' | 'images' | 'spreadsheets' | 'other' => {
+const categorizeFileType = (type: string): 'documents' | 'images' | 'spreadsheets' => {
   console.log('Categorizing file type:', type);
   
   // Images first (highest priority)
@@ -62,21 +61,15 @@ const categorizeFileType = (type: string): 'documents' | 'images' | 'spreadsheet
     return 'spreadsheets';
   }
   
-  // Documents third
-  if (type.includes('pdf') || type.includes('document') || type.includes('text') || type === 'application/msword') {
-    console.log('-> Categorized as documents');
-    return 'documents';
-  }
-  
-  // Everything else
-  console.log('-> Categorized as other');
-  return 'other';
+  // Everything else goes to documents (including PDFs, text files, and other files)
+  console.log('-> Categorized as documents');
+  return 'documents';
 };
 
 export const filterAttachments = (
   attachments: AttachmentWithContext[],
   searchQuery: string,
-  selectedFilter: 'all' | 'documents' | 'images' | 'spreadsheets' | 'other'
+  selectedFilter: 'all' | 'documents' | 'images' | 'spreadsheets'
 ): AttachmentWithContext[] => {
   return attachments.filter(attachment => {
     const matchesSearch = attachment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -97,7 +90,6 @@ export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
   let documents = 0;
   let images = 0;
   let spreadsheets = 0;
-  let other = 0;
 
   console.log('=== ATTACHMENT STATS CALCULATION ===');
   console.log('Total attachments to categorize:', total);
@@ -116,9 +108,6 @@ export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
       case 'spreadsheets':
         spreadsheets++;
         break;
-      case 'other':
-        other++;
-        break;
     }
   });
 
@@ -126,9 +115,8 @@ export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
   console.log('Documents:', documents);
   console.log('Images:', images);
   console.log('Spreadsheets:', spreadsheets);
-  console.log('Other:', other);
-  console.log('Total calculated:', documents + images + spreadsheets + other);
+  console.log('Total calculated:', documents + images + spreadsheets);
   console.log('Should match total:', total);
 
-  return { total, documents, images, spreadsheets, other };
+  return { total, documents, images, spreadsheets, other: 0 };
 };
