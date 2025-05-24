@@ -98,7 +98,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             </Card>
             <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
               <div className="text-center">
-                <div className="text-2xl font-bold bg-gradient-to-r from-orange-200 to-orange-400 bg-clip-text text-transparent">{stats.spreadsheets}</div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-orange-50 to-orange-100 bg-clip-text text-transparent">{stats.spreadsheets}</div>
                 <div className="text-sm text-gray-600 font-medium">Spreadsheets</div>
               </div>
             </Card>
