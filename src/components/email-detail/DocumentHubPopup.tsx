@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
-import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image } from 'lucide-react';
+import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, File } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { SidebarProvider } from '../ui/sidebar';
@@ -18,7 +19,7 @@ interface DocumentHubPopupProps {
 
 const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'other' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 
   const allAttachments = getAllAttachments();
@@ -58,7 +59,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   // Group attachments by different criteria
   const groupAttachments = (attachments: AttachmentWithContext[], filterType: string) => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
+    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets' || filterType === 'other') {
       return [['All Files', attachments] as [string, AttachmentWithContext[]]];
     }
 
@@ -93,6 +94,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
     { key: 'documents', label: 'Documents', icon: FileText },
     { key: 'images', label: 'Images', icon: Image },
     { key: 'spreadsheets', label: 'Spreadsheets', icon: FileSpreadsheet },
+    { key: 'other', label: 'Other Files', icon: File },
     { key: 'organization', label: 'Organization', icon: Users },
     { key: 'date', label: 'Date', icon: Calendar }
   ];
@@ -119,7 +121,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             
             <div className="flex-1 flex flex-col space-y-6 px-6">
               {/* Stats Row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
                   <div className="text-center">
                     <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">{stats.total}</div>
@@ -144,6 +146,12 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                     <div className="text-sm text-gray-600 font-medium">Spreadsheets</div>
                   </div>
                 </Card>
+                <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">{stats.other}</div>
+                    <div className="text-sm text-gray-600 font-medium">Other Files</div>
+                  </div>
+                </Card>
               </div>
 
               {/* Search and Filters */}
@@ -163,7 +171,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   
                   {/* Filter Grid - Right Side */}
                   <div className="grid grid-cols-3 gap-2 ml-auto">
-                    {filterOptions.map((filter) => {
+                    {filterOptions.slice(0, 6).map((filter) => {
                       const IconComponent = filter.icon;
                       return (
                         <Button
