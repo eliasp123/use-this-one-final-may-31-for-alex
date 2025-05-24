@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
@@ -95,14 +94,12 @@ const Documents = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Container matching Communication Hub exactly */}
       <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
-        {/* Header section matching Communication Hub */}
+        {/* Header section */}
         <div className="text-center mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
           <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
           
-          {/* Action buttons matching Communication Hub style and spacing */}
           <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
             <Button
               onClick={() => setShowNewEmailForm(true)}
@@ -123,7 +120,7 @@ const Documents = () => {
           </div>
         </div>
 
-        {/* Search bar matching Communication Hub exactly */}
+        {/* Search bar */}
         <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -137,45 +134,6 @@ const Documents = () => {
           </div>
         </div>
 
-        {/* Stats cards matching Communication Hub layout exactly */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
-                </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
-              </div>
-            </div>
-          </Card>
-          
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
-                </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
-              </div>
-            </div>
-          </Card>
-          
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
-                </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
         <SidebarProvider defaultOpen={true}>
           <div className="flex gap-6">
             <DocumentSidebar 
@@ -185,7 +143,46 @@ const Documents = () => {
             />
             
             <div className="flex-1">
-              {/* Filter buttons matching Communication Hub style */}
+              {/* Stats cards - now inside the main content area */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Filter buttons */}
               <div className="flex justify-center gap-3 mb-6 sm:mb-8">
                 {filterOptions.map((filter) => {
                   const IconComponent = filter.icon;
