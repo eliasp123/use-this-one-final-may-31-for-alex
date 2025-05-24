@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
 import { FileText, X, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import DocumentCard from '../documents/DocumentCard';
+import CompactDocumentCard from '../documents/CompactDocumentCard';
 import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
 import { AttachmentWithContext } from '../../utils/attachmentUtils';
 
@@ -162,10 +163,10 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                           </span>
                         </div>
                       ) : null}
-                      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4">
                         {attachments.map((attachment) => (
                           <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
-                            <DocumentCard attachment={attachment} isGridView={true} />
+                            <CompactDocumentCard attachment={attachment} layout="grid" />
                           </div>
                         ))}
                       </div>

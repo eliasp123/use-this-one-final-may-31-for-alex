@@ -5,7 +5,7 @@ import { FileText } from 'lucide-react';
 import DocumentsHeader from '../components/documents/DocumentsHeader';
 import DocumentsStats from '../components/documents/DocumentsStats';
 import DocumentsFilters from '../components/documents/DocumentsFilters';
-import DocumentCard from '../components/documents/DocumentCard';
+import CompactDocumentCard from '../components/documents/CompactDocumentCard';
 import { getAllAttachments, filterAttachments, getAttachmentStats } from '../utils/attachmentUtils';
 
 const Documents = () => {
@@ -29,14 +29,17 @@ const Documents = () => {
         />
 
         {/* Attachments Grid */}
-        <div className="grid gap-4">
+        <div className="space-y-4">
           {filteredAttachments.length > 0 ? (
-            filteredAttachments.map((attachment) => (
-              <DocumentCard 
-                key={`${attachment.emailId}-${attachment.id}`} 
-                attachment={attachment} 
-              />
-            ))
+            <div className="space-y-2">
+              {filteredAttachments.map((attachment) => (
+                <CompactDocumentCard 
+                  key={`${attachment.emailId}-${attachment.id}`} 
+                  attachment={attachment}
+                  layout="list"
+                />
+              ))}
+            </div>
           ) : (
             <Card className="p-12 text-center">
               <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
