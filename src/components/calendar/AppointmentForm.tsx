@@ -45,7 +45,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
       title: title.trim(),
       organization: organization.trim(),
       notes: notes.trim(),
-      isPrivate: Boolean(isPrivate)
+      isPrivate: isPrivate
     });
   };
 
