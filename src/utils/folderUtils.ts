@@ -1,4 +1,3 @@
-
 export interface DocumentFolder {
   id: string;
   name: string;
@@ -16,39 +15,18 @@ export interface FolderAssignment {
 // Mock data for folders - in a real app this would come from a backend
 const mockFolders: DocumentFolder[] = [
   {
-    id: 'folder-1',
-    name: 'Marketing Materials',
-    parentId: null,
-    createdAt: '2024-01-15T10:00:00Z',
-    color: 'from-blue-500 to-blue-600'
-  },
-  {
-    id: 'folder-2', 
-    name: 'Financial Reports',
-    parentId: null,
-    createdAt: '2024-01-10T14:30:00Z',
-    color: 'from-green-500 to-green-600'
-  },
-  {
     id: 'folder-3',
     name: 'Q1 2024',
-    parentId: 'folder-2',
+    parentId: 'finances',
     createdAt: '2024-01-20T09:15:00Z',
     color: 'from-green-400 to-green-500'
-  },
-  {
-    id: 'folder-4',
-    name: 'Legal Documents', 
-    parentId: null,
-    createdAt: '2024-01-05T16:45:00Z',
-    color: 'from-purple-500 to-purple-600'
   }
 ];
 
 // Mock assignments - which documents are in which folders
 const mockAssignments: FolderAssignment[] = [
-  { documentId: 'att-1', emailId: 'email-1', folderId: 'folder-1' },
-  { documentId: 'att-2', emailId: 'email-2', folderId: 'folder-2' },
+  { documentId: 'att-1', emailId: 'email-1', folderId: 'insurance' },
+  { documentId: 'att-2', emailId: 'email-2', folderId: 'medical' },
   { documentId: 'att-5', emailId: 'email-3', folderId: 'folder-3' },
 ];
 
