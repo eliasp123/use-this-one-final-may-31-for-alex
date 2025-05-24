@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Reply, CheckCircle, Clock, Lock, Unlock } from 'lucide-react';
+import { Reply, CheckCircle, Clock, Lock, Unlock, FileText } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 
@@ -34,6 +34,15 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         disabled={showReplyForm}
       >
         <Reply className="mr-1 h-4 w-4" /> Reply
+      </Button>
+      
+      <Button 
+        variant="default" 
+        size="sm" 
+        className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
+        onClick={() => navigate('/documents')}
+      >
+        <FileText className="mr-1 h-4 w-4" /> Document Hub
       </Button>
       
       {!email.replied && (
