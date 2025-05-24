@@ -33,6 +33,23 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     app.date.getFullYear() === date.getFullYear()
   ) : [];
 
+  // Get upcoming appointments from TODAY
+  const getUpcomingAppointments = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return APPOINTMENTS
+      .filter(app => {
+        const appDate = new Date(app.date);
+        appDate.setHours(0, 0, 0, 0);
+        return appDate > today;
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(0, 3);
+  };
+
+  const upcomingAppointments = getUpcomingAppointments();
+
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="mb-6">
@@ -51,7 +68,8 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         <div className="md:col-span-1">
           <AppointmentList 
             date={date}
-            appointments={selectedDateAppointments}
+            selectedAppointments={selectedDateAppointments}
+            upcomingAppointments={upcomingAppointments}
           />
         </div>
       </div>
