@@ -153,14 +153,16 @@ const Documents = () => {
                 onViewModeChange={setViewMode}
               />
 
-              <DocumentsContent 
-                groupedAttachments={groupedAttachments}
-                selectedFilter={selectedFilter}
-                filteredAttachments={filteredAttachments}
-                searchQuery={searchQuery}
-                selectedFolderId={selectedFolderId}
-                viewMode={viewMode}
-              />
+              <div className="mt-8">
+                <DocumentsContent 
+                  groupedAttachments={groupedAttachments}
+                  selectedFilter={selectedFilter}
+                  filteredAttachments={filteredAttachments}
+                  searchQuery={searchQuery}
+                  selectedFolderId={selectedFolderId}
+                  viewMode={viewMode}
+                />
+              </div>
             </div>
           </div>
         </div>
