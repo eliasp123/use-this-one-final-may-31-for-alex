@@ -50,6 +50,15 @@ const AppointmentForm = ({
       )
     : [];
 
+  // Function to check if a date has appointments
+  const isDayWithAppointment = (day: Date) => {
+    return existingAppointments.some(app => 
+      app.date.getDate() === day.getDate() && 
+      app.date.getMonth() === day.getMonth() && 
+      app.date.getFullYear() === day.getFullYear()
+    );
+  };
+
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     setDatePickerOpen(false);
@@ -107,6 +116,12 @@ const AppointmentForm = ({
                   onSelect={handleDateSelect}
                   initialFocus
                   className="pointer-events-auto"
+                  modifiers={{
+                    hasAppointment: (date) => isDayWithAppointment(date),
+                  }}
+                  modifiersClassNames={{
+                    hasAppointment: 'bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full',
+                  }}
                 />
               </PopoverContent>
             </Popover>
