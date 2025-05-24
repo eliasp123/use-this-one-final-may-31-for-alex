@@ -27,7 +27,12 @@ const mockFolders: DocumentFolder[] = [
 const mockAssignments: FolderAssignment[] = [
   { documentId: 'att-1', emailId: 'email-1', folderId: 'insurance' },
   { documentId: 'att-2', emailId: 'email-2', folderId: 'medical' },
+  { documentId: 'att-3', emailId: 'email-1', folderId: 'legal' },
+  { documentId: 'att-4', emailId: 'email-2', folderId: 'finances' },
   { documentId: 'att-5', emailId: 'email-3', folderId: 'folder-3' },
+  { documentId: 'att-6', emailId: 'email-3', folderId: 'discounts' },
+  { documentId: 'att-7', emailId: 'email-1', folderId: 'housing' },
+  { documentId: 'att-8', emailId: 'email-2', folderId: 'insurance' },
 ];
 
 export const getAllFolders = (): DocumentFolder[] => {

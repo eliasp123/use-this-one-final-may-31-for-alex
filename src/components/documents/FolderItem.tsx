@@ -63,8 +63,8 @@ const FolderItem: React.FC<FolderItemProps> = ({
           
           {documentCount > 0 && (
             <Badge 
-              variant="secondary" 
-              className="ml-2 bg-gray-100 text-gray-600 text-xs"
+              variant="circle"
+              className={`ml-2 bg-gradient-to-r ${folder.color}`}
             >
               {documentCount}
             </Badge>

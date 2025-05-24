@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -91,7 +90,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarContent className="pt-28">
         <SidebarGroup>
-          <div className="px-4 pb-60">
+          <div className="px-4 pb-4">
             <div className="space-y-3">
               {isCreatingFolder ? (
                 <div className="space-y-3">
@@ -168,7 +167,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'insurance'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('insurance')}
               onSelect={() => onFolderSelect('insurance')}
               onToggleExpand={() => {}}
               level={0}
@@ -184,7 +183,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'medical'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('medical')}
               onSelect={() => onFolderSelect('medical')}
               onToggleExpand={() => {}}
               level={0}
@@ -200,7 +199,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'legal'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('legal')}
               onSelect={() => onFolderSelect('legal')}
               onToggleExpand={() => {}}
               level={0}
@@ -216,7 +215,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'finances'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('finances')}
               onSelect={() => onFolderSelect('finances')}
               onToggleExpand={() => {}}
               level={0}
@@ -232,7 +231,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'discounts'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('discounts')}
               onSelect={() => onFolderSelect('discounts')}
               onToggleExpand={() => {}}
               level={0}
@@ -248,7 +247,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               }}
               isActive={selectedFolderId === 'housing'}
               isExpanded={false}
-              documentCount={0}
+              documentCount={getDocumentCount('housing')}
               onSelect={() => onFolderSelect('housing')}
               onToggleExpand={() => {}}
               level={0}
