@@ -30,6 +30,10 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
     .sort((a, b) => a.date.getTime() - b.date.getTime())
     .slice(0, 3); // Show only next 3 upcoming
 
+  console.log('Today:', today);
+  console.log('All appointments:', APPOINTMENTS);
+  console.log('Filtered upcoming appointments:', upcomingAppointments);
+
   return (
     <Card className="h-full shadow-sm border border-gray-100 overflow-hidden">
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
@@ -92,32 +96,32 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
         </div>
 
         {/* Separator */}
-        <Separator className="bg-gray-300" />
+        <Separator className="bg-gray-400" />
 
         {/* Bottom section for upcoming appointments */}
-        <div className="p-4">
-          <h4 className="text-sm font-medium text-gray-600 mb-3">Upcoming Appointments</h4>
+        <div className="p-4 bg-gray-50">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments</h4>
           <div className="space-y-2">
             {upcomingAppointments.length === 0 ? (
-              <p className="text-gray-400 text-xs">No upcoming appointments</p>
+              <p className="text-gray-500 text-xs">No upcoming appointments</p>
             ) : (
               upcomingAppointments.map(appointment => (
                 <div 
                   key={appointment.id} 
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-100 transition-colors border border-gray-200"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-500"></div>
                     <div>
-                      <p className="text-xs font-medium text-gray-700 truncate max-w-32">
+                      <p className="text-xs font-medium text-gray-800 truncate max-w-32">
                         {appointment.title}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-600">
                         {format(appointment.date, 'MMM d')}
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500">{appointment.time}</span>
+                  <span className="text-xs text-gray-600">{appointment.time}</span>
                 </div>
               ))
             )}
