@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { Send, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { EmailData } from '@/types/email';
+import { getAllCategories, addCustomCategory } from '@/utils/categoryUtils';
 
 interface NewEmailFormProps {
   onClose: () => void;
@@ -55,7 +55,7 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
 }) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [customCategories, setCustomCategories] = useState<CustomCategoryData[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<{ id: string; title: string }[]>([]);
   const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [showCcBcc, setShowCcBcc] = useState(false);
@@ -74,24 +74,45 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
     }
   });
 
-  const allCategories = [...predefinedCategories, ...customCategories];
+  // Load available categories (predefined + custom)
+  useEffect(() => {
+    const allCategories = getAllCategories();
+    const categoryList = Object.entries(allCategories).map(([id, data]) => ({
+      id,
+      title: data.title
+    }));
+    setAvailableCategories(categoryList);
+  }, [isOpen]);
 
   const handleAddCustomCategory = () => {
     if (newCategoryName.trim()) {
-      const categoryId = newCategoryName.toLowerCase().replace(/\s+/g, '-');
-      const newCategory = {
-        id: categoryId,
-        title: newCategoryName.trim()
-      };
-      setCustomCategories(prev => [...prev, newCategory]);
-      form.setValue('category', categoryId);
-      setNewCategoryName('');
-      setShowCustomCategoryDialog(false);
-      
-      toast({
-        title: "Category Added",
-        description: `"${newCategoryName.trim()}" has been added as a new category.`,
-      });
+      try {
+        const newCategory = addCustomCategory(newCategoryName.trim());
+        
+        // Update available categories
+        const allCategories = getAllCategories();
+        const categoryList = Object.entries(allCategories).map(([id, data]) => ({
+          id,
+          title: data.title
+        }));
+        setAvailableCategories(categoryList);
+        
+        // Set the new category as selected
+        form.setValue('category', newCategory.id);
+        setNewCategoryName('');
+        setShowCustomCategoryDialog(false);
+        
+        toast({
+          title: "Category Added",
+          description: `"${newCategoryName.trim()}" has been added as a new category.`,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to create category. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -311,7 +332,7 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {allCategories.map((category) => (
+                          {availableCategories.map((category) => (
                             <SelectItem key={category.id} value={category.id}>
                               {category.title}
                             </SelectItem>

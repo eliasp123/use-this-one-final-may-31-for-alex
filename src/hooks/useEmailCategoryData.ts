@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
-import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard } from 'lucide-react';
+import { getAllCategories } from '../utils/categoryUtils';
+import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard, Folder } from 'lucide-react';
 
 export interface EmailCategory {
   id: string;
@@ -15,116 +16,87 @@ export interface EmailCategory {
   textColor: string;
 }
 
+const categoryIconMap: Record<string, any> = {
+  'senior-living': Heart,
+  'home-care': Home,
+  'government': Shield,
+  'attorneys': Scale,
+  'other-professionals': Users,
+  'va': Award,
+  'physical-therapy': Activity,
+  'paying-for-care': CreditCard,
+};
+
+const categoryTextColorMap: Record<string, string> = {
+  'senior-living': 'text-rose-700',
+  'home-care': 'text-blue-700',
+  'government': 'text-emerald-700',
+  'attorneys': 'text-amber-700',
+  'other-professionals': 'text-indigo-700',
+  'va': 'text-teal-700',
+  'physical-therapy': 'text-cyan-700',
+  'paying-for-care': 'text-lime-700',
+};
+
 export const useEmailCategoryData = () => {
   const [totalUnread, setTotalUnread] = useState(0);
   const [totalPending, setTotalPending] = useState(0);
   const [totalUnresponded, setTotalUnresponded] = useState(0);
   const [emailCategories, setEmailCategories] = useState<EmailCategory[]>([]);
 
-  // Load email counts and categories
-  useEffect(() => {
+  const loadCategories = () => {
     setTotalUnread(getUnreadEmails().length);
     setTotalPending(getPendingEmails().length);
     setTotalUnresponded(getUnrespondedEmails().length);
     
-    const categories = [
-      {
-        id: 'senior-living',
-        title: 'Senior Living',
-        icon: Heart,
-        unread: getUnreadEmails('senior-living').length,
-        pending: getPendingEmails('senior-living').length,
-        total: 12,
-        color: 'from-rose-400 to-pink-500',
-        bgColor: 'bg-rose-50',
-        textColor: 'text-rose-700'
-      },
-      {
-        id: 'home-care',
-        title: 'Home Care',
-        icon: Home,
-        unread: getUnreadEmails('home-care').length,
-        pending: getPendingEmails('home-care').length,
-        total: 8,
-        color: 'from-blue-400 to-blue-500',
-        bgColor: 'bg-blue-50',
-        textColor: 'text-blue-700'
-      },
-      {
-        id: 'government',
-        title: 'Government',
-        icon: Shield,
-        unread: getUnreadEmails('government').length,
-        pending: getPendingEmails('government').length,
-        total: 21,
-        color: 'from-emerald-400 to-emerald-500',
-        bgColor: 'bg-emerald-50',
-        textColor: 'text-emerald-700'
-      },
-      {
-        id: 'attorneys',
-        title: 'Attorneys',
-        icon: Scale,
-        unread: getUnreadEmails('attorneys').length,
-        pending: getPendingEmails('attorneys').length,
-        total: 9,
-        color: 'from-amber-400 to-orange-500',
-        bgColor: 'bg-amber-50',
-        textColor: 'text-amber-700'
-      },
-      {
-        id: 'other-professionals',
-        title: 'Other Professionals',
-        icon: Users,
-        unread: getUnreadEmails('other-professionals').length,
-        pending: getPendingEmails('other-professionals').length,
-        total: 9,
-        color: 'from-indigo-400 to-indigo-500',
-        bgColor: 'bg-indigo-50',
-        textColor: 'text-indigo-700'
-      },
-      {
-        id: 'va',
-        title: 'VA',
-        icon: Award,
-        unread: getUnreadEmails('va').length,
-        pending: getPendingEmails('va').length,
-        total: 7,
-        color: 'from-teal-400 to-teal-500',
-        bgColor: 'bg-teal-50',
-        textColor: 'text-teal-700'
-      },
-      {
-        id: 'physical-therapy',
-        title: 'Physical Therapy',
-        icon: Activity,
-        unread: getUnreadEmails('physical-therapy').length,
-        pending: getPendingEmails('physical-therapy').length,
-        total: 5,
-        color: 'from-cyan-400 to-cyan-500',
-        bgColor: 'bg-cyan-50',
-        textColor: 'text-cyan-700'
-      },
-      {
-        id: 'paying-for-care',
-        title: 'Paying for Care',
-        icon: CreditCard,
-        unread: getUnreadEmails('paying-for-care').length,
-        pending: getPendingEmails('paying-for-care').length,
-        total: 6,
-        color: 'from-lime-400 to-lime-500',
-        bgColor: 'bg-lime-50',
-        textColor: 'text-lime-700'
+    const allCategories = getAllCategories();
+    
+    const categories = Object.entries(allCategories).map(([id, categoryData]) => {
+      const unreadCount = getUnreadEmails(id).length;
+      const pendingCount = getPendingEmails(id).length;
+      
+      // Use predefined icon for known categories, Folder icon for custom ones
+      const icon = categoryIconMap[id] || Folder;
+      
+      // Generate text color based on background color for custom categories
+      let textColor = categoryTextColorMap[id];
+      if (!textColor) {
+        // For custom categories, derive text color from background color
+        if (categoryData.bgColor.includes('purple')) textColor = 'text-purple-700';
+        else if (categoryData.bgColor.includes('pink')) textColor = 'text-pink-700';
+        else if (categoryData.bgColor.includes('red')) textColor = 'text-red-700';
+        else if (categoryData.bgColor.includes('orange')) textColor = 'text-orange-700';
+        else if (categoryData.bgColor.includes('yellow')) textColor = 'text-yellow-700';
+        else if (categoryData.bgColor.includes('green')) textColor = 'text-green-700';
+        else textColor = 'text-slate-700';
       }
-    ];
+      
+      return {
+        id,
+        title: categoryData.title,
+        icon,
+        unread: unreadCount,
+        pending: pendingCount,
+        total: Math.floor(Math.random() * 15) + 5, // Random total for demo
+        color: categoryData.color.replace('bg-gradient-to-r ', ''),
+        bgColor: categoryData.bgColor,
+        textColor
+      };
+    });
     
     setEmailCategories(categories);
+  };
+
+  // Load email counts and categories
+  useEffect(() => {
+    loadCategories();
   }, []);
 
   return {
     totalUnread,
     totalPending,
     totalUnresponded,
-    emailCategories
+    emailCategories,
+    refreshCategories: loadCategories
   };
 };

@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { useEmailCategoryData } from '@/hooks/useEmailCategoryData';
 import { useEmailFiltering } from '@/hooks/useEmailFiltering';
 import { useEmailFormatter } from '@/hooks/useEmailFormatter';
-import { categoryInfo } from '@/utils/categoryUtils';
+import { getAllCategories } from '@/utils/categoryUtils';
 import EmailSidebar from '@/components/email-list/EmailSidebar';
 import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
@@ -19,7 +19,7 @@ const EmailList = () => {
   const [activeTab, setActiveTab] = useState<string>(status || 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
-  const { emailCategories } = useEmailCategoryData();
+  const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { formatDate } = useEmailFormatter();
   const { filteredEmails } = useEmailFiltering({ 
     category, 
@@ -48,8 +48,13 @@ const EmailList = () => {
     });
   };
 
+  const handleCategoryAdded = () => {
+    refreshCategories();
+  };
+
   // Get info for current category
-  const currentCategory = category ? categoryInfo[category] : null;
+  const allCategories = getAllCategories();
+  const currentCategory = category ? allCategories[category] : null;
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -59,6 +64,7 @@ const EmailList = () => {
           emailCategories={emailCategories} 
           category={category} 
           activeTab={activeTab}
+          onCategoryAdded={handleCategoryAdded}
         />
         
         {/* Main Content - Updated padding to include pt-16 for consistent top spacing */}

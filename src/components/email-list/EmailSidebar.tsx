@@ -6,22 +6,33 @@ import {
   SidebarGroup, 
   SidebarMenu 
 } from '@/components/ui/sidebar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Plus, FolderPlus } from 'lucide-react';
 import { EmailCategory } from '@/hooks/useEmailCategoryData';
 import EmailCategoryItem from './EmailCategoryItem';
+import { addCustomCategory } from '@/utils/categoryUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface EmailSidebarProps {
   emailCategories: EmailCategory[];
   category: string | undefined;
   activeTab: string;
+  onCategoryAdded?: () => void;
 }
 
 const EmailSidebar: React.FC<EmailSidebarProps> = ({ 
   emailCategories, 
   category, 
-  activeTab 
+  activeTab,
+  onCategoryAdded 
 }) => {
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [orderedCategories, setOrderedCategories] = useState(emailCategories);
+  const [showNewCategoryDialog, setShowNewCategoryDialog] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const { toast } = useToast();
 
   // Update ordered categories when prop changes
   React.useEffect(() => {
@@ -60,10 +71,73 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     setDraggedItem(null);
   };
 
+  const handleAddCustomCategory = () => {
+    if (newCategoryName.trim()) {
+      try {
+        addCustomCategory(newCategoryName.trim());
+        setNewCategoryName('');
+        setShowNewCategoryDialog(false);
+        
+        toast({
+          title: "Category Created",
+          description: `"${newCategoryName.trim()}" has been added as a new category.`,
+        });
+        
+        // Notify parent component to refresh categories
+        if (onCategoryAdded) {
+          onCategoryAdded();
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to create category. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16">  
         <SidebarGroup className="pt-8">
+          {/* Add Category Button */}
+          <div className="px-3 mb-4">
+            <Dialog open={showNewCategoryDialog} onOpenChange={setShowNewCategoryDialog}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Category
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create New Category</DialogTitle>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Category name"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddCustomCategory();
+                      }
+                    }}
+                  />
+                  <Button onClick={handleAddCustomCategory} size="sm">
+                    Create
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
           <SidebarMenu className="space-y-1">
             {orderedCategories.map((cat, index) => (
               <div key={cat.id}>
