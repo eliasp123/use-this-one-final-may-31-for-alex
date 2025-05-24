@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
@@ -82,6 +83,19 @@ const categoryTitleMap: Record<string, string> = {
   'paying-for-care': 'Paying for Care'
 };
 
+// Function to filter emails by search query
+const filterEmailsBySearch = (emails: any[], searchQuery: string) => {
+  if (!searchQuery.trim()) return emails;
+  
+  const query = searchQuery.toLowerCase();
+  return emails.filter(email => 
+    email.subject.toLowerCase().includes(query) ||
+    email.sender.name.toLowerCase().includes(query) ||
+    email.sender.organization.toLowerCase().includes(query) ||
+    email.content.toLowerCase().includes(query)
+  );
+};
+
 const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({ 
   searchQuery = '' 
 }) => {
@@ -93,12 +107,20 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
     filteredEmailsByCategory
   } = useFilteredEmailData();
 
-  const totalUnread = getFilteredUnreadEmails().length;
-  const totalPending = getFilteredPendingEmails().length;
-  const totalUnresponded = getFilteredUnrespondedEmails().length;
+  // Apply search filtering to all email categories
+  const searchFilteredEmailsByCategory = Object.entries(filteredEmailsByCategory).reduce((acc, [category, emails]) => {
+    acc[category] = filterEmailsBySearch(emails, searchQuery);
+    return acc;
+  }, {} as Record<string, any[]>);
+
+  // Calculate totals based on search-filtered emails
+  const allSearchFilteredEmails = Object.values(searchFilteredEmailsByCategory).flat();
+  const totalUnread = allSearchFilteredEmails.filter(email => !email.read).length;
+  const totalPending = allSearchFilteredEmails.filter(email => !email.replied && email.read).length;
+  const totalUnresponded = allSearchFilteredEmails.filter(email => email.replied && !email.responseReceived).length;
 
   // Transform filtered emails by category into the format expected by EmailCategoryGrid
-  const emailCategories = Object.entries(filteredEmailsByCategory).map(([category, emails]) => {
+  const emailCategories = Object.entries(searchFilteredEmailsByCategory).map(([category, emails]) => {
     const unreadCount = emails.filter(email => !email.read).length;
     const pendingCount = emails.filter(email => !email.replied && email.read).length;
     
