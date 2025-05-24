@@ -85,7 +85,7 @@ const AppointmentFormFields = ({
                 hasAppointment: (date) => isDayWithAppointment(date),
               }}
               modifiersClassNames={{
-                hasAppointment: 'relative before:absolute before:top-1 before:right-1 before:w-2 before:h-2 before:bg-orange-400 before:rounded-full',
+                hasAppointment: 'bg-orange-100 hover:bg-orange-200 text-orange-900',
               }}
             />
           </PopoverContent>
