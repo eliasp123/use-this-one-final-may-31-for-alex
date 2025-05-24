@@ -146,7 +146,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
                 name: 'All Files',
                 parentId: null,
                 createdAt: '',
-                color: 'from-gray-400 to-gray-500'
+                color: 'from-purple-400 to-purple-500'
               }}
               isActive={selectedFolderId === null}
               isExpanded={false}
