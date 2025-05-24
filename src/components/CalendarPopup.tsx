@@ -82,6 +82,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
             onDateSelect={handleSelect}
             isDayWithAppointment={isDayWithAppointment}
             onAddAppointment={handleAddAppointment}
+            appointments={APPOINTMENTS}
           />
         </div>
         
