@@ -99,25 +99,21 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     return (
       <Card className="hover:shadow-lg transition-all duration-200 bg-white/90 backdrop-blur-sm border border-gray-200/60 h-full">
         <CardContent className="p-6 flex flex-col h-full">
-          {/* File Icon and Name Section - Fixed Height */}
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className={`w-16 h-16 rounded-2xl ${fileInfo.bgColor} flex items-center justify-center mb-4 shadow-sm`}>
+          {/* File Icon and Name Section */}
+          <div className="flex flex-col items-center text-center mb-4">
+            <div className={`w-16 h-16 rounded-2xl ${fileInfo.bgColor} flex items-center justify-center mb-3 shadow-sm`}>
               <FileIcon className={`h-8 w-8 ${fileInfo.textColor}`} />
             </div>
-            {/* File name with word-wrap and fixed height container */}
-            <div className="h-12 flex items-center justify-center w-full mb-3">
-              <h3 className="font-semibold text-gray-800 text-sm leading-tight text-center break-words hyphens-auto">
-                {attachment.name}
-              </h3>
-            </div>
-            {/* File size with consistent positioning */}
+            <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2">
+              {attachment.name}
+            </h3>
             <div className="text-xs font-medium text-gray-600 mb-4">
               {formatFileSize(attachment.size)}
             </div>
           </div>
 
-          {/* Metadata Section - Starts at same level for all cards */}
-          <div className="flex-1 space-y-3 mb-4">
+          {/* Metadata Section */}
+          <div className="flex-1 space-y-2 mb-4">
             <div className="flex items-center justify-center gap-1 text-xs text-gray-600">
               <User className="h-3 w-3 flex-shrink-0" />
               <span className="truncate text-center">{attachment.senderName}</span>
