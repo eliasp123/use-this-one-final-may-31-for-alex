@@ -95,7 +95,7 @@ const Documents = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-4 sm:py-8 pt-16 max-w-7xl">
+      <div className="mx-auto px-6 py-4 sm:py-8 pt-16 max-w-[1400px]">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
@@ -128,14 +128,14 @@ const Documents = () => {
         </div>
 
         <SidebarProvider defaultOpen={true}>
-          <div className="flex h-full min-h-[600px] w-full">
+          <div className="flex h-full min-h-[600px] w-full gap-6">
             <DocumentSidebar 
               selectedFolderId={selectedFolderId}
               onFolderSelect={setSelectedFolderId}
               onCreateFolder={handleCreateFolder}
             />
             
-            <div className="flex-1 flex flex-col space-y-6 px-8">
+            <div className="flex-1 flex flex-col space-y-6">
               {/* Stats Row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card className="p-4 bg-white border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
