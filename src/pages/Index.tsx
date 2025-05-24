@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText, Calendar, Search } from 'lucide-react';
+import { Info, Pencil, FileText, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import AutocompleteSearch from '../components/AutocompleteSearch';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import CalendarPopup from '../components/CalendarPopup';
 import { 
   Pagination, 
   PaginationContent, 
@@ -102,18 +101,6 @@ const Index = () => {
             
             {/* Action buttons centered under the subheader with spacing */}
             <div className="mt-6 sm:mt-8 flex gap-3">
-              <CalendarPopup 
-                trigger={
-                  <Button
-                    variant="outline"
-                    className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
-                  >
-                    <Calendar className="mr-2 h-4 w-4" />
-                    Calendar
-                  </Button>
-                }
-              />
-              
               <Button
                 onClick={() => setShowNewEmailForm(true)}
                 className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center"
