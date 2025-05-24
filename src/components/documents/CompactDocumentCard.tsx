@@ -106,12 +106,12 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           </div>
         </div>
 
-        {/* Centered Status Badge and File Size */}
-        <div className="flex flex-col items-center mb-5 space-y-2">
+        {/* Left-aligned Status Badge and File Size */}
+        <div className="flex flex-col items-start mb-5 space-y-2">
           <Badge className={`${fileInfo.badgeColor} text-white text-sm px-3 py-1`}>
             {attachment.direction === 'received' ? 'Received' : 'Sent'}
           </Badge>
-          <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+          <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
         </div>
 
         {/* Actions */}
