@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
+import { getUnreadEmails, getPendingEmails, getUnrespondedEmails, getEmailsByCategory } from '../data/emailData';
 import { getAllCategories } from '../utils/categoryUtils';
 import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard, Folder } from 'lucide-react';
 
@@ -71,13 +71,25 @@ export const useEmailCategoryData = () => {
         else textColor = 'text-slate-700';
       }
       
+      // Calculate total based on actual emails for custom categories, random for predefined ones
+      let totalCount;
+      if (categoryIconMap[id]) {
+        // Predefined categories get random counts for demo purposes
+        totalCount = Math.floor(Math.random() * 15) + 5;
+      } else {
+        // Custom categories get actual email counts
+        const categoryEmails = getEmailsByCategory(id);
+        totalCount = categoryEmails.length;
+        console.log(`Custom category ${id} has ${totalCount} actual emails`);
+      }
+      
       return {
         id,
         title: categoryData.title,
         icon,
         unread: unreadCount,
         pending: pendingCount,
-        total: Math.floor(Math.random() * 15) + 5, // Random total for demo
+        total: totalCount,
         color: categoryData.color.replace('bg-gradient-to-r ', ''),
         bgColor: categoryData.bgColor,
         textColor
