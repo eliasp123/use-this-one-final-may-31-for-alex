@@ -49,12 +49,19 @@ const DocumentsViewToggle = ({
           type="single" 
           value={directionFilter} 
           onValueChange={(value) => value && onDirectionFilterChange(value as 'all' | 'received' | 'sent')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-60 justify-center"
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-80 justify-center"
         >
+          <ToggleGroupItem 
+            value="all" 
+            aria-label="All documents"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-gray-600 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+          >
+            <span className="text-sm font-medium">All</span>
+          </ToggleGroupItem>
           <ToggleGroupItem 
             value="received" 
             aria-label="Received documents"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-green-400 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <ArrowDown className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">Received</span>
@@ -62,7 +69,7 @@ const DocumentsViewToggle = ({
           <ToggleGroupItem 
             value="sent" 
             aria-label="Sent documents"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-orange-400 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-orange-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <ArrowUp className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">Sent</span>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -35,8 +36,8 @@ const Documents = () => {
       })
     : allAttachments;
 
-  // Apply direction filter ONLY if the selected filter is not 'all'
-  const directionFilteredAttachments = (selectedFilter === 'all' || directionFilter === 'all')
+  // Apply direction filter - this should work regardless of other filters
+  const directionFilteredAttachments = directionFilter === 'all'
     ? folderFilteredAttachments 
     : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
 
@@ -100,11 +101,11 @@ const Documents = () => {
 
   const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
 
-  // Calculate counts for each filter - when 'all' filter is selected, show total counts regardless of direction
+  // Calculate counts for each filter - when direction filter is applied, respect it
   const getFilterCount = (filterType: string) => {
-    // For 'all' filter type, always use all attachments regardless of direction
-    const baseAttachments = filterType === 'all' ? allAttachments : 
-      (directionFilter === 'all' ? allAttachments : allAttachments.filter(attachment => attachment.direction === directionFilter));
+    // Apply direction filter first
+    const baseAttachments = directionFilter === 'all' ? allAttachments : 
+      allAttachments.filter(attachment => attachment.direction === directionFilter);
     
     const baseStats = getAttachmentStats(baseAttachments);
     
