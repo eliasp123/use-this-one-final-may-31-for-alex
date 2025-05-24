@@ -139,7 +139,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
             </div>
           </div>
           
-          <SidebarMenu className="space-y-1">
+          <SidebarMenu className="space-y-2">
             {/* All Files option */}
             <FolderItem
               folder={{
