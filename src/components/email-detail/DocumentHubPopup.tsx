@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -5,7 +6,10 @@ import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, I
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { SidebarProvider } from '../ui/sidebar';
+import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
+import { LayoutGrid, LayoutList } from 'lucide-react';
 import CompactDocumentCard from '../documents/CompactDocumentCard';
+import DocumentCard from '../documents/DocumentCard';
 import DocumentSidebar from '../documents/DocumentSidebar';
 import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
 import { getDocumentsInFolder, getDocumentFolder, createFolder } from '../../utils/folderUtils';
@@ -20,6 +24,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const allAttachments = getAllAttachments();
   
@@ -194,6 +199,33 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                 </div>
               </div>
 
+              {/* View Mode Toggle */}
+              <div className="flex justify-center">
+                <ToggleGroup 
+                  type="single" 
+                  value={viewMode} 
+                  onValueChange={(value) => value && setViewMode(value as 'grid' | 'list')}
+                  className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-60 justify-center"
+                >
+                  <ToggleGroupItem 
+                    value="grid" 
+                    aria-label="Grid view"
+                    className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+                  >
+                    <LayoutGrid className="h-4 w-4 mr-2" />
+                    <span className="text-sm font-medium">Grid</span>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem 
+                    value="list" 
+                    aria-label="List view"
+                    className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+                  >
+                    <LayoutList className="h-4 w-4 mr-2" />
+                    <span className="text-sm font-medium">List</span>
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+
               {/* Documents Grid */}
               <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-200/60 bg-white">
                 <div className="px-6 py-6">
@@ -206,13 +238,24 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                               <h3 className="text-lg font-semibold text-gray-800">{groupKey}</h3>
                             </div>
                           ) : null}
-                          <div className="grid grid-cols-3 gap-10">
-                            {attachments.map((attachment) => (
-                              <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
-                                <CompactDocumentCard attachment={attachment} layout="grid" />
-                              </div>
-                            ))}
-                          </div>
+                          
+                          {viewMode === 'grid' ? (
+                            <div className="grid grid-cols-3 gap-10">
+                              {attachments.map((attachment) => (
+                                <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
+                                  <CompactDocumentCard attachment={attachment} layout="grid" />
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              {attachments.map((attachment) => (
+                                <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:translate-x-1">
+                                  <DocumentCard attachment={attachment} isGridView={false} />
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
