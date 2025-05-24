@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -28,6 +27,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const allFolders = getAllFolders();
   const rootFolders = getFoldersByParent(null);
@@ -96,38 +96,67 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     setDraggedItem(folderId);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', folderId);
+    
+    // Set drag image to be slightly transparent
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '0.5';
+    }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedItem && index !== dragOverIndex) {
+      setDragOverIndex(index);
+    }
   };
 
-  const handleDrop = (e: React.DragEvent, targetFolderId: string) => {
+  const handleDragEnter = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedItem) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear drag over index if we're leaving the entire drop zone
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverIndex(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
     
     const draggedId = e.dataTransfer.getData('text/plain') || draggedItem;
     
-    if (!draggedId || draggedId === targetFolderId) {
+    if (!draggedId) {
       setDraggedItem(null);
+      setDragOverIndex(null);
       return;
     }
 
     const newFolders = [...orderedFolders];
     const draggedIndex = newFolders.findIndex(folder => folder.id === draggedId);
-    const targetIndex = newFolders.findIndex(folder => folder.id === targetFolderId);
 
-    if (draggedIndex !== -1 && targetIndex !== -1) {
+    if (draggedIndex !== -1 && targetIndex !== draggedIndex) {
       const [draggedFolder] = newFolders.splice(draggedIndex, 1);
       newFolders.splice(targetIndex, 0, draggedFolder);
       setOrderedFolders(newFolders);
     }
 
     setDraggedItem(null);
+    setDragOverIndex(null);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: React.DragEvent) => {
+    // Reset opacity
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '1';
+    }
     setDraggedItem(null);
+    setDragOverIndex(null);
   };
 
   const toggleExpanded = (folderId: string) => {
@@ -188,7 +217,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarContent className="pt-32">
+      <SidebarContent className="pt-20">
         <SidebarGroup>
           {/* Create Folder Button aligned with main content */}
           <div className="px-3 mb-6">
@@ -241,35 +270,48 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
           <div className="h-6" />
           
           <SidebarMenu className="space-y-1">
-            {/* Default Category Folders with drag and drop and 3-at-a-time spacing */}
-            {orderedFolders.map((folder, index) => (
-              <div key={folder.id}>
-                <div
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, folder.id)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, folder.id)}
-                  onDragEnd={handleDragEnd}
-                  className={`cursor-move transition-all ${
-                    draggedItem === folder.id ? 'opacity-50 scale-95' : ''
-                  }`}
-                >
-                  <FolderItem
-                    folder={folder}
-                    isActive={selectedFolderId === folder.id}
-                    isExpanded={false}
-                    documentCount={folder.id === 'all' ? 0 : getDocumentCount(folder.id)}
-                    onSelect={() => onFolderSelect(folder.id === 'all' ? null : folder.id)}
-                    onToggleExpand={() => {}}
-                    level={0}
-                  />
+            {/* Default Category Folders with enhanced drag and drop */}
+            {orderedFolders.map((folder, index) => {
+              const isDragging = draggedItem === folder.id;
+              const isDropTarget = dragOverIndex === index;
+              
+              return (
+                <div key={folder.id} className="relative">
+                  {/* Drop indicator line above */}
+                  {isDropTarget && draggedItem !== folder.id && (
+                    <div className="absolute -top-1 left-3 right-3 h-0.5 bg-purple-500 rounded-full z-10" />
+                  )}
+                  
+                  <div
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, folder.id)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragEnter={(e) => handleDragEnter(e, index)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, index)}
+                    onDragEnd={handleDragEnd}
+                    className={`cursor-move transition-all duration-200 ${
+                      isDragging ? 'scale-95 rotate-1 shadow-lg z-20' : ''
+                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''}`}
+                  >
+                    <FolderItem
+                      folder={folder}
+                      isActive={selectedFolderId === folder.id}
+                      isExpanded={false}
+                      documentCount={folder.id === 'all' ? 0 : getDocumentCount(folder.id)}
+                      onSelect={() => onFolderSelect(folder.id === 'all' ? null : folder.id)}
+                      onToggleExpand={() => {}}
+                      level={0}
+                    />
+                  </div>
+                  
+                  {/* Add extra space every 3 items with increased spacing */}
+                  {(index + 1) % 3 === 0 && index < orderedFolders.length - 1 && (
+                    <div className="h-8" />
+                  )}
                 </div>
-                {/* Add extra space every 3 items with increased spacing */}
-                {(index + 1) % 3 === 0 && index < orderedFolders.length - 1 && (
-                  <div className="h-8" />
-                )}
-              </div>
-            ))}
+              );
+            })}
             
             {/* Custom user-created folders */}
             {renderFolderTree(rootFolders)}

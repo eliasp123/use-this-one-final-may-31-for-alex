@@ -29,6 +29,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
   onCategoryAdded 
 }) => {
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [orderedCategories, setOrderedCategories] = useState(emailCategories);
   const [showNewCategoryDialog, setShowNewCategoryDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -43,38 +44,67 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     setDraggedItem(categoryId);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', categoryId);
+    
+    // Set drag image to be slightly transparent
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '0.5';
+    }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedItem && index !== dragOverIndex) {
+      setDragOverIndex(index);
+    }
   };
 
-  const handleDrop = (e: React.DragEvent, targetCategoryId: string) => {
+  const handleDragEnter = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedItem) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear drag over index if we're leaving the entire drop zone
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverIndex(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
     
     const draggedId = e.dataTransfer.getData('text/plain') || draggedItem;
     
-    if (!draggedId || draggedId === targetCategoryId) {
+    if (!draggedId) {
       setDraggedItem(null);
+      setDragOverIndex(null);
       return;
     }
 
     const newCategories = [...orderedCategories];
     const draggedIndex = newCategories.findIndex(cat => cat.id === draggedId);
-    const targetIndex = newCategories.findIndex(cat => cat.id === targetCategoryId);
 
-    if (draggedIndex !== -1 && targetIndex !== -1) {
+    if (draggedIndex !== -1 && targetIndex !== draggedIndex) {
       const [draggedCategory] = newCategories.splice(draggedIndex, 1);
       newCategories.splice(targetIndex, 0, draggedCategory);
       setOrderedCategories(newCategories);
     }
 
     setDraggedItem(null);
+    setDragOverIndex(null);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: React.DragEvent) => {
+    // Reset opacity
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '1';
+    }
     setDraggedItem(null);
+    setDragOverIndex(null);
   };
 
   const handleAddCustomCategory = () => {
@@ -145,30 +175,43 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
           </div>
 
           <SidebarMenu className="space-y-1">
-            {orderedCategories.map((cat, index) => (
-              <div key={cat.id}>
-                <div
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, cat.id)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, cat.id)}
-                  onDragEnd={handleDragEnd}
-                  className={`cursor-move transition-all ${
-                    draggedItem === cat.id ? 'opacity-50 scale-95' : ''
-                  }`}
-                >
-                  <EmailCategoryItem 
-                    category={cat} 
-                    activeCategory={category} 
-                    activeTab={activeTab} 
-                  />
+            {orderedCategories.map((cat, index) => {
+              const isDragging = draggedItem === cat.id;
+              const isDropTarget = dragOverIndex === index;
+              
+              return (
+                <div key={cat.id} className="relative">
+                  {/* Drop indicator line above */}
+                  {isDropTarget && draggedItem !== cat.id && (
+                    <div className="absolute -top-1 left-3 right-3 h-0.5 bg-purple-500 rounded-full z-10" />
+                  )}
+                  
+                  <div
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, cat.id)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragEnter={(e) => handleDragEnter(e, index)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, index)}
+                    onDragEnd={handleDragEnd}
+                    className={`cursor-move transition-all duration-200 ${
+                      isDragging ? 'scale-95 rotate-1 shadow-lg z-20' : ''
+                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''}`}
+                  >
+                    <EmailCategoryItem 
+                      category={cat} 
+                      activeCategory={category} 
+                      activeTab={activeTab} 
+                    />
+                  </div>
+                  
+                  {/* Add extra space every 3 items with increased spacing */}
+                  {(index + 1) % 3 === 0 && index < orderedCategories.length - 1 && (
+                    <div className="h-8" />
+                  )}
                 </div>
-                {/* Add extra space every 3 items with increased spacing */}
-                {(index + 1) % 3 === 0 && index < orderedCategories.length - 1 && (
-                  <div className="h-8" />
-                )}
-              </div>
-            ))}
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
