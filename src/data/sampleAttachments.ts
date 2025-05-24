@@ -157,5 +157,47 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       url: "/documents/activity-schedule.docx"
     }
+  ],
+  // New sent emails with attachments
+  "sent_001": [
+    {
+      id: "att_sent_001",
+      name: "Insurance_Questions_Response.pdf",
+      size: 845000,
+      type: "application/pdf",
+      url: "/documents/insurance-questions-response.pdf"
+    },
+    {
+      id: "att_sent_002",
+      name: "Updated_Emergency_Contacts.docx",
+      size: 325000,
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      url: "/documents/emergency-contacts.docx"
+    }
+  ],
+  "sent_002": [
+    {
+      id: "att_sent_003",
+      name: "Family_Medical_History_Complete.xlsx",
+      size: 1240000,
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      url: "/documents/family-medical-history.xlsx"
+    }
+  ],
+  "sent_003": [
+    {
+      id: "att_sent_004",
+      name: "Care_Preferences_Form.pdf",
+      size: 680000,
+      type: "application/pdf",
+      url: "/documents/care-preferences.pdf"
+    },
+    {
+      id: "att_sent_005",
+      name: "Weekly_Schedule_Photo.jpg",
+      size: 1560000,
+      type: "image/jpeg",
+      url: "/documents/weekly-schedule.jpg"
+    }
   ]
 };

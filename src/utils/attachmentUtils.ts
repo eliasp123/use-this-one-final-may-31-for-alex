@@ -1,4 +1,3 @@
-
 import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
@@ -22,6 +21,10 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
     if (email.attachments && email.attachments.length > 0) {
       email.attachments.forEach(attachment => {
         console.log(`Adding attachment: ${attachment.name} from email ${email.id}`);
+        
+        // Determine direction based on email ID - sent emails have IDs starting with 'sent_'
+        const direction = email.id.startsWith('sent_') ? 'sent' : 'received';
+        
         attachments.push({
           ...attachment,
           emailId: email.id,
@@ -29,14 +32,14 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
           senderName: email.sender.name,
           senderOrganization: email.sender.organization,
           emailDate: email.date,
-          direction: 'received'
+          direction: direction
         });
       });
     }
   });
 
   console.log('Total attachments found:', attachments.length);
-  console.log('Attachments:', attachments.map(a => a.name));
+  console.log('Attachments:', attachments.map(a => `${a.name} (${a.direction})`));
   
   return attachments.sort((a, b) => new Date(b.emailDate).getTime() - new Date(a.emailDate).getTime());
 };
