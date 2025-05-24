@@ -13,6 +13,7 @@ interface AppointmentFormProps {
     title: string;
     organization: string;
     notes: string;
+    to: string;
   }) => void;
   onCancel: () => void;
   onDateChange?: (date: Date | undefined) => void;
@@ -24,6 +25,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
   const [title, setTitle] = useState<string>('');
   const [organization, setOrganization] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  const [to, setTo] = useState<string>('');
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -42,7 +44,8 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
       date: selectedDate,
       title: title.trim(),
       organization: organization.trim(),
-      notes: notes.trim()
+      notes: notes.trim(),
+      to: to.trim()
     });
   };
 
@@ -60,10 +63,12 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
             title={title}
             organization={organization}
             notes={notes}
+            to={to}
             onDateSelect={handleDateSelect}
             onTitleChange={setTitle}
             onOrganizationChange={setOrganization}
             onNotesChange={setNotes}
+            onToChange={setTo}
           />
 
           {/* Right Column - Existing Appointments */}

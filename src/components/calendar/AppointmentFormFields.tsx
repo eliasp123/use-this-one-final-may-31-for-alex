@@ -14,10 +14,12 @@ interface AppointmentFormFieldsProps {
   title: string;
   organization: string;
   notes: string;
+  to: string;
   onDateSelect: (date: Date | undefined) => void;
   onTitleChange: (title: string) => void;
   onOrganizationChange: (organization: string) => void;
   onNotesChange: (notes: string) => void;
+  onToChange: (to: string) => void;
 }
 
 const AppointmentFormFields = ({
@@ -25,10 +27,12 @@ const AppointmentFormFields = ({
   title,
   organization,
   notes,
+  to,
   onDateSelect,
   onTitleChange,
   onOrganizationChange,
   onNotesChange,
+  onToChange,
 }: AppointmentFormFieldsProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -79,6 +83,18 @@ const AppointmentFormFields = ({
           onChange={(e) => onTitleChange(e.target.value)}
           placeholder="e.g., Doctor Visit, Physical Therapy"
           required
+          className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+        />
+      </div>
+
+      {/* To Field */}
+      <div className="space-y-3">
+        <Label htmlFor="to" className="text-lg font-medium">To</Label>
+        <Input
+          id="to"
+          value={to}
+          onChange={(e) => onToChange(e.target.value)}
+          placeholder="e.g., Dr. Smith, Family Member (optional)"
           className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
         />
       </div>

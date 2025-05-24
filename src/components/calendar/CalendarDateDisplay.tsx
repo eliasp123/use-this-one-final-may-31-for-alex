@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -23,6 +24,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     title: string;
     organization: string;
     notes: string;
+    to: string;
   }) => {
     console.log('Saving appointment:', appointmentData);
     // Here you would typically save to your data store
@@ -77,10 +79,10 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               }}
             />
             
-            {/* Custom Dialog Overlay - Fixed height container with proper button positioning */}
+            {/* Custom Dialog Overlay - Enlarged container */}
             {isDialogOpen && (
-              <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto">
-                <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[95vw] max-w-[1200px] min-h-[600px] max-h-[calc(100vh-4rem)] flex flex-col relative my-auto">
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto bg-black/50">
+                <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
                   {/* Close button */}
                   <div className="absolute right-4 top-4 z-10">
                     <button
