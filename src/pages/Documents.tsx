@@ -121,7 +121,7 @@ const Documents = () => {
                 size="sm"
               >
                 <Mail className="mr-2 h-4 w-4" />
-                View Emails
+                Return to Email Hub
               </Button>
             </div>
           </div>
