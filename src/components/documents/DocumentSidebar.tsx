@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -107,7 +108,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
                       size="sm" 
                       onClick={() => handleCreateFolder(newFolderName)}
                       disabled={!newFolderName.trim()}
-                      className="h-7 text-xs flex-1"
+                      className="h-7 text-xs flex-1 bg-purple-600 hover:bg-purple-700 text-white"
                     >
                       Create
                     </Button>
@@ -129,7 +130,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => setIsCreatingFolder(true)}
-                  className="flex items-center gap-2 h-8 w-full justify-start"
+                  className="flex items-center gap-2 h-8 w-full justify-start bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
                 >
                   <FolderPlus className="w-4 h-4" />
                   Create Folder
