@@ -94,11 +94,30 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'list') {
     return (
-      <Card className="group hover:shadow-md transition-all duration-200 border border-gray-200 bg-gray-50/30">
-        <CardContent className="p-4 bg-white/80" style={{ backgroundImage: 'linear-gradient(45deg, transparent 24%, rgba(255,255,255,.05) 25%, rgba(255,255,255,.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,.05) 75%, rgba(255,255,255,.05) 76%, transparent 77%), linear-gradient(45deg, transparent 24%, rgba(0,0,0,.01) 25%, rgba(0,0,0,.01) 26%, transparent 27%, transparent 74%, rgba(0,0,0,.01) 75%, rgba(0,0,0,.01) 76%, transparent 77%)', backgroundSize: '12px 12px' }}>
+      <Card className="group hover:shadow-md transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white" 
+            style={{ 
+              backgroundImage: `
+                repeating-linear-gradient(
+                  0deg,
+                  transparent,
+                  transparent 1px,
+                  rgba(0,0,0,0.02) 1px,
+                  rgba(0,0,0,0.02) 2px
+                ),
+                repeating-linear-gradient(
+                  90deg,
+                  transparent,
+                  transparent 1px,
+                  rgba(0,0,0,0.01) 1px,
+                  rgba(0,0,0,0.01) 2px
+                )
+              `,
+              backgroundSize: '20px 20px'
+            }}>
+        <CardContent className="p-4">
           <div className="flex items-center gap-4">
             {/* File Icon */}
-            <div className={`w-10 h-10 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-100`}>
+            <div className={`w-10 h-10 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-200`}>
               <FileIcon className={`h-5 w-5 ${fileInfo.color}`} />
             </div>
             
@@ -149,11 +168,30 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   // Grid layout (compact)
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 border border-gray-200 bg-gray-50/30 h-full">
-      <CardContent className="p-4 flex flex-col h-full bg-white/80" style={{ backgroundImage: 'linear-gradient(45deg, transparent 24%, rgba(255,255,255,.05) 25%, rgba(255,255,255,.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,.05) 75%, rgba(255,255,255,.05) 76%, transparent 77%), linear-gradient(45deg, transparent 24%, rgba(0,0,0,.01) 25%, rgba(0,0,0,.01) 26%, transparent 27%, transparent 74%, rgba(0,0,0,.01) 75%, rgba(0,0,0,.01) 76%, transparent 77%)', backgroundSize: '12px 12px' }}>
+    <Card className="group hover:shadow-lg transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white h-full"
+          style={{ 
+            backgroundImage: `
+              repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                rgba(0,0,0,0.02) 1px,
+                rgba(0,0,0,0.02) 2px
+              ),
+              repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 1px,
+                rgba(0,0,0,0.01) 1px,
+                rgba(0,0,0,0.01) 2px
+              )
+            `,
+            backgroundSize: '20px 20px'
+          }}>
+      <CardContent className="p-4 flex flex-col h-full">
         {/* File Icon and Name */}
         <div className="flex items-start gap-3 mb-3">
-          <div className={`w-8 h-8 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-100`}>
+          <div className={`w-8 h-8 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-200`}>
             <FileIcon className={`h-4 w-4 ${fileInfo.color}`} />
           </div>
           <div className="flex-1 min-w-0">
