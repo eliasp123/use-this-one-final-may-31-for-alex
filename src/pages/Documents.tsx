@@ -20,7 +20,7 @@ const Documents = () => {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('received');
+  const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('all');
   const { toast } = useToast();
 
   const allAttachments = getAllAttachments();
