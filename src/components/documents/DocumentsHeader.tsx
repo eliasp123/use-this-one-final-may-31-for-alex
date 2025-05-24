@@ -2,41 +2,39 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { Pencil, Mail } from 'lucide-react';
 
-const DocumentsHeader = () => {
+interface DocumentsHeaderProps {
+  onNewEmailClick: () => void;
+}
+
+const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <>
-      {/* Navigation buttons */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <Button
-            onClick={() => navigate('/')}
-            className="bg-green-500 hover:bg-green-600 text-white"
-            size="sm"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
-          <Button
-            onClick={() => navigate('/emails/all/all')}
-            className="bg-orange-500 hover:bg-orange-600 text-white"
-            size="sm"
-          >
-            <Mail className="mr-2 h-4 w-4" />
-            Back to Conversations
-          </Button>
-        </div>
+    <div className="text-center mb-8 sm:mb-16">
+      <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
+      <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
+      
+      <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
+        <Button
+          onClick={onNewEmailClick}
+          className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium"
+        >
+          <Pencil className="mr-2 h-4 w-4" />
+          Compose New Email
+        </Button>
+        
+        <Button
+          onClick={() => navigate('/')}
+          variant="outline"
+          className="px-6 py-3 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+        >
+          <Mail className="mr-2 h-4 w-4" />
+          Return to Communication Hub
+        </Button>
       </div>
-
-      {/* Centered Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-light text-gray-700 mb-2">Documents Dashboard</h1>
-        <p className="text-gray-500">Manage all your email attachments in one place</p>
-      </div>
-    </>
+    </div>
   );
 };
 
