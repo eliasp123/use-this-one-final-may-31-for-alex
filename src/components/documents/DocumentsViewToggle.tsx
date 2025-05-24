@@ -54,7 +54,7 @@ const DocumentsViewToggle = ({
           <ToggleGroupItem 
             value="all" 
             aria-label="All documents"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-gray-600 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <span className="text-sm font-medium">All</span>
           </ToggleGroupItem>
