@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -153,7 +154,7 @@ const Documents = () => {
                 onViewModeChange={setViewMode}
               />
 
-              <div className="mt-8">
+              <div className="mt-6">
                 <DocumentsContent 
                   groupedAttachments={groupedAttachments}
                   selectedFilter={selectedFilter}
