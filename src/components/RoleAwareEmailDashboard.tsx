@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
@@ -158,7 +157,7 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
       {/* Show explanation when search has no email results */}
       {hasNoEmailResults && (
         <div className="mb-8">
-          <Alert className="border-0 bg-orange-50 text-gray-800">
+          <Alert className="border-0 bg-orange-100 text-gray-800">
             <Calendar className="h-4 w-4 text-orange-600" />
             <AlertDescription className="text-gray-800 text-center ml-6">
               No emails found for "{searchQuery}". However, you may have related appointments in the calendar below.
