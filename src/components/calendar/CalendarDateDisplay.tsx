@@ -78,7 +78,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
                   hasAppointment: (date) => isDayWithAppointment(date),
                 }}
                 modifiersClassNames={{
-                  hasAppointment: 'bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full',
+                  hasAppointment: 'bg-orange-200 text-gray-600 rounded-full',
                 }}
               />
             </div>
