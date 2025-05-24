@@ -9,4 +9,5 @@ export interface Appointment {
   textColor: string;
   time: string;
   notes?: string;
+  isPrivate?: boolean;
 }
