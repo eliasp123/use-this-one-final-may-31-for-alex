@@ -1,3 +1,4 @@
+
 import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
@@ -68,10 +69,21 @@ export const filterAttachments = (
 
 export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
   const total = attachments.length;
-  const documents = attachments.filter(a => a.type.includes('pdf') || a.type.includes('document')).length;
+  const documents = attachments.filter(a => a.type.includes('pdf') || a.type.includes('document') || a.type.includes('text')).length;
   const images = attachments.filter(a => a.type.startsWith('image/')).length;
-  const spreadsheets = attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv')).length;
-  const other = total - documents - images - spreadsheets;
+  const spreadsheets = attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv') || a.type.includes('excel')).length;
+  const other = attachments.filter(a => 
+    !a.type.startsWith('image/') && 
+    !a.type.includes('pdf') && 
+    !a.type.includes('document') && 
+    !a.type.includes('text') &&
+    !a.type.includes('sheet') && 
+    !a.type.includes('csv') &&
+    !a.type.includes('excel')
+  ).length;
+
+  console.log('Attachment stats:', { total, documents, images, spreadsheets, other });
+  console.log('Verification total:', documents + images + spreadsheets + other);
 
   return { total, documents, images, spreadsheets, other };
 };
