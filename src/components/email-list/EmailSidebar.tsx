@@ -42,6 +42,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
   const handleDragStart = (e: React.DragEvent, categoryId: string) => {
     setDraggedItem(categoryId);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', categoryId);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -52,10 +53,15 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
   const handleDrop = (e: React.DragEvent, targetCategoryId: string) => {
     e.preventDefault();
     
-    if (!draggedItem || draggedItem === targetCategoryId) return;
+    const draggedId = e.dataTransfer.getData('text/plain') || draggedItem;
+    
+    if (!draggedId || draggedId === targetCategoryId) {
+      setDraggedItem(null);
+      return;
+    }
 
     const newCategories = [...orderedCategories];
-    const draggedIndex = newCategories.findIndex(cat => cat.id === draggedItem);
+    const draggedIndex = newCategories.findIndex(cat => cat.id === draggedId);
     const targetIndex = newCategories.findIndex(cat => cat.id === targetCategoryId);
 
     if (draggedIndex !== -1 && targetIndex !== -1) {
@@ -101,8 +107,8 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16">  
         <SidebarGroup className="pt-8">
-          {/* Add Category Button */}
-          <div className="px-3 mb-4">
+          {/* Add Category Button with increased bottom margin */}
+          <div className="px-3 mb-8">
             <Dialog open={showNewCategoryDialog} onOpenChange={setShowNewCategoryDialog}>
               <DialogTrigger asChild>
                 <Button
@@ -148,7 +154,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   onDrop={(e) => handleDrop(e, cat.id)}
                   onDragEnd={handleDragEnd}
                   className={`cursor-move transition-all ${
-                    draggedItem === cat.id ? 'opacity-50' : ''
+                    draggedItem === cat.id ? 'opacity-50 scale-95' : ''
                   }`}
                 >
                   <EmailCategoryItem 
@@ -157,9 +163,9 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     activeTab={activeTab} 
                   />
                 </div>
-                {/* Add extra space every 3 items */}
+                {/* Add extra space every 3 items with increased spacing */}
                 {(index + 1) % 3 === 0 && index < orderedCategories.length - 1 && (
-                  <div className="h-4" />
+                  <div className="h-8" />
                 )}
               </div>
             ))}
