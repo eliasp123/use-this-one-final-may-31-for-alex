@@ -89,7 +89,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarHeader className="pt-6 pb-4 px-4">
+      <SidebarHeader className="pt-6 pb-4 px-4 space-y-6">
         <div className="space-y-3">
           {isCreatingFolder ? (
             <div className="space-y-2">
