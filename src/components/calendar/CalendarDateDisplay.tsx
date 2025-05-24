@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
-import { Plus, Calendar as CalendarIcon } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Plus } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import AppointmentForm from './AppointmentForm';
 
 interface CalendarDateDisplayProps {
   date: Date | undefined;
@@ -15,19 +15,25 @@ interface CalendarDateDisplayProps {
 }
 
 const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment }: CalendarDateDisplayProps) => {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleAddAppointment = () => {
-    // Open a date picker to select appointment date
-    setIsCalendarOpen(true);
+  const handleSaveAppointment = (appointmentData: {
+    date: Date;
+    title: string;
+    organization: string;
+    notes: string;
+    isPrivate: boolean;
+  }) => {
+    console.log('Saving appointment:', appointmentData);
+    // Here you would typically save to your data store
+    // For now, we'll just close the sheet and call the original handler
+    setIsSheetOpen(false);
+    onDateSelect(appointmentData.date);
+    onAddAppointment();
   };
 
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    onDateSelect(selectedDate);
-    setIsCalendarOpen(false);
-    if (selectedDate) {
-      onAddAppointment();
-    }
+  const handleCancelAppointment = () => {
+    setIsSheetOpen(false);
   };
 
   return (
@@ -36,31 +42,23 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
         <div className="flex flex-col md:flex-row">
           <div className="bg-gradient-to-br from-amber-400 to-orange-500 w-full md:w-1/3 flex flex-col">
             <div className="p-4">
-              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                <PopoverTrigger asChild>
+              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
                   <Button
-                    onClick={handleAddAppointment}
                     className="bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full"
                   >
                     <Plus className="mr-2 h-5 w-5" />
                     Add Appointment
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={handleDateSelect}
-                    className="p-3 pointer-events-auto"
-                    modifiers={{
-                      hasAppointment: (date) => isDayWithAppointment(date),
-                    }}
-                    modifiersClassNames={{
-                      hasAppointment: 'bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full',
-                    }}
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px]">
+                  <AppointmentForm
+                    initialDate={date}
+                    onSave={handleSaveAppointment}
+                    onCancel={handleCancelAppointment}
                   />
-                </PopoverContent>
-              </Popover>
+                </SheetContent>
+              </Sheet>
             </div>
             
             <div className="p-8 pt-4 flex-1 flex flex-col justify-center">
