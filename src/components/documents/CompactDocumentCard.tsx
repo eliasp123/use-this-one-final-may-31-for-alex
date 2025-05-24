@@ -44,24 +44,24 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     if (type.startsWith('image/')) {
       return { 
         badgeColor: 'bg-purple-500',
-        statusBadgeColor: 'bg-purple-400 text-white font-normal'
+        statusBadgeColor: 'bg-purple-400 text-white font-normal text-xs'
       };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
       return { 
         badgeColor: 'bg-blue-500',
-        statusBadgeColor: 'bg-blue-400 text-white font-normal'
+        statusBadgeColor: 'bg-blue-400 text-white font-normal text-xs'
       };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
       return { 
         badgeColor: 'bg-green-500',
-        statusBadgeColor: 'bg-green-400 text-white font-normal'
+        statusBadgeColor: 'bg-green-400 text-white font-normal text-xs'
       };
     }
     return { 
       badgeColor: 'bg-gray-500',
-      statusBadgeColor: 'bg-gray-400 text-white font-normal'
+      statusBadgeColor: 'bg-gray-400 text-white font-normal text-xs'
     };
   };
 
@@ -121,7 +121,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         <div className="flex flex-col mb-5 space-y-2">
           <div className="flex justify-start">
             <div className="flex flex-col items-center">
-              <Badge className={`${fileInfo.statusBadgeColor} text-sm px-3 py-1`}>
+              <Badge className={`${fileInfo.statusBadgeColor} px-3 py-1`}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </Badge>
               <div className="text-xs font-medium text-gray-600 mt-2">{formatFileSize(attachment.size)}</div>
