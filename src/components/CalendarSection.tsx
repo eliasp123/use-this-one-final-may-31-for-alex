@@ -10,7 +10,8 @@ const CalendarSection = () => {
     selectedDateAppointments,
     isDayWithAppointment,
     handleSelect,
-    getUpcomingAppointments
+    getUpcomingAppointments,
+    handleAppointmentClick
   } = useCalendarLogic();
 
   const upcomingAppointments = getUpcomingAppointments();
@@ -33,6 +34,7 @@ const CalendarSection = () => {
             date={date}
             selectedAppointments={selectedDateAppointments}
             upcomingAppointments={upcomingAppointments}
+            onAppointmentClick={handleAppointmentClick}
           />
         </div>
       </div>

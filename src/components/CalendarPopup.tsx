@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { APPOINTMENTS } from '../data/appointmentData';
+import { Appointment } from '../types/appointment';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -11,6 +12,13 @@ interface CalendarPopupProps {
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedDateAppointments, setSelectedDateAppointments] = useState(
+    APPOINTMENTS.filter(app => 
+      app.date.getDate() === new Date().getDate() && 
+      app.date.getMonth() === new Date().getMonth() && 
+      app.date.getFullYear() === new Date().getFullYear()
+    )
+  );
 
   // Function to highlight dates with appointments
   const isDayWithAppointment = (day: Date) => {
@@ -24,14 +32,24 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   // Handle date selection - no popup behavior
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
+    
+    if (selectedDate) {
+      const appointmentsOnDate = APPOINTMENTS.filter(app => 
+        app.date.getDate() === selectedDate.getDate() && 
+        app.date.getMonth() === selectedDate.getMonth() && 
+        app.date.getFullYear() === selectedDate.getFullYear()
+      );
+      setSelectedDateAppointments(appointmentsOnDate);
+    } else {
+      setSelectedDateAppointments([]);
+    }
   };
 
-  // Get appointments for the selected date
-  const selectedDateAppointments = date ? APPOINTMENTS.filter(app => 
-    app.date.getDate() === date.getDate() && 
-    app.date.getMonth() === date.getMonth() && 
-    app.date.getFullYear() === date.getFullYear()
-  ) : [];
+  // Handle appointment click from upcoming list
+  const handleAppointmentClick = (appointment: Appointment) => {
+    setDate(appointment.date);
+    setSelectedDateAppointments([appointment]);
+  };
 
   // Get upcoming appointments from TODAY
   const getUpcomingAppointments = () => {
@@ -70,6 +88,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
             date={date}
             selectedAppointments={selectedDateAppointments}
             upcomingAppointments={upcomingAppointments}
+            onAppointmentClick={handleAppointmentClick}
           />
         </div>
       </div>

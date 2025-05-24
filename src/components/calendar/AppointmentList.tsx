@@ -10,9 +10,10 @@ interface AppointmentListProps {
   date: Date | undefined;
   selectedAppointments: Appointment[];
   upcomingAppointments: Appointment[];
+  onAppointmentClick: (appointment: Appointment) => void;
 }
 
-const AppointmentList = ({ date, selectedAppointments, upcomingAppointments }: AppointmentListProps) => {
+const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onAppointmentClick }: AppointmentListProps) => {
   const getEncouragingMessage = (date: Date) => {
     const dayOfWeek = date.getDay();
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
@@ -72,6 +73,11 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments }: A
                         </svg>
                         <span>{appointment.organization}</span>
                       </div>
+                      {appointment.notes && (
+                        <div className="mt-2 p-2 bg-amber-50 rounded-lg">
+                          <p className="text-xs text-gray-700 leading-relaxed">{appointment.notes}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -93,14 +99,21 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments }: A
               upcomingAppointments.map(appointment => (
                 <div 
                   key={appointment.id} 
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer"
+                  onClick={() => onAppointmentClick(appointment)}
                 >
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-gray-800 truncate">
-                        {appointment.title}
-                      </p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-xs font-medium text-gray-800 truncate">
+                          {appointment.title}
+                        </p>
+                        <span className="text-xs text-gray-500 flex-shrink-0">•</span>
+                        <p className="text-xs text-gray-600 truncate">
+                          {appointment.organization}
+                        </p>
+                      </div>
                       <p className="text-xs text-gray-600">
                         {format(new Date(appointment.date), 'MMM d')}
                       </p>

@@ -8,4 +8,5 @@ export interface Appointment {
   organization: string;
   textColor: string;
   time: string;
+  notes?: string;
 }

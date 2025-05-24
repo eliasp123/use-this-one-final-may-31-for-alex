@@ -10,7 +10,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Golden Years Living',
     textColor: 'text-amber-700',
-    time: '10:30 AM'
+    time: '10:30 AM',
+    notes: 'Bring previous medical records and insurance information. Tour the memory care wing and ask about meal plans.'
   },
   {
     id: 2,
@@ -20,7 +21,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Comfort Home Services',
     textColor: 'text-amber-700',
-    time: '2:15 PM'
+    time: '2:15 PM',
+    notes: 'Assessment will include mobility evaluation and discussion of daily care needs. Prepare list of current medications.'
   },
   {
     id: 3,
@@ -30,7 +32,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Medicare Services Office',
     textColor: 'text-amber-700',
-    time: '9:00 AM'
+    time: '9:00 AM',
+    notes: 'Annual review of coverage options. Bring Medicare card and summary of current prescriptions.'
   },
   {
     id: 4,
@@ -40,7 +43,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Elder Law Associates',
     textColor: 'text-amber-700',
-    time: '3:30 PM'
+    time: '3:30 PM',
+    notes: 'Discussion about power of attorney and estate planning. Bring current will and financial documents.'
   },
   {
     id: 5,
@@ -50,7 +54,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Wellness Rehabilitation Center',
     textColor: 'text-amber-700',
-    time: '11:00 AM'
+    time: '11:00 AM',
+    notes: 'Focus on balance and strength exercises. Wear comfortable clothing and supportive shoes.'
   },
   {
     id: 6,
@@ -60,7 +65,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Community Pharmacy',
     textColor: 'text-amber-700',
-    time: '2:00 PM'
+    time: '2:00 PM',
+    notes: 'Comprehensive medication review with pharmacist. Bring all current medications and supplements.'
   },
   {
     id: 7,
@@ -70,7 +76,8 @@ export const APPOINTMENTS: Appointment[] = [
     color: 'bg-amber-500',
     organization: 'Elder Law Associates',
     textColor: 'text-amber-700',
-    time: '10:00 AM'
+    time: '10:00 AM',
+    notes: 'Review drafted documents and finalize healthcare directives. Bring ID and witness information.'
   }
 ];
 

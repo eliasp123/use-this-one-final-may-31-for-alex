@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { APPOINTMENTS } from '../data/calendarData';
+import { Appointment } from '../types/appointment';
 
 export const useCalendarLogic = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -37,6 +38,12 @@ export const useCalendarLogic = () => {
     }
   };
 
+  // Handle appointment click from upcoming list
+  const handleAppointmentClick = (appointment: Appointment) => {
+    setDate(appointment.date);
+    setSelectedDateAppointments([appointment]);
+  };
+
   // Get upcoming appointments from TODAY
   const getUpcomingAppointments = () => {
     const today = new Date();
@@ -57,6 +64,7 @@ export const useCalendarLogic = () => {
     selectedDateAppointments,
     isDayWithAppointment,
     handleSelect,
-    getUpcomingAppointments
+    getUpcomingAppointments,
+    handleAppointmentClick
   };
 };
