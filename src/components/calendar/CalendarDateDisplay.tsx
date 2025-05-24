@@ -21,7 +21,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
           <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-8 w-full md:w-1/3 flex flex-col justify-center">
             <Button
               onClick={onAddAppointment}
-              className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-6 rounded-lg border transition-all duration-200 mb-6"
+              className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-6 rounded-lg border transition-all duration-200 mb-8 mt-2"
             >
               <Plus className="mr-2 h-5 w-5" />
               Add Appointment
