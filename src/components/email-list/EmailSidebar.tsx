@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -173,6 +174,12 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     const customCategories = getCustomCategories();
     const isCustom = customCategories.some(cat => cat.id === categoryId);
     const categoryData = orderedCategories.find(cat => cat.id === categoryId);
+    console.log('Category delete check:', {
+      categoryId,
+      isCustom,
+      categoryData: categoryData ? { total: categoryData.total, title: categoryData.title } : null,
+      result: isCustom && categoryData && categoryData.total === 0
+    });
     return isCustom && categoryData && categoryData.total === 0;
   };
 
@@ -228,6 +235,13 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
               const isDropTarget = dragOverIndex === index;
               const canDelete = isCustomEmptyCategory(cat.id);
               
+              console.log('Rendering category:', {
+                id: cat.id,
+                title: cat.title,
+                total: cat.total,
+                canDelete
+              });
+              
               return (
                 <div key={cat.id} className="relative">
                   {/* Drop indicator line above */}
@@ -243,11 +257,9 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDrop(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={`cursor-move transition-all duration-200 ${
+                    className={`cursor-move transition-all duration-200 group relative ${
                       isDragging ? 'scale-95 rotate-1 shadow-lg z-20' : ''
-                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''} ${
-                      canDelete ? 'group relative' : ''
-                    }`}
+                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''}`}
                   >
                     <EmailCategoryItem 
                       category={cat} 
@@ -259,13 +271,15 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     {canDelete && (
                       <button
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
+                          console.log('Delete button clicked for category:', cat.id);
                           handleDeleteCategory(cat.id);
                         }}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-red-100 rounded"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-red-100 rounded z-30"
                         title="Delete category"
                       >
-                        <Trash2 className="h-3 w-3 text-red-500" />
+                        <Trash2 className="h-4 w-4 text-red-500" />
                       </button>
                     )}
                   </div>
