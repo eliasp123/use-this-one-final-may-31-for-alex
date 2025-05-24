@@ -49,7 +49,7 @@ export const getFileTypeInfo = (type: string) => {
 
 export const getStatusBadgeColor = (direction: string, fileTypeColor: string) => {
   if (direction === 'sent') {
-    return 'bg-orange-500 hover:bg-orange-600 text-white border-orange-500';
+    return 'bg-orange-500 text-white font-normal text-xs';
   }
   return fileTypeColor;
 };
