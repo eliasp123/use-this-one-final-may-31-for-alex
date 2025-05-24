@@ -72,15 +72,15 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
   ) : [];
 
   return (
-    <div className="flex flex-col min-h-0">
-      {/* Header */}
+    <div className="flex flex-col h-full p-8">
+      {/* Fixed Header */}
       <div className="flex-shrink-0 pb-6 border-b border-gray-200">
         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Add New Appointment</h2>
         <p className="text-lg text-gray-600">Fill in the details for your new appointment.</p>
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto py-6">
+      <div className="flex-1 overflow-y-auto py-6 min-h-0">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Form Fields */}
           <div className="lg:col-span-2 space-y-6">
@@ -92,7 +92,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal text-lg py-6",
+                      "w-full justify-start text-left font-normal text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
                       !selectedDate && "text-muted-foreground"
                     )}
                   >
@@ -121,7 +121,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., Doctor Visit, Physical Therapy"
                 required
-                className="text-lg py-6"
+                className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
               />
             </div>
 
@@ -133,7 +133,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
                 value={organization}
                 onChange={(e) => setOrganization(e.target.value)}
                 placeholder="e.g., City Hospital, ABC Clinic"
-                className="text-lg py-6"
+                className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
               />
             </div>
 
@@ -144,7 +144,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
                 id="private"
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
-                className="h-5 w-5 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
+                className="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
               />
               <Label htmlFor="private" className="text-lg">
                 Mark as Private
@@ -160,7 +160,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Any additional notes or reminders..."
-                className="w-full rounded-md border border-input bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden"
+                className="w-full rounded-md border border-input bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground hover:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-colors"
                 style={{ minHeight: '120px' }}
               />
             </div>
@@ -223,8 +223,8 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
         </div>
       </div>
 
-      {/* Fixed Footer with buttons */}
-      <div className="flex-shrink-0 pt-6 border-t border-gray-200">
+      {/* Fixed Footer with buttons - Always visible */}
+      <div className="flex-shrink-0 pt-6 border-t border-gray-200 bg-white">
         <div className="flex gap-4">
           <Button
             onClick={handleSave}
@@ -236,7 +236,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
           <Button
             onClick={onCancel}
             variant="outline"
-            className="flex-1 text-lg py-6"
+            className="flex-1 text-lg py-6 hover:border-purple-500 hover:text-purple-600"
           >
             Cancel
           </Button>

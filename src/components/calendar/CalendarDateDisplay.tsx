@@ -79,22 +79,22 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               }}
             />
             
-            {/* Custom Dialog Overlay without dark background */}
+            {/* Custom Dialog Overlay - Fixed height container with proper button positioning */}
             {isDialogOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-[95vw] max-w-[1200px] max-h-[90vh] flex flex-col">
+              <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto">
+                <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[95vw] max-w-[1200px] min-h-[600px] max-h-[calc(100vh-4rem)] flex flex-col relative my-auto">
                   {/* Close button */}
                   <div className="absolute right-4 top-4 z-10">
                     <button
                       onClick={() => setIsDialogOpen(false)}
-                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-purple-100 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                     >
                       <X className="h-4 w-4 text-gray-600" />
                     </button>
                   </div>
                   
-                  {/* Content */}
-                  <div className="p-8 flex-1 overflow-hidden">
+                  {/* Content - Full height container */}
+                  <div className="flex-1 flex flex-col overflow-hidden">
                     <AppointmentForm
                       initialDate={date}
                       onSave={handleSaveAppointment}
