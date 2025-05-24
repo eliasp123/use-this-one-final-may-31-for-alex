@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
@@ -121,6 +122,15 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   const totalEmailsFound = emailCategories.reduce((sum, category) => sum + category.total, 0);
   const hasSearchQuery = searchQuery.trim().length > 0;
   const hasNoEmailResults = hasSearchQuery && totalEmailsFound === 0;
+  
+  // Debug logging
+  console.log('Search debug:', {
+    searchQuery,
+    hasSearchQuery,
+    totalEmailsFound,
+    hasNoEmailResults,
+    emailCategories: emailCategories.length
+  });
   
   return (
     <div className="max-w-7xl mx-auto">
