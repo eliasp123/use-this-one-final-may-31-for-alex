@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Pencil, Mail, Calendar } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent } from '../ui/dialog';
 import CalendarPopup from '../CalendarPopup';
 
 interface DocumentsHeaderProps {
@@ -50,14 +50,6 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
       {/* Calendar Popup */}
       <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
         <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-          <DialogHeader className="pb-6">
-            <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center mr-3">
-                <Calendar className="h-5 w-5 text-white" />
-              </div>
-              Calendar
-            </DialogTitle>
-          </DialogHeader>
           <CalendarPopup showTrigger={false} />
         </DialogContent>
       </Dialog>
