@@ -148,16 +148,16 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Documents Grid */}
-          <div className="flex-1 overflow-y-auto bg-gradient-to-br from-purple-400 to-purple-500 backdrop-blur-sm rounded-2xl border border-gray-200/60">
+          <div className="flex-1 overflow-y-auto bg-gradient-to-br from-purple-100 to-purple-200 backdrop-blur-sm rounded-2xl border border-gray-200/60">
             <div className="p-6">
               {filteredAttachments.length > 0 ? (
                 <div className="space-y-8">
                   {groupedAttachments.map(([groupKey, attachments]) => (
                     <div key={groupKey} className="space-y-6">
                       {selectedFilter === 'organization' || selectedFilter === 'date' ? (
-                        <div className="flex items-center gap-3 pb-3 border-b border-white/20">
-                          <h3 className="text-lg font-semibold text-white">{groupKey}</h3>
-                          <span className="text-sm text-white/80 bg-white/20 px-3 py-1 rounded-full">
+                        <div className="flex items-center gap-3 pb-3 border-b border-purple-300/40">
+                          <h3 className="text-lg font-semibold text-purple-800">{groupKey}</h3>
+                          <span className="text-sm text-purple-700 bg-purple-200/60 px-3 py-1 rounded-full">
                             {attachments.length} file{attachments.length !== 1 ? 's' : ''}
                           </span>
                         </div>
