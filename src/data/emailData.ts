@@ -100,7 +100,7 @@ export const mockEmails: EmailData[] = [
     category: "home-care"
   },
   
-  // Federal Benefits Category
+  // Government Category (formerly Federal Benefits)
   {
     id: "byff0azjme", // This ID matches sample attachments
     subject: "Medicare Application Status Update",
@@ -116,7 +116,7 @@ export const mockEmails: EmailData[] = [
     replied: false,
     responseReceived: true,
     private: false,
-    category: "federal-benefits"
+    category: "government"
   },
   {
     id: "l8ob8e8p1k", // This ID matches sample attachments
@@ -133,7 +133,7 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: false,
     private: false,
-    category: "federal-benefits"
+    category: "government"
   },
   {
     id: "av13yvz2vf", // This ID matches sample attachments
@@ -150,10 +150,10 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: true,
     private: false,
-    category: "federal-benefits"
+    category: "government"
   },
   
-  // Local Government Category
+  // Government Category (formerly Local Government)
   {
     id: "h8wj2ya19p",
     subject: "Property Tax Exemption Approval",
@@ -169,7 +169,7 @@ export const mockEmails: EmailData[] = [
     replied: false,
     responseReceived: true,
     private: false,
-    category: "local-government"
+    category: "government"
   },
   {
     id: "s88pqu6xed",
@@ -186,7 +186,7 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: false,
     private: false,
-    category: "local-government"
+    category: "government"
   },
   
   // Attorneys Category

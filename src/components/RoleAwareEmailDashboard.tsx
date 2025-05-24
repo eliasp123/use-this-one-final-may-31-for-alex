@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import { 
-  Heart, Home, Shield, Building, Scale, 
+  Heart, Home, Shield, Scale, 
   Users, Award, Activity, CreditCard 
 } from 'lucide-react';
 
@@ -17,8 +16,7 @@ interface RoleAwareEmailDashboardProps {
 const categoryIconMap: Record<string, React.ElementType> = {
   'senior-living': Heart,
   'home-care': Home,
-  'federal-benefits': Shield,
-  'local-government': Building,
+  'government': Shield,
   'attorneys': Scale,
   'other-professionals': Users,
   'va': Award,
@@ -38,15 +36,10 @@ const categoryColorMap: Record<string, { color: string, bgColor: string, textCol
     bgColor: 'bg-blue-50',
     textColor: 'text-blue-700'
   },
-  'federal-benefits': {
+  'government': {
     color: 'from-emerald-400 to-emerald-500',
     bgColor: 'bg-emerald-50',
     textColor: 'text-emerald-700'
-  },
-  'local-government': {
-    color: 'from-purple-400 to-purple-500',
-    bgColor: 'bg-purple-50',
-    textColor: 'text-purple-700'
   },
   'attorneys': {
     color: 'from-amber-400 to-orange-500',
@@ -79,8 +72,7 @@ const categoryColorMap: Record<string, { color: string, bgColor: string, textCol
 const categoryTitleMap: Record<string, string> = {
   'senior-living': 'Senior Living',
   'home-care': 'Home Care',
-  'federal-benefits': 'Federal Benefits',
-  'local-government': 'Local Government',
+  'government': 'Government',
   'attorneys': 'Attorneys',
   'other-professionals': 'Other Professionals',
   'va': 'VA',

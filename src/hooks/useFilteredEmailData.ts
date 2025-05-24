@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import { useUserRole } from './useUserRole';
 import { EmailData } from '../types/email';
@@ -24,8 +23,7 @@ export const useFilteredEmailData = () => {
     const categories = [
       'senior-living',
       'home-care', 
-      'federal-benefits',
-      'local-government',
+      'government',
       'attorneys',
       'other-professionals',
       'va',

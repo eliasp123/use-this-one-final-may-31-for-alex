@@ -22,7 +22,7 @@ export interface EmailData {
   replied: boolean;
   responseReceived: boolean;
   private: boolean;
-  category: 'senior-living' | 'home-care' | 'federal-benefits' | 'local-government' | 'attorneys' | 'other-professionals' | 'va' | 'physical-therapy' | 'paying-for-care';
+  category: 'senior-living' | 'home-care' | 'government' | 'attorneys' | 'other-professionals' | 'va' | 'physical-therapy' | 'paying-for-care';
   attachments?: EmailAttachment[];
   cc?: string[];
   bcc?: string[];

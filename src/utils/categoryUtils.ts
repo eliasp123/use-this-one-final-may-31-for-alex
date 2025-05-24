@@ -11,15 +11,10 @@ export const categoryInfo: Record<string, { title: string, color: string, bgColo
     color: 'bg-gradient-to-r from-blue-400 to-blue-500',
     bgColor: 'bg-blue-50' 
   },
-  'federal-benefits': { 
-    title: 'Federal Benefits', 
+  'government': { 
+    title: 'Government', 
     color: 'bg-gradient-to-r from-emerald-400 to-emerald-500',
     bgColor: 'bg-emerald-50' 
-  },
-  'local-government': { 
-    title: 'Local Government', 
-    color: 'bg-gradient-to-r from-purple-400 to-purple-500',
-    bgColor: 'bg-purple-50' 
   },
   'attorneys': { 
     title: 'Attorneys', 

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails } from '../data/emailData';
-import { Heart, Home, Shield, Building, Scale, Users, Award, Activity, CreditCard } from 'lucide-react';
+import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard } from 'lucide-react';
 
 export interface EmailCategory {
   id: string;
@@ -51,26 +51,15 @@ export const useEmailCategoryData = () => {
         textColor: 'text-blue-700'
       },
       {
-        id: 'federal-benefits',
-        title: 'Federal Benefits',
+        id: 'government',
+        title: 'Government',
         icon: Shield,
-        unread: getUnreadEmails('federal-benefits').length,
-        pending: getPendingEmails('federal-benefits').length,
-        total: 15,
+        unread: getUnreadEmails('government').length,
+        pending: getPendingEmails('government').length,
+        total: 21,
         color: 'from-emerald-400 to-emerald-500',
         bgColor: 'bg-emerald-50',
         textColor: 'text-emerald-700'
-      },
-      {
-        id: 'local-government',
-        title: 'Local Government',
-        icon: Building,
-        unread: getUnreadEmails('local-government').length,
-        pending: getPendingEmails('local-government').length,
-        total: 6,
-        color: 'from-purple-400 to-purple-500',
-        bgColor: 'bg-purple-50',
-        textColor: 'text-purple-700'
       },
       {
         id: 'attorneys',
