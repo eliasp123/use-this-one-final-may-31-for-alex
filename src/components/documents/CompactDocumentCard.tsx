@@ -16,6 +16,7 @@ import {
 import FileIconDisplay from './FileIconDisplay';
 import DocumentMetadata from './DocumentMetadata';
 import DocumentActions from './DocumentActions';
+import StatusBadge from './StatusBadge';
 
 interface AttachmentWithContext {
   id: string;
@@ -121,9 +122,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         <div className="flex flex-col mb-5 space-y-2">
           <div className="flex justify-start">
             <div className="flex flex-col items-center">
-              <Badge className={`${fileInfo.statusBadgeColor} px-3 py-1`}>
-                {attachment.direction === 'received' ? 'Received' : 'Sent'}
-              </Badge>
+              <StatusBadge direction={attachment.direction} statusBadgeColor="" />
               <div className="text-xs font-medium text-gray-600 mt-2">{formatFileSize(attachment.size)}</div>
             </div>
           </div>
