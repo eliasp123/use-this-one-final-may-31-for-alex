@@ -1,19 +1,10 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { 
-  FileText, 
-  Image, 
-  FileSpreadsheet, 
-  File, 
-  Download, 
-  Calendar,
-  User,
-  Building
-} from 'lucide-react';
+import FileIconDisplay, { getFileTypeInfo } from './FileIconDisplay';
+import DocumentMetadata from './DocumentMetadata';
+import DocumentActions from './DocumentActions';
 
 interface AttachmentWithContext {
   id: string;
@@ -35,46 +26,6 @@ interface CompactDocumentCardProps {
 }
 
 const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCardProps) => {
-  const navigate = useNavigate();
-
-  // Get file type icon and colors
-  const getFileTypeInfo = (type: string) => {
-    if (type.startsWith('image/')) {
-      return {
-        icon: Image,
-        color: 'from-purple-400 to-purple-500',
-        bgColor: 'bg-purple-50',
-        textColor: 'text-purple-700',
-        badgeColor: 'bg-purple-500'
-      };
-    }
-    if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
-      return {
-        icon: FileText,
-        color: 'from-blue-400 to-blue-500',
-        bgColor: 'bg-blue-50',
-        textColor: 'text-blue-700',
-        badgeColor: 'bg-blue-500'
-      };
-    }
-    if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
-      return {
-        icon: FileSpreadsheet,
-        color: 'from-green-400 to-green-500',
-        bgColor: 'bg-green-50',
-        textColor: 'text-green-700',
-        badgeColor: 'bg-green-500'
-      };
-    }
-    return {
-      icon: File,
-      color: 'from-amber-400 to-orange-500',
-      bgColor: 'bg-orange-50',
-      textColor: 'text-orange-700',
-      badgeColor: 'bg-orange-500'
-    };
-  };
-
   // Format file size
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -84,17 +35,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
   const fileInfo = getFileTypeInfo(attachment.type);
-  const FileIcon = fileInfo.icon;
 
   if (layout === 'grid') {
     return (
@@ -106,8 +47,8 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         <CardContent className="p-6 flex flex-col h-full">
           {/* File Icon and Name Section */}
           <div className="flex flex-col items-center text-center mb-4">
-            <div className={`w-14 h-14 rounded-xl ${fileInfo.bgColor} flex items-center justify-center mb-3 shadow-sm`}>
-              <FileIcon className={`h-7 w-7 ${fileInfo.textColor}`} />
+            <div className="mb-3">
+              <FileIconDisplay type={attachment.type} size="medium" />
             </div>
             <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2 break-words line-clamp-2 px-1 min-h-[2.5rem] flex items-center">
               {attachment.name}
@@ -118,20 +59,12 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           </div>
 
           {/* Metadata Section */}
-          <div className="flex-1 space-y-2 mb-4 text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-              <User className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate max-w-[200px]">{attachment.senderName}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-              <Building className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate max-w-[200px]">{attachment.senderOrganization}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-              <Calendar className="h-3 w-3 flex-shrink-0" />
-              <span>{formatDate(attachment.emailDate)}</span>
-            </div>
-          </div>
+          <DocumentMetadata
+            senderName={attachment.senderName}
+            senderOrganization={attachment.senderOrganization}
+            emailDate={attachment.emailDate}
+            layout="grid"
+          />
 
           {/* Direction Badge */}
           <div className="flex justify-center mb-4">
@@ -141,54 +74,32 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 mt-auto">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => navigate(`/email/${attachment.emailId}`)}
-              className="flex-1 text-xs h-8 px-3 border-gray-300 hover:bg-gray-50 font-medium"
-            >
-              View Email
-            </Button>
-            <Button
-              size="sm"
-              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-xs h-8 px-3 font-medium`}
-            >
-              <Download className="h-3 w-3 mr-1" />
-              Download
-            </Button>
-          </div>
+          <DocumentActions
+            emailId={attachment.emailId}
+            badgeColor={fileInfo.badgeColor}
+            layout="grid"
+          />
         </CardContent>
       </Card>
     );
   }
 
-  // List layout remains unchanged
+  // List layout
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-lg ${fileInfo.bgColor} flex items-center justify-center`}>
-              <FileIcon className={`h-6 w-6 ${fileInfo.textColor}`} />
-            </div>
+            <FileIconDisplay type={attachment.type} size="small" />
             
             <div className="flex-1">
               <h3 className="font-medium text-gray-700 mb-1 break-words">{attachment.name}</h3>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  {attachment.senderName}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Building className="h-3 w-3" />
-                  {attachment.senderOrganization}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(attachment.emailDate)}
-                </div>
-              </div>
+              <DocumentMetadata
+                senderName={attachment.senderName}
+                senderOrganization={attachment.senderOrganization}
+                emailDate={attachment.emailDate}
+                layout="list"
+              />
             </div>
           </div>
 
@@ -200,22 +111,11 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
               </Badge>
             </div>
             
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => navigate(`/email/${attachment.emailId}`)}
-              >
-                View Email
-              </Button>
-              <Button
-                size="sm"
-                className={`${fileInfo.badgeColor} hover:opacity-90`}
-              >
-                <Download className="h-4 w-4 mr-1" />
-                Download
-              </Button>
-            </div>
+            <DocumentActions
+              emailId={attachment.emailId}
+              badgeColor={fileInfo.badgeColor}
+              layout="list"
+            />
           </div>
         </div>
       </CardContent>
