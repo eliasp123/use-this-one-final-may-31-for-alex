@@ -80,10 +80,10 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               }}
             />
             
-            {/* Wide Overlay Dialog covering sidebar and calendar */}
+            {/* Fixed Dialog with proper sizing and positioning */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[90vw] max-w-[1200px] h-[85vh] max-h-[700px] bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden p-0 z-50">
-                <div className="p-8 h-full">
+              <DialogContent className="w-[95vw] max-w-[1200px] h-[90vh] max-h-[800px] p-0 gap-0">
+                <div className="p-8 h-full flex flex-col">
                   <AppointmentForm
                     initialDate={date}
                     onSave={handleSaveAppointment}
