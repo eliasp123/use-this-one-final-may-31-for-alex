@@ -120,7 +120,7 @@ const AppointmentForm = ({
                     hasAppointment: (date) => isDayWithAppointment(date),
                   }}
                   modifiersClassNames={{
-                    hasAppointment: 'bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full',
+                    hasAppointment: 'bg-orange-100 text-gray-900 rounded-full',
                   }}
                 />
               </PopoverContent>
