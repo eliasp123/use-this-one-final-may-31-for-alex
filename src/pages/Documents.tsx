@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
-import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
+import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail, User } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { SidebarProvider } from '../components/ui/sidebar';
 import CompactDocumentCard from '../components/documents/CompactDocumentCard';
@@ -15,7 +15,7 @@ import { useToast } from '../hooks/use-toast';
 
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date' | 'person'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Documents = () => {
       })
     : allAttachments;
 
-  const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' ? 'all' : selectedFilter);
+  const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' || selectedFilter === 'person' ? 'all' : selectedFilter);
   const stats = getAttachmentStats(allAttachments);
 
   const handleCreateFolder = (name: string) => {
@@ -68,6 +68,16 @@ const Documents = () => {
       return Object.entries(groups);
     }
 
+    if (filterType === 'person') {
+      const groups: Record<string, AttachmentWithContext[]> = {};
+      attachments.forEach(attachment => {
+        const key = attachment.senderName || 'Unknown Person';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(attachment);
+      });
+      return Object.entries(groups);
+    }
+
     if (filterType === 'date') {
       const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
@@ -84,11 +94,36 @@ const Documents = () => {
 
   const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
 
+  // Calculate counts for each filter
+  const getFilterCount = (filterType: string) => {
+    if (filterType === 'all') return stats.total;
+    if (filterType === 'documents') return stats.documents;
+    if (filterType === 'images') return stats.images;
+    if (filterType === 'spreadsheets') return stats.spreadsheets;
+    if (filterType === 'organization') {
+      const uniqueOrgs = new Set(allAttachments.map(a => a.senderOrganization));
+      return uniqueOrgs.size;
+    }
+    if (filterType === 'person') {
+      const uniquePersons = new Set(allAttachments.map(a => a.senderName));
+      return uniquePersons.size;
+    }
+    if (filterType === 'date') {
+      const uniqueMonths = new Set(allAttachments.map(a => {
+        const date = new Date(a.emailDate);
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+      }));
+      return uniqueMonths.size;
+    }
+    return 0;
+  };
+
   const filterOptions = [
     { key: 'all', label: 'All Files', icon: FolderOpen },
     { key: 'documents', label: 'Documents', icon: FileText },
     { key: 'images', label: 'Images', icon: Image },
     { key: 'spreadsheets', label: 'Spreadsheets', icon: FileSpreadsheet },
+    { key: 'person', label: 'Person', icon: User },
     { key: 'organization', label: 'Organization', icon: Users },
     { key: 'date', label: 'Date', icon: Calendar }
   ];
@@ -145,64 +180,29 @@ const Documents = () => {
                 </div>
               </div>
 
-              {/* Stats cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12 max-w-6xl mx-auto">
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-                
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-                
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Filter buttons */}
-              <div className="flex justify-center gap-3 mb-6 sm:mb-8">
+              {/* Filter buttons with counts */}
+              <div className="flex justify-center gap-3 mb-6 sm:mb-8 flex-wrap">
                 {filterOptions.map((filter) => {
                   const IconComponent = filter.icon;
+                  const count = getFilterCount(filter.key);
                   return (
                     <Button
                       key={filter.key}
                       variant={selectedFilter === filter.key ? "default" : "outline"}
                       onClick={() => setSelectedFilter(filter.key as any)}
                       className={`
-                        px-6 py-3 rounded-lg font-medium transition-all duration-200
+                        px-6 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center min-w-[120px] h-16
                         ${selectedFilter === filter.key 
                           ? "bg-purple-500 hover:bg-purple-600 text-white shadow-md" 
                           : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                         }
                       `}
                     >
-                      <IconComponent className="h-4 w-4 mr-2" />
-                      {filter.label}
+                      <div className="flex items-center gap-2">
+                        <IconComponent className="h-4 w-4" />
+                        <span className="text-sm">{filter.label}</span>
+                      </div>
+                      <span className="text-xs font-bold mt-1">{count}</span>
                     </Button>
                   );
                 })}
@@ -214,7 +214,7 @@ const Documents = () => {
                   <div className="space-y-6 sm:space-y-8">
                     {groupedAttachments.map(([groupKey, attachments]) => (
                       <div key={groupKey} className="space-y-4 sm:space-y-6">
-                        {selectedFilter === 'organization' || selectedFilter === 'date' ? (
+                        {selectedFilter === 'organization' || selectedFilter === 'date' || selectedFilter === 'person' ? (
                           <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
                             <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                           </div>
