@@ -25,9 +25,10 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     );
   };
 
-  // Handle date selection
+  // Handle date selection - removed dialog opening
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
+    // Removed setIsDialogOpen(true) - no more popup on date selection
   };
 
   // Explicitly handle dialog open/close to prevent unwanted triggers
