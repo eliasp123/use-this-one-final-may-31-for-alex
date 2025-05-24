@@ -25,7 +25,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
     .filter(app => {
       const appDate = new Date(app.date);
       appDate.setHours(0, 0, 0, 0);
-      return appDate >= today;
+      return appDate > today; // Only future appointments, not today's
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3); // Show only next 3 upcoming
