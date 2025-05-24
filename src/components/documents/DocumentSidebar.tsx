@@ -65,7 +65,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarContent className="pt-4">
+      <SidebarContent className="pt-20">
         <SidebarGroup>
           <SidebarMenu className="space-y-1">
             {/* All Files option */}

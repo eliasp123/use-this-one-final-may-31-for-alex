@@ -97,7 +97,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-[1400px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -239,7 +239,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
               </div>
 
               {/* Attachments Label */}
-              <div className="flex items-center justify-between px-2">
+              <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-gray-800">Attachments</h3>
                 <span className="text-sm text-gray-500">
                   {filteredAttachments.length} file{filteredAttachments.length !== 1 ? 's' : ''}
