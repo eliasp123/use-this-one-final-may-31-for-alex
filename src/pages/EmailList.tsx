@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -58,6 +57,9 @@ const EmailList = () => {
   const allCategories = getAllCategories();
   const currentCategory = category ? allCategories[category] : null;
 
+  // Debug log for calendar visibility
+  console.log('Calendar visibility state:', showCalendar);
+
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
@@ -77,7 +79,10 @@ const EmailList = () => {
               emailCount={filteredEmails.length}
               activeTab={activeTab}
               onComposeClick={() => setShowNewEmailForm(true)}
-              onCalendarClick={() => setShowCalendar(!showCalendar)}
+              onCalendarClick={() => {
+                console.log('Calendar button clicked, current state:', showCalendar);
+                setShowCalendar(!showCalendar);
+              }}
             />
             
             <EmailListToolbar 
@@ -106,9 +111,11 @@ const EmailList = () => {
 
       {/* Calendar Section - Separate section below everything, outside sidebar layout */}
       {showCalendar && (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 pl-24 pr-32">
-          <div className="container mx-auto px-4 py-8">
-            <CalendarPopup showTrigger={false} />
+        <div className="w-full bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
+          <div className="pl-24 pr-32 py-8">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-50">
+              <CalendarPopup showTrigger={false} />
+            </div>
           </div>
         </div>
       )}
