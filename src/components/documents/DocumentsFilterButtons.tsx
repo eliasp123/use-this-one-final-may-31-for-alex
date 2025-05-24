@@ -45,7 +45,7 @@ const DocumentsFilterButtons = ({ selectedFilter, onFilterChange, getFilterCount
                       flex-1 px-3 py-3 rounded-md font-medium transition-all duration-200 flex flex-col items-center h-16
                       ${isSelected 
                         ? "bg-purple-500 hover:bg-purple-600 text-white shadow-md" 
-                        : "text-gray-700 hover:bg-gray-50"
+                        : "text-gray-700 hover:bg-gray-50 hover:shadow-md hover:shadow-purple-200/50"
                       }
                     `}
                   >
@@ -56,7 +56,7 @@ const DocumentsFilterButtons = ({ selectedFilter, onFilterChange, getFilterCount
                     <span className="text-xs font-bold mt-1">{count}</span>
                   </button>
                   {!isLast && (
-                    <div className="w-px h-12 bg-gray-200/60 mx-1"></div>
+                    <div className="w-px h-12 bg-gray-300/80 mx-1"></div>
                   )}
                 </React.Fragment>
               );
