@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
@@ -34,6 +33,11 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   const getFileIcon = () => {
@@ -95,7 +99,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="w-60 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+      <Card className="w-72 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
         {/* File Icon Header */}
         <div className={`${getFileColor()} p-4 relative`}>
           <div className="flex items-center justify-between">
@@ -111,7 +115,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-3">
           {/* File Name */}
           <div>
             <h3 className="font-bold text-gray-900 text-xs leading-tight line-clamp-2">
@@ -119,26 +123,32 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             </h3>
           </div>
 
-          {/* File Size */}
-          <div>
-            <p className="text-xs text-gray-500">Size:</p>
-            <p className="text-gray-600 text-xs">{formatFileSize(attachment.size)}</p>
-          </div>
-
           {/* Sender Info */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <div>
-              <p className="text-xs text-gray-500">From:</p>
+              <p className="text-xs text-gray-500 font-bold">From:</p>
               <p className="text-gray-600 text-xs">{attachment.senderName}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Organization:</p>
+              <p className="text-xs text-gray-500 font-bold">Organization:</p>
               <p className="text-gray-600 text-xs">{attachment.senderOrganization}</p>
             </div>
           </div>
 
+          {/* Bottom Info - Size and Date */}
+          <div className="space-y-2 pt-1">
+            <div>
+              <p className="text-xs text-gray-500">Size:</p>
+              <p className="text-gray-600 text-xs">{formatFileSize(attachment.size)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Date:</p>
+              <p className="text-gray-600 text-xs">{formatDate(attachment.emailDate)}</p>
+            </div>
+          </div>
+
           {/* Action Buttons */}
-          <div className="flex space-x-1.5 pt-1">
+          <div className="flex space-x-1.5 pt-2">
             <Button
               onClick={handleView}
               variant="outline"
