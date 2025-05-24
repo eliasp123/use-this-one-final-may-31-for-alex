@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import FileIconDisplay, { getFileTypeInfo } from './FileIconDisplay';
-import DocumentMetadata from './DocumentMetadata';
-import DocumentActions from './DocumentActions';
+import { Button } from '../ui/button';
+import { Download, Eye, FileText, FileSpreadsheet, Image, File } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface AttachmentWithContext {
   id: string;
@@ -26,6 +25,8 @@ interface CompactDocumentCardProps {
 }
 
 const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCardProps) => {
+  const navigate = useNavigate();
+
   // Format file size
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -35,87 +36,174 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const fileInfo = getFileTypeInfo(attachment.type);
+  const getFileIcon = () => {
+    if (attachment.type.startsWith('image/')) {
+      return <Image className="w-8 h-8 text-white" />;
+    }
+    if (attachment.type.includes('pdf')) {
+      return <FileText className="w-8 h-8 text-white" />;
+    }
+    if (attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel')) {
+      return <FileSpreadsheet className="w-8 h-8 text-white" />;
+    }
+    if (attachment.type.includes('document') || attachment.type.includes('text') || attachment.type.includes('word')) {
+      return <FileText className="w-8 h-8 text-white" />;
+    }
+    return <File className="w-8 h-8 text-white" />;
+  };
+
+  const getFileColor = () => {
+    if (attachment.type.startsWith('image/')) {
+      return 'bg-gradient-to-br from-purple-400 to-purple-600';
+    }
+    if (attachment.type.includes('pdf')) {
+      return 'bg-gradient-to-br from-red-400 to-red-600';
+    }
+    if (attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel')) {
+      return 'bg-gradient-to-br from-green-400 to-green-600';
+    }
+    if (attachment.type.includes('document') || attachment.type.includes('text') || attachment.type.includes('word')) {
+      return 'bg-gradient-to-br from-blue-400 to-blue-600';
+    }
+    return 'bg-gradient-to-br from-gray-400 to-gray-600';
+  };
+
+  const getFileTypeLabel = () => {
+    if (attachment.type.startsWith('image/')) {
+      return 'IMG';
+    }
+    if (attachment.type.includes('pdf')) {
+      return 'PDF';
+    }
+    if (attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel')) {
+      return 'XLS';
+    }
+    if (attachment.type.includes('document') || attachment.type.includes('text') || attachment.type.includes('word')) {
+      return 'DOC';
+    }
+    return 'FILE';
+  };
+
+  const handleView = () => {
+    navigate(`/email/${attachment.emailId}`);
+  };
+
+  const handleDownload = () => {
+    console.log(`Downloading file: ${attachment.name}`);
+    // Add download logic here
+  };
 
   if (layout === 'grid') {
     return (
-      <Card className="hover:shadow-lg transition-all duration-200 bg-white border-2 border-gray-200 rounded-xl w-[280px] h-[320px]" 
-            style={{ 
-              backgroundImage: 'radial-gradient(circle at 20px 20px, #f8f9fa 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
-            }}>
-        <CardContent className="p-6 flex flex-col h-full">
-          {/* File Icon and Name Section */}
-          <div className="flex flex-col items-center text-center mb-4">
-            <div className="mb-3">
-              <FileIconDisplay type={attachment.type} size="medium" />
+      <Card className="w-72 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+        {/* File Icon Header */}
+        <div className={`${getFileColor()} p-6 relative`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              {getFileIcon()}
+              <span className="text-white font-bold text-lg">{getFileTypeLabel()}</span>
             </div>
-            <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2 break-words line-clamp-2 px-1 min-h-[2.5rem] flex items-center">
+          </div>
+          
+          {/* Folded corner effect */}
+          <div className="absolute top-0 right-0 w-8 h-8 bg-white/20 transform rotate-45 translate-x-4 -translate-y-4"></div>
+          <div className="absolute top-0 right-0 w-6 h-6 bg-white/10"></div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-4">
+          {/* File Name */}
+          <div>
+            <h3 className="font-semibold text-gray-900 text-lg leading-tight line-clamp-2">
               {attachment.name}
             </h3>
-            <div className="text-xs font-medium text-gray-500 mb-3">
-              {formatFileSize(attachment.size)}
+          </div>
+
+          {/* File Size */}
+          <div>
+            <p className="text-sm text-gray-600">Size:</p>
+            <p className="font-medium text-gray-900">{formatFileSize(attachment.size)}</p>
+          </div>
+
+          {/* Sender Info */}
+          <div className="space-y-2">
+            <div>
+              <p className="text-sm text-gray-600">From:</p>
+              <p className="font-medium text-gray-900">{attachment.senderName}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Organization:</p>
+              <p className="font-medium text-gray-900">{attachment.senderOrganization}</p>
             </div>
           </div>
 
-          {/* Metadata Section */}
-          <DocumentMetadata
-            senderName={attachment.senderName}
-            senderOrganization={attachment.senderOrganization}
-            emailDate={attachment.emailDate}
-            layout="grid"
-          />
-
-          {/* Direction Badge */}
-          <div className="flex justify-center mb-4">
-            <Badge className={`${fileInfo.bgColor} text-white text-xs px-3 py-1 rounded-full`}>
-              {attachment.direction === 'received' ? 'Received' : 'Sent'}
-            </Badge>
+          {/* Action Buttons */}
+          <div className="flex space-x-2 pt-2">
+            <Button
+              onClick={handleView}
+              variant="outline"
+              size="sm"
+              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300"
+            >
+              <Eye className="w-4 h-4" />
+              <span>View</span>
+            </Button>
+            <Button
+              onClick={handleDownload}
+              size="sm"
+              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download</span>
+            </Button>
           </div>
-
-          {/* Actions */}
-          <DocumentActions
-            emailId={attachment.emailId}
-            badgeColor={fileInfo.bgColor}
-            layout="grid"
-          />
-        </CardContent>
+        </div>
       </Card>
     );
   }
 
-  // List layout
+  // List layout - simplified version for list view
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <FileIconDisplay type={attachment.type} size="small" />
+            <div className={`${getFileColor()} p-3 rounded-lg`}>
+              {getFileIcon()}
+            </div>
             
             <div className="flex-1">
               <h3 className="font-medium text-gray-700 mb-1 break-words">{attachment.name}</h3>
-              <DocumentMetadata
-                senderName={attachment.senderName}
-                senderOrganization={attachment.senderOrganization}
-                emailDate={attachment.emailDate}
-                layout="list"
-              />
+              <div className="text-sm text-gray-500">
+                {attachment.senderName} • {attachment.senderOrganization}
+              </div>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-              <Badge className={`${fileInfo.bgColor} text-white text-xs`}>
-                {attachment.direction === 'received' ? 'Received' : 'Sent'}
-              </Badge>
+              <div className="text-xs text-gray-500">{getFileTypeLabel()}</div>
             </div>
             
-            <DocumentActions
-              emailId={attachment.emailId}
-              badgeColor={fileInfo.bgColor}
-              layout="list"
-            />
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleView}
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                View
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleDownload}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Download
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>
