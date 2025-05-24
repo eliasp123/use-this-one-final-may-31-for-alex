@@ -70,10 +70,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-xl font-light text-gray-800">Calendar</h2>
-      </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
           <CalendarDateDisplay 
