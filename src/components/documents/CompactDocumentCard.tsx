@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -110,17 +111,17 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           <div className="flex items-center gap-2 text-lg">
             <User className="h-4 w-4 text-gray-600 flex-shrink-0" />
             <span className="font-semibold text-gray-700">From:</span>
-            <span className="text-gray-700 truncate">{attachment.senderName}</span>
+            <span className="text-gray-600 truncate">{attachment.senderName}</span>
           </div>
           <div className="flex items-center gap-2 text-lg">
             <Building className="h-4 w-4 text-gray-600 flex-shrink-0" />
             <span className="font-semibold text-gray-700">Organization:</span>
-            <span className="text-gray-700 truncate">{attachment.senderOrganization}</span>
+            <span className="text-gray-600 truncate">{attachment.senderOrganization}</span>
           </div>
           <div className="flex items-center gap-2 text-lg">
             <Calendar className="h-4 w-4 text-gray-600 flex-shrink-0" />
             <span className="font-semibold text-gray-700">Date:</span>
-            <span className="text-gray-700">{formatDate(attachment.emailDate)}</span>
+            <span className="text-gray-600">{formatDate(attachment.emailDate)}</span>
           </div>
         </div>
 
