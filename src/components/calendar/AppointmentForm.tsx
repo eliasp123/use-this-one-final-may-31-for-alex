@@ -35,7 +35,12 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     if (!selectedDate || !title.trim()) {
       return; // Basic validation
     }
@@ -49,14 +54,29 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     });
   };
 
+  const handleCancel = (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    onCancel();
+  };
+
   const isFormValid = !!(selectedDate && title.trim());
+
+  // Prevent form submission propagation
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleSave();
+  };
 
   return (
     <div className="flex flex-col h-full p-8">
       <AppointmentFormHeader />
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto py-6 min-h-0">
+      {/* Scrollable Content - Wrap in form to isolate */}
+      <form onSubmit={handleFormSubmit} className="flex-1 overflow-y-auto py-6 min-h-0">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <AppointmentFormFields
             selectedDate={selectedDate}
@@ -80,12 +100,12 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
             />
           </div>
         </div>
-      </div>
+      </form>
 
       <AppointmentFormFooter
         isFormValid={isFormValid}
         onSave={handleSave}
-        onCancel={onCancel}
+        onCancel={handleCancel}
       />
     </div>
   );
