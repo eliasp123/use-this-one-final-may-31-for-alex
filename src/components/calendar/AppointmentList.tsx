@@ -27,7 +27,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
       appDate.setHours(0, 0, 0, 0);
       return appDate > today;
     })
-    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3); // Show only next 3 upcoming
 
   console.log('Today:', today);
@@ -117,7 +117,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
                         {appointment.title}
                       </p>
                       <p className="text-xs text-gray-600">
-                        {format(appointment.date, 'MMM d')}
+                        {format(new Date(appointment.date), 'MMM d')}
                       </p>
                     </div>
                   </div>
