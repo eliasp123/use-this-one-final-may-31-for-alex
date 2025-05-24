@@ -33,6 +33,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
 
   console.log('Grid view - direction:', attachment.direction, 'statusBadgeColor:', statusBadgeColor);
   console.log('Grid view - fileInfo.statusBadgeColor:', fileInfo.statusBadgeColor);
+  console.log('Grid view - about to render StatusBadge with:', { direction: attachment.direction, statusBadgeColor });
 
   return (
     <Card className="hover:shadow-lg transition-all duration-200 bg-white/90 backdrop-blur-sm border border-gray-200/60 h-full">
