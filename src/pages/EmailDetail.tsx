@@ -1,11 +1,15 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { getEmailByIdWithAttachments } from '../utils/emailDataUtils';
 import { EmailData } from '../types/email';
+import { useEmailCategoryData } from '@/hooks/useEmailCategoryData';
 import EmailDetailHeader from '../components/email-detail/EmailDetailHeader';
 import EmailDetailCard from '../components/email-detail/EmailDetailCard';
 import EmailDetailActions from '../components/email-detail/EmailDetailActions';
+import EmailSidebar from '../components/email-list/EmailSidebar';
 import EmailReplyForm from '../components/EmailReplyForm';
 import NewEmailForm from '../components/NewEmailForm';
 import { useToast } from '../hooks/use-toast';
@@ -17,6 +21,7 @@ const EmailDetail = () => {
   const [email, setEmail] = useState<EmailData | null>(null);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { toast } = useToast();
   
   useEffect(() => {
@@ -140,41 +145,54 @@ const EmailDetail = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <EmailDetailHeader 
-          email={email}
-          onComposeClick={() => setShowNewEmailForm(true)}
+    <SidebarProvider defaultOpen={true}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
+        {/* Sidebar */}
+        <EmailSidebar 
+          emailCategories={emailCategories} 
+          category={email.category} 
+          activeTab="all"
+          onCategoryAdded={refreshCategories}
         />
         
-        <EmailDetailCard email={email} />
-        
-        <EmailDetailActions
-          email={email}
-          onReplyClick={handleReplyClick}
-          onMarkAsReplied={handleMarkAsReplied}
-          onMarkAsResponseReceived={handleMarkAsResponseReceived}
-          onMarkAsPrivate={handleMarkAsPrivate}
-          showReplyForm={showReplyForm}
-        />
-        
-        {/* Reply Form */}
-        {showReplyForm && (
-          <EmailReplyForm
-            originalEmail={email}
-            onClose={handleReplyClose}
-            onSend={handleReplySend}
-          />
-        )}
+        {/* Main Content */}
+        <div className="flex-1 pl-24 pr-32">
+          <div className="container mx-auto px-4 py-8">
+            <EmailDetailHeader 
+              email={email}
+              onComposeClick={() => setShowNewEmailForm(true)}
+            />
+            
+            <EmailDetailCard email={email} />
+            
+            <EmailDetailActions
+              email={email}
+              onReplyClick={handleReplyClick}
+              onMarkAsReplied={handleMarkAsReplied}
+              onMarkAsResponseReceived={handleMarkAsResponseReceived}
+              onMarkAsPrivate={handleMarkAsPrivate}
+              showReplyForm={showReplyForm}
+            />
+            
+            {/* Reply Form */}
+            {showReplyForm && (
+              <EmailReplyForm
+                originalEmail={email}
+                onClose={handleReplyClose}
+                onSend={handleReplySend}
+              />
+            )}
 
-        {/* New Email Form */}
-        <NewEmailForm
-          isOpen={showNewEmailForm}
-          onClose={() => setShowNewEmailForm(false)}
-          onSend={handleNewEmail}
-        />
+            {/* New Email Form */}
+            <NewEmailForm
+              isOpen={showNewEmailForm}
+              onClose={() => setShowNewEmailForm(false)}
+              onSend={handleNewEmail}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

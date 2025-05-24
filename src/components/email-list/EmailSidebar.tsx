@@ -185,7 +185,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
-      <SidebarContent className="pt-16">  
+      <SidebarContent className="pt-16 pl-4">  
         <SidebarGroup className="pt-8">
           {/* Add Category Button with increased bottom margin */}
           <div className="px-3 mb-8">
