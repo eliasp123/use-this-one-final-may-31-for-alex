@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
@@ -134,6 +135,45 @@ const Documents = () => {
           </div>
         </div>
 
+        {/* Stats cards - back to full width */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
+          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
+                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
+                </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
+              </div>
+            </div>
+          </Card>
+          
+          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
+                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
+                </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
+              </div>
+            </div>
+          </Card>
+          
+          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
+                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
+                </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         <SidebarProvider defaultOpen={true}>
           <div className="flex gap-6">
             <DocumentSidebar 
@@ -142,46 +182,8 @@ const Documents = () => {
               onCreateFolder={handleCreateFolder}
             />
             
+            {/* Main content area - now full width minus sidebar */}
             <div className="flex-1">
-              {/* Stats cards - now inside the main content area */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-                
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-                
-                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
-                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
-                      </div>
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
               {/* Filter buttons */}
               <div className="flex justify-center gap-3 mb-6 sm:mb-8">
                 {filterOptions.map((filter) => {
@@ -206,7 +208,7 @@ const Documents = () => {
                 })}
               </div>
 
-              {/* Documents Grid */}
+              {/* Documents Grid - now takes full available width */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 min-h-[500px]">
                 {filteredAttachments.length > 0 ? (
                   <div className="space-y-6 sm:space-y-8">
@@ -217,7 +219,7 @@ const Documents = () => {
                             <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                           </div>
                         ) : null}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
                           {attachments.map((attachment) => (
                             <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                               <CompactDocumentCard attachment={attachment} layout="grid" />
