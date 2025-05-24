@@ -3,6 +3,7 @@ import React from 'react';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
+import { APPOINTMENTS } from '../data/calendarData';
 
 const CalendarSection = () => {
   const {
@@ -32,6 +33,7 @@ const CalendarSection = () => {
             onDateSelect={handleSelect}
             isDayWithAppointment={isDayWithAppointment}
             onAddAppointment={handleAddAppointment}
+            appointments={APPOINTMENTS}
           />
         </div>
         

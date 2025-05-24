@@ -5,17 +5,19 @@ import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Plus } from 'lucide-react';
-import { Dialog, DialogContent, DialogOverlay } from '../ui/dialog';
+import { Dialog, DialogContent } from '../ui/dialog';
 import AppointmentForm from './AppointmentForm';
+import { Appointment } from '../../types/appointment';
 
 interface CalendarDateDisplayProps {
   date: Date | undefined;
   onDateSelect: (selectedDate: Date | undefined) => void;
   isDayWithAppointment: (day: Date) => boolean;
   onAddAppointment: () => void;
+  appointments: Appointment[];
 }
 
-const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment }: CalendarDateDisplayProps) => {
+const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment, appointments }: CalendarDateDisplayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSaveAppointment = (appointmentData: {
@@ -80,13 +82,14 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             
             {/* Wide Overlay Dialog covering sidebar and calendar */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[85vw] max-w-[900px] h-[85vh] max-h-[700px] bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden p-0 z-50">
+              <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[90vw] max-w-[1200px] h-[85vh] max-h-[700px] bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden p-0 z-50">
                 <div className="p-8 h-full">
                   <AppointmentForm
                     initialDate={date}
                     onSave={handleSaveAppointment}
                     onCancel={handleCancelAppointment}
                     onDateChange={handleDateChangeInForm}
+                    existingAppointments={appointments}
                   />
                 </div>
               </DialogContent>
