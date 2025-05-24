@@ -35,7 +35,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
   console.log('Filtered upcoming appointments:', upcomingAppointments);
 
   return (
-    <Card className="h-full shadow-sm border border-gray-100 overflow-hidden">
+    <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
         <div className="text-white">
           <h3 className="text-lg font-light uppercase mb-1">
@@ -47,7 +47,8 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
           </p>
         </div>
       </div>
-      <CardContent className="p-0 flex flex-col h-full">
+      
+      <CardContent className="p-0 flex flex-col flex-1">
         {/* Top section for selected date appointments */}
         <div className="p-4 flex-1">
           <div className="space-y-3">
@@ -95,11 +96,11 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
           </div>
         </div>
 
-        {/* Separator */}
-        <Separator className="bg-gray-300" />
+        {/* Separator line - soft but dark gray */}
+        <Separator className="bg-gray-600" />
 
         {/* Bottom section for upcoming appointments */}
-        <div className="p-4 bg-gray-50">
+        <div className="p-4 bg-gray-50 flex-1">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments</h4>
           <div className="space-y-2">
             {upcomingAppointments.length === 0 ? (
