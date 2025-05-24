@@ -9,10 +9,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, FolderPlus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { EmailCategory } from '@/hooks/useEmailCategoryData';
 import EmailCategoryItem from './EmailCategoryItem';
-import { addCustomCategory } from '@/utils/categoryUtils';
+import { addCustomCategory, getCustomCategories, saveCustomCategories } from '@/utils/categoryUtils';
 import { useToast } from '@/hooks/use-toast';
 
 interface EmailSidebarProps {
@@ -133,6 +133,50 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     }
   };
 
+  const handleDeleteCategory = (categoryId: string) => {
+    const categoryToDelete = orderedCategories.find(cat => cat.id === categoryId);
+    
+    // Check if category is empty (no unread, pending, or total emails)
+    if (categoryToDelete && categoryToDelete.total === 0) {
+      try {
+        // Remove from custom categories in localStorage
+        const customCategories = getCustomCategories();
+        const filteredCategories = customCategories.filter(cat => cat.id !== categoryId);
+        saveCustomCategories(filteredCategories);
+        
+        toast({
+          title: "Category Deleted",
+          description: `"${categoryToDelete.title}" has been deleted.`,
+        });
+        
+        // Notify parent component to refresh categories
+        if (onCategoryAdded) {
+          onCategoryAdded();
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to delete category. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      toast({
+        title: "Cannot Delete",
+        description: "Only empty categories can be deleted.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Check if a category is a custom category and is empty
+  const isCustomEmptyCategory = (categoryId: string) => {
+    const customCategories = getCustomCategories();
+    const isCustom = customCategories.some(cat => cat.id === categoryId);
+    const categoryData = orderedCategories.find(cat => cat.id === categoryId);
+    return isCustom && categoryData && categoryData.total === 0;
+  };
+
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16">  
@@ -152,7 +196,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Create New Category</DialogTitle>
+                  <DialogTitle className="text-gray-800 font-normal">Create New Category</DialogTitle>
                 </DialogHeader>
                 <div className="flex items-center space-x-2">
                   <Input
@@ -165,8 +209,13 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                         handleAddCustomCategory();
                       }
                     }}
+                    className="text-gray-800"
                   />
-                  <Button onClick={handleAddCustomCategory} size="sm">
+                  <Button 
+                    onClick={handleAddCustomCategory} 
+                    size="sm"
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
+                  >
                     Create
                   </Button>
                 </div>
@@ -178,6 +227,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
             {orderedCategories.map((cat, index) => {
               const isDragging = draggedItem === cat.id;
               const isDropTarget = dragOverIndex === index;
+              const canDelete = isCustomEmptyCategory(cat.id);
               
               return (
                 <div key={cat.id} className="relative">
@@ -196,13 +246,29 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     onDragEnd={handleDragEnd}
                     className={`cursor-move transition-all duration-200 ${
                       isDragging ? 'scale-95 rotate-1 shadow-lg z-20' : ''
-                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''}`}
+                    } ${isDropTarget && !isDragging ? 'transform translate-y-1' : ''} ${
+                      canDelete ? 'group relative' : ''
+                    }`}
                   >
                     <EmailCategoryItem 
                       category={cat} 
                       activeCategory={category} 
                       activeTab={activeTab} 
                     />
+                    
+                    {/* Delete button for custom empty categories */}
+                    {canDelete && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteCategory(cat.id);
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-red-100 rounded"
+                        title="Delete category"
+                      >
+                        <Trash2 className="h-3 w-3 text-red-500" />
+                      </button>
+                    )}
                   </div>
                   
                   {/* Add extra space every 3 items with increased spacing */}
