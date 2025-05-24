@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import { 
@@ -34,10 +35,19 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   
-  // Filter categories based on search query
-  const filteredCategories = categories.filter(category => 
-    category.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // When there's a search query, only show categories that have emails
+  // When there's no search query, show all categories
+  const filteredCategories = searchQuery.trim() 
+    ? categories.filter(category => category.total > 0)
+    : categories;
+  
+  console.log('EmailCategoryGrid debug:', {
+    searchQuery: searchQuery.trim(),
+    originalCategories: categories.length,
+    filteredCategories: filteredCategories.length,
+    categoriesWithEmails: categories.filter(c => c.total > 0).length,
+    totalEmailsAcrossCategories: categories.reduce((sum, cat) => sum + cat.total, 0)
+  });
   
   // Calculate pagination values
   const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
