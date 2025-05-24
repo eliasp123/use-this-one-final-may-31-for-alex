@@ -26,8 +26,10 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   // Filter attachments by folder first, then by other criteria
   const folderFilteredAttachments = selectedFolderId 
     ? allAttachments.filter(attachment => {
-        const folder = getDocumentFolder(attachment.id, attachment.emailId);
-        return folder?.id === selectedFolderId;
+        const folderAssignments = getDocumentsInFolder(selectedFolderId);
+        return folderAssignments.some(assignment => 
+          assignment.documentId === attachment.id && assignment.emailId === attachment.emailId
+        );
       })
     : allAttachments;
 
@@ -201,7 +203,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                       </div>
                       <h3 className="text-xl font-semibold text-gray-700 mb-3">No documents found</h3>
                       <p className="text-gray-500 text-base leading-relaxed max-w-md mx-auto">
-                        {searchQuery ? 'Try adjusting your search terms or filters to find the documents you\'re looking for.' : 'No email attachments are available at the moment. Documents will appear here when emails with attachments are received.'}
+                        {searchQuery ? 'Try adjusting your search terms or filters to find the documents you\'re looking for.' : selectedFolderId ? `No documents found in this folder.` : 'No email attachments are available at the moment. Documents will appear here when emails with attachments are received.'}
                       </p>
                     </Card>
                   )}
