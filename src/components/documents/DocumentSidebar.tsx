@@ -87,172 +87,129 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     });
   };
 
+  // Create array of all folder items for spacing calculation
+  const defaultFolders = [
+    {
+      id: 'all',
+      name: 'All Files',
+      parentId: null,
+      createdAt: '',
+      color: 'from-purple-400 to-purple-500'
+    },
+    {
+      id: 'insurance',
+      name: 'Insurance',
+      parentId: null,
+      createdAt: '',
+      color: 'from-blue-400 to-blue-500'
+    },
+    {
+      id: 'medical',
+      name: 'Medical',
+      parentId: null,
+      createdAt: '',
+      color: 'from-emerald-400 to-emerald-500'
+    },
+    {
+      id: 'legal',
+      name: 'Legal',
+      parentId: null,
+      createdAt: '',
+      color: 'from-purple-400 to-purple-500'
+    },
+    {
+      id: 'finances',
+      name: 'Finances',
+      parentId: null,
+      createdAt: '',
+      color: 'from-amber-400 to-orange-500'
+    },
+    {
+      id: 'discounts',
+      name: 'Discounts',
+      parentId: null,
+      createdAt: '',
+      color: 'from-rose-400 to-pink-500'
+    },
+    {
+      id: 'housing',
+      name: 'Housing',
+      parentId: null,
+      createdAt: '',
+      color: 'from-teal-400 to-teal-500'
+    }
+  ];
+
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarContent className="pt-32">
-        <SidebarGroup>
-          <div className="px-4 pb-56">
-            <div className="space-y-3">
-              {isCreatingFolder ? (
-                <div className="space-y-3">
-                  <Input
-                    placeholder="Folder name..."
-                    value={newFolderName}
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="text-sm h-8"
-                    autoFocus
-                  />
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      onClick={() => handleCreateFolder(newFolderName)}
-                      disabled={!newFolderName.trim()}
-                      className="h-7 text-xs flex-1 bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                      Create
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => {
-                        setIsCreatingFolder(false);
-                        setNewFolderName('');
-                      }}
-                      className="h-7 text-xs flex-1"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+      <SidebarContent className="pt-16">
+        <SidebarGroup className="pt-8">
+          {/* Create Folder Button moved higher with proper spacing */}
+          <div className="px-3 mb-6">
+            {isCreatingFolder ? (
+              <div className="space-y-3">
+                <Input
+                  placeholder="Folder name..."
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="text-sm h-8"
+                  autoFocus
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleCreateFolder(newFolderName)}
+                    disabled={!newFolderName.trim()}
+                    className="h-7 text-xs flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    Create
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => {
+                      setIsCreatingFolder(false);
+                      setNewFolderName('');
+                    }}
+                    className="h-7 text-xs flex-1"
+                  >
+                    Cancel
+                  </Button>
                 </div>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsCreatingFolder(true)}
-                  className="flex items-center gap-2 h-8 w-full justify-start bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
-                >
-                  <FolderPlus className="w-4 h-4" />
-                  Create Folder
-                </Button>
-              )}
-            </div>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCreatingFolder(true)}
+                className="flex items-center gap-2 h-8 w-full justify-start bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
+              >
+                <FolderPlus className="w-4 h-4" />
+                Create Folder
+              </Button>
+            )}
           </div>
           
-          <SidebarMenu className="space-y-2">
-            {/* All Files option */}
-            <FolderItem
-              folder={{
-                id: 'all',
-                name: 'All Files',
-                parentId: null,
-                createdAt: '',
-                color: 'from-purple-400 to-purple-500'
-              }}
-              isActive={selectedFolderId === null}
-              isExpanded={false}
-              documentCount={0}
-              onSelect={() => onFolderSelect(null)}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            {/* Default Category Folders */}
-            <FolderItem
-              folder={{
-                id: 'insurance',
-                name: 'Insurance',
-                parentId: null,
-                createdAt: '',
-                color: 'from-blue-400 to-blue-500'
-              }}
-              isActive={selectedFolderId === 'insurance'}
-              isExpanded={false}
-              documentCount={getDocumentCount('insurance')}
-              onSelect={() => onFolderSelect('insurance')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'medical',
-                name: 'Medical',
-                parentId: null,
-                createdAt: '',
-                color: 'from-emerald-400 to-emerald-500'
-              }}
-              isActive={selectedFolderId === 'medical'}
-              isExpanded={false}
-              documentCount={getDocumentCount('medical')}
-              onSelect={() => onFolderSelect('medical')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'legal',
-                name: 'Legal',
-                parentId: null,
-                createdAt: '',
-                color: 'from-purple-400 to-purple-500'
-              }}
-              isActive={selectedFolderId === 'legal'}
-              isExpanded={false}
-              documentCount={getDocumentCount('legal')}
-              onSelect={() => onFolderSelect('legal')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'finances',
-                name: 'Finances',
-                parentId: null,
-                createdAt: '',
-                color: 'from-amber-400 to-orange-500'
-              }}
-              isActive={selectedFolderId === 'finances'}
-              isExpanded={false}
-              documentCount={getDocumentCount('finances')}
-              onSelect={() => onFolderSelect('finances')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'discounts',
-                name: 'Discounts',
-                parentId: null,
-                createdAt: '',
-                color: 'from-rose-400 to-pink-500'
-              }}
-              isActive={selectedFolderId === 'discounts'}
-              isExpanded={false}
-              documentCount={getDocumentCount('discounts')}
-              onSelect={() => onFolderSelect('discounts')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'housing',
-                name: 'Housing',
-                parentId: null,
-                createdAt: '',
-                color: 'from-teal-400 to-teal-500'
-              }}
-              isActive={selectedFolderId === 'housing'}
-              isExpanded={false}
-              documentCount={getDocumentCount('housing')}
-              onSelect={() => onFolderSelect('housing')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
+          <SidebarMenu className="space-y-1">
+            {/* Default Category Folders with 3-at-a-time spacing */}
+            {defaultFolders.map((folder, index) => (
+              <div key={folder.id}>
+                <FolderItem
+                  folder={folder}
+                  isActive={selectedFolderId === folder.id}
+                  isExpanded={false}
+                  documentCount={folder.id === 'all' ? 0 : getDocumentCount(folder.id)}
+                  onSelect={() => onFolderSelect(folder.id === 'all' ? null : folder.id)}
+                  onToggleExpand={() => {}}
+                  level={0}
+                />
+                {/* Add extra space every 3 items with increased spacing */}
+                {(index + 1) % 3 === 0 && index < defaultFolders.length - 1 && (
+                  <div className="h-8" />
+                )}
+              </div>
+            ))}
             
             {/* Custom user-created folders */}
             {renderFolderTree(rootFolders)}
