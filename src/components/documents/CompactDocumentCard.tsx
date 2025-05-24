@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
@@ -59,18 +60,18 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   const getFileColor = () => {
     if (attachment.type.startsWith('image/')) {
-      return 'bg-gradient-to-br from-purple-400 to-purple-600';
+      return 'bg-gradient-to-br from-purple-200 to-purple-300';
     }
     if (attachment.type.includes('pdf')) {
-      return 'bg-gradient-to-br from-red-400 to-red-600';
+      return 'bg-gradient-to-br from-red-200 to-red-300';
     }
     if (attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel')) {
-      return 'bg-gradient-to-br from-green-400 to-green-600';
+      return 'bg-gradient-to-br from-green-200 to-green-300';
     }
     if (attachment.type.includes('document') || attachment.type.includes('text') || attachment.type.includes('word')) {
-      return 'bg-gradient-to-br from-blue-400 to-blue-600';
+      return 'bg-gradient-to-br from-blue-200 to-blue-300';
     }
-    return 'bg-gradient-to-br from-gray-400 to-gray-600';
+    return 'bg-gradient-to-br from-gray-200 to-gray-300';
   };
 
   const getFileTypeLabel = () => {
@@ -100,13 +101,13 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="w-72 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+      <Card className="w-72 bg-gradient-to-br from-stone-50 to-amber-50/30 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-stone-200/40">
         {/* File Icon Header */}
         <div className={`${getFileColor()} p-4 relative`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               {getFileIcon()}
-              <span className="text-white font-medium text-xs">{getFileTypeLabel()}</span>
+              <span className="text-stone-600 font-medium text-xs">{getFileTypeLabel()}</span>
             </div>
           </div>
           
@@ -154,7 +155,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
               onClick={handleView}
               variant="outline"
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs py-2 px-1.5"
+              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs py-3 px-1.5 border-stone-300"
             >
               <Eye className="w-2.5 h-2.5" />
               <span>View</span>
@@ -162,7 +163,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             <Button
               onClick={handleDownload}
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs py-2 px-1.5"
+              className="flex-1 flex items-center justify-center space-x-1 bg-blue-500 hover:bg-blue-600 text-xs py-3 px-1.5"
             >
               <Download className="w-2.5 h-2.5" />
               <span>Download</span>
@@ -224,3 +225,4 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 };
 
 export default CompactDocumentCard;
+
