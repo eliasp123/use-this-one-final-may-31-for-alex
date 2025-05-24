@@ -89,56 +89,56 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarHeader className="pt-6 pb-4 px-4 space-y-6">
-        <div className="space-y-3">
-          {isCreatingFolder ? (
-            <div className="space-y-2">
-              <Input
-                placeholder="Folder name..."
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="text-sm h-8"
-                autoFocus
-              />
-              <div className="flex gap-2">
-                <Button 
-                  size="sm" 
-                  onClick={() => handleCreateFolder(newFolderName)}
-                  disabled={!newFolderName.trim()}
-                  className="h-7 text-xs flex-1"
+      <SidebarContent className="pt-16">
+        <SidebarGroup className="pt-8">
+          <div className="px-4 pb-4">
+            <div className="space-y-3">
+              {isCreatingFolder ? (
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Folder name..."
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="text-sm h-8"
+                    autoFocus
+                  />
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleCreateFolder(newFolderName)}
+                      disabled={!newFolderName.trim()}
+                      className="h-7 text-xs flex-1"
+                    >
+                      Create
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => {
+                        setIsCreatingFolder(false);
+                        setNewFolderName('');
+                      }}
+                      className="h-7 text-xs flex-1"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsCreatingFolder(true)}
+                  className="flex items-center gap-2 h-8 w-full justify-start"
                 >
-                  Create
+                  <FolderPlus className="w-4 h-4" />
+                  Create Folder
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={() => {
-                    setIsCreatingFolder(false);
-                    setNewFolderName('');
-                  }}
-                  className="h-7 text-xs flex-1"
-                >
-                  Cancel
-                </Button>
-              </div>
+              )}
             </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsCreatingFolder(true)}
-              className="flex items-center gap-2 h-8 w-full justify-start"
-            >
-              <FolderPlus className="w-4 h-4" />
-              Create Folder
-            </Button>
-          )}
-        </div>
-      </SidebarHeader>
-      
-      <SidebarContent>
-        <SidebarGroup>
+          </div>
+          
           <SidebarMenu className="space-y-1">
             {/* All Files option */}
             <FolderItem
