@@ -105,15 +105,12 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-xs font-medium text-gray-800 truncate">
-                          {appointment.title}
-                        </p>
-                        <span className="text-xs text-gray-500 flex-shrink-0">•</span>
-                        <p className="text-xs text-gray-600 truncate">
-                          {appointment.organization}
-                        </p>
-                      </div>
+                      <p className="text-xs font-medium text-gray-800 truncate mb-1">
+                        {appointment.title}
+                      </p>
+                      <p className="text-xs text-gray-600 truncate mb-1">
+                        {appointment.organization}
+                      </p>
                       <p className="text-xs text-gray-600">
                         {format(new Date(appointment.date), 'MMM d')}
                       </p>
