@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -92,7 +91,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             </div>
             Document Hub
           </DialogTitle>
-          <p className="text-gray-600 mt-2">Browse and manage all your email attachments</p>
         </DialogHeader>
         
         <SidebarProvider defaultOpen={true}>

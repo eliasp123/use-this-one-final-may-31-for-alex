@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -91,8 +90,6 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarHeader className="pt-20 pb-4 px-4">
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-800">Document Folders</h3>
-          
           {isCreatingFolder ? (
             <div className="space-y-2">
               <Input
