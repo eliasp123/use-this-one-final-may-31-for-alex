@@ -24,12 +24,12 @@ const DocumentsViewToggle = ({
           type="single" 
           value={viewMode} 
           onValueChange={(value) => value && onViewModeChange(value as 'grid' | 'list')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md"
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-48 justify-center"
         >
           <ToggleGroupItem 
             value="grid" 
             aria-label="Grid view"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <LayoutGrid className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">Grid</span>
@@ -37,7 +37,7 @@ const DocumentsViewToggle = ({
           <ToggleGroupItem 
             value="list" 
             aria-label="List view"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <LayoutList className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">List</span>
@@ -49,12 +49,12 @@ const DocumentsViewToggle = ({
           type="single" 
           value={directionFilter} 
           onValueChange={(value) => value && onDirectionFilterChange(value as 'all' | 'received' | 'sent')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md"
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-48 justify-center"
         >
           <ToggleGroupItem 
             value="received" 
             aria-label="Received documents"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <ArrowDown className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">Received</span>
@@ -62,7 +62,7 @@ const DocumentsViewToggle = ({
           <ToggleGroupItem 
             value="sent" 
             aria-label="Sent documents"
-            className="px-4 py-2.5 rounded-md data-[state=on]:bg-orange-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200"
+            className="px-4 py-2.5 rounded-md data-[state=on]:bg-orange-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
           >
             <ArrowUp className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">Sent</span>
