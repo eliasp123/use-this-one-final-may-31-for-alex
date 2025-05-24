@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Calendar } from '../ui/calendar';
+import { Checkbox } from '../ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -101,12 +102,11 @@ const AppointmentFormFields = ({
 
       {/* Private Toggle */}
       <div className="flex items-center space-x-3">
-        <input
-          type="checkbox"
+        <Checkbox
           id="private"
           checked={isPrivate}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onPrivateChange(e.target.checked)}
-          className="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+          onCheckedChange={onPrivateChange}
+          className="h-5 w-5"
         />
         <Label htmlFor="private" className="text-lg">
           Mark as Private
