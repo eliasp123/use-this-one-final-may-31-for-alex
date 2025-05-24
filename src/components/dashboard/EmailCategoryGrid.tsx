@@ -67,8 +67,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     if (!currentPage) {
       setInternalCurrentPage(page);
     }
-    // Scroll to top of category section for better UX
-    document.getElementById('category-section')?.scrollIntoView({ behavior: 'smooth' });
+    // Removed the scrollIntoView behavior - no need for scrolling
   };
 
   // Split the current categories into rows of 3 for consistent spacing

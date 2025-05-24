@@ -54,8 +54,7 @@ const Index = () => {
   
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Scroll to category section for better UX
-    document.getElementById('category-section')?.scrollIntoView({ behavior: 'smooth' });
+    // Removed the scrollIntoView behavior - no need for scrolling
   };
 
   // Generate page numbers for pagination
