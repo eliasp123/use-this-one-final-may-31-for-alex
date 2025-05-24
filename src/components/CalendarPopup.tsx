@@ -30,6 +30,11 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     setDate(selectedDate);
   };
 
+  // Explicitly handle dialog open/close to prevent unwanted triggers
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
+
   // Get appointments for the selected date
   const selectedDateAppointments = date ? APPOINTMENTS.filter(app => 
     app.date.getDate() === date.getDate() && 
@@ -42,6 +47,11 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
       variant="outline"
       size="sm"
       className="px-6 py-3 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOpen(true);
+      }}
     >
       <CalendarIcon className="mr-2 h-4 w-4" />
       Calendar
@@ -49,7 +59,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {showTrigger && (
         <DialogTrigger asChild>
           {trigger || defaultTrigger}
