@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail, User } from 'lucide-react';
@@ -223,7 +224,7 @@ const Documents = () => {
                             <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                           </div>
                         ) : null}
-                        <div className="grid grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
+                        <div className="grid grid-cols-3 gap-4">
                           {attachments.map((attachment) => (
                             <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                               <CompactDocumentCard attachment={attachment} layout="grid" />
@@ -261,3 +262,4 @@ const Documents = () => {
 };
 
 export default Documents;
+
