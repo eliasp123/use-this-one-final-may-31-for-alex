@@ -94,7 +94,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
           <div className="px-4 pb-4">
             <div className="space-y-3">
               {isCreatingFolder ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Input
                     placeholder="Folder name..."
                     value={newFolderName}
