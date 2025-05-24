@@ -81,7 +81,7 @@ const Index = () => {
                 trigger={
                   <Button
                     variant="outline"
-                    className="w-56 px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
+                    className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     Calendar
@@ -91,7 +91,7 @@ const Index = () => {
               
               <Button
                 onClick={() => setShowNewEmailForm(true)}
-                className="w-56 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-11 rounded-lg font-medium flex items-center justify-center"
+                className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center"
               >
                 <Pencil className="mr-2 h-4 w-4" />
                 Compose New Email
@@ -100,7 +100,7 @@ const Index = () => {
               <Button
                 onClick={() => navigate('/documents')}
                 variant="outline"
-                className="w-56 px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
+                className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
               >
                 <FileText className="mr-2 h-4 w-4" />
                 View Documents
