@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
@@ -12,6 +13,7 @@ import {
 
 interface RoleAwareEmailDashboardProps {
   searchQuery?: string;
+  currentPage?: number;
 }
 
 // Map category IDs to their respective icons
@@ -96,7 +98,8 @@ const filterEmailsBySearch = (emails: any[], searchQuery: string) => {
 };
 
 const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({ 
-  searchQuery = '' 
+  searchQuery = '',
+  currentPage = 1 
 }) => {
   const { userRole } = useUserRole();
   const {
@@ -173,11 +176,13 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
         totalUnresponded={totalUnresponded} 
       />
 
-      {/* Email Category Grid with Pagination */}
+      {/* Email Category Grid without Pagination */}
       <EmailCategoryGrid 
         categories={emailCategories}
         searchQuery={searchQuery}
         itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        showPagination={false}
       />
     </div>
   );

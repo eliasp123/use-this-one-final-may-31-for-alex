@@ -26,14 +26,21 @@ interface EmailCategoryGridProps {
   categories: EmailCategory[];
   searchQuery?: string;
   itemsPerPage: number;
+  currentPage?: number;
+  showPagination?: boolean;
 }
 
 const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({ 
   categories, 
   searchQuery = '', 
-  itemsPerPage 
+  itemsPerPage,
+  currentPage = 1,
+  showPagination = true
 }) => {
-  const [currentPage, setCurrentPage] = React.useState(1);
+  const [internalCurrentPage, setInternalCurrentPage] = React.useState(1);
+  
+  // Use external currentPage if provided, otherwise use internal state
+  const activePage = currentPage || internalCurrentPage;
   
   // When there's a search query, only show categories that have emails
   // When there's no search query, show all categories
@@ -51,13 +58,15 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   // Calculate pagination values
   const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, filteredCategories.length);
   const currentCategories = filteredCategories.slice(startIndex, endIndex);
   
-  // Handle page change
+  // Handle page change (only used when showPagination is true and no external currentPage)
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (!currentPage) {
+      setInternalCurrentPage(page);
+    }
     // Scroll to top of category section for better UX
     document.getElementById('category-section')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -90,17 +99,17 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         ))}
       </div>
       
-      {/* Pagination - Only show if we have more than one page */}
-      {totalPages > 1 && (
+      {/* Pagination - Only show if showPagination is true and we have more than one page */}
+      {showPagination && totalPages > 1 && (
         <Pagination className="mt-8 sm:mt-12">
           <PaginationContent>
-            {currentPage > 1 && (
+            {activePage > 1 && (
               <PaginationItem>
                 <PaginationPrevious 
                   href="#" 
                   onClick={(e) => {
                     e.preventDefault();
-                    handlePageChange(currentPage - 1);
+                    handlePageChange(activePage - 1);
                   }} 
                 />
               </PaginationItem>
@@ -110,7 +119,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
               <PaginationItem key={page}>
                 <PaginationLink 
                   href="#" 
-                  isActive={page === currentPage}
+                  isActive={page === activePage}
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageChange(page);
@@ -121,13 +130,13 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
               </PaginationItem>
             ))}
             
-            {currentPage < totalPages && (
+            {activePage < totalPages && (
               <PaginationItem>
                 <PaginationNext 
                   href="#" 
                   onClick={(e) => {
                     e.preventDefault();
-                    handlePageChange(currentPage + 1);
+                    handlePageChange(activePage + 1);
                   }} 
                 />
               </PaginationItem>

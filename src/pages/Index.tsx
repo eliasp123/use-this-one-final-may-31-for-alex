@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText, Calendar } from 'lucide-react';
+import { Info, Pencil, FileText, Calendar, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import AutocompleteSearch from '../components/AutocompleteSearch';
@@ -10,10 +10,19 @@ import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import CalendarPopup from '../components/CalendarPopup';
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from '../components/ui/pagination';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const { userRole, setUserRole } = useUserRole();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -37,6 +46,23 @@ const Index = () => {
     const newRole = userRole === 'primary-caregiver' ? 'family-member' : 'primary-caregiver';
     setUserRole(newRole);
   };
+  
+  // Pagination logic
+  const itemsPerPage = 6;
+  const totalCategories = 8; // Total number of email categories
+  const totalPages = Math.ceil(totalCategories / itemsPerPage);
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to category section for better UX
+    document.getElementById('category-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Generate page numbers for pagination
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -106,6 +132,54 @@ const Index = () => {
                 View Documents
               </Button>
             </div>
+
+            {/* Pagination - Centered under action buttons */}
+            {totalPages > 1 && (
+              <div className="mt-8 sm:mt-12">
+                <Pagination className="">
+                  <PaginationContent>
+                    {currentPage > 1 && (
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                    
+                    {pageNumbers.map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink 
+                          href="#" 
+                          isActive={page === currentPage}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(page);
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    
+                    {currentPage < totalPages && (
+                      <PaginationItem>
+                        <PaginationNext 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
           </div>
         </div>
         
@@ -123,12 +197,21 @@ const Index = () => {
         </div>
         */}
         
-        {/* Search Bar with Autocomplete */}
-        <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
-          <AutocompleteSearch onSearch={handleSearch} initialValue={searchQuery} />
+        {/* Search Bar with Autocomplete - Styled to match Document Hub */}
+        <div className="max-w-xs sm:max-w-md mx-auto mb-12 sm:mb-16">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-14 pl-12 pr-4 text-base bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
         </div>
         
-        <RoleAwareEmailDashboard searchQuery={searchQuery} />
+        <RoleAwareEmailDashboard searchQuery={searchQuery} currentPage={currentPage} />
 
         {/* Calendar Section with margin top for separation */}
         <div className="mt-10 sm:mt-16">
