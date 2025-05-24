@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FileText } from 'lucide-react';
 import CompactDocumentCard from './CompactDocumentCard';
@@ -30,9 +29,9 @@ const DocumentsContent = ({
                   <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                 </div>
               ) : null}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-6">
                 {attachments.map((attachment) => (
-                  <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
+                  <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02] px-1">
                     <CompactDocumentCard attachment={attachment} layout="grid" />
                   </div>
                 ))}
