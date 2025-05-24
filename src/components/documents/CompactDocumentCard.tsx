@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
@@ -135,15 +136,15 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             </div>
           </div>
 
-          {/* Bottom Info - Size and Date */}
+          {/* Bottom Info - Date and Size */}
           <div className="space-y-2 pt-1">
+            <div>
+              <p className="text-xs text-gray-500 font-bold">Date:</p>
+              <p className="text-gray-600 text-xs">{formatDate(attachment.emailDate)}</p>
+            </div>
             <div>
               <p className="text-xs text-gray-500">Size:</p>
               <p className="text-gray-600 text-xs">{formatFileSize(attachment.size)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Date:</p>
-              <p className="text-gray-600 text-xs">{formatDate(attachment.emailDate)}</p>
             </div>
           </div>
 
@@ -153,7 +154,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
               onClick={handleView}
               variant="outline"
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs h-5 px-1.5"
+              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs py-2 px-1.5"
             >
               <Eye className="w-2.5 h-2.5" />
               <span>View</span>
@@ -161,7 +162,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             <Button
               onClick={handleDownload}
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs h-5 px-1.5"
+              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs py-2 px-1.5"
             >
               <Download className="w-2.5 h-2.5" />
               <span>Download</span>
