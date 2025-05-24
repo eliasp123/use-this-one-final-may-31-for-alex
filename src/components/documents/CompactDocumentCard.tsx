@@ -98,63 +98,63 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="hover:shadow-md transition-all duration-200 bg-white border border-gray-200 rounded-xl h-full max-w-[280px] mx-auto" 
+      <Card className="hover:shadow-sm transition-all duration-200 bg-white border border-gray-300 rounded-lg h-full w-[220px]" 
             style={{ 
-              backgroundImage: 'radial-gradient(circle at 20px 20px, #f8f9fa 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
+              backgroundImage: 'radial-gradient(circle at 15px 15px, #f8f9fa 0.8px, transparent 0.8px)',
+              backgroundSize: '15px 15px'
             }}>
-        <CardContent className="p-4 flex flex-col h-full">
+        <CardContent className="p-3 flex flex-col h-full">
           {/* File Icon and Name Section */}
-          <div className="flex flex-col items-center text-center mb-3">
-            <div className={`w-12 h-12 rounded-lg ${fileInfo.bgColor} flex items-center justify-center mb-2 shadow-sm`}>
-              <FileIcon className={`h-6 w-6 ${fileInfo.textColor}`} />
+          <div className="flex flex-col items-center text-center mb-2">
+            <div className={`w-8 h-8 rounded-md ${fileInfo.bgColor} flex items-center justify-center mb-1.5 shadow-sm`}>
+              <FileIcon className={`h-4 w-4 ${fileInfo.textColor}`} />
             </div>
-            <h3 className="font-medium text-gray-800 text-xs leading-tight mb-1 break-words line-clamp-2 px-1">
+            <h3 className="font-medium text-gray-800 text-[11px] leading-tight mb-1 break-words line-clamp-2 px-0.5 h-[32px] flex items-center">
               {attachment.name}
             </h3>
-            <div className="text-[10px] font-medium text-gray-500 mb-2">
+            <div className="text-[9px] font-medium text-gray-500 mb-1.5">
               {formatFileSize(attachment.size)}
             </div>
           </div>
 
-          {/* Metadata Section - Compact */}
-          <div className="flex-1 space-y-1 mb-3 text-center">
-            <div className="flex items-center justify-center gap-1 text-[10px] text-gray-600">
-              <User className="h-2.5 w-2.5 flex-shrink-0" />
-              <span className="truncate">{attachment.senderName}</span>
+          {/* Metadata Section - Ultra Compact */}
+          <div className="flex-1 space-y-0.5 mb-2 text-center">
+            <div className="flex items-center justify-center gap-0.5 text-[9px] text-gray-600">
+              <User className="h-2 w-2 flex-shrink-0" />
+              <span className="truncate max-w-[160px]">{attachment.senderName}</span>
             </div>
-            <div className="flex items-center justify-center gap-1 text-[10px] text-gray-500">
-              <Building className="h-2.5 w-2.5 flex-shrink-0" />
-              <span className="truncate">{attachment.senderOrganization}</span>
+            <div className="flex items-center justify-center gap-0.5 text-[9px] text-gray-500">
+              <Building className="h-2 w-2 flex-shrink-0" />
+              <span className="truncate max-w-[160px]">{attachment.senderOrganization}</span>
             </div>
-            <div className="flex items-center justify-center gap-1 text-[10px] text-gray-500">
-              <Calendar className="h-2.5 w-2.5 flex-shrink-0" />
+            <div className="flex items-center justify-center gap-0.5 text-[9px] text-gray-500">
+              <Calendar className="h-2 w-2 flex-shrink-0" />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
           </div>
 
-          {/* Direction Badge - Smaller */}
-          <div className="flex justify-center mb-3">
-            <Badge className={`${fileInfo.badgeColor} text-white text-[9px] px-2 py-0.5 h-4`}>
+          {/* Direction Badge - Minimal */}
+          <div className="flex justify-center mb-2">
+            <Badge className={`${fileInfo.badgeColor} text-white text-[8px] px-1.5 py-0.5 h-3.5 rounded-full`}>
               {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </Badge>
           </div>
 
-          {/* Actions - Compact Buttons */}
-          <div className="flex gap-1.5 mt-auto">
+          {/* Actions - Tiny Buttons */}
+          <div className="flex gap-1 mt-auto">
             <Button
               size="sm"
               variant="outline"
               onClick={() => navigate(`/email/${attachment.emailId}`)}
-              className="flex-1 text-[10px] h-7 px-2 border-gray-300 hover:bg-gray-50"
+              className="flex-1 text-[9px] h-6 px-1.5 border-gray-300 hover:bg-gray-50 font-medium"
             >
               View
             </Button>
             <Button
               size="sm"
-              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-[10px] h-7 px-2`}
+              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-[9px] h-6 px-1.5 font-medium`}
             >
-              <Download className="h-2.5 w-2.5 mr-1" />
+              <Download className="h-2 w-2 mr-0.5" />
               Get
             </Button>
           </div>
