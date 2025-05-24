@@ -101,7 +101,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="w-72 bg-gradient-to-br from-amber-50 via-stone-50 to-orange-50/20 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-amber-200/50">
+      <Card className="w-72 bg-gradient-to-br from-amber-30 via-stone-30 to-orange-30/20 shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-amber-200/50">
         {/* File Icon Header */}
         <div className={`${getFileColor()} p-4 relative`}>
           <div className="flex items-center justify-between">
