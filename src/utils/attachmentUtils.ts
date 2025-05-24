@@ -1,4 +1,3 @@
-
 import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
@@ -45,6 +44,27 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
   return attachments.sort((a, b) => new Date(b.emailDate).getTime() - new Date(a.emailDate).getTime());
 };
 
+// Helper function to categorize file types with priority order
+const categorizeFileType = (type: string): 'documents' | 'images' | 'spreadsheets' | 'other' => {
+  // Images first (highest priority)
+  if (type.startsWith('image/')) {
+    return 'images';
+  }
+  
+  // Spreadsheets second
+  if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
+    return 'spreadsheets';
+  }
+  
+  // Documents third
+  if (type.includes('pdf') || type.includes('document') || type.includes('text') || type === 'application/msword') {
+    return 'documents';
+  }
+  
+  // Everything else
+  return 'other';
+};
+
 export const filterAttachments = (
   attachments: AttachmentWithContext[],
   searchQuery: string,
@@ -58,32 +78,41 @@ export const filterAttachments = (
     if (!matchesSearch) return false;
 
     if (selectedFilter === 'all') return true;
-    if (selectedFilter === 'documents') return attachment.type.includes('pdf') || attachment.type.includes('document') || attachment.type.includes('text');
-    if (selectedFilter === 'images') return attachment.type.startsWith('image/');
-    if (selectedFilter === 'spreadsheets') return attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel');
-    if (selectedFilter === 'other') return !attachment.type.startsWith('image/') && !attachment.type.includes('pdf') && !attachment.type.includes('document') && !attachment.type.includes('sheet') && !attachment.type.includes('csv');
-
-    return true;
+    
+    const category = categorizeFileType(attachment.type);
+    return category === selectedFilter;
   });
 };
 
 export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
   const total = attachments.length;
-  const documents = attachments.filter(a => a.type.includes('pdf') || a.type.includes('document') || a.type.includes('text')).length;
-  const images = attachments.filter(a => a.type.startsWith('image/')).length;
-  const spreadsheets = attachments.filter(a => a.type.includes('sheet') || a.type.includes('csv') || a.type.includes('excel')).length;
-  const other = attachments.filter(a => 
-    !a.type.startsWith('image/') && 
-    !a.type.includes('pdf') && 
-    !a.type.includes('document') && 
-    !a.type.includes('text') &&
-    !a.type.includes('sheet') && 
-    !a.type.includes('csv') &&
-    !a.type.includes('excel')
-  ).length;
+  let documents = 0;
+  let images = 0;
+  let spreadsheets = 0;
+  let other = 0;
+
+  // Categorize each attachment exactly once
+  attachments.forEach(attachment => {
+    const category = categorizeFileType(attachment.type);
+    switch (category) {
+      case 'documents':
+        documents++;
+        break;
+      case 'images':
+        images++;
+        break;
+      case 'spreadsheets':
+        spreadsheets++;
+        break;
+      case 'other':
+        other++;
+        break;
+    }
+  });
 
   console.log('Attachment stats:', { total, documents, images, spreadsheets, other });
   console.log('Verification total:', documents + images + spreadsheets + other);
+  console.log('Should match total:', total);
 
   return { total, documents, images, spreadsheets, other };
 };
