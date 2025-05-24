@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -6,7 +5,7 @@ import NewEmailForm from '../components/NewEmailForm';
 import { Info, Pencil, FileText, Search, Calendar } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent } from '../components/ui/dialog';
 import AutocompleteSearch from '../components/AutocompleteSearch';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
@@ -227,14 +226,6 @@ const Index = () => {
         {/* Calendar Popup */}
         <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
           <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-            <DialogHeader className="pb-6">
-              <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center mr-3">
-                  <Calendar className="h-5 w-5 text-white" />
-                </div>
-                Calendar
-              </DialogTitle>
-            </DialogHeader>
             <CalendarPopup showTrigger={false} />
           </DialogContent>
         </Dialog>
