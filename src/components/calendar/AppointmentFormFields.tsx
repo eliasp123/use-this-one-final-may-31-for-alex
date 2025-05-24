@@ -46,7 +46,7 @@ const AppointmentFormFields = ({
   }, [notes]);
 
   const handlePrivateToggle = (checked: boolean | 'indeterminate') => {
-    // Convert 'indeterminate' to false, pass through boolean values
+    // Ensure we only pass boolean values
     onPrivateChange(checked === true);
   };
 
