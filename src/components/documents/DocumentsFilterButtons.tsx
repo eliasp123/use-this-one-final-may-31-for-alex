@@ -23,7 +23,7 @@ const DocumentsFilterButtons = ({ selectedFilter, onFilterChange, getFilterCount
     { key: 'spreadsheets', label: 'Spreadsheets', icon: FileSpreadsheet },
     { key: 'person', label: 'Person', icon: User },
     { key: 'organization', label: 'Organization', icon: Users },
-    { key: 'date', label: 'Date', icon: Calendar }
+    { key: 'date', label: 'Month', icon: Calendar }
   ];
 
   return (
