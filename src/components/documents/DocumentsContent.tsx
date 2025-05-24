@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText } from 'lucide-react';
 import CompactDocumentCard from './CompactDocumentCard';
@@ -22,7 +23,7 @@ const DocumentsContent = ({
   viewMode 
 }: DocumentsContentProps) => {
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto pt-8">
       {filteredAttachments.length > 0 ? (
         <div className="space-y-6 sm:space-y-8">
           {groupedAttachments.map(([groupKey, attachments]) => (
