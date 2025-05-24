@@ -84,7 +84,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[1412px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-[1424px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -103,7 +103,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
               onCreateFolder={handleCreateFolder}
             />
             
-            <div className="flex-1 flex flex-col space-y-6 pl-6">
+            <div className="flex-1 flex flex-col space-y-6 px-6">
               {/* Stats Row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
@@ -174,11 +174,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                 </div>
               </div>
 
-              {/* Attachments Label */}
-              <div className="flex items-center justify-between pl-6">
-                <h3 className="text-xl font-semibold text-gray-800">Attachments</h3>
-              </div>
-
               {/* Documents Grid */}
               <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-200/60" style={{ backgroundColor: '#fff7ed' }}>
                 <div className="p-6">
@@ -189,9 +184,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                           {selectedFilter === 'organization' || selectedFilter === 'date' ? (
                             <div className="flex items-center gap-3 pb-3 border-b border-orange-200/30">
                               <h3 className="text-lg font-semibold text-gray-800">{groupKey}</h3>
-                              <span className="text-sm text-gray-600 bg-white/60 px-3 py-1 rounded-full">
-                                {attachments.length} file{attachments.length !== 1 ? 's' : ''}
-                              </span>
                             </div>
                           ) : null}
                           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
