@@ -16,6 +16,11 @@ const CalendarSection = () => {
 
   const upcomingAppointments = getUpcomingAppointments();
 
+  const handleAddAppointment = () => {
+    // Placeholder for add appointment functionality
+    console.log('Add appointment clicked');
+  };
+
   return (
     <div className="max-w-7xl mx-auto">
       <h2 className="text-2xl font-light text-gray-800 text-center mb-8">Upcoming Appointments</h2>
@@ -26,6 +31,7 @@ const CalendarSection = () => {
             date={date}
             onDateSelect={handleSelect}
             isDayWithAppointment={isDayWithAppointment}
+            onAddAppointment={handleAddAppointment}
           />
         </div>
         
