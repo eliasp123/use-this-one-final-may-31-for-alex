@@ -94,7 +94,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'list') {
     return (
-      <Card className="group hover:shadow-md transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white" 
+      <Card className="group hover:shadow-md transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white relative overflow-hidden" 
             style={{ 
               backgroundImage: `
                 repeating-linear-gradient(
@@ -114,6 +114,10 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
               `,
               backgroundSize: '20px 20px'
             }}>
+        {/* File corner fold */}
+        <div className="absolute top-0 right-0 w-4 h-4 bg-gray-200 transform rotate-45 translate-x-2 -translate-y-2"></div>
+        <div className="absolute top-0 right-0 w-4 h-4 border-l border-b border-gray-300 bg-gray-100"></div>
+        
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             {/* File Icon */}
@@ -168,7 +172,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   // Grid layout (compact)
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white h-full"
+    <Card className="group hover:shadow-lg transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white h-full relative overflow-hidden"
           style={{ 
             backgroundImage: `
               repeating-linear-gradient(
@@ -188,6 +192,10 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             `,
             backgroundSize: '20px 20px'
           }}>
+      {/* File corner fold */}
+      <div className="absolute top-0 right-0 w-5 h-5 bg-gray-200 transform rotate-45 translate-x-2.5 -translate-y-2.5"></div>
+      <div className="absolute top-0 right-0 w-5 h-5 border-l border-b border-gray-300 bg-gray-100"></div>
+      
       <CardContent className="p-4 flex flex-col h-full">
         {/* File Icon and Name */}
         <div className="flex items-start gap-3 mb-3">
