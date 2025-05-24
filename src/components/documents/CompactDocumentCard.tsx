@@ -75,43 +75,43 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 bg-white/90 backdrop-blur-sm border border-gray-200/60 h-full">
+    <Card className="hover:shadow-lg transition-all duration-200 border-2 border-gray-300 h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 bg-[size:40px_40px] [background-image:radial-gradient(circle_at_20px_20px,_rgba(0,0,0,0.02)_1px,_transparent_1px)]">
       <CardContent className="p-6 flex flex-col h-full">
         {/* File Icon and Name */}
-        <div className="flex flex-col items-center text-center mb-4">
-          <div className="mb-3">
+        <div className="flex flex-col items-center text-center mb-5">
+          <div className="mb-3 transform scale-75">
             <FileIconDisplay type={attachment.type} size="medium" />
           </div>
-          <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2 line-clamp-2">
+          <h3 className="font-semibold text-gray-800 text-base leading-tight mb-2 line-clamp-2">
             {attachment.name}
           </h3>
         </div>
 
-        {/* Metadata with icons and darker headings */}
-        <div className="flex-1 space-y-3 mb-4">
-          <div className="flex items-center justify-center gap-2 text-xs">
-            <User className="h-3 w-3 text-gray-600" />
-            <span className="font-medium text-gray-700">From:</span>
-            <span className="text-gray-600 truncate max-w-[120px]">{attachment.senderName}</span>
+        {/* Metadata with icons and left-aligned text */}
+        <div className="flex-1 space-y-3 mb-5">
+          <div className="flex items-center gap-2 text-sm">
+            <User className="h-4 w-4 text-gray-600 flex-shrink-0" />
+            <span className="font-semibold text-gray-800">From:</span>
+            <span className="text-gray-700 truncate">{attachment.senderName}</span>
           </div>
-          <div className="flex items-center justify-center gap-2 text-xs">
-            <Building className="h-3 w-3 text-gray-600" />
-            <span className="font-medium text-gray-700">Organization:</span>
-            <span className="text-gray-600 truncate max-w-[100px]">{attachment.senderOrganization}</span>
+          <div className="flex items-center gap-2 text-sm">
+            <Building className="h-4 w-4 text-gray-600 flex-shrink-0" />
+            <span className="font-semibold text-gray-800">Organization:</span>
+            <span className="text-gray-700 truncate">{attachment.senderOrganization}</span>
           </div>
-          <div className="flex items-center justify-center gap-2 text-xs">
-            <Calendar className="h-3 w-3 text-gray-600" />
-            <span className="font-medium text-gray-700">Date:</span>
-            <span className="text-gray-600">{formatDate(attachment.emailDate)}</span>
+          <div className="flex items-center gap-2 text-sm">
+            <Calendar className="h-4 w-4 text-gray-600 flex-shrink-0" />
+            <span className="font-semibold text-gray-800">Date:</span>
+            <span className="text-gray-700">{formatDate(attachment.emailDate)}</span>
           </div>
         </div>
 
-        {/* Size and Direction Badge */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-          <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+        {/* Centered Status Badge and File Size */}
+        <div className="flex flex-col items-center mb-5 space-y-2">
+          <Badge className={`${fileInfo.badgeColor} text-white text-sm px-3 py-1`}>
             {attachment.direction === 'received' ? 'Received' : 'Sent'}
           </Badge>
+          <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
         </div>
 
         {/* Actions */}
