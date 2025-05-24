@@ -5,7 +5,6 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Calendar } from '../ui/calendar';
-import { Checkbox } from '../ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -15,12 +14,10 @@ interface AppointmentFormFieldsProps {
   title: string;
   organization: string;
   notes: string;
-  isPrivate: boolean;
   onDateSelect: (date: Date | undefined) => void;
   onTitleChange: (title: string) => void;
   onOrganizationChange: (organization: string) => void;
   onNotesChange: (notes: string) => void;
-  onPrivateChange: (isPrivate: boolean) => void;
 }
 
 const AppointmentFormFields = ({
@@ -28,12 +25,10 @@ const AppointmentFormFields = ({
   title,
   organization,
   notes,
-  isPrivate,
   onDateSelect,
   onTitleChange,
   onOrganizationChange,
   onNotesChange,
-  onPrivateChange,
 }: AppointmentFormFieldsProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,11 +39,6 @@ const AppointmentFormFields = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [notes]);
-
-  const handlePrivateToggle = (checked: boolean | 'indeterminate') => {
-    // Ensure we only pass boolean values
-    onPrivateChange(checked === true);
-  };
 
   return (
     <div className="lg:col-span-2 space-y-6">
@@ -103,19 +93,6 @@ const AppointmentFormFields = ({
           placeholder="e.g., City Hospital, ABC Clinic"
           className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
         />
-      </div>
-
-      {/* Private Toggle */}
-      <div className="flex items-center space-x-3">
-        <Checkbox
-          id="private"
-          checked={isPrivate}
-          onCheckedChange={handlePrivateToggle}
-          className="h-5 w-5"
-        />
-        <Label htmlFor="private" className="text-lg">
-          Mark as Private
-        </Label>
       </div>
 
       {/* Notes - Auto-expanding */}
