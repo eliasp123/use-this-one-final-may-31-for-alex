@@ -25,7 +25,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
   const [title, setTitle] = useState('');
   const [organization, setOrganization] = useState('');
   const [notes, setNotes] = useState('');
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -45,7 +45,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
       title: title.trim(),
       organization: organization.trim(),
       notes: notes.trim(),
-      isPrivate
+      isPrivate: Boolean(isPrivate)
     });
   };
 
