@@ -116,26 +116,26 @@ const Documents = () => {
               </Button>
               
               <Button
-                onClick={() => navigate('/emails/all/all')}
+                onClick={() => navigate('/')}
                 variant="outline"
                 size="sm"
               >
                 <Mail className="mr-2 h-4 w-4" />
-                Return to Email Hub
+                Return to Communication Hub
               </Button>
             </div>
           </div>
         </div>
 
         <SidebarProvider defaultOpen={true}>
-          <div className="flex h-full min-h-[600px] w-full">
+          <div className="flex h-full min-h-[600px] w-full max-w-7xl mx-auto">
             <DocumentSidebar 
               selectedFolderId={selectedFolderId}
               onFolderSelect={setSelectedFolderId}
               onCreateFolder={handleCreateFolder}
             />
             
-            <div className="flex-1 flex flex-col space-y-6 px-6">
+            <div className="flex-1 flex flex-col space-y-6 ml-6">
               {/* Stats Row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card className="p-4 bg-white border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
