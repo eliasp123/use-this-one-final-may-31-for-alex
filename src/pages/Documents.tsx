@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
@@ -96,17 +95,17 @@ const Documents = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <SidebarProvider defaultOpen={true}>
-        <div className="flex gap-6">
+        <div className="flex gap-6 w-full">
           <DocumentSidebar 
             selectedFolderId={selectedFolderId}
             onFolderSelect={setSelectedFolderId}
             onCreateFolder={handleCreateFolder}
           />
           
-          {/* Main content area - now contains both header and file sections */}
-          <div className="flex-1 min-w-0">
-            <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
-              {/* Header section - now inside sidebar layout */}
+          {/* Main content area - centered and wider */}
+          <div className="flex-1 min-w-0 flex justify-center">
+            <div className="w-full max-w-[1920px] mx-auto px-6 py-4 sm:py-8 pt-16">
+              {/* Header section */}
               <div className="text-center mb-8 sm:mb-16">
                 <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
                 <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
@@ -146,7 +145,7 @@ const Documents = () => {
               </div>
 
               {/* Stats cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12 max-w-6xl mx-auto">
                 <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
                   <div className="p-4 sm:p-6">
                     <div className="flex items-center justify-between">
@@ -208,9 +207,9 @@ const Documents = () => {
                 })}
               </div>
 
-              {/* Documents Grid */}
-              <div className="w-full">
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 min-h-[500px]">
+              {/* Documents Grid - centered and wider */}
+              <div className="w-full max-w-7xl mx-auto">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 min-h-[500px]">
                   {filteredAttachments.length > 0 ? (
                     <div className="space-y-6 sm:space-y-8">
                       {groupedAttachments.map(([groupKey, attachments]) => (
@@ -220,7 +219,7 @@ const Documents = () => {
                               <h3 className="text-base sm:text-lg font-medium text-gray-800">{groupKey}</h3>
                             </div>
                           ) : null}
-                          <div className="grid grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+                          <div className="grid grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
                             {attachments.map((attachment) => (
                               <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                                 <CompactDocumentCard attachment={attachment} layout="grid" />
