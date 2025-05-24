@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from './ui/button';
@@ -142,13 +141,13 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
           {trigger || defaultTrigger}
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-hidden">
+      <DialogContent className="sm:max-w-5xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-xl font-light text-gray-800">Calendar</DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <div className="md:col-span-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2">
             <Card className="overflow-hidden shadow-sm border border-gray-100">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row">
@@ -158,7 +157,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                     <p className="text-white/70 text-sm font-light">{date ? format(date, 'yyyy') : ''}</p>
                   </div>
                   
-                  <div className="w-full md:w-2/3 p-4 bg-white">
+                  <div className="w-full md:w-2/3 p-3 bg-white">
                     <Calendar
                       mode="single"
                       selected={date}
@@ -177,7 +176,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
             </Card>
           </div>
           
-          <div className="md:col-span-4">
+          <div className="md:col-span-1">
             <Card className="h-full shadow-sm border border-gray-100 overflow-hidden">
               <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
                 <div className="text-white">
