@@ -44,24 +44,24 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     if (type.startsWith('image/')) {
       return { 
         badgeColor: 'bg-purple-500',
-        statusBadgeColor: 'bg-purple-300 text-purple-800'
+        statusBadgeColor: 'bg-purple-400 text-white font-normal'
       };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
       return { 
         badgeColor: 'bg-blue-500',
-        statusBadgeColor: 'bg-blue-300 text-blue-800'
+        statusBadgeColor: 'bg-blue-400 text-white font-normal'
       };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
       return { 
         badgeColor: 'bg-green-500',
-        statusBadgeColor: 'bg-green-300 text-green-800'
+        statusBadgeColor: 'bg-green-400 text-white font-normal'
       };
     }
     return { 
       badgeColor: 'bg-gray-500',
-      statusBadgeColor: 'bg-gray-300 text-gray-800'
+      statusBadgeColor: 'bg-gray-400 text-white font-normal'
     };
   };
 
