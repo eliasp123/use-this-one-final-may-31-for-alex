@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -36,8 +35,8 @@ const Documents = () => {
       })
     : allAttachments;
 
-  // Apply direction filter
-  const directionFilteredAttachments = directionFilter === 'all' 
+  // Apply direction filter ONLY if the selected filter is not 'all'
+  const directionFilteredAttachments = (selectedFilter === 'all' || directionFilter === 'all')
     ? folderFilteredAttachments 
     : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
 
@@ -101,29 +100,28 @@ const Documents = () => {
 
   const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
 
-  // Calculate counts for each filter
+  // Calculate counts for each filter - when 'all' filter is selected, show total counts regardless of direction
   const getFilterCount = (filterType: string) => {
-    // Apply direction filter to stats as well
-    const directionFilteredForStats = directionFilter === 'all' 
-      ? allAttachments 
-      : allAttachments.filter(attachment => attachment.direction === directionFilter);
+    // For 'all' filter type, always use all attachments regardless of direction
+    const baseAttachments = filterType === 'all' ? allAttachments : 
+      (directionFilter === 'all' ? allAttachments : allAttachments.filter(attachment => attachment.direction === directionFilter));
     
-    const directionStats = getAttachmentStats(directionFilteredForStats);
+    const baseStats = getAttachmentStats(baseAttachments);
     
-    if (filterType === 'all') return directionStats.total;
-    if (filterType === 'documents') return directionStats.documents;
-    if (filterType === 'images') return directionStats.images;
-    if (filterType === 'spreadsheets') return directionStats.spreadsheets;
+    if (filterType === 'all') return baseStats.total;
+    if (filterType === 'documents') return baseStats.documents;
+    if (filterType === 'images') return baseStats.images;
+    if (filterType === 'spreadsheets') return baseStats.spreadsheets;
     if (filterType === 'organization') {
-      const uniqueOrgs = new Set(directionFilteredForStats.map(a => a.senderOrganization));
+      const uniqueOrgs = new Set(baseAttachments.map(a => a.senderOrganization));
       return uniqueOrgs.size;
     }
     if (filterType === 'person') {
-      const uniquePersons = new Set(directionFilteredForStats.map(a => a.senderName));
+      const uniquePersons = new Set(baseAttachments.map(a => a.senderName));
       return uniquePersons.size;
     }
     if (filterType === 'date') {
-      const uniqueMonths = new Set(directionFilteredForStats.map(a => {
+      const uniqueMonths = new Set(baseAttachments.map(a => {
         const date = new Date(a.emailDate);
         return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
       }));
