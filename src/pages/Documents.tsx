@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail, User } from 'lucide-react';
@@ -167,8 +165,8 @@ const Documents = () => {
                 </div>
               </div>
 
-              {/* Search bar */}
-              <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
+              {/* Search bar with increased spacing */}
+              <div className="max-w-xs sm:max-w-md mx-auto mb-12 sm:mb-16">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <input
@@ -181,8 +179,8 @@ const Documents = () => {
                 </div>
               </div>
 
-              {/* Filter buttons with counts - distributed across full width to match file grid */}
-              <div className="mb-6 sm:mb-8">
+              {/* Filter buttons with counts and increased spacing */}
+              <div className="mb-12 sm:mb-16">
                 <div className="w-full max-w-7xl mx-auto">
                   <div className="grid grid-cols-7 gap-3">
                     {filterOptions.map((filter) => {
@@ -262,4 +260,3 @@ const Documents = () => {
 };
 
 export default Documents;
-
