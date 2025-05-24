@@ -1,11 +1,10 @@
 
+
 import React, { useState } from 'react';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { APPOINTMENTS } from '../data/appointmentData';
 import { Appointment } from '../types/appointment';
-import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
-import { LayoutGrid, LayoutList, ArrowDown, ArrowUp } from 'lucide-react';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -14,8 +13,6 @@ interface CalendarPopupProps {
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('all');
   const [selectedDateAppointments, setSelectedDateAppointments] = useState(
     APPOINTMENTS.filter(app => 
       app.date.getDate() === new Date().getDate() && 
@@ -74,68 +71,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      {/* View Toggle Controls */}
-      <div className="flex justify-center mb-8">
-        <div className="flex gap-8 items-center">
-          {/* View Mode Toggle */}
-          <ToggleGroup 
-            type="single" 
-            value={viewMode} 
-            onValueChange={(value) => value && setViewMode(value as 'grid' | 'list')}
-            className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-60 justify-center"
-          >
-            <ToggleGroupItem 
-              value="grid" 
-              aria-label="Grid view"
-              className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
-            >
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">Grid</span>
-            </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="list" 
-              aria-label="List view"
-              className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
-            >
-              <LayoutList className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">List</span>
-            </ToggleGroupItem>
-          </ToggleGroup>
-
-          {/* Direction Filter Toggle */}
-          <ToggleGroup 
-            type="single" 
-            value={directionFilter} 
-            onValueChange={(value) => value && setDirectionFilter(value as 'all' | 'received' | 'sent')}
-            className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-80 justify-center"
-          >
-            <ToggleGroupItem 
-              value="all" 
-              aria-label="All appointments"
-              className="px-4 py-2.5 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
-            >
-              <span className="text-sm font-medium">All</span>
-            </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="received" 
-              aria-label="Received appointments"
-              className="px-4 py-2.5 rounded-md data-[state=on]:bg-green-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
-            >
-              <ArrowDown className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">Received</span>
-            </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="sent" 
-              aria-label="Sent appointments"
-              className="px-4 py-2.5 rounded-md data-[state=on]:bg-orange-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 flex-1 justify-center"
-            >
-              <ArrowUp className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">Sent</span>
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
           <CalendarDateDisplay 
@@ -159,3 +94,4 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 };
 
 export default CalendarPopup;
+
