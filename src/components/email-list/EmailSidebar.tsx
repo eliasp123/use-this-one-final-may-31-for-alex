@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -196,7 +195,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle className="text-gray-800 font-normal">Create New Category</DialogTitle>
+                  <DialogTitle className="text-gray-600 font-normal">Create New Category</DialogTitle>
                 </DialogHeader>
                 <div className="flex items-center space-x-2">
                   <Input
