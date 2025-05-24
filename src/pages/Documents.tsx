@@ -154,7 +154,7 @@ const Documents = () => {
                 onViewModeChange={setViewMode}
               />
 
-              <div className="mt-6">
+              <div className="mt-8">
                 <DocumentsContent 
                   groupedAttachments={groupedAttachments}
                   selectedFilter={selectedFilter}
