@@ -17,21 +17,21 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
 
-  // Get upcoming appointments (future dates from today)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Get upcoming appointments relative to the selected date (or today if no date selected)
+  const referenceDate = date || new Date();
+  referenceDate.setHours(0, 0, 0, 0);
   
   const upcomingAppointments = APPOINTMENTS
     .filter(app => {
       const appDate = new Date(app.date);
       appDate.setHours(0, 0, 0, 0);
-      return appDate > today; // Only future appointments, not today's
+      return appDate > referenceDate; // Future appointments from reference date
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3); // Show only next 3 upcoming
 
-  console.log('Today:', today);
-  console.log('All appointments:', APPOINTMENTS);
+  console.log('Reference date:', referenceDate);
+  console.log('Selected date appointments:', appointments);
   console.log('Filtered upcoming appointments:', upcomingAppointments);
 
   return (
@@ -50,7 +50,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
       
       <CardContent className="p-0 flex flex-col flex-1">
         {/* Top section for selected date appointments */}
-        <div className="p-4 flex-1">
+        <div className="p-4 min-h-0 flex-1">
           <div className="space-y-3">
             {appointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -100,7 +100,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
         <Separator className="bg-gray-600" />
 
         {/* Bottom section for upcoming appointments */}
-        <div className="p-4 bg-gray-50 flex-1">
+        <div className="p-4 bg-gray-50 min-h-0 flex-1">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments</h4>
           <div className="space-y-2">
             {upcomingAppointments.length === 0 ? (
