@@ -149,7 +149,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Documents Grid */}
-          <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-200/60" style={{ backgroundColor: '#fee6c8' }}>
+          <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-200/60" style={{ backgroundColor: '#ffeeda' }}>
             <div className="p-6">
               {filteredAttachments.length > 0 ? (
                 <div className="space-y-8">
