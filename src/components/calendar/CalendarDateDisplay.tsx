@@ -4,8 +4,7 @@ import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
-import { Plus } from 'lucide-react';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Plus, X } from 'lucide-react';
 import AppointmentForm from './AppointmentForm';
 import { Appointment } from '../../types/appointment';
 
@@ -80,20 +79,33 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               }}
             />
             
-            {/* Fixed Dialog with proper sizing and positioning */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="w-[95vw] max-w-[1200px] h-[90vh] max-h-[800px] p-0 gap-0">
-                <div className="p-8 h-full flex flex-col">
-                  <AppointmentForm
-                    initialDate={date}
-                    onSave={handleSaveAppointment}
-                    onCancel={handleCancelAppointment}
-                    onDateChange={handleDateChangeInForm}
-                    existingAppointments={appointments}
-                  />
+            {/* Custom Dialog Overlay without dark background */}
+            {isDialogOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-[95vw] max-w-[1200px] max-h-[90vh] flex flex-col">
+                  {/* Close button */}
+                  <div className="absolute right-4 top-4 z-10">
+                    <button
+                      onClick={() => setIsDialogOpen(false)}
+                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                      <X className="h-4 w-4 text-gray-600" />
+                    </button>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-8 flex-1 overflow-hidden">
+                    <AppointmentForm
+                      initialDate={date}
+                      onSave={handleSaveAppointment}
+                      onCancel={handleCancelAppointment}
+                      onDateChange={handleDateChangeInForm}
+                      existingAppointments={appointments}
+                    />
+                  </div>
                 </div>
-              </DialogContent>
-            </Dialog>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>

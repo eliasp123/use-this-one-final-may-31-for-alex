@@ -72,15 +72,15 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
   ) : [];
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Fixed Header */}
+    <div className="flex flex-col min-h-0">
+      {/* Header */}
       <div className="flex-shrink-0 pb-6 border-b border-gray-200">
         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Add New Appointment</h2>
         <p className="text-lg text-gray-600">Fill in the details for your new appointment.</p>
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto py-6 min-h-0">
+      <div className="flex-1 overflow-y-auto py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Form Fields */}
           <div className="lg:col-span-2 space-y-6">
@@ -223,7 +223,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
         </div>
       </div>
 
-      {/* Fixed Footer */}
+      {/* Fixed Footer with buttons */}
       <div className="flex-shrink-0 pt-6 border-t border-gray-200">
         <div className="flex gap-4">
           <Button
