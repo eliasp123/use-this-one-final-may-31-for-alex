@@ -11,8 +11,7 @@ import {
   Download, 
   Calendar,
   User,
-  Building,
-  Eye
+  Building
 } from 'lucide-react';
 
 interface AttachmentWithContext {
@@ -42,47 +41,52 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     if (type.startsWith('image/')) {
       return {
         icon: Image,
-        color: 'text-purple-600',
+        color: 'from-purple-400 to-purple-500',
         bgColor: 'bg-purple-50',
-        badgeColor: 'bg-purple-100 text-purple-700'
+        textColor: 'text-purple-700',
+        badgeColor: 'bg-purple-500'
       };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
       return {
         icon: FileText,
-        color: 'text-blue-600',
+        color: 'from-blue-400 to-blue-500',
         bgColor: 'bg-blue-50',
-        badgeColor: 'bg-blue-100 text-blue-700'
+        textColor: 'text-blue-700',
+        badgeColor: 'bg-blue-500'
       };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
       return {
         icon: FileSpreadsheet,
-        color: 'text-green-600',
+        color: 'from-green-400 to-green-500',
         bgColor: 'bg-green-50',
-        badgeColor: 'bg-green-100 text-green-700'
+        textColor: 'text-green-700',
+        badgeColor: 'bg-green-500'
       };
     }
     return {
       icon: File,
-      color: 'text-orange-600',
+      color: 'from-amber-400 to-orange-500',
       bgColor: 'bg-orange-50',
-      badgeColor: 'bg-orange-100 text-orange-700'
+      textColor: 'text-orange-700',
+      badgeColor: 'bg-orange-500'
     };
   };
 
   // Format file size
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B';
+    if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   // Format date
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
+      year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
@@ -91,160 +95,127 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   const fileInfo = getFileTypeInfo(attachment.type);
   const FileIcon = fileInfo.icon;
 
-  if (layout === 'list') {
+  if (layout === 'grid') {
     return (
-      <Card className="group hover:shadow-md transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white" 
-            style={{ 
-              backgroundImage: `
-                repeating-linear-gradient(
-                  0deg,
-                  transparent,
-                  transparent 1px,
-                  rgba(0,0,0,0.02) 1px,
-                  rgba(0,0,0,0.02) 2px
-                ),
-                repeating-linear-gradient(
-                  90deg,
-                  transparent,
-                  transparent 1px,
-                  rgba(0,0,0,0.01) 1px,
-                  rgba(0,0,0,0.01) 2px
-                )
-              `,
-              backgroundSize: '20px 20px'
-            }}>
-        
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            {/* File Icon */}
-            <div className={`w-10 h-10 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-200`}>
-              <FileIcon className={`h-5 w-5 ${fileInfo.color}`} />
+      <Card className="hover:shadow-lg transition-all duration-200 bg-white/90 backdrop-blur-sm border border-gray-200/60 h-full">
+        <CardContent className="p-6 flex flex-col h-full">
+          {/* File Icon and Name Section - Fixed Height */}
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className={`w-16 h-16 rounded-2xl ${fileInfo.bgColor} flex items-center justify-center mb-4 shadow-sm`}>
+              <FileIcon className={`h-8 w-8 ${fileInfo.textColor}`} />
             </div>
-            
-            {/* File Info */}
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-gray-900 text-sm truncate mb-1">{attachment.name}</h3>
-              <div className="flex items-center gap-3 text-xs text-gray-500">
-                <span className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  {attachment.senderName}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(attachment.emailDate)}
-                </span>
-                <span>{formatFileSize(attachment.size)}</span>
-              </div>
+            {/* File name with word-wrap and fixed height container */}
+            <div className="h-12 flex items-center justify-center w-full mb-3">
+              <h3 className="font-semibold text-gray-800 text-sm leading-tight text-center break-words hyphens-auto">
+                {attachment.name}
+              </h3>
             </div>
+            {/* File size with consistent positioning */}
+            <div className="text-xs font-medium text-gray-600 mb-4">
+              {formatFileSize(attachment.size)}
+            </div>
+          </div>
 
-            {/* Direction Badge */}
-            <Badge className={`${fileInfo.badgeColor} text-xs border-0 flex-shrink-0`}>
-              {attachment.direction === 'received' ? 'In' : 'Out'}
+          {/* Metadata Section - Starts at same level for all cards */}
+          <div className="flex-1 space-y-3 mb-4">
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-600">
+              <User className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate text-center">{attachment.senderName}</span>
+            </div>
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+              <Building className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate text-center">{attachment.senderOrganization}</span>
+            </div>
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+              <Calendar className="h-3 w-3 flex-shrink-0" />
+              <span>{formatDate(attachment.emailDate)}</span>
+            </div>
+          </div>
+
+          {/* Direction Badge */}
+          <div className="flex justify-center mb-4">
+            <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+              {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </Badge>
+          </div>
 
-            {/* Actions - Hidden by default, shown on hover */}
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => navigate(`/email/${attachment.emailId}`)}
-                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
+          {/* Actions */}
+          <div className="flex gap-2 mt-auto">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/email/${attachment.emailId}`)}
+              className="flex-1 text-xs"
+            >
+              View Email
+            </Button>
+            <Button
+              size="sm"
+              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-xs`}
+            >
+              <Download className="h-3 w-3 mr-1" />
+              Download
+            </Button>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  // Grid layout (compact)
+  // List layout remains unchanged
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 border-2 border-gray-300 rounded-xl bg-white h-full"
-          style={{ 
-            backgroundImage: `
-              repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 1px,
-                rgba(0,0,0,0.02) 1px,
-                rgba(0,0,0,0.02) 2px
-              ),
-              repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 1px,
-                rgba(0,0,0,0.01) 1px,
-                rgba(0,0,0,0.01) 2px
-              )
-            `,
-            backgroundSize: '20px 20px'
-          }}>
-      
-      <CardContent className="p-4 flex flex-col h-full">
-        {/* File Icon and Name */}
-        <div className="flex items-start gap-3 mb-3">
-          <div className={`w-8 h-8 rounded-lg ${fileInfo.bgColor} flex items-center justify-center flex-shrink-0 border border-gray-200`}>
-            <FileIcon className={`h-4 w-4 ${fileInfo.color}`} />
+    <Card className="hover:shadow-md transition-shadow">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-lg ${fileInfo.bgColor} flex items-center justify-center`}>
+              <FileIcon className={`h-6 w-6 ${fileInfo.textColor}`} />
+            </div>
+            
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-700 mb-1 break-words">{attachment.name}</h3>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
+                  <User className="h-3 w-3" />
+                  {attachment.senderName}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Building className="h-3 w-3" />
+                  {attachment.senderOrganization}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  {formatDate(attachment.emailDate)}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-gray-900 text-sm leading-tight line-clamp-2 mb-1">
-              {attachment.name}
-            </h3>
-            <div className="text-xs text-gray-500">{formatFileSize(attachment.size)}</div>
-          </div>
-        </div>
 
-        {/* Metadata */}
-        <div className="flex-1 space-y-1 mb-3 text-xs text-gray-500">
-          <div className="flex items-center gap-1 truncate">
-            <User className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{attachment.senderName}</span>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+              <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+                {attachment.direction === 'received' ? 'Received' : 'Sent'}
+              </Badge>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => navigate(`/email/${attachment.emailId}`)}
+              >
+                View Email
+              </Button>
+              <Button
+                size="sm"
+                className={`${fileInfo.badgeColor} hover:opacity-90`}
+              >
+                <Download className="h-4 w-4 mr-1" />
+                Download
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-1 truncate">
-            <Building className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{attachment.senderOrganization}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 flex-shrink-0" />
-            <span>{formatDate(attachment.emailDate)}</span>
-          </div>
-        </div>
-
-        {/* Direction Badge */}
-        <div className="flex justify-between items-center mb-3">
-          <Badge className={`${fileInfo.badgeColor} text-xs border-0`}>
-            {attachment.direction === 'received' ? 'Received' : 'Sent'}
-          </Badge>
-        </div>
-
-        {/* Actions - Compact buttons */}
-        <div className="flex gap-1">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => navigate(`/email/${attachment.emailId}`)}
-            className="flex-1 h-7 text-xs px-2 border-gray-200 hover:border-gray-300"
-          >
-            <Eye className="h-3 w-3 mr-1" />
-            View
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex-1 h-7 text-xs px-2 border-gray-200 hover:border-gray-300"
-          >
-            <Download className="h-3 w-3 mr-1" />
-            Get
-          </Button>
         </div>
       </CardContent>
     </Card>
