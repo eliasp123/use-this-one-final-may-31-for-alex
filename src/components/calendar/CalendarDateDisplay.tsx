@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -24,7 +23,6 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     title: string;
     organization: string;
     notes: string;
-    isPrivate: boolean;
   }) => {
     console.log('Saving appointment:', appointmentData);
     // Here you would typically save to your data store
