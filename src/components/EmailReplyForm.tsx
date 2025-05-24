@@ -5,9 +5,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useForm } from 'react-hook-form';
-import { Send, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, X, ChevronDown, ChevronUp, Calendar as CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import CalendarPopup from './CalendarPopup';
 
 interface EmailReplyFormProps {
   originalEmail: {
@@ -198,6 +200,25 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
                 </FormItem>
               )}
             />
+
+            {/* Calendar Accordion */}
+            <div className="space-y-4">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="calendar" className="border-none">
+                  <AccordionTrigger className="bg-orange-100 hover:bg-orange-200 px-4 py-3 rounded-lg font-medium text-orange-900 hover:no-underline">
+                    <div className="flex items-center">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      Click to see your calendar
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 pb-0">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <CalendarPopup showTrigger={false} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
             
             <FormField
               control={form.control}
