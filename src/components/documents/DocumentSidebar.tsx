@@ -89,8 +89,8 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarContent className="pt-24">
-        <SidebarGroup className="pt-8">
+      <SidebarContent className="pt-16">
+        <SidebarGroup>
           <div className="px-4 pb-4">
             <div className="space-y-3">
               {isCreatingFolder ? (
@@ -157,147 +157,99 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               level={0}
             />
             
-            {/* Email Category Folders */}
+            {/* Default Category Folders */}
             <FolderItem
               folder={{
-                id: 'senior-living',
-                name: 'Senior Living',
-                parentId: null,
-                createdAt: '',
-                color: 'from-rose-400 to-pink-500'
-              }}
-              isActive={selectedFolderId === 'senior-living'}
-              isExpanded={false}
-              documentCount={0}
-              onSelect={() => onFolderSelect('senior-living')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'home-care',
-                name: 'Home Care',
+                id: 'insurance',
+                name: 'Insurance',
                 parentId: null,
                 createdAt: '',
                 color: 'from-blue-400 to-blue-500'
               }}
-              isActive={selectedFolderId === 'home-care'}
+              isActive={selectedFolderId === 'insurance'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('home-care')}
+              onSelect={() => onFolderSelect('insurance')}
               onToggleExpand={() => {}}
               level={0}
             />
             
             <FolderItem
               folder={{
-                id: 'federal-benefits',
-                name: 'Federal Benefits',
+                id: 'medical',
+                name: 'Medical',
                 parentId: null,
                 createdAt: '',
                 color: 'from-emerald-400 to-emerald-500'
               }}
-              isActive={selectedFolderId === 'federal-benefits'}
+              isActive={selectedFolderId === 'medical'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('federal-benefits')}
+              onSelect={() => onFolderSelect('medical')}
               onToggleExpand={() => {}}
               level={0}
             />
             
             <FolderItem
               folder={{
-                id: 'local-government',
-                name: 'Local Government',
+                id: 'legal',
+                name: 'Legal',
                 parentId: null,
                 createdAt: '',
                 color: 'from-purple-400 to-purple-500'
               }}
-              isActive={selectedFolderId === 'local-government'}
+              isActive={selectedFolderId === 'legal'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('local-government')}
+              onSelect={() => onFolderSelect('legal')}
               onToggleExpand={() => {}}
               level={0}
             />
             
             <FolderItem
               folder={{
-                id: 'attorneys',
-                name: 'Attorneys',
+                id: 'finances',
+                name: 'Finances',
                 parentId: null,
                 createdAt: '',
                 color: 'from-amber-400 to-orange-500'
               }}
-              isActive={selectedFolderId === 'attorneys'}
+              isActive={selectedFolderId === 'finances'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('attorneys')}
+              onSelect={() => onFolderSelect('finances')}
               onToggleExpand={() => {}}
               level={0}
             />
             
             <FolderItem
               folder={{
-                id: 'other-professionals',
-                name: 'Other Professionals',
+                id: 'discounts',
+                name: 'Discounts',
                 parentId: null,
                 createdAt: '',
-                color: 'from-indigo-400 to-indigo-500'
+                color: 'from-rose-400 to-pink-500'
               }}
-              isActive={selectedFolderId === 'other-professionals'}
+              isActive={selectedFolderId === 'discounts'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('other-professionals')}
+              onSelect={() => onFolderSelect('discounts')}
               onToggleExpand={() => {}}
               level={0}
             />
             
             <FolderItem
               folder={{
-                id: 'va',
-                name: 'VA',
+                id: 'housing',
+                name: 'Housing',
                 parentId: null,
                 createdAt: '',
                 color: 'from-teal-400 to-teal-500'
               }}
-              isActive={selectedFolderId === 'va'}
+              isActive={selectedFolderId === 'housing'}
               isExpanded={false}
               documentCount={0}
-              onSelect={() => onFolderSelect('va')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'physical-therapy',
-                name: 'Physical Therapy',
-                parentId: null,
-                createdAt: '',
-                color: 'from-cyan-400 to-cyan-500'
-              }}
-              isActive={selectedFolderId === 'physical-therapy'}
-              isExpanded={false}
-              documentCount={0}
-              onSelect={() => onFolderSelect('physical-therapy')}
-              onToggleExpand={() => {}}
-              level={0}
-            />
-            
-            <FolderItem
-              folder={{
-                id: 'paying-for-care',
-                name: 'Paying for Care',
-                parentId: null,
-                createdAt: '',
-                color: 'from-lime-400 to-lime-500'
-              }}
-              isActive={selectedFolderId === 'paying-for-care'}
-              isExpanded={false}
-              documentCount={0}
-              onSelect={() => onFolderSelect('paying-for-care')}
+              onSelect={() => onFolderSelect('housing')}
               onToggleExpand={() => {}}
               level={0}
             />
