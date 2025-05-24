@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -190,7 +191,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
               {/* Documents Grid */}
               <div className="flex-1 overflow-y-auto rounded-2xl border border-gray-200/60" style={{ backgroundColor: '#fff7ed' }}>
-                <div className="p-6">
+                <div className="px-6 py-6">
                   {filteredAttachments.length > 0 ? (
                     <div className="space-y-8">
                       {groupedAttachments.map(([groupKey, attachments]) => (
@@ -200,7 +201,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                               <h3 className="text-lg font-semibold text-gray-800">{groupKey}</h3>
                             </div>
                           ) : null}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
                             {attachments.map((attachment) => (
                               <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                                 <CompactDocumentCard attachment={attachment} layout="grid" />

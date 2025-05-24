@@ -38,18 +38,18 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   const getFileIcon = () => {
     if (attachment.type.startsWith('image/')) {
-      return <Image className="w-5 h-5 text-white" />;
+      return <Image className="w-4 h-4 text-white" />;
     }
     if (attachment.type.includes('pdf')) {
-      return <FileText className="w-5 h-5 text-white" />;
+      return <FileText className="w-4 h-4 text-white" />;
     }
     if (attachment.type.includes('sheet') || attachment.type.includes('csv') || attachment.type.includes('excel')) {
-      return <FileSpreadsheet className="w-5 h-5 text-white" />;
+      return <FileSpreadsheet className="w-4 h-4 text-white" />;
     }
     if (attachment.type.includes('document') || attachment.type.includes('text') || attachment.type.includes('word')) {
-      return <FileText className="w-5 h-5 text-white" />;
+      return <FileText className="w-4 h-4 text-white" />;
     }
-    return <File className="w-5 h-5 text-white" />;
+    return <File className="w-4 h-4 text-white" />;
   };
 
   const getFileColor = () => {
@@ -95,26 +95,26 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="w-60 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+      <Card className="w-48 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
         {/* File Icon Header */}
-        <div className={`${getFileColor()} p-4 relative`}>
+        <div className={`${getFileColor()} p-3 relative`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               {getFileIcon()}
-              <span className="text-white font-semibold text-sm">{getFileTypeLabel()}</span>
+              <span className="text-white font-medium text-xs">{getFileTypeLabel()}</span>
             </div>
           </div>
           
           {/* Folded corner effect */}
-          <div className="absolute top-0 right-0 w-6 h-6 bg-white/20 transform rotate-45 translate-x-3 -translate-y-3"></div>
-          <div className="absolute top-0 right-0 w-4 h-4 bg-white/10"></div>
+          <div className="absolute top-0 right-0 w-4 h-4 bg-white/20 transform rotate-45 translate-x-2 -translate-y-2"></div>
+          <div className="absolute top-0 right-0 w-3 h-3 bg-white/10"></div>
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-2">
           {/* File Name */}
           <div>
-            <h3 className="font-medium text-gray-900 text-sm leading-tight line-clamp-2">
+            <h3 className="font-bold text-gray-900 text-xs leading-tight line-clamp-2">
               {attachment.name}
             </h3>
           </div>
@@ -122,28 +122,28 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           {/* File Size */}
           <div>
             <p className="text-xs text-gray-600">Size:</p>
-            <p className="font-medium text-gray-900 text-sm">{formatFileSize(attachment.size)}</p>
+            <p className="text-gray-700 text-xs">{formatFileSize(attachment.size)}</p>
           </div>
 
           {/* Sender Info */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div>
               <p className="text-xs text-gray-600">From:</p>
-              <p className="font-medium text-gray-900 text-sm">{attachment.senderName}</p>
+              <p className="text-gray-700 text-xs">{attachment.senderName}</p>
             </div>
             <div>
               <p className="text-xs text-gray-600">Organization:</p>
-              <p className="font-medium text-gray-900 text-sm">{attachment.senderOrganization}</p>
+              <p className="text-gray-700 text-xs">{attachment.senderOrganization}</p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-2 pt-2">
+          <div className="flex space-x-1.5 pt-1">
             <Button
               onClick={handleView}
               variant="outline"
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs h-8"
+              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs h-6 px-2"
             >
               <Eye className="w-3 h-3" />
               <span>View</span>
@@ -151,7 +151,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             <Button
               onClick={handleDownload}
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs h-8"
+              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs h-6 px-2"
             >
               <Download className="w-3 h-3" />
               <span>Download</span>
@@ -162,7 +162,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     );
   }
 
-  // List layout - simplified version for list view
+  // List layout
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
@@ -173,7 +173,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             </div>
             
             <div className="flex-1">
-              <h3 className="font-medium text-gray-700 mb-1 break-words">{attachment.name}</h3>
+              <h3 className="font-bold text-gray-700 mb-1 break-words">{attachment.name}</h3>
               <div className="text-sm text-gray-500">
                 {attachment.senderName} • {attachment.senderOrganization}
               </div>
@@ -182,7 +182,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+              <div className="text-sm text-gray-600">{formatFileSize(attachment.size)}</div>
               <div className="text-xs text-gray-500">{getFileTypeLabel()}</div>
             </div>
             
@@ -191,16 +191,17 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
                 size="sm"
                 variant="outline"
                 onClick={handleView}
+                className="h-6 px-2 text-xs"
               >
-                <Eye className="h-4 w-4 mr-1" />
+                <Eye className="h-3 w-3 mr-1" />
                 View
               </Button>
               <Button
                 size="sm"
                 onClick={handleDownload}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 h-6 px-2 text-xs"
               >
-                <Download className="h-4 w-4 mr-1" />
+                <Download className="h-3 w-3 mr-1" />
                 Download
               </Button>
             </div>
