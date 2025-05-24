@@ -27,9 +27,108 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
 
   const allFolders = getAllFolders();
   const rootFolders = getFoldersByParent(null);
+
+  // Create array of all folder items for spacing calculation
+  const defaultFolders = [
+    {
+      id: 'all',
+      name: 'All Files',
+      parentId: null,
+      createdAt: '',
+      color: 'from-purple-400 to-purple-500'
+    },
+    {
+      id: 'insurance',
+      name: 'Insurance',
+      parentId: null,
+      createdAt: '',
+      color: 'from-blue-400 to-blue-500'
+    },
+    {
+      id: 'medical',
+      name: 'Medical',
+      parentId: null,
+      createdAt: '',
+      color: 'from-emerald-400 to-emerald-500'
+    },
+    {
+      id: 'legal',
+      name: 'Legal',
+      parentId: null,
+      createdAt: '',
+      color: 'from-purple-400 to-purple-500'
+    },
+    {
+      id: 'finances',
+      name: 'Finances',
+      parentId: null,
+      createdAt: '',
+      color: 'from-amber-400 to-orange-500'
+    },
+    {
+      id: 'discounts',
+      name: 'Discounts',
+      parentId: null,
+      createdAt: '',
+      color: 'from-rose-400 to-pink-500'
+    },
+    {
+      id: 'housing',
+      name: 'Housing',
+      parentId: null,
+      createdAt: '',
+      color: 'from-teal-400 to-teal-500'
+    }
+  ];
+
+  const [orderedFolders, setOrderedFolders] = useState(defaultFolders);
+
+  // Update ordered folders when needed
+  React.useEffect(() => {
+    setOrderedFolders(defaultFolders);
+  }, []);
+
+  const handleDragStart = (e: React.DragEvent, folderId: string) => {
+    setDraggedItem(folderId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', folderId);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, targetFolderId: string) => {
+    e.preventDefault();
+    
+    const draggedId = e.dataTransfer.getData('text/plain') || draggedItem;
+    
+    if (!draggedId || draggedId === targetFolderId) {
+      setDraggedItem(null);
+      return;
+    }
+
+    const newFolders = [...orderedFolders];
+    const draggedIndex = newFolders.findIndex(folder => folder.id === draggedId);
+    const targetIndex = newFolders.findIndex(folder => folder.id === targetFolderId);
+
+    if (draggedIndex !== -1 && targetIndex !== -1) {
+      const [draggedFolder] = newFolders.splice(draggedIndex, 1);
+      newFolders.splice(targetIndex, 0, draggedFolder);
+      setOrderedFolders(newFolders);
+    }
+
+    setDraggedItem(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+  };
 
   const toggleExpanded = (folderId: string) => {
     const newExpanded = new Set(expandedFolders);
@@ -87,59 +186,6 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     });
   };
 
-  // Create array of all folder items for spacing calculation
-  const defaultFolders = [
-    {
-      id: 'all',
-      name: 'All Files',
-      parentId: null,
-      createdAt: '',
-      color: 'from-purple-400 to-purple-500'
-    },
-    {
-      id: 'insurance',
-      name: 'Insurance',
-      parentId: null,
-      createdAt: '',
-      color: 'from-blue-400 to-blue-500'
-    },
-    {
-      id: 'medical',
-      name: 'Medical',
-      parentId: null,
-      createdAt: '',
-      color: 'from-emerald-400 to-emerald-500'
-    },
-    {
-      id: 'legal',
-      name: 'Legal',
-      parentId: null,
-      createdAt: '',
-      color: 'from-purple-400 to-purple-500'
-    },
-    {
-      id: 'finances',
-      name: 'Finances',
-      parentId: null,
-      createdAt: '',
-      color: 'from-amber-400 to-orange-500'
-    },
-    {
-      id: 'discounts',
-      name: 'Discounts',
-      parentId: null,
-      createdAt: '',
-      color: 'from-rose-400 to-pink-500'
-    },
-    {
-      id: 'housing',
-      name: 'Housing',
-      parentId: null,
-      createdAt: '',
-      color: 'from-teal-400 to-teal-500'
-    }
-  ];
-
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarContent className="pt-32">
@@ -195,20 +241,31 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
           <div className="h-6" />
           
           <SidebarMenu className="space-y-1">
-            {/* Default Category Folders with 3-at-a-time spacing */}
-            {defaultFolders.map((folder, index) => (
+            {/* Default Category Folders with drag and drop and 3-at-a-time spacing */}
+            {orderedFolders.map((folder, index) => (
               <div key={folder.id}>
-                <FolderItem
-                  folder={folder}
-                  isActive={selectedFolderId === folder.id}
-                  isExpanded={false}
-                  documentCount={folder.id === 'all' ? 0 : getDocumentCount(folder.id)}
-                  onSelect={() => onFolderSelect(folder.id === 'all' ? null : folder.id)}
-                  onToggleExpand={() => {}}
-                  level={0}
-                />
+                <div
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, folder.id)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, folder.id)}
+                  onDragEnd={handleDragEnd}
+                  className={`cursor-move transition-all ${
+                    draggedItem === folder.id ? 'opacity-50 scale-95' : ''
+                  }`}
+                >
+                  <FolderItem
+                    folder={folder}
+                    isActive={selectedFolderId === folder.id}
+                    isExpanded={false}
+                    documentCount={folder.id === 'all' ? 0 : getDocumentCount(folder.id)}
+                    onSelect={() => onFolderSelect(folder.id === 'all' ? null : folder.id)}
+                    onToggleExpand={() => {}}
+                    level={0}
+                  />
+                </div>
                 {/* Add extra space every 3 items with increased spacing */}
-                {(index + 1) % 3 === 0 && index < defaultFolders.length - 1 && (
+                {(index + 1) % 3 === 0 && index < orderedFolders.length - 1 && (
                   <div className="h-8" />
                 )}
               </div>
