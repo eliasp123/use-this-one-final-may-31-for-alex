@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Pencil, FileText } from 'lucide-react';
 import DocumentHubPopup from '../email-detail/DocumentHubPopup';
+import CalendarPopup from '../CalendarPopup';
+import CalendarIcon from 'lucide-react/icons/calendar';
 
 interface EmailHeaderProps {
   currentCategory: { 
@@ -45,6 +46,18 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         >
           <FileText className="mr-1 h-4 w-4" /> Document Hub
         </Button>
+
+        <CalendarPopup 
+          trigger={
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
+            >
+              <CalendarIcon className="mr-1 h-4 w-4" /> Calendar
+            </Button>
+          }
+        />
       </div>
       
       <div className="flex items-center justify-between bg-white p-6 rounded-xl shadow-sm border border-gray-50">
