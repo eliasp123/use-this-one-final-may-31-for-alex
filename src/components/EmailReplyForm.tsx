@@ -9,7 +9,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { useForm } from 'react-hook-form';
 import { Send, X, ChevronDown, ChevronUp, Calendar as CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import CalendarPopup from './CalendarPopup';
+import { useCalendarLogic } from '@/hooks/useCalendarLogic';
+import CalendarDateDisplay from './calendar/CalendarDateDisplay';
+import AppointmentList from './calendar/AppointmentList';
+import { APPOINTMENTS } from '../data/appointmentData';
 
 interface EmailReplyFormProps {
   originalEmail: {
@@ -42,6 +45,18 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCcBcc, setShowCcBcc] = useState(false);
+  
+  // Use calendar logic hook for interactive functionality
+  const {
+    date,
+    selectedDateAppointments,
+    isDayWithAppointment,
+    handleSelect,
+    getUpcomingAppointments,
+    handleAppointmentClick
+  } = useCalendarLogic();
+
+  const upcomingAppointments = getUpcomingAppointments();
   
   const form = useForm<ReplyFormData>({
     defaultValues: {
@@ -86,6 +101,11 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAddAppointment = () => {
+    // Placeholder for add appointment functionality
+    console.log('Add appointment clicked from email reply form');
   };
 
   return (
@@ -201,7 +221,7 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
               )}
             />
 
-            {/* Calendar Accordion */}
+            {/* Interactive Calendar Accordion */}
             <div className="space-y-4">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="calendar" className="border-none">
@@ -213,7 +233,28 @@ const EmailReplyForm: React.FC<EmailReplyFormProps> = ({
                   </AccordionTrigger>
                   <AccordionContent className="pt-4 pb-0">
                     <div className="bg-gray-50 rounded-lg p-4">
-                      <CalendarPopup showTrigger={false} />
+                      <div className="w-full max-w-5xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          <div className="md:col-span-2">
+                            <CalendarDateDisplay 
+                              date={date}
+                              onDateSelect={handleSelect}
+                              isDayWithAppointment={isDayWithAppointment}
+                              onAddAppointment={handleAddAppointment}
+                              appointments={APPOINTMENTS}
+                            />
+                          </div>
+                          
+                          <div className="md:col-span-1">
+                            <AppointmentList 
+                              date={date}
+                              selectedAppointments={selectedDateAppointments}
+                              upcomingAppointments={upcomingAppointments}
+                              onAppointmentClick={handleAppointmentClick}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
