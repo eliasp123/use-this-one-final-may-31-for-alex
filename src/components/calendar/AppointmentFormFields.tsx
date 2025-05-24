@@ -106,10 +106,10 @@ const AppointmentFormFields = ({
         </Popover>
       </div>
 
-      {/* Title with custom validation */}
+      {/* Title with custom validation - Better contained */}
       <div className="space-y-3">
         <Label htmlFor="title" className="text-lg font-medium">Appointment Name *</Label>
-        <div className="relative">
+        <div className="relative isolate">
           <Input
             id="title"
             value={title}
@@ -122,7 +122,7 @@ const AppointmentFormFields = ({
             )}
           />
           {showTitleError && (
-            <div className="absolute top-full left-0 mt-1 px-3 py-2 bg-purple-500 text-white text-sm rounded-md shadow-lg z-10">
+            <div className="absolute top-full left-0 mt-1 px-3 py-2 bg-purple-500 text-white text-sm rounded-md shadow-lg z-50 pointer-events-none">
               Please fill out this field.
               <div className="absolute -top-1 left-4 w-2 h-2 bg-purple-500 rotate-45"></div>
             </div>
