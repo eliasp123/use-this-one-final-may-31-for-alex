@@ -3,6 +3,8 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
+import { Button } from '../ui/button';
+import { Plus } from 'lucide-react';
 import { Appointment } from '../../types/appointment';
 import { ENCOURAGING_MESSAGES } from '../../data/calendarData';
 
@@ -19,6 +21,11 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
 
+  const handleAddAppointment = () => {
+    // Placeholder for add appointment functionality
+    console.log('Add appointment clicked');
+  };
+
   // Filter upcoming appointments to two weeks maximum
   const twoWeeksFromNow = new Date();
   twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
@@ -30,6 +37,17 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
 
   return (
     <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+      {/* Add Appointment Button - at the very top */}
+      <div className="p-4 border-b border-gray-100">
+        <Button
+          onClick={handleAddAppointment}
+          className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-medium py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+        >
+          <Plus className="mr-2 h-5 w-5" />
+          Add Appointment
+        </Button>
+      </div>
+
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
         <div className="text-white">
           <h3 className="text-lg font-light uppercase mb-1">
