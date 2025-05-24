@@ -3,7 +3,18 @@ import React from 'react';
 import { Badge } from '../ui/badge';
 import { SidebarMenuItem, SidebarMenuButton } from '../ui/sidebar';
 import { DocumentFolder } from '../../utils/folderUtils';
-import { Folder, ChevronRight, ChevronDown } from 'lucide-react';
+import { Folder, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 
 interface FolderItemProps {
   folder: DocumentFolder;
@@ -12,7 +23,9 @@ interface FolderItemProps {
   documentCount: number;
   onSelect: (folderId: string) => void;
   onToggleExpand: (folderId: string) => void;
+  onDelete?: (folderId: string) => void;
   level: number;
+  showDeleteButton?: boolean;
 }
 
 const FolderItem: React.FC<FolderItemProps> = ({ 
@@ -22,7 +35,9 @@ const FolderItem: React.FC<FolderItemProps> = ({
   documentCount,
   onSelect, 
   onToggleExpand,
-  level 
+  onDelete,
+  level,
+  showDeleteButton = false
 }) => {
   const handleClick = () => {
     onSelect(folder.id);
@@ -31,6 +46,13 @@ const FolderItem: React.FC<FolderItemProps> = ({
   const handleToggleExpand = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleExpand(folder.id);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(folder.id);
+    }
   };
 
   return (
@@ -68,6 +90,38 @@ const FolderItem: React.FC<FolderItemProps> = ({
             >
               {documentCount}
             </Badge>
+          )}
+
+          {showDeleteButton && onDelete && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  className="ml-2 opacity-0 group-hover:opacity-100 hover:bg-red-100 rounded p-1 transition-all duration-200"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Trash2 className="w-3 h-3 text-red-500" />
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Folder</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete the folder "{folder.name}"? 
+                    {documentCount > 0 && ` This folder contains ${documentCount} document${documentCount === 1 ? '' : 's'}.`}
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDelete}
+                    className="bg-red-500 hover:bg-red-600"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
       </SidebarMenuButton>

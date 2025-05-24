@@ -101,6 +101,35 @@ export const createFolder = (name: string, parentId: string | null = null): Docu
   return newFolder;
 };
 
+export const deleteFolder = (folderId: string): void => {
+  console.log('Deleting folder:', folderId);
+  
+  // Remove the folder from mockFolders
+  const folderIndex = mockFolders.findIndex(folder => folder.id === folderId);
+  if (folderIndex >= 0) {
+    mockFolders.splice(folderIndex, 1);
+  }
+  
+  // Remove any document assignments to this folder
+  const assignmentsToRemove = mockAssignments.filter(assignment => assignment.folderId === folderId);
+  assignmentsToRemove.forEach(assignment => {
+    const assignmentIndex = mockAssignments.findIndex(
+      a => a.documentId === assignment.documentId && a.emailId === assignment.emailId
+    );
+    if (assignmentIndex >= 0) {
+      mockAssignments.splice(assignmentIndex, 1);
+    }
+  });
+  
+  // Also delete any child folders recursively
+  const childFolders = mockFolders.filter(folder => folder.parentId === folderId);
+  childFolders.forEach(childFolder => {
+    deleteFolder(childFolder.id);
+  });
+  
+  console.log('Updated mockFolders after deletion:', mockFolders);
+};
+
 export const assignDocumentToFolder = (documentId: string, emailId: string, folderId: string): void => {
   // Remove existing assignment
   const existingIndex = mockAssignments.findIndex(

@@ -2,18 +2,20 @@
 import React, { useState } from 'react';
 import { SidebarMenu } from '../ui/sidebar';
 import FolderItem from './FolderItem';
-import { DocumentFolder, getFoldersByParent, getDocumentsInFolder } from '../../utils/folderUtils';
+import { DocumentFolder, getFoldersByParent, getDocumentsInFolder, deleteFolder } from '../../utils/folderUtils';
 
 interface CustomFoldersListProps {
   rootFolders: DocumentFolder[];
   selectedFolderId: string | null;
   onFolderSelect: (folderId: string | null) => void;
+  onFolderDeleted?: () => void;
 }
 
 const CustomFoldersList: React.FC<CustomFoldersListProps> = ({
   rootFolders,
   selectedFolderId,
-  onFolderSelect
+  onFolderSelect,
+  onFolderDeleted
 }) => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
 
@@ -29,6 +31,22 @@ const CustomFoldersList: React.FC<CustomFoldersListProps> = ({
 
   const getDocumentCount = (folderId: string): number => {
     return getDocumentsInFolder(folderId).length;
+  };
+
+  const handleDeleteFolder = (folderId: string) => {
+    console.log('CustomFoldersList handleDeleteFolder called with:', folderId);
+    
+    // If the deleted folder is currently selected, deselect it
+    if (selectedFolderId === folderId) {
+      onFolderSelect(null);
+    }
+    
+    deleteFolder(folderId);
+    
+    // Notify parent component that a folder was deleted
+    if (onFolderDeleted) {
+      onFolderDeleted();
+    }
   };
 
   const renderFolderTree = (folders: DocumentFolder[], level: number = 0): React.ReactNode[] => {
@@ -47,6 +65,8 @@ const CustomFoldersList: React.FC<CustomFoldersListProps> = ({
             documentCount={documentCount}
             onSelect={onFolderSelect}
             onToggleExpand={toggleExpanded}
+            onDelete={handleDeleteFolder}
+            showDeleteButton={true}
             level={level}
           />
           {hasChildren && isExpanded && renderFolderTree(childFolders, level + 1)}

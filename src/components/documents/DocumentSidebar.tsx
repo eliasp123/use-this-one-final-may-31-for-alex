@@ -97,6 +97,12 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     setRefreshKey(prev => prev + 1);
   };
 
+  const handleFolderDeleted = () => {
+    console.log('DocumentSidebar handleFolderDeleted called');
+    // Force a refresh by updating the key
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarContent className="pt-20">
@@ -119,6 +125,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
             rootFolders={rootFolders}
             selectedFolderId={selectedFolderId}
             onFolderSelect={onFolderSelect}
+            onFolderDeleted={handleFolderDeleted}
           />
         </SidebarGroup>
       </SidebarContent>
