@@ -9,31 +9,23 @@ interface StatusBadgeProps {
 const StatusBadge = ({ direction, statusBadgeColor }: StatusBadgeProps) => {
   console.log('StatusBadge render - direction:', direction, 'statusBadgeColor:', statusBadgeColor);
   
-  // Extract background and text colors from the statusBadgeColor string
-  const getInlineStyles = (colorString: string) => {
-    if (colorString.includes('bg-orange-500')) {
-      return { backgroundColor: '#f97316', color: '#ffffff' };
+  // Map direction directly to colors to ensure they apply correctly
+  const getBadgeClasses = () => {
+    if (direction === 'sent') {
+      return 'bg-orange-500 text-white';
     }
-    if (colorString.includes('bg-green-500')) {
-      return { backgroundColor: '#22c55e', color: '#ffffff' };
+    if (direction === 'received') {
+      return 'bg-green-500 text-white';
     }
-    if (colorString.includes('bg-purple-400')) {
-      return { backgroundColor: '#c084fc', color: '#ffffff' };
-    }
-    if (colorString.includes('bg-blue-400')) {
-      return { backgroundColor: '#60a5fa', color: '#ffffff' };
-    }
-    // Default fallback
-    return { backgroundColor: '#6b7280', color: '#ffffff' };
+    // Fallback
+    return 'bg-gray-500 text-white';
   };
 
-  const inlineStyles = getInlineStyles(statusBadgeColor);
+  const badgeClasses = getBadgeClasses();
+  console.log('StatusBadge - final classes:', badgeClasses);
   
   return (
-    <div 
-      className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-normal"
-      style={inlineStyles}
-    >
+    <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-normal ${badgeClasses}`}>
       {direction === 'received' ? 'Received' : 'Sent'}
     </div>
   );
