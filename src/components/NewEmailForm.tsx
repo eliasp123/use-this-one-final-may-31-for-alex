@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,12 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useForm } from 'react-hook-form';
-import { Send, X, ChevronDown, ChevronUp, Paperclip, Trash2, File } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { EmailData } from '@/types/email';
-import { getAllCategories, addCustomCategory } from '@/utils/categoryUtils';
+import { Send, X } from 'lucide-react';
+import { useNewEmailForm, NewEmailData } from '@/hooks/useNewEmailForm';
+import CustomCategoryDialog from '@/components/forms/CustomCategoryDialog';
+import EmailAttachmentsSection from '@/components/forms/EmailAttachmentsSection';
+import EmailCcBccFields from '@/components/forms/EmailCcBccFields';
 
 interface NewEmailFormProps {
   onClose: () => void;
@@ -20,177 +19,36 @@ interface NewEmailFormProps {
   isOpen: boolean;
 }
 
-interface NewEmailData {
-  to: string;
-  toName: string;
-  toOrganization: string;
-  cc: string;
-  bcc: string;
-  subject: string;
-  content: string;
-  category: string;
-  isPrivate: boolean;
-  attachments: File[];
-}
-
-interface CustomCategoryData {
-  id: string;
-  title: string;
-}
-
-const predefinedCategories = [
-  { id: 'senior-living', title: 'Senior Living' },
-  { id: 'home-care', title: 'Home Care' },
-  { id: 'federal-benefits', title: 'Federal Benefits' },
-  { id: 'local-government', title: 'Local Government' },
-  { id: 'attorneys', title: 'Attorneys' },
-  { id: 'other-professionals', title: 'Other Professionals' },
-  { id: 'va', title: 'VA' },
-  { id: 'physical-therapy', title: 'Physical Therapy' },
-  { id: 'paying-for-care', title: 'Paying for Care' }
-];
-
 const NewEmailForm: React.FC<NewEmailFormProps> = ({ 
   onClose, 
   onSend,
   isOpen 
 }) => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [availableCategories, setAvailableCategories] = useState<{ id: string; title: string }[]>([]);
   const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
   const [showCcBcc, setShowCcBcc] = useState(false);
-  const [attachments, setAttachments] = useState<File[]>([]);
   
-  const form = useForm<NewEmailData>({
-    defaultValues: {
-      to: '',
-      toName: '',
-      toOrganization: '',
-      cc: '',
-      bcc: '',
-      subject: '',
-      content: '',
-      category: '',
-      isPrivate: false,
-      attachments: []
-    }
-  });
+  const {
+    form,
+    isSubmitting,
+    availableCategories,
+    attachments,
+    setAttachments,
+    handleAddCustomCategory,
+    handleCategoryChange,
+    handleSubmit
+  } = useNewEmailForm(isOpen, onSend, onClose);
 
-  // Load available categories (predefined + custom)
-  useEffect(() => {
-    const allCategories = getAllCategories();
-    const categoryList = Object.entries(allCategories).map(([id, data]) => ({
-      id,
-      title: data.title
-    }));
-    setAvailableCategories(categoryList);
-  }, [isOpen]);
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newAttachments = Array.from(files);
-      setAttachments(prev => [...prev, ...newAttachments]);
-      form.setValue('attachments', [...attachments, ...newAttachments]);
-    }
-    // Reset the input so the same file can be selected again if needed
-    event.target.value = '';
+  const handleFileSelect = (files: FileList) => {
+    const newAttachments = Array.from(files);
+    const updatedAttachments = [...attachments, ...newAttachments];
+    setAttachments(updatedAttachments);
+    form.setValue('attachments', updatedAttachments);
   };
 
   const removeAttachment = (index: number) => {
     const updatedAttachments = attachments.filter((_, i) => i !== index);
     setAttachments(updatedAttachments);
     form.setValue('attachments', updatedAttachments);
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const handleAddCustomCategory = () => {
-    if (newCategoryName.trim()) {
-      try {
-        const newCategory = addCustomCategory(newCategoryName.trim());
-        
-        // Update available categories
-        const allCategories = getAllCategories();
-        const categoryList = Object.entries(allCategories).map(([id, data]) => ({
-          id,
-          title: data.title
-        }));
-        setAvailableCategories(categoryList);
-        
-        // Set the new category as selected
-        form.setValue('category', newCategory.id);
-        setNewCategoryName('');
-        setShowCustomCategoryDialog(false);
-        
-        toast({
-          title: "Category Added",
-          description: `"${newCategoryName.trim()}" has been added as a new category.`,
-        });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to create category. Please try again.",
-          variant: "destructive",
-        });
-      }
-    }
-  };
-
-  const handleCategoryChange = (value: string) => {
-    if (value === 'add-custom') {
-      setShowCustomCategoryDialog(true);
-    } else {
-      form.setValue('category', value);
-    }
-  };
-
-  const handleSubmit = async (data: NewEmailData) => {
-    setIsSubmitting(true);
-    
-    try {
-      // This is where you'll integrate with Nylas later
-      console.log('New email data to be sent via Nylas:', {
-        ...data,
-        ccEmails: data.cc ? data.cc.split(',').map(email => email.trim()).filter(email => email) : [],
-        bccEmails: data.bcc ? data.bcc.split(',').map(email => email.trim()).filter(email => email) : [],
-        attachments: attachments.map(file => ({
-          name: file.name,
-          size: file.size,
-          type: file.type
-        }))
-      });
-      
-      // Simulate sending (replace with actual Nylas integration)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      onSend({ ...data, attachments });
-      
-      toast({
-        title: "Email Sent",
-        description: `Your email has been sent successfully${attachments.length > 0 ? ` with ${attachments.length} attachment${attachments.length > 1 ? 's' : ''}.` : '.'}`,
-      });
-      
-      form.reset();
-      setAttachments([]);
-      onClose();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send email. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   if (!isOpen) return null;
@@ -270,69 +128,11 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                 )}
               />
 
-              {/* CC/BCC Toggle - Made more prominent with purple styling */}
-              <div className="flex justify-start">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowCcBcc(!showCcBcc)}
-                  className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 hover:text-purple-800 font-medium"
-                >
-                  {showCcBcc ? (
-                    <>
-                      <ChevronUp className="mr-1 h-4 w-4" />
-                      Hide CC/BCC
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="mr-1 h-4 w-4" />
-                      Add CC/BCC
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {/* CC/BCC Fields */}
-              {showCcBcc && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="cc"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CC</FormLabel>
-                        <FormControl>
-                          <Input 
-                            {...field} 
-                            type="email"
-                            placeholder="email1@example.com, email2@example.com"
-                          />
-                        </FormControl>
-                        <p className="text-xs text-gray-500">Separate multiple emails with commas</p>
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="bcc"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>BCC</FormLabel>
-                        <FormControl>
-                          <Input 
-                            {...field} 
-                            type="email"
-                            placeholder="email1@example.com, email2@example.com"
-                          />
-                        </FormControl>
-                        <p className="text-xs text-gray-500">Separate multiple emails with commas</p>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
+              <EmailCcBccFields
+                control={form.control}
+                showCcBcc={showCcBcc}
+                onToggleCcBcc={() => setShowCcBcc(!showCcBcc)}
+              />
               
               <FormField
                 control={form.control}
@@ -360,7 +160,10 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category *</FormLabel>
-                      <Select onValueChange={handleCategoryChange} value={field.value}>
+                      <Select 
+                        onValueChange={(value) => handleCategoryChange(value, () => setShowCustomCategoryDialog(true))} 
+                        value={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger className={field.value === 'add-custom' ? 'bg-purple-500 text-white border-purple-500' : ''}>
                             <SelectValue placeholder="Select category" />
@@ -404,55 +207,11 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                 />
               </div>
 
-              {/* Attachments Section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <FormLabel>Attachments</FormLabel>
-                  <div>
-                    <input
-                      type="file"
-                      multiple
-                      onChange={handleFileSelect}
-                      className="hidden"
-                      id="file-input"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById('file-input')?.click()}
-                    >
-                      <Paperclip className="mr-2 h-4 w-4" />
-                      Add Files
-                    </Button>
-                  </div>
-                </div>
-                
-                {attachments.length > 0 && (
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {attachments.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <File className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium truncate">{file.name}</p>
-                            <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
-                          </div>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeAttachment(index)}
-                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <EmailAttachmentsSection
+                attachments={attachments}
+                onFileSelect={handleFileSelect}
+                onRemoveAttachment={removeAttachment}
+              />
               
               <FormField
                 control={form.control}
@@ -501,30 +260,11 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
           </Form>
         </CardContent>
 
-        {/* Custom Category Dialog */}
-        <Dialog open={showCustomCategoryDialog} onOpenChange={setShowCustomCategoryDialog}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add Custom Category</DialogTitle>
-            </DialogHeader>
-            <div className="flex items-center space-x-2">
-              <Input
-                placeholder="Category name"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleAddCustomCategory();
-                  }
-                }}
-              />
-              <Button onClick={handleAddCustomCategory} size="sm">
-                Add
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <CustomCategoryDialog
+          isOpen={showCustomCategoryDialog}
+          onOpenChange={setShowCustomCategoryDialog}
+          onAddCategory={handleAddCustomCategory}
+        />
       </Card>
     </div>
   );
