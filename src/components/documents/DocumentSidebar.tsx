@@ -4,27 +4,23 @@ import {
   Sidebar, 
   SidebarContent, 
   SidebarGroup, 
-  SidebarMenu,
-  SidebarHeader 
+  SidebarMenu
 } from '../ui/sidebar';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 import { DocumentFolder, getAllFolders, getFoldersByParent, getDocumentsInFolder, createFolder } from '../../utils/folderUtils';
 import FolderItem from './FolderItem';
-import { Plus, FolderPlus } from 'lucide-react';
 
 interface DocumentSidebarProps {
   selectedFolderId: string | null;
   onFolderSelect: (folderId: string | null) => void;
+  onCreateFolder: (name: string) => void;
 }
 
 const DocumentSidebar: React.FC<DocumentSidebarProps> = ({ 
   selectedFolderId, 
-  onFolderSelect 
+  onFolderSelect,
+  onCreateFolder
 }) => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
-  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
 
   const allFolders = getAllFolders();
   const rootFolders = getFoldersByParent(null);
@@ -37,23 +33,6 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
       newExpanded.add(folderId);
     }
     setExpandedFolders(newExpanded);
-  };
-
-  const handleCreateFolder = () => {
-    if (newFolderName.trim()) {
-      createFolder(newFolderName.trim());
-      setNewFolderName('');
-      setIsCreatingFolder(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleCreateFolder();
-    } else if (e.key === 'Escape') {
-      setIsCreatingFolder(false);
-      setNewFolderName('');
-    }
   };
 
   const getDocumentCount = (folderId: string): number => {
@@ -85,55 +64,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
   };
 
   return (
-    <Sidebar variant="sidebar" className="min-w-[280px] max-w-[320px]">
-      <SidebarHeader className="p-4 border-b border-gray-200">
-        <div className="space-y-3">
-          <h3 className="font-semibold text-gray-800">Document Folders</h3>
-          
-          {isCreatingFolder ? (
-            <div className="space-y-2">
-              <Input
-                placeholder="Folder name..."
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="text-sm"
-                autoFocus
-              />
-              <div className="flex gap-2">
-                <Button 
-                  size="sm" 
-                  onClick={handleCreateFolder}
-                  disabled={!newFolderName.trim()}
-                >
-                  Create
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={() => {
-                    setIsCreatingFolder(false);
-                    setNewFolderName('');
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsCreatingFolder(true)}
-              className="w-full justify-start"
-            >
-              <FolderPlus className="w-4 h-4 mr-2" />
-              Create Folder
-            </Button>
-          )}
-        </div>
-      </SidebarHeader>
-      
+    <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarContent className="pt-4">
         <SidebarGroup>
           <SidebarMenu className="space-y-1">
