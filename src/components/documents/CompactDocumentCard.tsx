@@ -82,36 +82,40 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           <div className="mb-3 transform scale-75">
             <FileIconDisplay type={attachment.type} size="medium" />
           </div>
-          <h3 className="font-semibold text-gray-800 text-base leading-tight mb-2 line-clamp-2">
+          <h3 className="font-semibold text-gray-800 text-lg leading-tight mb-2 line-clamp-2">
             {attachment.name}
           </h3>
         </div>
 
         {/* Metadata with icons and left-aligned text */}
         <div className="flex-1 space-y-3 mb-5">
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-lg">
             <User className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-800">From:</span>
+            <span className="font-semibold text-gray-700">From:</span>
             <span className="text-gray-700 truncate">{attachment.senderName}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-lg">
             <Building className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-800">Organization:</span>
+            <span className="font-semibold text-gray-700">Organization:</span>
             <span className="text-gray-700 truncate">{attachment.senderOrganization}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-lg">
             <Calendar className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-800">Date:</span>
+            <span className="font-semibold text-gray-700">Date:</span>
             <span className="text-gray-700">{formatDate(attachment.emailDate)}</span>
           </div>
         </div>
 
-        {/* Left-aligned Status Badge and File Size */}
-        <div className="flex flex-col items-start mb-5 space-y-2">
-          <Badge className={`${fileInfo.badgeColor} text-white text-sm px-3 py-1`}>
-            {attachment.direction === 'received' ? 'Received' : 'Sent'}
-          </Badge>
-          <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+        {/* Left-aligned Status Badge and Centered File Size */}
+        <div className="flex flex-col mb-5 space-y-2">
+          <div className="flex justify-start">
+            <Badge className={`${fileInfo.badgeColor} text-white text-sm px-3 py-1`}>
+              {attachment.direction === 'received' ? 'Received' : 'Sent'}
+            </Badge>
+          </div>
+          <div className="flex justify-center">
+            <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
+          </div>
         </div>
 
         {/* Actions */}
