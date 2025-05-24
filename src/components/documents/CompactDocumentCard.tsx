@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -104,7 +105,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
             <div className={`w-16 h-16 rounded-2xl ${fileInfo.bgColor} flex items-center justify-center mb-3 shadow-sm`}>
               <FileIcon className={`h-8 w-8 ${fileInfo.textColor}`} />
             </div>
-            <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2">
+            <h3 className="font-semibold text-gray-800 text-sm leading-tight mb-2 break-words">
               {attachment.name}
             </h3>
             <div className="text-xs font-medium text-gray-600 mb-4">
