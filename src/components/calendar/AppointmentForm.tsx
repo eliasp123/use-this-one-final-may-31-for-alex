@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Appointment } from '../../types/appointment';
 import AppointmentFormHeader from './AppointmentFormHeader';
@@ -34,8 +35,8 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     }
   };
 
-  const handlePrivateChange = (privateValue: boolean) => {
-    setIsPrivate(privateValue);
+  const handlePrivateChange = (value: boolean) => {
+    setIsPrivate(value);
   };
 
   const handleSave = () => {
