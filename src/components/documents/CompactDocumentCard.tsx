@@ -68,7 +68,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
           {/* Direction Badge */}
           <div className="flex justify-center mb-4">
-            <Badge className={`${fileInfo.badgeColor} text-white text-xs px-3 py-1 rounded-full`}>
+            <Badge className={`${fileInfo.bgColor} text-white text-xs px-3 py-1 rounded-full`}>
               {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </Badge>
           </div>
@@ -76,7 +76,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           {/* Actions */}
           <DocumentActions
             emailId={attachment.emailId}
-            badgeColor={fileInfo.badgeColor}
+            badgeColor={fileInfo.bgColor}
             layout="grid"
           />
         </CardContent>
@@ -106,14 +106,14 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-              <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+              <Badge className={`${fileInfo.bgColor} text-white text-xs`}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </Badge>
             </div>
             
             <DocumentActions
               emailId={attachment.emailId}
-              badgeColor={fileInfo.badgeColor}
+              badgeColor={fileInfo.bgColor}
               layout="list"
             />
           </div>
