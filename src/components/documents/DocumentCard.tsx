@@ -79,10 +79,10 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
     };
   };
 
-  // Get status badge color - use orange for sent documents
+  // Get status badge color - use orange for sent documents with !important override
   const getStatusBadgeColor = (direction: string, fileTypeColor: string) => {
     if (direction === 'sent') {
-      return 'bg-orange-500 text-white font-normal text-xs';
+      return 'bg-orange-500 hover:bg-orange-600 text-white border-orange-500';
     }
     return fileTypeColor;
   };
@@ -142,9 +142,9 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           {/* Size and Direction Badge */}
           <div className="flex justify-between items-center mb-4">
             <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-            <Badge className={statusBadgeColor}>
+            <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-normal ${statusBadgeColor}`}>
               {attachment.direction === 'received' ? 'Received' : 'Sent'}
-            </Badge>
+            </div>
           </div>
 
           {/* Actions */}
@@ -202,9 +202,9 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-              <Badge className={statusBadgeColor}>
+              <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-normal ${statusBadgeColor}`}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
-              </Badge>
+              </div>
             </div>
             
             <div className="flex gap-2">
