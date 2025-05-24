@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import { Alert, AlertDescription } from './ui/alert';
-import { Info } from 'lucide-react';
+import { Info, Calendar } from 'lucide-react';
 import { 
   Heart, Home, Shield, Scale, 
   Users, Award, Activity, CreditCard 
@@ -138,7 +137,7 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
       {hasNoEmailResults && (
         <div className="mb-8">
           <Alert className="border-blue-200 bg-blue-50">
-            <Info className="h-4 w-4 text-blue-600" />
+            <Calendar className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
               No emails found for "{searchQuery}". However, you may have related appointments in the calendar below.
             </AlertDescription>
