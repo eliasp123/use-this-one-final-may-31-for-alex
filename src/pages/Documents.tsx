@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail } from 'lucide-react';
@@ -94,95 +95,95 @@ const Documents = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
-        {/* Header section */}
-        <div className="text-center mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
-          <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
+      <SidebarProvider defaultOpen={true}>
+        <div className="flex gap-6">
+          <DocumentSidebar 
+            selectedFolderId={selectedFolderId}
+            onFolderSelect={setSelectedFolderId}
+            onCreateFolder={handleCreateFolder}
+          />
           
-          <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
-            <Button
-              onClick={() => setShowNewEmailForm(true)}
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium"
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              Compose New Email
-            </Button>
-            
-            <Button
-              onClick={() => navigate('/')}
-              variant="outline"
-              className="px-6 py-3 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Return to Communication Hub
-            </Button>
-          </div>
-        </div>
-
-        {/* Search bar */}
-        <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="text"
-              placeholder="Search documents..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 text-base bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        {/* Stats cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
+          {/* Main content area - now contains both header and file sections */}
+          <div className="flex-1 min-w-0">
+            <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
+              {/* Header section - now inside sidebar layout */}
+              <div className="text-center mb-8 sm:mb-16">
+                <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
+                <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
+                
+                <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
+                  <Button
+                    onClick={() => setShowNewEmailForm(true)}
+                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium"
+                  >
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Compose New Email
+                  </Button>
+                  
+                  <Button
+                    onClick={() => navigate('/')}
+                    variant="outline"
+                    className="px-6 py-3 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    Return to Communication Hub
+                  </Button>
                 </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
               </div>
-            </div>
-          </Card>
-          
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
-                </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
-              </div>
-            </div>
-          </Card>
-          
-          <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
-                  <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
-                </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
-              </div>
-            </div>
-          </Card>
-        </div>
 
-        <SidebarProvider defaultOpen={true}>
-          <div className="flex gap-6">
-            <DocumentSidebar 
-              selectedFolderId={selectedFolderId}
-              onFolderSelect={setSelectedFolderId}
-              onCreateFolder={handleCreateFolder}
-            />
-            
-            {/* Main content area - now matches header width */}
-            <div className="flex-1 min-w-0">
+              {/* Search bar */}
+              <div className="max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search documents..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full h-14 pl-12 pr-4 text-base bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Stats cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-8 sm:mb-12">
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Total Files</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.total}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Documents</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.documents}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-gray-500 text-xs sm:text-sm font-medium">Images</div>
+                        <div className="text-2xl sm:text-3xl font-medium text-gray-800">{stats.images}</div>
+                      </div>
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-green-400 to-green-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
               {/* Filter buttons */}
               <div className="flex justify-center gap-3 mb-6 sm:mb-8">
                 {filterOptions.map((filter) => {
@@ -207,7 +208,7 @@ const Documents = () => {
                 })}
               </div>
 
-              {/* Documents Grid - now using container width with same buffers as header */}
+              {/* Documents Grid */}
               <div className="w-full">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 min-h-[500px]">
                   {filteredAttachments.length > 0 ? (
@@ -244,7 +245,7 @@ const Documents = () => {
               </div>
             </div>
           </div>
-        </SidebarProvider>
+        </div>
 
         {/* New Email Form */}
         <NewEmailForm
@@ -252,7 +253,7 @@ const Documents = () => {
           onClose={() => setShowNewEmailForm(false)}
           onSend={handleNewEmail}
         />
-      </div>
+      </SidebarProvider>
     </div>
   );
 };
