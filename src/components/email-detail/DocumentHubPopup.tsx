@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -24,6 +25,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [folderRefreshKey, setFolderRefreshKey] = useState(0);
 
   const allAttachments = getAllAttachments();
   
@@ -57,6 +59,8 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const handleCreateFolder = (name: string) => {
     if (name.trim()) {
       createFolder(name.trim());
+      // Trigger a re-render by updating the refresh key
+      setFolderRefreshKey(prev => prev + 1);
     }
   };
 
@@ -116,6 +120,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
         <SidebarProvider defaultOpen={true}>
           <div className="flex h-full min-h-[600px] w-full">
             <DocumentSidebar 
+              key={folderRefreshKey}
               selectedFolderId={selectedFolderId}
               onFolderSelect={setSelectedFolderId}
               onCreateFolder={handleCreateFolder}
