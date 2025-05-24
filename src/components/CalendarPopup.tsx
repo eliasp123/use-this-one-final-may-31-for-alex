@@ -1,10 +1,11 @@
 
-
 import React, { useState } from 'react';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { APPOINTMENTS } from '../data/appointmentData';
 import { Appointment } from '../types/appointment';
+import { Button } from './ui/button';
+import { Plus } from 'lucide-react';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -69,6 +70,11 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 
   const upcomingAppointments = getUpcomingAppointments();
 
+  const handleAddAppointment = () => {
+    // Placeholder for add appointment functionality
+    console.log('Add appointment clicked');
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -81,6 +87,17 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>
         
         <div className="md:col-span-1">
+          {/* Add Appointment Button */}
+          <div className="mb-6">
+            <Button
+              onClick={handleAddAppointment}
+              className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-medium py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <Plus className="mr-2 h-5 w-5" />
+              Add Appointment
+            </Button>
+          </div>
+          
           <AppointmentList 
             date={date}
             selectedAppointments={selectedDateAppointments}
@@ -94,4 +111,3 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 };
 
 export default CalendarPopup;
-
