@@ -23,15 +23,28 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   const allAttachments = getAllAttachments();
   
+  // Add debugging for folder filtering
+  console.log('Selected folder ID:', selectedFolderId);
+  console.log('All attachments:', allAttachments.map(att => ({ id: att.id, emailId: att.emailId, name: att.name })));
+  
+  if (selectedFolderId) {
+    const folderAssignments = getDocumentsInFolder(selectedFolderId);
+    console.log(`Folder assignments for ${selectedFolderId}:`, folderAssignments);
+  }
+  
   // Filter attachments by folder first, then by other criteria
   const folderFilteredAttachments = selectedFolderId 
     ? allAttachments.filter(attachment => {
         const folderAssignments = getDocumentsInFolder(selectedFolderId);
-        return folderAssignments.some(assignment => 
+        const isInFolder = folderAssignments.some(assignment => 
           assignment.documentId === attachment.id && assignment.emailId === attachment.emailId
         );
+        console.log(`Attachment ${attachment.id} from email ${attachment.emailId} in folder ${selectedFolderId}:`, isInFolder);
+        return isInFolder;
       })
     : allAttachments;
+
+  console.log('Folder filtered attachments:', folderFilteredAttachments.length);
 
   const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' ? 'all' : selectedFilter);
   const stats = getAttachmentStats(allAttachments);
