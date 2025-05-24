@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -38,6 +38,7 @@ const AppointmentFormFields = ({
   existingAppointments,
 }: AppointmentFormFieldsProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showTitleError, setShowTitleError] = useState(false);
 
   // Auto-resize textarea as user types
   useEffect(() => {
@@ -54,6 +55,19 @@ const AppointmentFormFields = ({
       app.date.getMonth() === day.getMonth() && 
       app.date.getFullYear() === day.getFullYear()
     );
+  };
+
+  const handleTitleChange = (value: string) => {
+    onTitleChange(value);
+    if (value.trim()) {
+      setShowTitleError(false);
+    }
+  };
+
+  const handleTitleBlur = () => {
+    if (!title.trim()) {
+      setShowTitleError(true);
+    }
   };
 
   return (
@@ -92,21 +106,28 @@ const AppointmentFormFields = ({
         </Popover>
       </div>
 
-      {/* Title */}
+      {/* Title with custom validation */}
       <div className="space-y-3">
         <Label htmlFor="title" className="text-lg font-medium">Appointment Name *</Label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="e.g., Doctor Visit, Physical Therapy"
-          required
-          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500 invalid:border-purple-500 invalid:ring-purple-500"
-          style={{
-            '--tw-ring-color': 'rgb(168 85 247)',
-            '--tw-border-opacity': '1'
-          } as React.CSSProperties}
-        />
+        <div className="relative">
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            onBlur={handleTitleBlur}
+            placeholder="e.g., Doctor Visit, Physical Therapy"
+            className={cn(
+              "text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
+              showTitleError && "border-purple-500 ring-2 ring-purple-500"
+            )}
+          />
+          {showTitleError && (
+            <div className="absolute top-full left-0 mt-1 px-3 py-2 bg-purple-500 text-white text-sm rounded-md shadow-lg z-10">
+              Please fill out this field.
+              <div className="absolute -top-1 left-4 w-2 h-2 bg-purple-500 rotate-45"></div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* To Field */}
