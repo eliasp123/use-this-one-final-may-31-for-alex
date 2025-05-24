@@ -6,14 +6,16 @@ import DocumentsHeader from '../components/documents/DocumentsHeader';
 import DocumentsSearchBar from '../components/documents/DocumentsSearchBar';
 import DocumentsFilterButtons from '../components/documents/DocumentsFilterButtons';
 import DocumentsContent from '../components/documents/DocumentsContent';
-import { getAllAttachments, filterAttachments, getAttachmentStats } from '../utils/attachmentUtils';
+import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../utils/folderUtils';
 import NewEmailForm from '../components/NewEmailForm';
 import { useToast } from '../hooks/use-toast';
 
+type FilterType = 'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date' | 'person';
+
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date' | 'person'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const { toast } = useToast();
@@ -50,13 +52,13 @@ const Documents = () => {
   };
 
   // Group attachments by different criteria
-  const groupAttachments = (attachments: any[], filterType: string) => {
+  const groupAttachments = (attachments: AttachmentWithContext[], filterType: FilterType): [string, AttachmentWithContext[]][] => {
     if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
       return [['All Files', attachments]];
     }
 
     if (filterType === 'organization') {
-      const groups: Record<string, any[]> = {};
+      const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const key = attachment.senderOrganization || 'Unknown Organization';
         if (!groups[key]) groups[key] = [];
@@ -66,7 +68,7 @@ const Documents = () => {
     }
 
     if (filterType === 'person') {
-      const groups: Record<string, any[]> = {};
+      const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const key = attachment.senderName || 'Unknown Person';
         if (!groups[key]) groups[key] = [];
@@ -76,7 +78,7 @@ const Documents = () => {
     }
 
     if (filterType === 'date') {
-      const groups: Record<string, any[]> = {};
+      const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const date = new Date(attachment.emailDate);
         const key = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
@@ -115,6 +117,10 @@ const Documents = () => {
     return 0;
   };
 
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter as FilterType);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <SidebarProvider defaultOpen={true}>
@@ -137,7 +143,7 @@ const Documents = () => {
 
               <DocumentsFilterButtons 
                 selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
+                onFilterChange={handleFilterChange}
                 getFilterCount={getFilterCount}
               />
 
