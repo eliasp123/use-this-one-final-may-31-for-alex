@@ -106,28 +106,23 @@ const AppointmentFormFields = ({
         </Popover>
       </div>
 
-      {/* Title with custom validation - Better contained */}
+      {/* Title with simple validation */}
       <div className="space-y-3">
         <Label htmlFor="title" className="text-lg font-medium">Appointment Name *</Label>
-        <div className="relative isolate">
-          <Input
-            id="title"
-            value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            onBlur={handleTitleBlur}
-            placeholder="e.g., Doctor Visit, Physical Therapy"
-            className={cn(
-              "text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
-              showTitleError && "border-purple-500 ring-2 ring-purple-500"
-            )}
-          />
-          {showTitleError && (
-            <div className="absolute top-full left-0 mt-1 px-3 py-2 bg-purple-500 text-white text-sm rounded-md shadow-lg z-50 pointer-events-none">
-              Please fill out this field.
-              <div className="absolute -top-1 left-4 w-2 h-2 bg-purple-500 rotate-45"></div>
-            </div>
+        <Input
+          id="title"
+          value={title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          onBlur={handleTitleBlur}
+          placeholder="e.g., Doctor Visit, Physical Therapy"
+          className={cn(
+            "text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
+            showTitleError && "border-red-500 ring-2 ring-red-500"
           )}
-        </div>
+        />
+        {showTitleError && (
+          <p className="text-sm text-red-600">Please fill out this field.</p>
+        )}
       </div>
 
       {/* To Field */}
