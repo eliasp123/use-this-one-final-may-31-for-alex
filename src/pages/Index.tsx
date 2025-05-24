@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText } from 'lucide-react';
+import { Info, Pencil, FileText, Calendar } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import AutocompleteSearch from '../components/AutocompleteSearch';
