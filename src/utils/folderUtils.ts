@@ -23,16 +23,30 @@ const mockFolders: DocumentFolder[] = [
   }
 ];
 
-// Mock assignments - which documents are in which folders
+// Mock assignments - using real attachment names as IDs since that's what we have
 const mockAssignments: FolderAssignment[] = [
-  { documentId: 'att-1', emailId: 'email-1', folderId: 'insurance' },
-  { documentId: 'att-2', emailId: 'email-2', folderId: 'medical' },
-  { documentId: 'att-3', emailId: 'email-1', folderId: 'legal' },
-  { documentId: 'att-4', emailId: 'email-2', folderId: 'finances' },
-  { documentId: 'att-5', emailId: 'email-3', folderId: 'folder-3' },
-  { documentId: 'att-6', emailId: 'email-3', folderId: 'discounts' },
-  { documentId: 'att-7', emailId: 'email-1', folderId: 'housing' },
-  { documentId: 'att-8', emailId: 'email-2', folderId: 'insurance' },
+  // Insurance folder
+  { documentId: 'Medicare_Benefits_Summary_2024.pdf', emailId: 'ryoncku57t', folderId: 'insurance' },
+  { documentId: 'Insurance_Coverage_Spreadsheet.xlsx', emailId: 'zez5gyxa55', folderId: 'insurance' },
+  
+  // Medical folder  
+  { documentId: 'Medical_Records_Summary.pdf', emailId: 'zez5gyxa55', folderId: 'medical' },
+  
+  // Legal folder
+  { documentId: 'Legal_Documents_Checklist.pdf', emailId: 'l8ob8e8p1k', folderId: 'legal' },
+  
+  // Finances folder
+  { documentId: 'Healthcare_Expense_Tracking_2024.xlsx', emailId: '0hz8p5u8ie', folderId: 'finances' },
+  { documentId: 'Family_Budget_Summary.xlsx', emailId: 'byff0azjme', folderId: 'finances' },
+  
+  // Q1 2024 subfolder
+  { documentId: 'CT_Scan_Results_2024.dcm', emailId: 'zez5gyxa55', folderId: 'folder-3' },
+  
+  // Discounts folder
+  { documentId: 'Senior_Living_Brochure.pdf', emailId: 'av13yvz2vf', folderId: 'discounts' },
+  
+  // Housing folder
+  { documentId: 'Home_Care_Contract.pdf', emailId: 'byff0azjme', folderId: 'housing' },
 ];
 
 export const getAllFolders = (): DocumentFolder[] => {

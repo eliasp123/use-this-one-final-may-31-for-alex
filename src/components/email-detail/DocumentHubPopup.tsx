@@ -33,13 +33,14 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   }
   
   // Filter attachments by folder first, then by other criteria
+  // Use attachment name as documentId since that's what we have in our assignments
   const folderFilteredAttachments = selectedFolderId 
     ? allAttachments.filter(attachment => {
         const folderAssignments = getDocumentsInFolder(selectedFolderId);
         const isInFolder = folderAssignments.some(assignment => 
-          assignment.documentId === attachment.id && assignment.emailId === attachment.emailId
+          assignment.documentId === attachment.name && assignment.emailId === attachment.emailId
         );
-        console.log(`Attachment ${attachment.id} from email ${attachment.emailId} in folder ${selectedFolderId}:`, isInFolder);
+        console.log(`Attachment ${attachment.name} from email ${attachment.emailId} in folder ${selectedFolderId}:`, isInFolder);
         return isInFolder;
       })
     : allAttachments;
