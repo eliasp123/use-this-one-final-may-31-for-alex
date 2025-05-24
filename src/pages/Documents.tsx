@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail, User } from 'lucide-react';
@@ -179,10 +180,10 @@ const Documents = () => {
                 </div>
               </div>
 
-              {/* Filter buttons with counts - exact same width as file list */}
+              {/* Filter buttons with counts - distributed across full width to match file grid */}
               <div className="mb-6 sm:mb-8">
                 <div className="w-full max-w-7xl mx-auto">
-                  <div className="flex justify-center gap-3 flex-wrap">
+                  <div className="grid grid-cols-7 gap-3">
                     {filterOptions.map((filter) => {
                       const IconComponent = filter.icon;
                       const count = getFilterCount(filter.key);
@@ -192,16 +193,16 @@ const Documents = () => {
                           variant={selectedFilter === filter.key ? "default" : "outline"}
                           onClick={() => setSelectedFilter(filter.key as any)}
                           className={`
-                            px-6 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center min-w-[120px] h-16
+                            px-3 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center h-16 w-full
                             ${selectedFilter === filter.key 
                               ? "bg-purple-500 hover:bg-purple-600 text-white shadow-md" 
                               : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                             }
                           `}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
                             <IconComponent className="h-4 w-4" />
-                            <span className="text-sm">{filter.label}</span>
+                            <span className="text-xs">{filter.label}</span>
                           </div>
                           <span className="text-xs font-bold mt-1">{count}</span>
                         </Button>
