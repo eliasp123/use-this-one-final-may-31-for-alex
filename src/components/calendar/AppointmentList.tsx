@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
@@ -17,22 +16,22 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
 
-  // Get upcoming appointments relative to the selected date (or today if no date selected)
-  const referenceDate = date || new Date();
-  referenceDate.setHours(0, 0, 0, 0);
+  // Get upcoming appointments from TODAY (not from selected date)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   
   const upcomingAppointments = APPOINTMENTS
     .filter(app => {
       const appDate = new Date(app.date);
       appDate.setHours(0, 0, 0, 0);
-      return appDate > referenceDate; // Future appointments from reference date
+      return appDate > today; // Future appointments from today
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3); // Show only next 3 upcoming
 
-  console.log('Reference date:', referenceDate);
+  console.log('Today:', today);
   console.log('Selected date appointments:', appointments);
-  console.log('Filtered upcoming appointments:', upcomingAppointments);
+  console.log('Upcoming appointments from today:', upcomingAppointments);
 
   return (
     <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
