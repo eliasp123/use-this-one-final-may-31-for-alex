@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
-import { Send, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, X, ChevronDown, ChevronUp, Paperclip, Trash2, File } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { EmailData } from '@/types/email';
 import { getAllCategories, addCustomCategory } from '@/utils/categoryUtils';
@@ -29,6 +30,7 @@ interface NewEmailData {
   content: string;
   category: string;
   isPrivate: boolean;
+  attachments: File[];
 }
 
 interface CustomCategoryData {
@@ -59,6 +61,7 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
   const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [showCcBcc, setShowCcBcc] = useState(false);
+  const [attachments, setAttachments] = useState<File[]>([]);
   
   const form = useForm<NewEmailData>({
     defaultValues: {
@@ -70,7 +73,8 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
       subject: '',
       content: '',
       category: '',
-      isPrivate: false
+      isPrivate: false,
+      attachments: []
     }
   });
 
@@ -83,6 +87,31 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
     }));
     setAvailableCategories(categoryList);
   }, [isOpen]);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newAttachments = Array.from(files);
+      setAttachments(prev => [...prev, ...newAttachments]);
+      form.setValue('attachments', [...attachments, ...newAttachments]);
+    }
+    // Reset the input so the same file can be selected again if needed
+    event.target.value = '';
+  };
+
+  const removeAttachment = (index: number) => {
+    const updatedAttachments = attachments.filter((_, i) => i !== index);
+    setAttachments(updatedAttachments);
+    form.setValue('attachments', updatedAttachments);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   const handleAddCustomCategory = () => {
     if (newCategoryName.trim()) {
@@ -132,20 +161,26 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
       console.log('New email data to be sent via Nylas:', {
         ...data,
         ccEmails: data.cc ? data.cc.split(',').map(email => email.trim()).filter(email => email) : [],
-        bccEmails: data.bcc ? data.bcc.split(',').map(email => email.trim()).filter(email => email) : []
+        bccEmails: data.bcc ? data.bcc.split(',').map(email => email.trim()).filter(email => email) : [],
+        attachments: attachments.map(file => ({
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }))
       });
       
       // Simulate sending (replace with actual Nylas integration)
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      onSend(data);
+      onSend({ ...data, attachments });
       
       toast({
         title: "Email Sent",
-        description: "Your email has been sent successfully.",
+        description: `Your email has been sent successfully${attachments.length > 0 ? ` with ${attachments.length} attachment${attachments.length > 1 ? 's' : ''}.` : '.'}`,
       });
       
       form.reset();
+      setAttachments([]);
       onClose();
     } catch (error) {
       toast({
@@ -367,6 +402,56 @@ const NewEmailForm: React.FC<NewEmailFormProps> = ({
                     </FormItem>
                   )}
                 />
+              </div>
+
+              {/* Attachments Section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <FormLabel>Attachments</FormLabel>
+                  <div>
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      id="file-input"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('file-input')?.click()}
+                    >
+                      <Paperclip className="mr-2 h-4 w-4" />
+                      Add Files
+                    </Button>
+                  </div>
+                </div>
+                
+                {attachments.length > 0 && (
+                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                    {attachments.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <File className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">{file.name}</p>
+                            <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeAttachment(index)}
+                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               
               <FormField
