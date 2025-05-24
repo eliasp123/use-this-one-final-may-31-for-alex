@@ -45,6 +45,11 @@ const AppointmentFormFields = ({
     }
   }, [notes]);
 
+  const handlePrivateToggle = (checked: boolean | 'indeterminate') => {
+    // Convert 'indeterminate' to false, pass through boolean values
+    onPrivateChange(checked === true);
+  };
+
   return (
     <div className="lg:col-span-2 space-y-6">
       {/* Date Picker */}
@@ -105,7 +110,7 @@ const AppointmentFormFields = ({
         <Checkbox
           id="private"
           checked={isPrivate}
-          onCheckedChange={onPrivateChange}
+          onCheckedChange={handlePrivateToggle}
           className="h-5 w-5"
         />
         <Label htmlFor="private" className="text-lg">
