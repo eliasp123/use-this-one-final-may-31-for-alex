@@ -13,6 +13,19 @@ interface DocumentActionsProps {
 const DocumentActions = ({ emailId, badgeColor, layout = 'grid' }: DocumentActionsProps) => {
   const navigate = useNavigate();
 
+  // Convert harsh colors to softer variants
+  const getSofterColor = (color: string) => {
+    if (color.includes('bg-purple-500')) return 'bg-purple-400 hover:bg-purple-500 text-white';
+    if (color.includes('bg-blue-500')) return 'bg-blue-400 hover:bg-blue-500 text-white';
+    if (color.includes('bg-green-500')) return 'bg-green-400 hover:bg-green-500 text-white';
+    if (color.includes('bg-orange-500')) return 'bg-orange-400 hover:bg-orange-500 text-white';
+    if (color.includes('bg-red-500')) return 'bg-red-400 hover:bg-red-500 text-white';
+    // Default softer variant for any other colors
+    return 'bg-gray-400 hover:bg-gray-500 text-white';
+  };
+
+  const softColor = getSofterColor(badgeColor);
+
   if (layout === 'grid') {
     return (
       <div className="flex gap-2 mt-auto">
@@ -26,7 +39,7 @@ const DocumentActions = ({ emailId, badgeColor, layout = 'grid' }: DocumentActio
         </Button>
         <Button
           size="sm"
-          className={`${badgeColor} hover:opacity-90 flex-1 text-xs h-8 px-3 font-medium`}
+          className={`${softColor} flex-1 text-xs h-8 px-3 font-medium`}
         >
           <Download className="h-3 w-3 mr-1" />
           Download
@@ -46,7 +59,7 @@ const DocumentActions = ({ emailId, badgeColor, layout = 'grid' }: DocumentActio
       </Button>
       <Button
         size="sm"
-        className={`${badgeColor} hover:opacity-90`}
+        className={softColor}
       >
         <Download className="h-4 w-4 mr-1" />
         Download

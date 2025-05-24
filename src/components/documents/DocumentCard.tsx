@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -37,7 +36,7 @@ interface DocumentCardProps {
 const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => {
   const navigate = useNavigate();
 
-  // Get file type icon and colors
+  // Get file type icon and colors - using softer variants
   const getFileTypeInfo = (type: string) => {
     if (type.startsWith('image/')) {
       return {
@@ -45,7 +44,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-purple-400 to-purple-500',
         bgColor: 'bg-purple-50',
         textColor: 'text-purple-700',
-        badgeColor: 'bg-purple-500'
+        badgeColor: 'bg-purple-400 hover:bg-purple-500'
       };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
@@ -54,7 +53,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-blue-400 to-blue-500',
         bgColor: 'bg-blue-50',
         textColor: 'text-blue-700',
-        badgeColor: 'bg-blue-500'
+        badgeColor: 'bg-blue-400 hover:bg-blue-500'
       };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
@@ -63,7 +62,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-green-400 to-green-500',
         bgColor: 'bg-green-50',
         textColor: 'text-green-700',
-        badgeColor: 'bg-green-500'
+        badgeColor: 'bg-green-400 hover:bg-green-500'
       };
     }
     return {
@@ -71,7 +70,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
       color: 'from-amber-400 to-orange-500',
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
-      badgeColor: 'bg-orange-500'
+      badgeColor: 'bg-orange-400 hover:bg-orange-500'
     };
   };
 
@@ -146,7 +145,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
             </Button>
             <Button
               size="sm"
-              className={`${fileInfo.badgeColor} hover:opacity-90 flex-1 text-xs`}
+              className={`${fileInfo.badgeColor} text-white flex-1 text-xs`}
             >
               <Download className="h-3 w-3 mr-1" />
               Download
@@ -204,7 +203,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
               </Button>
               <Button
                 size="sm"
-                className={`${fileInfo.badgeColor} hover:opacity-90`}
+                className={`${fileInfo.badgeColor} text-white`}
               >
                 <Download className="h-4 w-4 mr-1" />
                 Download
