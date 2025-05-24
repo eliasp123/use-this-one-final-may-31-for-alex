@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -88,7 +89,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarHeader className="pt-20 pb-4 px-4">
+      <SidebarHeader className="pt-6 pb-4 px-4">
         <div className="space-y-3">
           {isCreatingFolder ? (
             <div className="space-y-2">
@@ -156,7 +157,152 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               level={0}
             />
             
-            {/* Folder tree */}
+            {/* Email Category Folders */}
+            <FolderItem
+              folder={{
+                id: 'senior-living',
+                name: 'Senior Living',
+                parentId: null,
+                createdAt: '',
+                color: 'from-rose-400 to-pink-500'
+              }}
+              isActive={selectedFolderId === 'senior-living'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('senior-living')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'home-care',
+                name: 'Home Care',
+                parentId: null,
+                createdAt: '',
+                color: 'from-blue-400 to-blue-500'
+              }}
+              isActive={selectedFolderId === 'home-care'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('home-care')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'federal-benefits',
+                name: 'Federal Benefits',
+                parentId: null,
+                createdAt: '',
+                color: 'from-emerald-400 to-emerald-500'
+              }}
+              isActive={selectedFolderId === 'federal-benefits'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('federal-benefits')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'local-government',
+                name: 'Local Government',
+                parentId: null,
+                createdAt: '',
+                color: 'from-purple-400 to-purple-500'
+              }}
+              isActive={selectedFolderId === 'local-government'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('local-government')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'attorneys',
+                name: 'Attorneys',
+                parentId: null,
+                createdAt: '',
+                color: 'from-amber-400 to-orange-500'
+              }}
+              isActive={selectedFolderId === 'attorneys'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('attorneys')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'other-professionals',
+                name: 'Other Professionals',
+                parentId: null,
+                createdAt: '',
+                color: 'from-indigo-400 to-indigo-500'
+              }}
+              isActive={selectedFolderId === 'other-professionals'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('other-professionals')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'va',
+                name: 'VA',
+                parentId: null,
+                createdAt: '',
+                color: 'from-teal-400 to-teal-500'
+              }}
+              isActive={selectedFolderId === 'va'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('va')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'physical-therapy',
+                name: 'Physical Therapy',
+                parentId: null,
+                createdAt: '',
+                color: 'from-cyan-400 to-cyan-500'
+              }}
+              isActive={selectedFolderId === 'physical-therapy'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('physical-therapy')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            <FolderItem
+              folder={{
+                id: 'paying-for-care',
+                name: 'Paying for Care',
+                parentId: null,
+                createdAt: '',
+                color: 'from-lime-400 to-lime-500'
+              }}
+              isActive={selectedFolderId === 'paying-for-care'}
+              isExpanded={false}
+              documentCount={0}
+              onSelect={() => onFolderSelect('paying-for-care')}
+              onToggleExpand={() => {}}
+              level={0}
+            />
+            
+            {/* Custom user-created folders */}
             {renderFolderTree(rootFolders)}
           </SidebarMenu>
         </SidebarGroup>
