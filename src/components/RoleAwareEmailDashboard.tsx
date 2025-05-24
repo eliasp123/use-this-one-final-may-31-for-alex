@@ -158,9 +158,9 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
       {/* Show explanation when search has no email results */}
       {hasNoEmailResults && (
         <div className="mb-8">
-          <Alert className="border-blue-200 bg-blue-50">
-            <Calendar className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
+          <Alert className="border-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white">
+            <Calendar className="h-4 w-4 text-white" />
+            <AlertDescription className="text-white text-center ml-6">
               No emails found for "{searchQuery}". However, you may have related appointments in the calendar below.
             </AlertDescription>
           </Alert>
