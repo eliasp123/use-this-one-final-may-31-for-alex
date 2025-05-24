@@ -69,7 +69,7 @@ const EmailList = () => {
           onCategoryAdded={handleCategoryAdded}
         />
         
-        {/* Main Content - Updated padding to include pt-16 for consistent top spacing */}
+        {/* Main Content */}
         <div className="flex-1 pl-24 pr-32 pt-16">
           <div className="py-8">
             <EmailHeader 
@@ -93,13 +93,6 @@ const EmailList = () => {
                 formatDate={formatDate}
               />
             </div>
-
-            {/* Calendar Section - Separate section below everything */}
-            {showCalendar && (
-              <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-gray-50">
-                <CalendarPopup showTrigger={false} />
-              </div>
-            )}
           </div>
         </div>
 
@@ -110,6 +103,15 @@ const EmailList = () => {
           onSend={handleNewEmail}
         />
       </div>
+
+      {/* Calendar Section - Separate section below everything, outside sidebar layout */}
+      {showCalendar && (
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 pl-24 pr-32">
+          <div className="container mx-auto px-4 py-8">
+            <CalendarPopup showTrigger={false} />
+          </div>
+        </div>
+      )}
     </SidebarProvider>
   );
 };
