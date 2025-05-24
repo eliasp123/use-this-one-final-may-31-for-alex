@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -12,7 +11,7 @@ import { getDocumentsInFolder, createFolder } from '../utils/folderUtils';
 import NewEmailForm from '../components/NewEmailForm';
 import { useToast } from '../hooks/use-toast';
 
-type FilterType = 'all' | 'documents' | 'images' | 'spreadsheets' | 'other' | 'organization' | 'date' | 'person';
+type FilterType = 'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date' | 'person';
 
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -61,7 +60,7 @@ const Documents = () => {
 
   // Group attachments by different criteria
   const groupAttachments = (attachments: AttachmentWithContext[], filterType: FilterType): [string, AttachmentWithContext[]][] => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets' || filterType === 'other') {
+    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
       return [['All Files', attachments]];
     }
 
@@ -113,7 +112,6 @@ const Documents = () => {
     if (filterType === 'documents') return baseStats.documents;
     if (filterType === 'images') return baseStats.images;
     if (filterType === 'spreadsheets') return baseStats.spreadsheets;
-    if (filterType === 'other') return baseStats.other;
     if (filterType === 'organization') {
       const uniqueOrgs = new Set(baseAttachments.map(a => a.senderOrganization));
       return uniqueOrgs.size;

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -19,7 +18,7 @@ interface DocumentHubPopupProps {
 
 const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'other' | 'organization' | 'date'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 
   const allAttachments = getAllAttachments();
@@ -59,7 +58,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   // Group attachments by different criteria
   const groupAttachments = (attachments: AttachmentWithContext[], filterType: string) => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets' || filterType === 'other') {
+    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
       return [['All Files', attachments] as [string, AttachmentWithContext[]]];
     }
 
@@ -94,7 +93,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
     { key: 'documents', label: 'Documents', icon: FileText },
     { key: 'images', label: 'Images', icon: Image },
     { key: 'spreadsheets', label: 'Spreadsheets', icon: FileSpreadsheet },
-    { key: 'other', label: 'Other Files', icon: File },
     { key: 'organization', label: 'Organization', icon: Users },
     { key: 'date', label: 'Date', icon: Calendar }
   ];
