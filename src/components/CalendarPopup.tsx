@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { APPOINTMENTS } from '../data/appointmentData';
@@ -58,36 +58,46 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     </Button>
   );
 
+  // Handle trigger click manually
+  const handleTriggerClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(true);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <>
       {showTrigger && (
-        <DialogTrigger asChild>
+        <div onClick={handleTriggerClick}>
           {trigger || defaultTrigger}
-        </DialogTrigger>
-      )}
-      <DialogContent className="sm:max-w-5xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-light text-gray-800">Calendar</DialogTitle>
-        </DialogHeader>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2">
-            <CalendarDateDisplay 
-              date={date}
-              onDateSelect={handleSelect}
-              isDayWithAppointment={isDayWithAppointment}
-            />
-          </div>
-          
-          <div className="md:col-span-1">
-            <AppointmentList 
-              date={date}
-              appointments={selectedDateAppointments}
-            />
-          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      )}
+      
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-5xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-light text-gray-800">Calendar</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <CalendarDateDisplay 
+                date={date}
+                onDateSelect={handleSelect}
+                isDayWithAppointment={isDayWithAppointment}
+              />
+            </div>
+            
+            <div className="md:col-span-1">
+              <AppointmentList 
+                date={date}
+                appointments={selectedDateAppointments}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
