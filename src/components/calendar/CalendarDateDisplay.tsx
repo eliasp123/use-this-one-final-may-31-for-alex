@@ -37,6 +37,11 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     setIsDialogOpen(false);
   };
 
+  const handleDateChangeInForm = (selectedDate: Date | undefined) => {
+    // Update the parent component's date selection so the sidebar updates
+    onDateSelect(selectedDate);
+  };
+
   return (
     <Card className="overflow-hidden shadow-sm border border-gray-100">
       <CardContent className="p-0">
@@ -73,14 +78,17 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               }}
             />
             
-            {/* Calendar Area Overlay Dialog */}
+            {/* Calendar Grid Overlay Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="max-w-md w-full absolute top-4 left-1/2 transform -translate-x-1/2 m-0 bg-white shadow-lg border border-gray-200">
-                <AppointmentForm
-                  initialDate={date}
-                  onSave={handleSaveAppointment}
-                  onCancel={handleCancelAppointment}
-                />
+              <DialogContent className="absolute inset-4 m-0 p-0 max-w-none w-auto h-auto bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden">
+                <div className="p-6 h-full">
+                  <AppointmentForm
+                    initialDate={date}
+                    onSave={handleSaveAppointment}
+                    onCancel={handleCancelAppointment}
+                    onDateChange={handleDateChangeInForm}
+                  />
+                </div>
               </DialogContent>
             </Dialog>
           </div>

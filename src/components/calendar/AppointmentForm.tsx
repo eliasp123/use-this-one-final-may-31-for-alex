@@ -20,14 +20,23 @@ interface AppointmentFormProps {
     isPrivate: boolean;
   }) => void;
   onCancel: () => void;
+  onDateChange?: (date: Date | undefined) => void;
 }
 
-const AppointmentForm = ({ initialDate, onSave, onCancel }: AppointmentFormProps) => {
+const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange }: AppointmentFormProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialDate);
   const [title, setTitle] = useState('');
   const [organization, setOrganization] = useState('');
   const [notes, setNotes] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    // Notify parent component so sidebar can update
+    if (onDateChange) {
+      onDateChange(date);
+    }
+  };
 
   const handleSave = () => {
     if (!selectedDate || !title.trim()) {
@@ -46,13 +55,13 @@ const AppointmentForm = ({ initialDate, onSave, onCancel }: AppointmentFormProps
   const isFormValid = selectedDate && title.trim();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full flex flex-col">
       <div>
         <h2 className="text-xl font-semibold text-gray-800 mb-2">Add New Appointment</h2>
         <p className="text-sm text-gray-600">Fill in the details for your new appointment.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1 min-h-0 overflow-y-auto">
         {/* Date Picker */}
         <div className="space-y-2">
           <Label htmlFor="date">Date</Label>
@@ -73,7 +82,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel }: AppointmentFormProps
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={setSelectedDate}
+                onSelect={handleDateSelect}
                 initialFocus
                 className="p-3 pointer-events-auto"
               />
@@ -132,7 +141,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel }: AppointmentFormProps
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 pt-4 border-t border-gray-200">
+      <div className="flex gap-3 pt-4 border-t border-gray-200 flex-shrink-0">
         <Button
           onClick={handleSave}
           disabled={!isFormValid}
