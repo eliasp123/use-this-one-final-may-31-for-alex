@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Pencil, FileText, Calendar } from 'lucide-react';
 import DocumentHubPopup from '../email-detail/DocumentHubPopup';
+import CalendarPopup from '../CalendarPopup';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface EmailHeaderProps {
   currentCategory: { 
@@ -14,18 +15,17 @@ interface EmailHeaderProps {
   emailCount: number;
   activeTab: string;
   onComposeClick: () => void;
-  onCalendarClick: () => void;
 }
 
 const EmailHeader: React.FC<EmailHeaderProps> = ({ 
   currentCategory, 
   emailCount, 
   activeTab,
-  onComposeClick,
-  onCalendarClick
+  onComposeClick
 }) => {
   const navigate = useNavigate();
   const [showDocumentHub, setShowDocumentHub] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
   
   return (
     <div className="mb-8">
@@ -42,7 +42,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <Button 
           variant="default" 
           size="sm" 
-          className="bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition-all duration-300"
+          className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
           onClick={() => setShowDocumentHub(true)}
         >
           <FileText className="mr-1 h-4 w-4" /> Document Hub
@@ -51,8 +51,8 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <Button 
           variant="default" 
           size="sm" 
-          className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
-          onClick={onCalendarClick}
+          className="bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition-all duration-300"
+          onClick={() => setShowCalendar(true)}
         >
           <Calendar className="mr-1 h-4 w-4" /> Calendar
         </Button>
@@ -96,6 +96,13 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         isOpen={showDocumentHub}
         onClose={() => setShowDocumentHub(false)}
       />
+
+      {/* Calendar Popup */}
+      <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
+        <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-hidden">
+          <CalendarPopup showTrigger={false} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -10,7 +10,6 @@ import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
 import EmailTable from '@/components/email-list/EmailTable';
 import NewEmailForm from '@/components/NewEmailForm';
-import CalendarPopup from '@/components/CalendarPopup';
 import { useToast } from '@/hooks/use-toast';
 
 const EmailList = () => {
@@ -19,7 +18,6 @@ const EmailList = () => {
   const [activeTab, setActiveTab] = useState<string>(status || 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { formatDate } = useEmailFormatter();
   const { filteredEmails } = useEmailFiltering({ 
@@ -57,9 +55,6 @@ const EmailList = () => {
   const allCategories = getAllCategories();
   const currentCategory = category ? allCategories[category] : null;
 
-  // Debug log for calendar visibility
-  console.log('Calendar visibility state:', showCalendar);
-
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
@@ -79,10 +74,6 @@ const EmailList = () => {
               emailCount={filteredEmails.length}
               activeTab={activeTab}
               onComposeClick={() => setShowNewEmailForm(true)}
-              onCalendarClick={() => {
-                console.log('Calendar button clicked, current state:', showCalendar);
-                setShowCalendar(!showCalendar);
-              }}
             />
             
             <EmailListToolbar 
@@ -108,17 +99,6 @@ const EmailList = () => {
           onSend={handleNewEmail}
         />
       </div>
-
-      {/* Calendar Section - Separate section below everything, outside sidebar layout */}
-      {showCalendar && (
-        <div className="w-full bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
-          <div className="pl-24 pr-32 py-8">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-50">
-              <CalendarPopup showTrigger={false} />
-            </div>
-          </div>
-        </div>
-      )}
     </SidebarProvider>
   );
 };
