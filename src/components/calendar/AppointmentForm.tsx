@@ -35,8 +35,8 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     }
   };
 
-  const handlePrivateChange = (value: boolean) => {
-    setIsPrivate(value);
+  const handlePrivateChange = (isPrivate: boolean) => {
+    setIsPrivate(isPrivate);
   };
 
   const handleSave = () => {
