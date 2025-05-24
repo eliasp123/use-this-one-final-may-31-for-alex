@@ -24,7 +24,7 @@ const DocumentsViewToggle = ({
           type="single" 
           value={viewMode} 
           onValueChange={(value) => value && onViewModeChange(value as 'grid' | 'list')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-48 justify-center"
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-60 justify-center"
         >
           <ToggleGroupItem 
             value="grid" 
@@ -49,7 +49,7 @@ const DocumentsViewToggle = ({
           type="single" 
           value={directionFilter} 
           onValueChange={(value) => value && onDirectionFilterChange(value as 'all' | 'received' | 'sent')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-48 justify-center"
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-md w-60 justify-center"
         >
           <ToggleGroupItem 
             value="received" 
