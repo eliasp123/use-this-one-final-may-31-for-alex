@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -149,7 +148,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Documents Grid */}
-          <div className="flex-1 overflow-y-auto bg-gradient-to-br from-orange-900 to-amber-900 backdrop-blur-sm rounded-2xl border border-gray-200/60">
+          <div className="flex-1 overflow-y-auto bg-gradient-to-br from-orange-700 to-orange-600 backdrop-blur-sm rounded-2xl border border-gray-200/60">
             <div className="p-6">
               {filteredAttachments.length > 0 ? (
                 <div className="space-y-8">
