@@ -25,7 +25,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
     .filter(app => {
       const appDate = new Date(app.date);
       appDate.setHours(0, 0, 0, 0);
-      return appDate > today;
+      return appDate >= today;
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3); // Show only next 3 upcoming
@@ -96,7 +96,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
         </div>
 
         {/* Separator */}
-        <Separator className="bg-gray-400" />
+        <Separator className="bg-gray-300" />
 
         {/* Bottom section for upcoming appointments */}
         <div className="p-4 bg-gray-50">
@@ -108,10 +108,10 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
               upcomingAppointments.map(appointment => (
                 <div 
                   key={appointment.id} 
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-100 transition-colors border border-gray-200"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-400"></div>
                     <div>
                       <p className="text-xs font-medium text-gray-800 truncate max-w-32">
                         {appointment.title}
