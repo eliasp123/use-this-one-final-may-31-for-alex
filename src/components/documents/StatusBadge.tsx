@@ -9,16 +9,16 @@ interface StatusBadgeProps {
 const StatusBadge = ({ direction, statusBadgeColor }: StatusBadgeProps) => {
   console.log('StatusBadge render - direction:', direction, 'statusBadgeColor:', statusBadgeColor);
   
-  // Map direction directly to colors to ensure they apply correctly
+  // Map direction to consistent colors matching the download button shading
   const getBadgeClasses = () => {
     if (direction === 'sent') {
-      return 'bg-orange-500 text-white';
+      return 'bg-orange-400 text-white';
     }
     if (direction === 'received') {
-      return 'bg-green-500 text-white';
+      return 'bg-green-400 text-white';
     }
     // Fallback
-    return 'bg-gray-500 text-white';
+    return 'bg-gray-400 text-white';
   };
 
   const badgeClasses = getBadgeClasses();

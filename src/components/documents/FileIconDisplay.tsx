@@ -17,7 +17,7 @@ export const getFileTypeInfo = (type: string) => {
     return {
       icon: Image,
       badge: 'JPG',
-      bgColor: 'bg-purple-500',
+      bgColor: 'bg-purple-400',
       textColor: 'text-white'
     };
   }
@@ -25,7 +25,7 @@ export const getFileTypeInfo = (type: string) => {
     return {
       icon: FileText,
       badge: 'PDF',
-      bgColor: 'bg-red-500',
+      bgColor: 'bg-red-400',
       textColor: 'text-white'
     };
   }
@@ -33,7 +33,7 @@ export const getFileTypeInfo = (type: string) => {
     return {
       icon: FileSpreadsheet,
       badge: 'XLS',
-      bgColor: 'bg-green-500',
+      bgColor: 'bg-green-400',
       textColor: 'text-white'
     };
   }
@@ -41,14 +41,14 @@ export const getFileTypeInfo = (type: string) => {
     return {
       icon: FileText,
       badge: 'DOC',
-      bgColor: 'bg-blue-500',
+      bgColor: 'bg-blue-400',
       textColor: 'text-white'
     };
   }
   return {
     icon: File,
     badge: 'FILE',
-    bgColor: 'bg-gray-500',
+    bgColor: 'bg-gray-400',
     textColor: 'text-white'
   };
 };
