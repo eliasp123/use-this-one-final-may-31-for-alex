@@ -95,9 +95,9 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   if (layout === 'grid') {
     return (
-      <Card className="w-48 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+      <Card className="w-60 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
         {/* File Icon Header */}
-        <div className={`${getFileColor()} p-3 relative`}>
+        <div className={`${getFileColor()} p-4 relative`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               {getFileIcon()}
@@ -111,7 +111,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         </div>
 
         {/* Content */}
-        <div className="p-3 space-y-2">
+        <div className="p-4 space-y-2">
           {/* File Name */}
           <div>
             <h3 className="font-bold text-gray-900 text-xs leading-tight line-clamp-2">
@@ -121,19 +121,19 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
           {/* File Size */}
           <div>
-            <p className="text-xs text-gray-600">Size:</p>
-            <p className="text-gray-700 text-xs">{formatFileSize(attachment.size)}</p>
+            <p className="text-xs text-gray-500">Size:</p>
+            <p className="text-gray-600 text-xs">{formatFileSize(attachment.size)}</p>
           </div>
 
           {/* Sender Info */}
           <div className="space-y-1">
             <div>
-              <p className="text-xs text-gray-600">From:</p>
-              <p className="text-gray-700 text-xs">{attachment.senderName}</p>
+              <p className="text-xs text-gray-500">From:</p>
+              <p className="text-gray-600 text-xs">{attachment.senderName}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-600">Organization:</p>
-              <p className="text-gray-700 text-xs">{attachment.senderOrganization}</p>
+              <p className="text-xs text-gray-500">Organization:</p>
+              <p className="text-gray-600 text-xs">{attachment.senderOrganization}</p>
             </div>
           </div>
 
@@ -143,17 +143,17 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
               onClick={handleView}
               variant="outline"
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs h-6 px-2"
+              className="flex-1 flex items-center justify-center space-x-1 hover:bg-blue-50 hover:border-blue-300 text-xs h-5 px-1.5"
             >
-              <Eye className="w-3 h-3" />
+              <Eye className="w-2.5 h-2.5" />
               <span>View</span>
             </Button>
             <Button
               onClick={handleDownload}
               size="sm"
-              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs h-6 px-2"
+              className="flex-1 flex items-center justify-center space-x-1 bg-blue-600 hover:bg-blue-700 text-xs h-5 px-1.5"
             >
-              <Download className="w-3 h-3" />
+              <Download className="w-2.5 h-2.5" />
               <span>Download</span>
             </Button>
           </div>

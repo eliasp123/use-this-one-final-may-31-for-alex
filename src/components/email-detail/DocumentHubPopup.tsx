@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -201,7 +200,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                               <h3 className="text-lg font-semibold text-gray-800">{groupKey}</h3>
                             </div>
                           ) : null}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+                          <div className="grid grid-cols-3 gap-10">
                             {attachments.map((attachment) => (
                               <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02]">
                                 <CompactDocumentCard attachment={attachment} layout="grid" />
