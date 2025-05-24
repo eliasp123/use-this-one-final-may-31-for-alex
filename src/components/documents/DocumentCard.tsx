@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -78,6 +79,14 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
     };
   };
 
+  // Get status badge color - use orange for sent documents
+  const getStatusBadgeColor = (direction: string, fileTypeColor: string) => {
+    if (direction === 'sent') {
+      return 'bg-orange-500 text-white font-normal text-xs';
+    }
+    return fileTypeColor;
+  };
+
   // Format file size
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -98,6 +107,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
 
   const fileInfo = getFileTypeInfo(attachment.type);
   const FileIcon = fileInfo.icon;
+  const statusBadgeColor = getStatusBadgeColor(attachment.direction, fileInfo.statusBadgeColor);
 
   if (isGridView) {
     return (
@@ -132,7 +142,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           {/* Size and Direction Badge */}
           <div className="flex justify-between items-center mb-4">
             <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-            <Badge className={fileInfo.statusBadgeColor}>
+            <Badge className={statusBadgeColor}>
               {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </Badge>
           </div>
@@ -192,7 +202,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-              <Badge className={fileInfo.statusBadgeColor}>
+              <Badge className={statusBadgeColor}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </Badge>
             </div>
