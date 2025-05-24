@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
@@ -19,11 +18,6 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
   const getEncouragingMessage = (date: Date) => {
     const dayOfWeek = date.getDay();
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
-  };
-
-  const handleAddAppointment = () => {
-    // Placeholder for add appointment functionality
-    console.log('Add appointment clicked');
   };
 
   // Filter upcoming appointments to two weeks maximum
