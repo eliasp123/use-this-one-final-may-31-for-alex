@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Pencil, FileText, Calendar } from 'lucide-react';
 import DocumentHubPopup from '../email-detail/DocumentHubPopup';
-import CalendarPopup from '../CalendarPopup';
 
 interface EmailHeaderProps {
   currentCategory: { 
@@ -14,13 +14,15 @@ interface EmailHeaderProps {
   emailCount: number;
   activeTab: string;
   onComposeClick: () => void;
+  onCalendarClick: () => void;
 }
 
 const EmailHeader: React.FC<EmailHeaderProps> = ({ 
   currentCategory, 
   emailCount, 
   activeTab,
-  onComposeClick 
+  onComposeClick,
+  onCalendarClick
 }) => {
   const navigate = useNavigate();
   const [showDocumentHub, setShowDocumentHub] = useState(false);
@@ -46,17 +48,14 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
           <FileText className="mr-1 h-4 w-4" /> Document Hub
         </Button>
 
-        <CalendarPopup 
-          trigger={
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
-            >
-              <Calendar className="mr-1 h-4 w-4" /> Calendar
-            </Button>
-          }
-        />
+        <Button 
+          variant="default" 
+          size="sm" 
+          className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300"
+          onClick={onCalendarClick}
+        >
+          <Calendar className="mr-1 h-4 w-4" /> Calendar
+        </Button>
       </div>
       
       <div className="flex items-center justify-between bg-white p-6 rounded-xl shadow-sm border border-gray-50">

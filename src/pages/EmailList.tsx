@@ -11,6 +11,7 @@ import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
 import EmailTable from '@/components/email-list/EmailTable';
 import NewEmailForm from '@/components/NewEmailForm';
+import CalendarPopup from '@/components/CalendarPopup';
 import { useToast } from '@/hooks/use-toast';
 
 const EmailList = () => {
@@ -19,6 +20,7 @@ const EmailList = () => {
   const [activeTab, setActiveTab] = useState<string>(status || 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
   const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { formatDate } = useEmailFormatter();
   const { filteredEmails } = useEmailFiltering({ 
@@ -75,6 +77,7 @@ const EmailList = () => {
               emailCount={filteredEmails.length}
               activeTab={activeTab}
               onComposeClick={() => setShowNewEmailForm(true)}
+              onCalendarClick={() => setShowCalendar(!showCalendar)}
             />
             
             <EmailListToolbar 
@@ -90,6 +93,13 @@ const EmailList = () => {
                 formatDate={formatDate}
               />
             </div>
+
+            {/* Calendar Section - Separate section below everything */}
+            {showCalendar && (
+              <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border border-gray-50">
+                <CalendarPopup showTrigger={false} />
+              </div>
+            )}
           </div>
         </div>
 
