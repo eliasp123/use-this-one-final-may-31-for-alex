@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '../components/ui/card';
 import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, Pencil, Mail, User } from 'lucide-react';
@@ -180,35 +179,37 @@ const Documents = () => {
                 </div>
               </div>
 
-              {/* Filter buttons with counts */}
-              <div className="flex justify-center gap-3 mb-6 sm:mb-8 flex-wrap">
-                {filterOptions.map((filter) => {
-                  const IconComponent = filter.icon;
-                  const count = getFilterCount(filter.key);
-                  return (
-                    <Button
-                      key={filter.key}
-                      variant={selectedFilter === filter.key ? "default" : "outline"}
-                      onClick={() => setSelectedFilter(filter.key as any)}
-                      className={`
-                        px-6 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center min-w-[120px] h-16
-                        ${selectedFilter === filter.key 
-                          ? "bg-purple-500 hover:bg-purple-600 text-white shadow-md" 
-                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                        }
-                      `}
-                    >
-                      <div className="flex items-center gap-2">
-                        <IconComponent className="h-4 w-4" />
-                        <span className="text-sm">{filter.label}</span>
-                      </div>
-                      <span className="text-xs font-bold mt-1">{count}</span>
-                    </Button>
-                  );
-                })}
+              {/* Filter buttons with counts - matching file list width */}
+              <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8">
+                <div className="flex justify-center gap-3 flex-wrap">
+                  {filterOptions.map((filter) => {
+                    const IconComponent = filter.icon;
+                    const count = getFilterCount(filter.key);
+                    return (
+                      <Button
+                        key={filter.key}
+                        variant={selectedFilter === filter.key ? "default" : "outline"}
+                        onClick={() => setSelectedFilter(filter.key as any)}
+                        className={`
+                          px-6 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center min-w-[120px] h-16
+                          ${selectedFilter === filter.key 
+                            ? "bg-purple-500 hover:bg-purple-600 text-white shadow-md" 
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                          }
+                        `}
+                      >
+                        <div className="flex items-center gap-2">
+                          <IconComponent className="h-4 w-4" />
+                          <span className="text-sm">{filter.label}</span>
+                        </div>
+                        <span className="text-xs font-bold mt-1">{count}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Documents Grid - no white border container, direct content like Communication Hub */}
+              {/* Documents Grid */}
               <div className="w-full max-w-7xl mx-auto">
                 {filteredAttachments.length > 0 ? (
                   <div className="space-y-6 sm:space-y-8">
