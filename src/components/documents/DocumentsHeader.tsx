@@ -2,8 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Pencil, Mail, Calendar } from 'lucide-react';
-import CalendarPopup from '../CalendarPopup';
+import { Pencil, Mail } from 'lucide-react';
 
 interface DocumentsHeaderProps {
   onNewEmailClick: () => void;
@@ -18,18 +17,6 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
       <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
       
       <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
-        <CalendarPopup 
-          trigger={
-            <Button
-              variant="outline"
-              className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
-            >
-              <Calendar className="mr-2 h-4 w-4" />
-              Calendar
-            </Button>
-          }
-        />
-        
         <Button
           onClick={onNewEmailClick}
           className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center"
