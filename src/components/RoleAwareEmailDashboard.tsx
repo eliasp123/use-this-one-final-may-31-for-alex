@@ -3,6 +3,8 @@ import { useUserRole } from '../hooks/useUserRole';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import SummarySection from './dashboard/SummarySection';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
+import { Alert, AlertDescription } from './ui/alert';
+import { Info } from 'lucide-react';
 import { 
   Heart, Home, Shield, Scale, 
   Users, Award, Activity, CreditCard 
@@ -115,9 +117,24 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
 
   const itemsPerPage = 6; // 2 rows of 3 cards
   
+  // Check if we have search results
+  const totalEmailsFound = emailCategories.reduce((sum, category) => sum + category.total, 0);
+  const hasSearchQuery = searchQuery.trim().length > 0;
+  const hasNoEmailResults = hasSearchQuery && totalEmailsFound === 0;
+  
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Role Indicator section removed */}
+      {/* Show explanation when search has no email results */}
+      {hasNoEmailResults && (
+        <div className="mb-8">
+          <Alert className="border-blue-200 bg-blue-50">
+            <Info className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="text-blue-800">
+              No emails found for "{searchQuery}". However, you may have related appointments in the calendar below.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
       {/* Summary Cards Section */}
       <SummarySection 
