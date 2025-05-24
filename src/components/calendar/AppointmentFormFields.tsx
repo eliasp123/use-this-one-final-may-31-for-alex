@@ -105,7 +105,7 @@ const AppointmentFormFields = ({
           type="checkbox"
           id="private"
           checked={isPrivate}
-          onChange={(e) => onPrivateChange(e.target.checked)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onPrivateChange(e.target.checked)}
           className="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
         />
         <Label htmlFor="private" className="text-lg">
