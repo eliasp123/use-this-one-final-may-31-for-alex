@@ -1,3 +1,4 @@
+
 import { getAllEmailsWithAttachments } from './emailDataUtils';
 import { EmailAttachment } from '../types/email';
 
@@ -46,22 +47,28 @@ export const getAllAttachments = (): AttachmentWithContext[] => {
 
 // Helper function to categorize file types with priority order
 const categorizeFileType = (type: string): 'documents' | 'images' | 'spreadsheets' | 'other' => {
+  console.log('Categorizing file type:', type);
+  
   // Images first (highest priority)
   if (type.startsWith('image/')) {
+    console.log('-> Categorized as images');
     return 'images';
   }
   
   // Spreadsheets second
   if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
+    console.log('-> Categorized as spreadsheets');
     return 'spreadsheets';
   }
   
   // Documents third
   if (type.includes('pdf') || type.includes('document') || type.includes('text') || type === 'application/msword') {
+    console.log('-> Categorized as documents');
     return 'documents';
   }
   
   // Everything else
+  console.log('-> Categorized as other');
   return 'other';
 };
 
@@ -91,8 +98,12 @@ export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
   let spreadsheets = 0;
   let other = 0;
 
+  console.log('=== ATTACHMENT STATS CALCULATION ===');
+  console.log('Total attachments to categorize:', total);
+
   // Categorize each attachment exactly once
-  attachments.forEach(attachment => {
+  attachments.forEach((attachment, index) => {
+    console.log(`\n${index + 1}. ${attachment.name} (${attachment.type})`);
     const category = categorizeFileType(attachment.type);
     switch (category) {
       case 'documents':
@@ -110,8 +121,12 @@ export const getAttachmentStats = (attachments: AttachmentWithContext[]) => {
     }
   });
 
-  console.log('Attachment stats:', { total, documents, images, spreadsheets, other });
-  console.log('Verification total:', documents + images + spreadsheets + other);
+  console.log('\n=== FINAL COUNTS ===');
+  console.log('Documents:', documents);
+  console.log('Images:', images);
+  console.log('Spreadsheets:', spreadsheets);
+  console.log('Other:', other);
+  console.log('Total calculated:', documents + images + spreadsheets + other);
   console.log('Should match total:', total);
 
   return { total, documents, images, spreadsheets, other };
