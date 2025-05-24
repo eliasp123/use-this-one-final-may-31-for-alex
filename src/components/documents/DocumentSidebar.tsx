@@ -142,9 +142,9 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
 
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
-      <SidebarContent className="pt-16">
-        <SidebarGroup className="pt-8">
-          {/* Create Folder Button moved higher with proper spacing */}
+      <SidebarContent className="pt-32">
+        <SidebarGroup>
+          {/* Create Folder Button aligned with main content */}
           <div className="px-3 mb-6">
             {isCreatingFolder ? (
               <div className="space-y-3">
@@ -190,6 +190,9 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
               </Button>
             )}
           </div>
+          
+          {/* All Files row positioned 24pts below button */}
+          <div className="h-6" />
           
           <SidebarMenu className="space-y-1">
             {/* Default Category Folders with 3-at-a-time spacing */}
