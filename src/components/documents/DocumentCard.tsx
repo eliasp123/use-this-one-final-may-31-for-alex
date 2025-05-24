@@ -44,7 +44,8 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-purple-400 to-purple-500',
         bgColor: 'bg-purple-50',
         textColor: 'text-purple-700',
-        badgeColor: 'bg-purple-400 hover:bg-purple-500'
+        badgeColor: 'bg-purple-400 hover:bg-purple-500',
+        statusBadgeColor: 'bg-purple-300 text-purple-800'
       };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
@@ -53,7 +54,8 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-blue-400 to-blue-500',
         bgColor: 'bg-blue-50',
         textColor: 'text-blue-700',
-        badgeColor: 'bg-blue-400 hover:bg-blue-500'
+        badgeColor: 'bg-blue-400 hover:bg-blue-500',
+        statusBadgeColor: 'bg-blue-300 text-blue-800'
       };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
@@ -62,7 +64,8 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
         color: 'from-green-400 to-green-500',
         bgColor: 'bg-green-50',
         textColor: 'text-green-700',
-        badgeColor: 'bg-green-400 hover:bg-green-500'
+        badgeColor: 'bg-green-400 hover:bg-green-500',
+        statusBadgeColor: 'bg-green-300 text-green-800'
       };
     }
     return {
@@ -70,7 +73,8 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
       color: 'from-amber-400 to-orange-500',
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
-      badgeColor: 'bg-orange-400 hover:bg-orange-500'
+      badgeColor: 'bg-orange-400 hover:bg-orange-500',
+      statusBadgeColor: 'bg-orange-300 text-orange-800'
     };
   };
 
@@ -128,7 +132,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           {/* Size and Direction Badge */}
           <div className="flex justify-between items-center mb-4">
             <div className="text-xs font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-            <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+            <Badge className={`${fileInfo.statusBadgeColor} text-xs`}>
               {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </Badge>
           </div>
@@ -188,7 +192,7 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">{formatFileSize(attachment.size)}</div>
-              <Badge className={`${fileInfo.badgeColor} text-white text-xs`}>
+              <Badge className={`${fileInfo.statusBadgeColor} text-xs`}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </Badge>
             </div>

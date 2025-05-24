@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -43,15 +42,27 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   // Get file type colors for badge
   const getFileTypeInfo = (type: string) => {
     if (type.startsWith('image/')) {
-      return { badgeColor: 'bg-purple-500' };
+      return { 
+        badgeColor: 'bg-purple-500',
+        statusBadgeColor: 'bg-purple-300 text-purple-800'
+      };
     }
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) {
-      return { badgeColor: 'bg-blue-500' };
+      return { 
+        badgeColor: 'bg-blue-500',
+        statusBadgeColor: 'bg-blue-300 text-blue-800'
+      };
     }
     if (type.includes('sheet') || type.includes('csv') || type.includes('excel')) {
-      return { badgeColor: 'bg-green-500' };
+      return { 
+        badgeColor: 'bg-green-500',
+        statusBadgeColor: 'bg-green-300 text-green-800'
+      };
     }
-    return { badgeColor: 'bg-gray-500' };
+    return { 
+      badgeColor: 'bg-gray-500',
+      statusBadgeColor: 'bg-gray-300 text-gray-800'
+    };
   };
 
   // Format file size
@@ -110,7 +121,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         <div className="flex flex-col mb-5 space-y-2">
           <div className="flex justify-start">
             <div className="flex flex-col items-center">
-              <Badge className={`${fileInfo.badgeColor} text-white text-sm px-3 py-1`}>
+              <Badge className={`${fileInfo.statusBadgeColor} text-sm px-3 py-1`}>
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </Badge>
               <div className="text-xs font-medium text-gray-600 mt-2">{formatFileSize(attachment.size)}</div>
