@@ -8,6 +8,7 @@ import { Calendar } from '../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Appointment } from '../../types/appointment';
 
 interface AppointmentFormFieldsProps {
   selectedDate: Date | undefined;
@@ -20,6 +21,7 @@ interface AppointmentFormFieldsProps {
   onOrganizationChange: (organization: string) => void;
   onNotesChange: (notes: string) => void;
   onToChange: (to: string) => void;
+  existingAppointments: Appointment[];
 }
 
 const AppointmentFormFields = ({
@@ -33,6 +35,7 @@ const AppointmentFormFields = ({
   onOrganizationChange,
   onNotesChange,
   onToChange,
+  existingAppointments,
 }: AppointmentFormFieldsProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,6 +47,15 @@ const AppointmentFormFields = ({
     }
   }, [notes]);
 
+  // Function to check if a date has appointments
+  const isDayWithAppointment = (day: Date) => {
+    return existingAppointments.some(app => 
+      app.date.getDate() === day.getDate() && 
+      app.date.getMonth() === day.getMonth() && 
+      app.date.getFullYear() === day.getFullYear()
+    );
+  };
+
   return (
     <div className="lg:col-span-2 space-y-6">
       {/* Date Picker */}
@@ -54,7 +66,7 @@ const AppointmentFormFields = ({
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
+                "w-full justify-start text-left font-normal text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
                 !selectedDate && "text-muted-foreground"
               )}
             >
@@ -69,6 +81,12 @@ const AppointmentFormFields = ({
               onSelect={onDateSelect}
               initialFocus
               className="p-3 pointer-events-auto"
+              modifiers={{
+                hasAppointment: (date) => isDayWithAppointment(date),
+              }}
+              modifiersClassNames={{
+                hasAppointment: 'relative before:absolute before:top-1 before:right-1 before:w-2 before:h-2 before:bg-orange-400 before:rounded-full',
+              }}
             />
           </PopoverContent>
         </Popover>
@@ -83,7 +101,7 @@ const AppointmentFormFields = ({
           onChange={(e) => onTitleChange(e.target.value)}
           placeholder="e.g., Doctor Visit, Physical Therapy"
           required
-          className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
         />
       </div>
 
@@ -95,7 +113,7 @@ const AppointmentFormFields = ({
           value={to}
           onChange={(e) => onToChange(e.target.value)}
           placeholder="e.g., Dr. Smith, Family Member (optional)"
-          className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
         />
       </div>
 
@@ -107,7 +125,7 @@ const AppointmentFormFields = ({
           value={organization}
           onChange={(e) => onOrganizationChange(e.target.value)}
           placeholder="e.g., City Hospital, ABC Clinic"
-          className="text-lg py-6 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
         />
       </div>
 
@@ -120,7 +138,7 @@ const AppointmentFormFields = ({
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
           placeholder="Any additional notes or reminders..."
-          className="w-full rounded-md border border-input bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground hover:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-colors"
+          className="w-full rounded-md border border-gray-200 bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground hover:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-colors"
           style={{ minHeight: '120px' }}
         />
       </div>

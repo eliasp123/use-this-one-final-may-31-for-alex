@@ -69,6 +69,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
             onOrganizationChange={setOrganization}
             onNotesChange={setNotes}
             onToChange={setTo}
+            existingAppointments={existingAppointments}
           />
 
           {/* Right Column - Existing Appointments */}
