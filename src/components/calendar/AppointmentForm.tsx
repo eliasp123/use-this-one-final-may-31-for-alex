@@ -22,9 +22,9 @@ interface AppointmentFormProps {
 
 const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existingAppointments }: AppointmentFormProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialDate);
-  const [title, setTitle] = useState('');
-  const [organization, setOrganization] = useState('');
-  const [notes, setNotes] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [organization, setOrganization] = useState<string>('');
+  const [notes, setNotes] = useState<string>('');
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   const handleDateSelect = (date: Date | undefined) => {
@@ -33,6 +33,10 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     if (onDateChange) {
       onDateChange(date);
     }
+  };
+
+  const handlePrivateChange = (value: boolean) => {
+    setIsPrivate(value);
   };
 
   const handleSave = () => {
@@ -68,7 +72,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
             onTitleChange={setTitle}
             onOrganizationChange={setOrganization}
             onNotesChange={setNotes}
-            onPrivateChange={setIsPrivate}
+            onPrivateChange={handlePrivateChange}
           />
 
           {/* Right Column - Existing Appointments */}
