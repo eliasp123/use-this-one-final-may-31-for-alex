@@ -19,6 +19,15 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
 
+  // Filter upcoming appointments to two weeks maximum
+  const twoWeeksFromNow = new Date();
+  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  
+  const limitedUpcomingAppointments = upcomingAppointments.filter(appointment => {
+    const appointmentDate = new Date(appointment.date);
+    return appointmentDate <= twoWeeksFromNow;
+  });
+
   return (
     <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
@@ -33,9 +42,9 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         </div>
       </div>
       
-      <CardContent className="p-0 flex flex-col flex-1">
-        {/* Top section for selected date appointments */}
-        <div className="p-4 min-h-0 flex-1">
+      <CardContent className="p-0 flex flex-col flex-1 min-h-0">
+        {/* Top section for selected date appointments - dynamic height */}
+        <div className="p-4 flex-1 min-h-0 overflow-y-auto">
           <div className="space-y-3">
             {selectedAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -89,17 +98,17 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         {/* Separator line */}
         <Separator className="bg-gray-600" />
 
-        {/* Bottom section for upcoming appointments */}
-        <div className="p-4 bg-gray-50 min-h-0 flex-1">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments</h4>
+        {/* Bottom section for upcoming appointments - dynamic height with wrapping */}
+        <div className="p-4 bg-gray-50 flex-1 min-h-0 overflow-y-auto">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 2 Weeks)</h4>
           <div className="space-y-2">
-            {upcomingAppointments.length === 0 ? (
-              <p className="text-gray-500 text-xs">No upcoming appointments</p>
+            {limitedUpcomingAppointments.length === 0 ? (
+              <p className="text-gray-500 text-xs">No upcoming appointments in the next 2 weeks</p>
             ) : (
-              upcomingAppointments.map(appointment => (
+              limitedUpcomingAppointments.map(appointment => (
                 <div 
                   key={appointment.id} 
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
                   onClick={() => onAppointmentClick(appointment)}
                 >
                   <div className="flex items-center gap-2 flex-1 min-w-0">
