@@ -1,3 +1,4 @@
+
 export interface DocumentFolder {
   id: string;
   name: string;
@@ -50,6 +51,7 @@ const mockAssignments: FolderAssignment[] = [
 ];
 
 export const getAllFolders = (): DocumentFolder[] => {
+  console.log('getAllFolders called, returning:', mockFolders);
   return mockFolders;
 };
 
@@ -58,7 +60,9 @@ export const getFolderById = (id: string): DocumentFolder | undefined => {
 };
 
 export const getFoldersByParent = (parentId: string | null): DocumentFolder[] => {
-  return mockFolders.filter(folder => folder.parentId === parentId);
+  const result = mockFolders.filter(folder => folder.parentId === parentId);
+  console.log(`getFoldersByParent(${parentId}) returning:`, result);
+  return result;
 };
 
 export const getDocumentFolder = (documentId: string, emailId: string): DocumentFolder | null => {
@@ -91,7 +95,9 @@ export const createFolder = (name: string, parentId: string | null = null): Docu
     color: colors[Math.floor(Math.random() * colors.length)]
   };
   
+  console.log('Creating folder:', newFolder);
   mockFolders.push(newFolder);
+  console.log('Updated mockFolders:', mockFolders);
   return newFolder;
 };
 

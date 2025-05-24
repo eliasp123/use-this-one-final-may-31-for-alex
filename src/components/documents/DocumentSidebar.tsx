@@ -21,8 +21,14 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
   onFolderSelect,
   onCreateFolder
 }) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Force refresh of folder data
   const allFolders = getAllFolders();
   const rootFolders = getFoldersByParent(null);
+
+  console.log('DocumentSidebar render - allFolders:', allFolders);
+  console.log('DocumentSidebar render - rootFolders:', rootFolders);
 
   // Default folders with their configurations
   const defaultFolders = [
@@ -84,11 +90,18 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
     setOrderedFolders(defaultFolders);
   }, []);
 
+  const handleCreateFolder = (name: string) => {
+    console.log('DocumentSidebar handleCreateFolder called with:', name);
+    onCreateFolder(name);
+    // Force a refresh by updating the key
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]">
       <SidebarContent className="pt-20">
         <SidebarGroup>
-          <CreateFolderButton onCreateFolder={onCreateFolder} />
+          <CreateFolderButton onCreateFolder={handleCreateFolder} />
           
           {/* All Files row positioned 24pts below button */}
           <div className="h-6" />
@@ -102,6 +115,7 @@ const DocumentSidebar: React.FC<DocumentSidebarProps> = ({
           />
           
           <CustomFoldersList
+            key={refreshKey}
             rootFolders={rootFolders}
             selectedFolderId={selectedFolderId}
             onFolderSelect={onFolderSelect}
