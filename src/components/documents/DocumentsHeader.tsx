@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Pencil, Mail } from 'lucide-react';
+import { Pencil, Mail, Calendar } from 'lucide-react';
 import CalendarPopup from '../CalendarPopup';
 
 interface DocumentsHeaderProps {
@@ -17,11 +18,21 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
       <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
       
       <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
-        <CalendarPopup />
+        <CalendarPopup 
+          trigger={
+            <Button
+              variant="outline"
+              className="px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              Calendar
+            </Button>
+          }
+        />
         
         <Button
           onClick={onNewEmailClick}
-          className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium"
+          className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-11 rounded-lg font-medium"
         >
           <Pencil className="mr-2 h-4 w-4" />
           Compose New Email
@@ -30,7 +41,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <Button
           onClick={() => navigate('/')}
           variant="outline"
-          className="px-6 py-3 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+          className="px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
         >
           <Mail className="mr-2 h-4 w-4" />
           Return to Communication Hub

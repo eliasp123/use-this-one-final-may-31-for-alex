@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -77,12 +78,21 @@ const Index = () => {
             
             {/* Action buttons centered under the subheader with spacing */}
             <div className="mt-6 sm:mt-8 flex gap-3">
-              <CalendarPopup />
+              <CalendarPopup 
+                trigger={
+                  <Button
+                    variant="outline"
+                    className="px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Calendar
+                  </Button>
+                }
+              />
               
               <Button
                 onClick={() => setShowNewEmailForm(true)}
-                className="bg-green-500 hover:bg-green-600 text-white"
-                size="sm"
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-11 rounded-lg font-medium"
               >
                 <Pencil className="mr-2 h-4 w-4" />
                 Compose New Email
@@ -91,7 +101,7 @@ const Index = () => {
               <Button
                 onClick={() => navigate('/documents')}
                 variant="outline"
-                size="sm"
+                className="px-6 py-3 h-11 rounded-lg font-medium border-gray-300 hover:bg-gray-50"
               >
                 <FileText className="mr-2 h-4 w-4" />
                 View Documents
