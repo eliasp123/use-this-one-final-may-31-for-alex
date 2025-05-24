@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
-import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image, FolderPlus } from 'lucide-react';
+import { FileText, Search, Grid, Users, Calendar, FolderOpen, FileSpreadsheet, Image } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { SidebarProvider } from '../ui/sidebar';
@@ -21,8 +21,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
 
   const allAttachments = getAllAttachments();
   
@@ -40,17 +38,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const handleCreateFolder = (name: string) => {
     if (name.trim()) {
       createFolder(name.trim());
-      setNewFolderName('');
-      setIsCreatingFolder(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleCreateFolder(newFolderName);
-    } else if (e.key === 'Escape') {
-      setIsCreatingFolder(false);
-      setNewFolderName('');
     }
   };
 
@@ -97,7 +84,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[1400px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-[1412px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -117,8 +104,8 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             />
             
             <div className="flex-1 flex flex-col space-y-6 pl-6">
-              {/* Stats and Folder Management Row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {/* Stats Row */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
                   <div className="text-center">
                     <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">{stats.total}</div>
@@ -141,57 +128,6 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                   <div className="text-center">
                     <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">{stats.spreadsheets}</div>
                     <div className="text-sm text-gray-600 font-medium">Spreadsheets</div>
-                  </div>
-                </Card>
-                
-                {/* Folder Management Section */}
-                <Card className="col-span-2 p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
-                  <div className="flex items-center justify-between h-full">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-sm font-semibold text-gray-800">Document Folders</h3>
-                    </div>
-                    
-                    {isCreatingFolder ? (
-                      <div className="flex items-center gap-2">
-                        <Input
-                          placeholder="Folder name..."
-                          value={newFolderName}
-                          onChange={(e) => setNewFolderName(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          className="w-32 text-sm h-8"
-                          autoFocus
-                        />
-                        <Button 
-                          size="sm" 
-                          onClick={() => handleCreateFolder(newFolderName)}
-                          disabled={!newFolderName.trim()}
-                          className="h-8"
-                        >
-                          Create
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => {
-                            setIsCreatingFolder(false);
-                            setNewFolderName('');
-                          }}
-                          className="h-8"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsCreatingFolder(true)}
-                        className="flex items-center gap-2 h-8"
-                      >
-                        <FolderPlus className="w-4 h-4" />
-                        Create Folder
-                      </Button>
-                    )}
                   </div>
                 </Card>
               </div>
@@ -239,11 +175,8 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
               </div>
 
               {/* Attachments Label */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between pl-6">
                 <h3 className="text-xl font-semibold text-gray-800">Attachments</h3>
-                <span className="text-sm text-gray-500">
-                  {filteredAttachments.length} file{filteredAttachments.length !== 1 ? 's' : ''}
-                </span>
               </div>
 
               {/* Documents Grid */}
