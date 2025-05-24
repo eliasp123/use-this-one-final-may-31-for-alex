@@ -5,7 +5,7 @@ import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Plus } from 'lucide-react';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogOverlay } from '../ui/dialog';
 import AppointmentForm from './AppointmentForm';
 
 interface CalendarDateDisplayProps {
@@ -80,7 +80,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             
             {/* Calendar Grid Overlay Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="absolute inset-4 m-0 p-0 max-w-none w-auto h-auto bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden">
+              <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[90vw] max-w-[500px] h-[90vh] max-h-[600px] bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden p-0 z-50">
                 <div className="p-6 h-full">
                   <AppointmentForm
                     initialDate={date}
