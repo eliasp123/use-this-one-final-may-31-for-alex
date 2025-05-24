@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -89,14 +90,20 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   return (
     <Card className="hover:shadow-lg transition-all duration-200 border-2 border-gray-300 h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 bg-[size:40px_40px] [background-image:radial-gradient(circle_at_20px_20px,_rgba(0,0,0,0.02)_1px,_transparent_1px)]">
       <CardContent className="p-6 flex flex-col h-full">
-        {/* File Icon and Name */}
+        {/* File Name with Border - Now Above Icon */}
+        <div className="mb-4">
+          <div className="border-2 border-gray-300 rounded-lg p-3 bg-white/80 backdrop-blur-sm">
+            <h3 className="text-gray-800 text-lg leading-tight text-center line-clamp-2">
+              {attachment.name}
+            </h3>
+          </div>
+        </div>
+
+        {/* File Icon - Now Below Name */}
         <div className="flex flex-col items-center text-center mb-5">
-          <div className="mb-3 transform scale-75">
+          <div className="transform scale-75">
             <FileIconDisplay type={attachment.type} size="medium" />
           </div>
-          <h3 className="font-semibold text-gray-800 text-lg leading-tight mb-2 line-clamp-2">
-            {attachment.name}
-          </h3>
         </div>
 
         {/* Metadata with icons and left-aligned text */}
