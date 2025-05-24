@@ -101,7 +101,11 @@ const AppointmentFormFields = ({
           onChange={(e) => onTitleChange(e.target.value)}
           placeholder="e.g., Doctor Visit, Physical Therapy"
           required
-          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500 invalid:border-purple-500 invalid:ring-purple-500"
+          style={{
+            '--tw-ring-color': 'rgb(168 85 247)',
+            '--tw-border-opacity': '1'
+          } as React.CSSProperties}
         />
       </div>
 
