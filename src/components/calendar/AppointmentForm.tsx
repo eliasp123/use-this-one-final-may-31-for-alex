@@ -46,7 +46,7 @@ const AppointmentForm = ({ initialDate, onSave, onCancel, onDateChange, existing
     });
   };
 
-  const isFormValid = selectedDate && title.trim();
+  const isFormValid = !!(selectedDate && title.trim());
 
   return (
     <div className="flex flex-col h-full p-8">
