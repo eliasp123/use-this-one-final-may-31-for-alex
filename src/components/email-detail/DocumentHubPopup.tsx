@@ -97,7 +97,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+      <DialogContent className="max-w-7xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center text-2xl font-semibold text-gray-800">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl flex items-center justify-center mr-3">
@@ -117,90 +117,90 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
             />
             
             <div className="flex-1 flex flex-col space-y-6 pl-6">
-              {/* Stats and Folder Management Section */}
-              <div className="space-y-4">
-                {/* Stats Row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">{stats.total}</div>
-                      <div className="text-sm text-gray-600 font-medium">Total Files</div>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">{stats.documents}</div>
-                      <div className="text-sm text-gray-600 font-medium">Documents</div>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">{stats.images}</div>
-                      <div className="text-sm text-gray-600 font-medium">Images</div>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">{stats.spreadsheets}</div>
-                      <div className="text-sm text-gray-600 font-medium">Spreadsheets</div>
-                    </div>
-                  </Card>
-                </div>
-
-                {/* Folder Management Row */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold text-gray-800">Document Folders</h3>
-                    <span className="text-sm text-gray-500">Organize your attachments</span>
+              {/* Stats and Folder Management Row */}
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">{stats.total}</div>
+                    <div className="text-sm text-gray-600 font-medium">Total Files</div>
                   </div>
-                  
-                  {isCreatingFolder ? (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        placeholder="Folder name..."
-                        value={newFolderName}
-                        onChange={(e) => setNewFolderName(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className="w-48 text-sm"
-                        autoFocus
-                      />
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleCreateFolder(newFolderName)}
-                        disabled={!newFolderName.trim()}
-                      >
-                        Create
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        onClick={() => {
-                          setIsCreatingFolder(false);
-                          setNewFolderName('');
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                </Card>
+                <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">{stats.documents}</div>
+                    <div className="text-sm text-gray-600 font-medium">Documents</div>
+                  </div>
+                </Card>
+                <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">{stats.images}</div>
+                    <div className="text-sm text-gray-600 font-medium">Images</div>
+                  </div>
+                </Card>
+                <Card className="p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">{stats.spreadsheets}</div>
+                    <div className="text-sm text-gray-600 font-medium">Spreadsheets</div>
+                  </div>
+                </Card>
+                
+                {/* Folder Management Section */}
+                <Card className="col-span-2 p-4 bg-white/70 backdrop-blur-sm border border-gray-200/60 hover:bg-white/90 transition-all duration-200">
+                  <div className="flex items-center justify-between h-full">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-sm font-semibold text-gray-800">Document Folders</h3>
                     </div>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setIsCreatingFolder(true)}
-                      className="flex items-center gap-2"
-                    >
-                      <FolderPlus className="w-4 h-4" />
-                      Create Folder
-                    </Button>
-                  )}
-                </div>
+                    
+                    {isCreatingFolder ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          placeholder="Folder name..."
+                          value={newFolderName}
+                          onChange={(e) => setNewFolderName(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          className="w-32 text-sm h-8"
+                          autoFocus
+                        />
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleCreateFolder(newFolderName)}
+                          disabled={!newFolderName.trim()}
+                          className="h-8"
+                        >
+                          Create
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => {
+                            setIsCreatingFolder(false);
+                            setNewFolderName('');
+                          }}
+                          className="h-8"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsCreatingFolder(true)}
+                        className="flex items-center gap-2 h-8"
+                      >
+                        <FolderPlus className="w-4 h-4" />
+                        Create Folder
+                      </Button>
+                    )}
+                  </div>
+                </Card>
               </div>
 
               {/* Search and Filters */}
               <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60">
-                <div className="flex flex-col lg:flex-row gap-12 items-start justify-between">
-                  {/* Search Bar - Left Side (Wider) */}
-                  <div className="relative w-full lg:min-w-[500px] lg:max-w-[500px] lg:flex-shrink-0">
+                <div className="flex flex-col lg:flex-row gap-6 items-start justify-between">
+                  {/* Search Bar - Left Side */}
+                  <div className="relative w-full lg:min-w-[400px] lg:max-w-[400px] lg:flex-shrink-0">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <input
                       type="text"
@@ -211,7 +211,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                     />
                   </div>
                   
-                  {/* Filter Grid - Right Side (3x2, Right-aligned) */}
+                  {/* Filter Grid - Right Side */}
                   <div className="grid grid-cols-3 gap-2 ml-auto">
                     {filterOptions.map((filter) => {
                       const IconComponent = filter.icon;
@@ -238,8 +238,8 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                 </div>
               </div>
 
-              {/* Attachments Label - Properly Aligned */}
-              <div className="flex items-center justify-between">
+              {/* Attachments Label */}
+              <div className="flex items-center justify-between px-2">
                 <h3 className="text-xl font-semibold text-gray-800">Attachments</h3>
                 <span className="text-sm text-gray-500">
                   {filteredAttachments.length} file{filteredAttachments.length !== 1 ? 's' : ''}
