@@ -1,37 +1,22 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
 import { Appointment } from '../../types/appointment';
-import { ENCOURAGING_MESSAGES, APPOINTMENTS } from '../../data/appointmentData';
+import { ENCOURAGING_MESSAGES } from '../../data/calendarData';
 
 interface AppointmentListProps {
   date: Date | undefined;
-  appointments: Appointment[];
+  selectedAppointments: Appointment[];
+  upcomingAppointments: Appointment[];
 }
 
-const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
+const AppointmentList = ({ date, selectedAppointments, upcomingAppointments }: AppointmentListProps) => {
   const getEncouragingMessage = (date: Date) => {
     const dayOfWeek = date.getDay();
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
-
-  // Get upcoming appointments from TODAY (not from selected date)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  const upcomingAppointments = APPOINTMENTS
-    .filter(app => {
-      const appDate = new Date(app.date);
-      appDate.setHours(0, 0, 0, 0);
-      return appDate > today; // Future appointments from today
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 3); // Show only next 3 upcoming
-
-  console.log('Today:', today);
-  console.log('Selected date appointments:', appointments);
-  console.log('Upcoming appointments from today:', upcomingAppointments);
 
   return (
     <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
@@ -42,7 +27,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
           </h3>
           <p className="font-light text-sm">
             {date ? format(date, 'MMMM d, yyyy') : ''}
-            {appointments.length > 0 && ` • ${appointments.length} appointment${appointments.length > 1 ? 's' : ''}`}
+            {selectedAppointments.length > 0 && ` • ${selectedAppointments.length} appointment${selectedAppointments.length > 1 ? 's' : ''}`}
           </p>
         </div>
       </div>
@@ -51,7 +36,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
         {/* Top section for selected date appointments */}
         <div className="p-4 min-h-0 flex-1">
           <div className="space-y-3">
-            {appointments.length === 0 ? (
+            {selectedAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <div className="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
@@ -63,7 +48,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
               </div>
             ) : (
               <div>
-                {appointments.map(appointment => (
+                {selectedAppointments.map(appointment => (
                   <div 
                     key={appointment.id} 
                     className="mb-3 p-3 bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow"
@@ -95,7 +80,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
           </div>
         </div>
 
-        {/* Separator line - soft but dark gray */}
+        {/* Separator line */}
         <Separator className="bg-gray-600" />
 
         {/* Bottom section for upcoming appointments */}
@@ -110,10 +95,10 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
                   key={appointment.id} 
                   className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200"
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400"></div>
-                    <div>
-                      <p className="text-xs font-medium text-gray-800 truncate max-w-32">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-800 truncate">
                         {appointment.title}
                       </p>
                       <p className="text-xs text-gray-600">
@@ -121,7 +106,7 @@ const AppointmentList = ({ date, appointments }: AppointmentListProps) => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-600">{appointment.time}</span>
+                  <span className="text-xs text-gray-600 flex-shrink-0 ml-2">{appointment.time}</span>
                 </div>
               ))
             )}
