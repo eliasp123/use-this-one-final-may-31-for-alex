@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { FileText } from 'lucide-react';
 import CompactDocumentCard from './CompactDocumentCard';
 import DocumentCard from './DocumentCard';
+import DocumentCardGrid from './DocumentCardGrid';
 import { AttachmentWithContext } from '../../utils/attachmentUtils';
 
 interface DocumentsContentProps {
@@ -38,7 +38,7 @@ const DocumentsContent = ({
                 <div className="grid grid-cols-3 gap-6">
                   {attachments.map((attachment) => (
                     <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200">
-                      <CompactDocumentCard attachment={attachment} layout="grid" />
+                      <DocumentCardGrid attachment={attachment} />
                     </div>
                   ))}
                 </div>
