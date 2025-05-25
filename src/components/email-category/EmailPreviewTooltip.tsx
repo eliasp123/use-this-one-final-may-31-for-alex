@@ -173,7 +173,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [position.x, position.y, smartPosition.placement, currentPosition.x]);
 
-  // Smart scroll to ensure both card and tooltip are visible (with slower animation)
+  // Smart scroll to ensure both card and tooltip are visible (with more aggressive scrolling)
   useEffect(() => {
     if (tooltipRef) {
       // Wait for tooltip to be fully rendered and positioned
@@ -207,9 +207,16 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           
           // Check if we need to scroll to make everything visible
           let needsScroll = false;
+          let scrollAmount = 0;
           
-          // If tooltip or card extends beyond viewport vertically
-          if (topBound < 0 || bottomBound > viewportHeight) {
+          // Calculate how much we need to scroll vertically
+          if (topBound < 0) {
+            // Need to scroll up - add extra margin for better visibility
+            scrollAmount = Math.abs(topBound) + 100; // Extra 100px margin
+            needsScroll = true;
+          } else if (bottomBound > viewportHeight) {
+            // Need to scroll down
+            scrollAmount = bottomBound - viewportHeight + 50; // Extra 50px margin
             needsScroll = true;
           }
           
@@ -219,11 +226,22 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           }
           
           if (needsScroll) {
-            // Use smooth scroll with slower timing
-            targetCard.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest',
-              inline: 'nearest'
+            // Calculate target scroll position
+            const currentScrollY = window.scrollY;
+            let targetScrollY = currentScrollY;
+            
+            if (topBound < 0) {
+              // Scroll up by the amount needed plus margin
+              targetScrollY = currentScrollY + topBound - 100;
+            } else if (bottomBound > viewportHeight) {
+              // Scroll down
+              targetScrollY = currentScrollY + (bottomBound - viewportHeight) + 50;
+            }
+            
+            // Use smooth scroll with controlled timing
+            window.scrollTo({
+              top: targetScrollY,
+              behavior: 'smooth'
             });
             
             // Add CSS to make scroll slower
