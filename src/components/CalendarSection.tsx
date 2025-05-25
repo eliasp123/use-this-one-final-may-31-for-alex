@@ -26,8 +26,8 @@ const CalendarSection = () => {
     <div className="w-full">
       <h2 className="text-2xl font-light text-gray-800 text-center mb-8">Upcoming Appointments</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div className="md:col-span-9">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
+        <div className="md:col-span-8">
           <CalendarDateDisplay
             date={date}
             onDateSelect={handleSelect}
@@ -37,7 +37,7 @@ const CalendarSection = () => {
           />
         </div>
         
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <AppointmentList
             date={date}
             selectedAppointments={selectedDateAppointments}
