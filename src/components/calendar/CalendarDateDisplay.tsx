@@ -72,65 +72,69 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     }
 
     return (
-      <HoverCard openDelay={300} closeDelay={100}>
+      <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <button
             {...props}
             className={props.className}
             onClick={() => onDateSelect(dayDate)}
+            style={{ position: 'relative', zIndex: 1 }}
           >
             {dayDate.getDate()}
           </button>
         </HoverCardTrigger>
-        {createPortal(
-          <HoverCardContent className="w-80 p-4 bg-white border border-gray-200 shadow-lg z-[9999] fixed">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-gray-800">
-                  {format(dayDate, 'EEEE, MMMM d')}
-                </h4>
-                <span className="text-xs text-gray-500">
-                  {dayAppointments.length} appointment{dayAppointments.length > 1 ? 's' : ''}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {dayAppointments.map(appointment => (
-                  <div key={appointment.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className={`w-2 h-2 rounded-full ${appointment.color}`}></div>
-                      <h5 className="font-medium text-amber-700 text-sm">{appointment.title}</h5>
+        <HoverCardContent 
+          className="w-80 p-4 bg-white border border-gray-200 shadow-xl z-[99999] fixed"
+          style={{ zIndex: 99999 }}
+          side="top"
+          align="center"
+          sideOffset={5}
+        >
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-800">
+                {format(dayDate, 'EEEE, MMMM d')}
+              </h4>
+              <span className="text-xs text-gray-500">
+                {dayAppointments.length} appointment{dayAppointments.length > 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="space-y-2">
+              {dayAppointments.map(appointment => (
+                <div key={appointment.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-2 h-2 rounded-full ${appointment.color}`}></div>
+                    <h5 className="font-medium text-amber-700 text-sm">{appointment.title}</h5>
+                  </div>
+                  <div className="space-y-1 text-xs text-gray-600">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-3 w-3" />
+                      <span>{appointment.time}</span>
                     </div>
-                    <div className="space-y-1 text-xs text-gray-600">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="h-3 w-3" />
-                        <span>{appointment.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Building className="h-3 w-3" />
-                        <span>{appointment.organization}</span>
-                      </div>
-                      {appointment.to && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-gray-400">with</span>
-                          <span>{appointment.to}</span>
-                        </div>
-                      )}
+                    <div className="flex items-center gap-1.5">
+                      <Building className="h-3 w-3" />
+                      <span>{appointment.organization}</span>
                     </div>
-                    {appointment.notes && (
-                      <div className="mt-2 p-2 bg-amber-50 rounded text-xs text-gray-700">
-                        {appointment.notes.length > 60 
-                          ? `${appointment.notes.substring(0, 60)}...` 
-                          : appointment.notes
-                        }
+                    {appointment.to && (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400">with</span>
+                        <span>{appointment.to}</span>
                       </div>
                     )}
                   </div>
-                ))}
-              </div>
+                  {appointment.notes && (
+                    <div className="mt-2 p-2 bg-amber-50 rounded text-xs text-gray-700">
+                      {appointment.notes.length > 60 
+                        ? `${appointment.notes.substring(0, 60)}...` 
+                        : appointment.notes
+                      }
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          </HoverCardContent>,
-          document.body
-        )}
+          </div>
+        </HoverCardContent>
       </HoverCard>
     );
   };
