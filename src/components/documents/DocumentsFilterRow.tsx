@@ -24,16 +24,13 @@ const DocumentsFilterRow = ({
 }: DocumentsFilterRowProps) => {
   return (
     <div className="w-full max-w-7xl mx-auto pt-8 mb-8">
-      {/* Single button container spanning the width */}
       <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch h-16">
-        {/* Filter by label with purple background - 1/9 width */}
+        {/* Filter by label with purple background */}
         <div className="bg-gradient-to-r from-purple-500 to-purple-500 text-white flex-1 rounded-l-2xl font-medium flex items-center justify-center h-full">
           Filter by:
         </div>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Person Filter - 1/9 width */}
+        {/* Person Filter */}
         <button
           onClick={() => onFilterChange('person')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -49,9 +46,7 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Organization Filter - 1/9 width */}
+        {/* Organization Filter */}
         <button
           onClick={() => onFilterChange('organization')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -67,9 +62,7 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Month Filter - 1/9 width */}
+        {/* Month Filter */}
         <button
           onClick={() => onFilterChange('date')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -85,9 +78,10 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300"></div>
+        {/* Subtle separator before view modes */}
+        <div className="w-px bg-gray-200/40"></div>
 
-        {/* Grid Toggle - 1/9 width */}
+        {/* Grid Toggle */}
         <button
           onClick={() => onViewModeChange('grid')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -100,9 +94,7 @@ const DocumentsFilterRow = ({
           Grid
         </button>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* List Toggle - 1/9 width */}
+        {/* List Toggle */}
         <button
           onClick={() => onViewModeChange('list')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -115,9 +107,10 @@ const DocumentsFilterRow = ({
           List
         </button>
 
-        <div className="w-px bg-gray-300"></div>
+        {/* Subtle separator before direction filters */}
+        <div className="w-px bg-gray-200/40"></div>
 
-        {/* All Direction - 1/9 width */}
+        {/* All Direction */}
         <button
           onClick={() => onDirectionFilterChange('all')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -129,9 +122,7 @@ const DocumentsFilterRow = ({
           All
         </button>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Received Direction - 1/9 width */}
+        {/* Received Direction */}
         <button
           onClick={() => onDirectionFilterChange('received')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
@@ -144,9 +135,7 @@ const DocumentsFilterRow = ({
           Received
         </button>
 
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Sent Direction - 1/9 width */}
+        {/* Sent Direction */}
         <button
           onClick={() => onDirectionFilterChange('sent')}
           className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
