@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -131,21 +132,36 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     });
   }, [position]);
 
-  // Auto-scroll tooltip into view when it becomes visible
+  // Auto-scroll to ensure tooltip visibility when it becomes visible
   useEffect(() => {
     if (tooltipRef) {
       // Small delay to ensure the tooltip is fully rendered and positioned
       setTimeout(() => {
-        if (tooltipRef) {
-          tooltipRef.scrollIntoView({
+        // Find the original trigger element (the hovered card section)
+        const cards = document.querySelectorAll('.bg-white.rounded-2xl');
+        let targetCard = null;
+        let minDistance = Infinity;
+        
+        cards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const distance = Math.abs(rect.left - position.x) + Math.abs(rect.top - position.y);
+          if (distance < minDistance) {
+            minDistance = distance;
+            targetCard = card;
+          }
+        });
+
+        if (targetCard) {
+          // Scroll the target card into view to ensure the tooltip area is visible
+          targetCard.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
             inline: 'nearest'
           });
         }
-      }, 150); // Slightly longer delay to ensure positioning is complete
+      }, 200); // Longer delay to ensure tooltip positioning is complete
     }
-  }, [tooltipRef]); // Trigger when tooltip ref is available (tooltip becomes visible)
+  }, [tooltipRef, position.x, position.y]); // Also depend on position to re-scroll if tooltip moves
 
   const getStatusLabel = () => {
     switch (status) {
