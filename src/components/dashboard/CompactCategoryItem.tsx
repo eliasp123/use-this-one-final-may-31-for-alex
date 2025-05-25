@@ -1,5 +1,4 @@
-
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronDown } from 'lucide-react';
@@ -34,6 +33,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
   const collapseTimeoutRef = useRef<NodeJS.Timeout>();
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
   const { getFilteredUnrespondedEmails } = useFilteredEmailData();
@@ -46,6 +46,22 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     category: id, 
     status: hoveredStatus || 'unread' 
   });
+
+  // Auto-scroll into view when accordion expands
+  useEffect(() => {
+    if (isExpanded && containerRef.current) {
+      // Small delay to ensure the expansion animation has started
+      setTimeout(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'nearest'
+          });
+        }
+      }, 150); // Delay matches half the animation duration
+    }
+  }, [isExpanded]);
   
   const handleCardClick = () => {
     navigate(`/emails/${id}/all`);
@@ -177,7 +193,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
 
   return (
     <>
-      <div className="space-y-0">
+      <div className="space-y-0" ref={containerRef}>
         {/* Compact Header - with hover activation and matching row 1 styling */}
         <div className="bg-white rounded-2xl border border-gray-200 hover:shadow-md transition-all duration-300">
           <div 
