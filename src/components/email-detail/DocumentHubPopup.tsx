@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Card } from '../ui/card';
@@ -26,6 +25,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [folderRefreshKey, setFolderRefreshKey] = useState(0);
+  const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('all');
 
   const allAttachments = getAllAttachments();
   
@@ -53,7 +53,12 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   console.log('Folder filtered attachments:', folderFilteredAttachments.length);
 
-  const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' ? 'all' : selectedFilter);
+  // Apply direction filter
+  const directionFilteredAttachments = directionFilter === 'all'
+    ? folderFilteredAttachments 
+    : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
+
+  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' ? 'all' : selectedFilter);
   const stats = getAttachmentStats(allAttachments);
 
   const handleCreateFolder = (name: string) => {
@@ -61,6 +66,15 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
       createFolder(name.trim());
       // Trigger a re-render by updating the refresh key
       setFolderRefreshKey(prev => prev + 1);
+    }
+  };
+
+  // Modified search handler to reset direction filter to 'all'
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    // Reset direction filter to 'all' when user performs a search
+    if (value.trim() && directionFilter !== 'all') {
+      setDirectionFilter('all');
     }
   };
 
@@ -171,7 +185,7 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                       type="text"
                       placeholder="Search documents, senders, or organizations..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                       className="w-full h-12 pl-10 pr-4 text-base bg-white/80 border border-gray-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-xl outline-none transition-all duration-200"
                     />
                   </div>
@@ -199,6 +213,43 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
                         </Button>
                       );
                     })}
+                  </div>
+                </div>
+
+                {/* Direction Filter Row */}
+                <div className="flex justify-center mt-4 pt-4 border-t border-gray-200/30">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-600 mr-2">Direction:</span>
+                    <button
+                      onClick={() => setDirectionFilter('all')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        directionFilter === 'all' 
+                          ? 'bg-purple-500 text-white shadow-md' 
+                          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      All
+                    </button>
+                    <button
+                      onClick={() => setDirectionFilter('received')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        directionFilter === 'received' 
+                          ? 'bg-purple-500 text-white shadow-md' 
+                          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      Received
+                    </button>
+                    <button
+                      onClick={() => setDirectionFilter('sent')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        directionFilter === 'sent' 
+                          ? 'bg-purple-500 text-white shadow-md' 
+                          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      Sent
+                    </button>
                   </div>
                 </div>
               </div>
