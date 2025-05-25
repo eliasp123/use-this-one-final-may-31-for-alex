@@ -65,7 +65,35 @@ const DocumentsFilterRow = ({
 
       {/* Right Side - View Controls */}
       <div className="flex gap-4 items-center">
-        {/* Direction Filter Toggle */}
+        {/* View Mode Toggle - moved to left */}
+        <ToggleGroup 
+          type="single" 
+          value={viewMode} 
+          onValueChange={(value) => value && onViewModeChange(value as 'grid' | 'list')}
+          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-sm"
+        >
+          <ToggleGroupItem 
+            value="grid" 
+            aria-label="Grid view"
+            className="px-3 py-2 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 text-sm"
+          >
+            <LayoutGrid className="h-3 w-3 mr-1" />
+            Grid
+          </ToggleGroupItem>
+          <ToggleGroupItem 
+            value="list" 
+            aria-label="List view"
+            className="px-3 py-2 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 text-sm"
+          >
+            <LayoutList className="h-3 w-3 mr-1" />
+            List
+          </ToggleGroupItem>
+        </ToggleGroup>
+
+        {/* Separator */}
+        <div className="text-gray-300 text-lg">|</div>
+
+        {/* Direction Filter Toggle - moved to right */}
         <ToggleGroup 
           type="single" 
           value={directionFilter} 
@@ -94,31 +122,6 @@ const DocumentsFilterRow = ({
           >
             <ArrowUp className="h-3 w-3 mr-1" />
             Sent
-          </ToggleGroupItem>
-        </ToggleGroup>
-
-        {/* View Mode Toggle */}
-        <ToggleGroup 
-          type="single" 
-          value={viewMode} 
-          onValueChange={(value) => value && onViewModeChange(value as 'grid' | 'list')}
-          className="border border-gray-200 rounded-lg p-1.5 bg-white shadow-sm"
-        >
-          <ToggleGroupItem 
-            value="grid" 
-            aria-label="Grid view"
-            className="px-3 py-2 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 text-sm"
-          >
-            <LayoutGrid className="h-3 w-3 mr-1" />
-            Grid
-          </ToggleGroupItem>
-          <ToggleGroupItem 
-            value="list" 
-            aria-label="List view"
-            className="px-3 py-2 rounded-md data-[state=on]:bg-blue-500 data-[state=on]:text-white hover:bg-gray-50 transition-all duration-200 text-sm"
-          >
-            <LayoutList className="h-3 w-3 mr-1" />
-            List
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
