@@ -102,7 +102,7 @@ const ToFieldAutocomplete = ({
       willShow: filtered.length > 0
     });
     
-    setFilteredSuggestions(filtered.slice(0, 5));
+    setFilteredSuggestions(filtered.slice(0, 8));
     setActiveSuggestion(0);
     setShowSuggestions(filtered.length > 0);
   }, [value, recipients]);
@@ -188,11 +188,11 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Simplified dropdown with absolute positioning */}
+      {/* Dropdown with same styling approach as Organization field */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
           className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-[99999]"
-          data-testid="autocomplete-dropdown"
+          data-testid="to-autocomplete-dropdown"
           style={{
             position: 'absolute',
             top: '100%',
@@ -206,15 +206,15 @@ const ToFieldAutocomplete = ({
             <div
               key={`${suggestion}-${index}`}
               className={cn(
-                "px-4 py-3 text-sm cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
+                "px-4 py-3 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
                 index === activeSuggestion 
-                  ? 'bg-blue-50 text-blue-900 font-medium' 
+                  ? 'bg-blue-50 text-blue-900' 
                   : 'hover:bg-gray-50 text-gray-900'
               )}
               onClick={() => handleSuggestionClick(suggestion)}
               onMouseEnter={() => setActiveSuggestion(index)}
             >
-              {suggestion}
+              <div className="font-medium text-sm">{suggestion}</div>
             </div>
           ))}
         </div>
