@@ -67,23 +67,24 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Action buttons at bottom */}
-        <div className="p-4 pt-0 flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => navigate(`/email/${attachment.emailId}`)}
-            className="flex-1 text-xs h-9 border-gray-300 text-gray-600 bg-gray-50 hover:bg-gray-100"
-          >
-            View Email
-          </Button>
-          <Button
-            size="sm"
-            className={`${fileInfo.badgeColor} text-white flex-1 text-xs h-9 hover:opacity-90`}
-          >
-            <Download className="h-3 w-3 mr-1" />
-            Download
-          </Button>
+        {/* Single bottom action section */}
+        <div className="border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+          <div className="flex">
+            <Button
+              variant="ghost"
+              onClick={() => navigate(`/email/${attachment.emailId}`)}
+              className="flex-1 h-12 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-none rounded-bl-2xl border-r border-gray-200"
+            >
+              View Email
+            </Button>
+            <Button
+              variant="ghost"
+              className={`flex-1 h-12 text-sm font-medium ${fileInfo.badgeColor} text-white hover:opacity-90 rounded-none rounded-br-2xl`}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
