@@ -30,6 +30,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     const tooltipHeight = 400; // Approximate height of tooltip
     const tooltipWidth = 480; // Max width from the component
     const margin = 20; // Safety margin from screen edges
+    const gap = 8; // Gap between trigger and tooltip
 
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
@@ -129,12 +130,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return null;
   }
 
-  // Calculate transform based on placement with fixed positioning
+  // Calculate transform based on placement with improved gap handling
   const getTransform = () => {
     if (smartPosition.placement === 'bottom') {
-      return 'translate(-50%, 10px)'; // Position below with small gap
+      return 'translate(-50%, 8px)'; // Smaller gap to reduce mouse travel distance
     }
-    return 'translate(-50%, calc(-100% - 10px))'; // Position above with small gap
+    return 'translate(-50%, calc(-100% - 8px))'; // Smaller gap for consistency
   };
 
   return (

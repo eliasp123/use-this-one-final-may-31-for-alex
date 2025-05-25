@@ -67,7 +67,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 300); // 300ms delay
+    }, 250); // Slightly reduced delay for better responsiveness
   }, []);
 
   const handleStatusLeave = useCallback(() => {
@@ -76,10 +76,10 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(hoverTimeoutRef.current);
     }
     
-    // Small delay before hiding to allow moving to tooltip
+    // Longer delay before hiding to allow moving to tooltip
     setTimeout(() => {
       setHoveredStatus(null);
-    }, 200);
+    }, 300); // Increased delay to prevent flickering
   }, []);
 
   const handleTooltipClose = useCallback(() => {
