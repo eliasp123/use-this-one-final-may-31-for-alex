@@ -28,6 +28,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   const navigate = useNavigate();
   const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
   const [tooltipRef, setTooltipRef] = useState<HTMLDivElement | null>(null);
+  const [currentPosition, setCurrentPosition] = useState({ x: position.x, y: position.y });
 
   // Calculate smart positioning for seamless card unfolding
   useEffect(() => {
@@ -129,9 +130,50 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       y: yPos,
       placement: placement as 'top' | 'bottom' | 'left' | 'right'
     });
+    
+    setCurrentPosition({ x: xPos, y: yPos });
   }, [position]);
 
-  // Smart scroll to ensure both card and tooltip are visible
+  // Update tooltip position when scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      // Find the target card again to get its current position
+      const cards = document.querySelectorAll('.bg-white.rounded-2xl');
+      let targetCard = null;
+      let minDistance = Infinity;
+      
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs(rect.left - position.x) + Math.abs(rect.top - position.y);
+        if (distance < minDistance) {
+          minDistance = distance;
+          targetCard = card;
+        }
+      });
+
+      if (targetCard) {
+        const cardRect = targetCard.getBoundingClientRect();
+        
+        // Update position based on current card position
+        let newX = currentPosition.x;
+        let newY = cardRect.top; // Always align with the top of the card
+        
+        // Adjust for placement
+        if (smartPosition.placement === 'right') {
+          newX = cardRect.right;
+        } else if (smartPosition.placement === 'left') {
+          newX = cardRect.left - 480; // tooltip width
+        }
+        
+        setCurrentPosition({ x: newX, y: newY });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [position.x, position.y, smartPosition.placement, currentPosition.x]);
+
+  // Smart scroll to ensure both card and tooltip are visible (with slower animation)
   useEffect(() => {
     if (tooltipRef) {
       // Wait for tooltip to be fully rendered and positioned
@@ -165,36 +207,35 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           
           // Check if we need to scroll to make everything visible
           let needsScroll = false;
-          let scrollOptions = {
-            behavior: 'smooth' as ScrollBehavior,
-            block: 'nearest' as ScrollLogicalPosition,
-            inline: 'nearest' as ScrollLogicalPosition
-          };
           
           // If tooltip or card extends beyond viewport vertically
           if (topBound < 0 || bottomBound > viewportHeight) {
             needsScroll = true;
-            // If more content is cut off at the top, prioritize showing the top
-            if (Math.abs(topBound) > (bottomBound - viewportHeight)) {
-              scrollOptions.block = 'start';
-            } else {
-              scrollOptions.block = 'end';
-            }
           }
           
           // If tooltip or card extends beyond viewport horizontally
           if (leftBound < 0 || rightBound > viewportWidth) {
             needsScroll = true;
-            scrollOptions.inline = 'nearest';
           }
           
           if (needsScroll) {
-            targetCard.scrollIntoView(scrollOptions);
+            // Use smooth scroll with slower timing
+            targetCard.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'nearest'
+            });
+            
+            // Add CSS to make scroll slower
+            document.documentElement.style.scrollBehavior = 'smooth';
+            setTimeout(() => {
+              document.documentElement.style.scrollBehavior = '';
+            }, 1000);
           }
         }
-      }, 250); // Longer delay to ensure tooltip is fully positioned
+      }, 250);
     }
-  }, [tooltipRef, position.x, position.y, smartPosition]); // Include smartPosition to trigger when tooltip position changes
+  }, [tooltipRef, position.x, position.y, smartPosition]);
 
   const getStatusLabel = () => {
     switch (status) {
@@ -295,8 +336,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       ref={setTooltipRef}
       className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-[9999]"
       style={{
-        left: `${smartPosition.x}px`,
-        top: `${smartPosition.y}px`,
+        left: `${currentPosition.x}px`,
+        top: `${currentPosition.y}px`,
         transform: getTransform(),
         position: 'fixed'
       }}
