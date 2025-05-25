@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -38,33 +37,69 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    // Get the card dimensions from the position (this represents the card being hovered)
-    // For positioning, we want to align perfectly with the card edges
+    // Find the card header element to align with its top edge
+    // We need to traverse up from the hovered element to find the card container
+    const findCardTop = () => {
+      // Look for elements with the card classes to find the actual card top
+      const cards = document.querySelectorAll('.bg-white.rounded-2xl');
+      let closestCard = null;
+      let minDistance = Infinity;
+      
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs(rect.left - position.x) + Math.abs(rect.top - position.y);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCard = card;
+        }
+      });
+      
+      if (closestCard) {
+        const cardRect = closestCard.getBoundingClientRect();
+        return {
+          cardTop: cardRect.top,
+          cardLeft: cardRect.left,
+          cardRight: cardRect.right,
+          cardWidth: cardRect.width
+        };
+      }
+      
+      // Fallback if we can't find the card
+      return {
+        cardTop: position.y - 150, // Estimate card header position
+        cardLeft: position.x - 200,
+        cardRight: position.x + 200,
+        cardWidth: 400
+      };
+    };
+
+    const cardInfo = findCardTop();
+    
     let placement = 'right';
     let xPos = position.x;
-    let yPos = position.y; // Start at the exact top of the card
+    let yPos = cardInfo.cardTop; // Always align with the top of the card
 
     // Determine horizontal placement first (preferred for unfolding effect)
-    const spaceRight = viewportWidth - position.x - margin;
-    const spaceLeft = position.x - margin;
+    const spaceRight = viewportWidth - cardInfo.cardRight - margin;
+    const spaceLeft = cardInfo.cardLeft - margin;
     
     // Check if we can fit horizontally (preferred for card unfolding)
     if (spaceRight >= tooltipWidth) {
       // Unfold to the right - position at the right edge of the card
       placement = 'right';
-      xPos = position.x; // Start exactly at the card's right edge
+      xPos = cardInfo.cardRight; // Start exactly at the card's right edge
     } else if (spaceLeft >= tooltipWidth) {
       // Unfold to the left - position at the left edge of the card
       placement = 'left';
-      xPos = position.x - tooltipWidth; // End exactly at the card's left edge
+      xPos = cardInfo.cardLeft - tooltipWidth; // End exactly at the card's left edge
     } else {
       // Fall back to vertical placement if horizontal doesn't fit
-      const spaceAbove = position.y - margin;
-      const spaceBelow = viewportHeight - position.y - margin;
+      const spaceAbove = cardInfo.cardTop - margin;
+      const spaceBelow = viewportHeight - cardInfo.cardTop - margin;
       const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
       
       placement = shouldPlaceBelow ? 'bottom' : 'top';
-      xPos = position.x;
+      xPos = cardInfo.cardLeft + (cardInfo.cardWidth / 2); // Center on card
       
       // Keep tooltip within horizontal bounds for vertical placement
       const halfWidth = tooltipWidth / 2;
@@ -75,11 +110,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       }
     }
 
-    // For horizontal placement, align with the card's top edge and keep within bounds
+    // For horizontal placement, ensure tooltip stays within vertical bounds
     if (placement === 'left' || placement === 'right') {
-      // Start at the exact same Y position as the card for perfect alignment
-      yPos = position.y;
-      
       // Ensure tooltip doesn't go below viewport
       if (yPos + tooltipHeight > viewportHeight - margin) {
         yPos = viewportHeight - tooltipHeight - margin;
