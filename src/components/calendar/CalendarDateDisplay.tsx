@@ -82,7 +82,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             {dayDate.getDate()}
           </button>
         </HoverCardTrigger>
-        <HoverCardContent className="w-80 p-4 bg-white border border-gray-200 shadow-lg z-50">
+        <HoverCardContent className="w-80 p-4 bg-white border border-gray-200 shadow-lg z-[9999] relative">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold text-gray-800">
