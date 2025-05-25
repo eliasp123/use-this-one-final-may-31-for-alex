@@ -94,7 +94,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               {/* Left side - Add New Appointment with very light orange */}
               <div className="bg-orange-50 px-6 py-4" style={{ width: 'calc(100% - 320px)' }}>
                 <h2 className="text-2xl font-semibold text-gray-600">Add New Appointment</h2>
-                <p className="text-gray-400 mt-1">Fill in the details for your new appointment.</p>
+                <p className="text-gray-600 mt-1">Fill in the details for your new appointment.</p>
               </div>
               
               {/* Right side - Date with beautiful orange background - matching sidebar width */}
