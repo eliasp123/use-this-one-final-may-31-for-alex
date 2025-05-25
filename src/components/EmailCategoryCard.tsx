@@ -28,6 +28,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const hideTimeoutRef = useRef<NodeJS.Timeout>();
   
   // Get the actual count of unresponded emails for this category
   const { getFilteredUnrespondedEmails } = useFilteredEmailData();
@@ -51,9 +52,12 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
-    // Clear any existing timeout
+    // Clear any existing timeouts
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
+    }
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
     }
 
     // Capture the rect information immediately while event.currentTarget is valid
@@ -67,23 +71,42 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 1000); // Increased to 1000ms for more stable behavior
+    }, 800); // Reduced to 800ms for better responsiveness
   }, []);
 
   const handleStatusLeave = useCallback(() => {
-    // Clear timeout to prevent showing tooltip
+    // Clear show timeout to prevent showing tooltip
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     
-    // Longer delay before hiding to allow moving to tooltip - matching enter delay
-    setTimeout(() => {
+    // Only start hide timer if we're not already hiding
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+    
+    // Delay before hiding to allow moving to tooltip
+    hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
-    }, 1200); // Increased to exceed enter delay to prevent timing conflicts
+    }, 300);
   }, []);
 
   const handleTooltipClose = useCallback(() => {
+    // Clear all timeouts and immediately hide
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
     setHoveredStatus(null);
+  }, []);
+
+  const handleTooltipMouseEnter = useCallback(() => {
+    // Cancel hide timeout when mouse enters tooltip
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
   }, []);
   
   return (
@@ -171,6 +194,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           category={id}
           position={tooltipPosition}
           onClose={handleTooltipClose}
+          onMouseEnter={handleTooltipMouseEnter}
           categoryColor={color}
         />,
         document.body

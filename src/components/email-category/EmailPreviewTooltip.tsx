@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -11,6 +10,7 @@ interface EmailPreviewTooltipProps {
   category: string;
   position: { x: number; y: number };
   onClose: () => void;
+  onMouseEnter?: () => void;
   categoryColor: string;
 }
 
@@ -20,6 +20,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   category,
   position,
   onClose,
+  onMouseEnter,
   categoryColor
 }) => {
   const navigate = useNavigate();
@@ -147,7 +148,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         transform: getTransform(),
         position: 'fixed' // Ensure it's truly fixed and won't affect layout
       }}
-      onMouseEnter={() => {}} // Prevent tooltip from closing when hovering over it
+      onMouseEnter={onMouseEnter} // Use the passed onMouseEnter handler
       onMouseLeave={onClose}
     >
       <div className="space-y-3">
