@@ -67,15 +67,32 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const endIndex = startIndex + CATEGORIES_PER_PAGE;
   const currentPageCategories = filteredCategories.slice(startIndex, endIndex);
   
-  // Split current page categories: first 3 as priority (full cards), rest as compact
-  const priorityCategories = currentPageCategories.slice(0, 3);
-  const compactCategories = currentPageCategories.slice(3);
+  // Determine where to place the "Add New Category" button
+  const totalCategoriesOnPage = currentPageCategories.length;
+  const shouldShowAddButton = activePage > totalPages || 
+    (activePage === totalPages && totalCategoriesOnPage < CATEGORIES_PER_PAGE);
   
-  // Show "Add New Category" button only if:
-  // 1. We're on the last page and there's space (less than 9 categories on this page)
-  // 2. OR we're beyond the last page (empty page for the button)
-  const showAddButton = activePage > totalPages || 
-    (activePage === totalPages && currentPageCategories.length < CATEGORIES_PER_PAGE);
+  let priorityCategories = [];
+  let compactCategories = [];
+  let addButtonInFirstRow = false;
+  let addButtonInCompactRows = false;
+  
+  if (shouldShowAddButton) {
+    if (totalCategoriesOnPage < 3) {
+      // Add button goes in first row as a card
+      priorityCategories = currentPageCategories;
+      addButtonInFirstRow = true;
+    } else if (totalCategoriesOnPage < 9) {
+      // Add button goes in compact rows
+      priorityCategories = currentPageCategories.slice(0, 3);
+      compactCategories = currentPageCategories.slice(3);
+      addButtonInCompactRows = true;
+    }
+  } else {
+    // No add button, normal layout
+    priorityCategories = currentPageCategories.slice(0, 3);
+    compactCategories = currentPageCategories.slice(3);
+  }
   
   // Handle page change
   const handlePageChange = (page: number) => {
@@ -120,7 +137,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   return (
     <>
       {/* Priority Categories Section - Full Cards (First Row Only) */}
-      {priorityCategories.length > 0 && (
+      {(priorityCategories.length > 0 || addButtonInFirstRow) && (
         <div className="space-y-8 sm:space-y-12 mb-16">
           <div className="text-center">
             <h2 className="text-lg font-medium text-gray-800 mb-2">Organized Emails For Your Review</h2>
@@ -172,12 +189,20 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                 category={category}
               />
             ))}
+            
+            {/* Add New Category Button in first row as a card */}
+            {addButtonInFirstRow && (
+              <AddNewCategoryButton 
+                onClick={handleAddNewCategory}
+                categoriesInRow={priorityCategories.length}
+              />
+            )}
           </div>
         </div>
       )}
 
       {/* Compact Categories Section */}
-      {compactCategories.length > 0 && (
+      {(compactCategories.length > 0 || addButtonInCompactRows) && (
         <div className="space-y-8" data-section="more-categories">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {compactCategories.map((category) => (
@@ -186,18 +211,14 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                 category={category}
               />
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* Add New Category Button - only show when appropriate */}
-      {showAddButton && (
-        <div className={`${priorityCategories.length > 0 || compactCategories.length > 0 ? 'mt-8' : ''}`}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            <AddNewCategoryButton 
-              onClick={handleAddNewCategory}
-              categoriesInRow={0}
-            />
+            
+            {/* Add New Category Button in compact rows */}
+            {addButtonInCompactRows && (
+              <AddNewCategoryButton 
+                onClick={handleAddNewCategory}
+                categoriesInRow={compactCategories.length % 3}
+              />
+            )}
           </div>
         </div>
       )}
