@@ -13,16 +13,16 @@ interface DocumentActionsProps {
 const DocumentActions = ({ emailId, badgeColor, layout = 'grid' }: DocumentActionsProps) => {
   const navigate = useNavigate();
 
-  // Convert harsh colors to softer variants and ensure sent documents use orange
+  // Convert colors to -500 variants and ensure sent documents use orange
   const getSofterColor = (color: string) => {
     // Check if this is a sent document (orange family)
     if (color.includes('bg-orange-500')) return 'bg-orange-500 hover:bg-orange-600 text-white';
-    if (color.includes('bg-purple-500')) return 'bg-purple-400 hover:bg-purple-500 text-white';
-    if (color.includes('bg-blue-500')) return 'bg-blue-400 hover:bg-blue-500 text-white';
-    if (color.includes('bg-green-500')) return 'bg-green-400 hover:bg-green-500 text-white';
-    if (color.includes('bg-red-500')) return 'bg-red-400 hover:bg-red-500 text-white';
-    // Default softer variant for any other colors
-    return 'bg-gray-400 hover:bg-gray-500 text-white';
+    if (color.includes('bg-purple-500')) return 'bg-purple-500 hover:bg-purple-600 text-white';
+    if (color.includes('bg-blue-500')) return 'bg-blue-500 hover:bg-blue-600 text-white';
+    if (color.includes('bg-green-500')) return 'bg-green-500 hover:bg-green-600 text-white';
+    if (color.includes('bg-red-500')) return 'bg-red-500 hover:bg-red-600 text-white';
+    // Default variant for any other colors
+    return 'bg-gray-500 hover:bg-gray-600 text-white';
   };
 
   const softColor = getSofterColor(badgeColor);
