@@ -80,9 +80,6 @@ const DocumentsFilterRow = ({
             </span>
           </button>
 
-          {/* Subtle separator before view controls */}
-          <div className="w-px bg-gray-200/40 mx-2"></div>
-
           {/* Grid Toggle */}
           <button
             onClick={() => onViewModeChange('grid')}
@@ -108,9 +105,6 @@ const DocumentsFilterRow = ({
             <LayoutList className="h-4 w-4 mr-2" />
             List
           </button>
-
-          {/* Subtle separator before direction filters */}
-          <div className="w-px bg-gray-200/40 mx-1"></div>
 
           {/* All Direction */}
           <button
