@@ -27,6 +27,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 }) => {
   const navigate = useNavigate();
   const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
+  const [tooltipRef, setTooltipRef] = useState<HTMLDivElement | null>(null);
 
   // Calculate smart positioning for seamless card unfolding
   useEffect(() => {
@@ -130,6 +131,22 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     });
   }, [position]);
 
+  // Auto-scroll tooltip into view when it appears
+  useEffect(() => {
+    if (tooltipRef && emails.length > 0) {
+      // Small delay to ensure the tooltip is fully rendered
+      setTimeout(() => {
+        if (tooltipRef) {
+          tooltipRef.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+    }
+  }, [tooltipRef, emails.length]);
+
   const getStatusLabel = () => {
     switch (status) {
       case 'unread':
@@ -226,6 +243,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
+      ref={setTooltipRef}
       className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-[9999]"
       style={{
         left: `${smartPosition.x}px`,
