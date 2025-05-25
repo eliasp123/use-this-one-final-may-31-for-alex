@@ -33,15 +33,15 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   return (
     <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[292px]">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with centered icon, file name, and status badge */}
-        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex flex-col items-center justify-center text-center`}>
+        {/* Top section with icon, file name, and status badge in same row */}
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center justify-center gap-3`}>
           {/* File icon */}
-          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
             <fileInfo.icon className="h-6 w-6 text-white" />
           </div>
           
           {/* File name */}
-          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 mb-3">
+          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 flex-1 text-center">
             {attachment.name}
           </h3>
           
