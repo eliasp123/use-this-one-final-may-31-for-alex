@@ -38,7 +38,7 @@ const DocumentsFilterRow = ({
             className={`flex items-center justify-center flex-[2] transition-all duration-200 h-full ${
               selectedFilter === 'person' 
                 ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
-                : "text-gray-700 hover:bg-gray-50"
+                : "text-gray-700 hover:bg-purple-100"
             }`}
           >
             <Users className="h-4 w-4 mr-2" />
@@ -54,7 +54,7 @@ const DocumentsFilterRow = ({
             className={`flex items-center justify-center flex-[2] transition-all duration-200 h-full ${
               selectedFilter === 'organization' 
                 ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
-                : "text-gray-700 hover:bg-gray-50"
+                : "text-gray-700 hover:bg-purple-100"
             }`}
           >
             <Building className="h-4 w-4 mr-2" />
@@ -70,7 +70,7 @@ const DocumentsFilterRow = ({
             className={`flex items-center justify-center flex-[2] transition-all duration-200 h-full ${
               selectedFilter === 'date' 
                 ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
-                : "text-gray-700 hover:bg-gray-50"
+                : "text-gray-700 hover:bg-purple-100"
             }`}
           >
             <Calendar className="h-4 w-4 mr-2" />
