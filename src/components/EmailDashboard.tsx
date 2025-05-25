@@ -6,10 +6,11 @@ import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
 
 interface EmailDashboardProps {
   searchQuery?: string;
+  currentPage?: number;
 }
 
-const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => {
-  const { totalUnread, totalPending, totalUnresponded, emailCategories } = useEmailCategoryData();
+const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '', currentPage = 1 }) => {
+  const { totalUnread, totalPending, totalUnresponded, emailCategories, refreshCategories } = useEmailCategoryData();
   const itemsPerPage = 6; // 2 rows of 3 cards
   
   return (
@@ -26,6 +27,8 @@ const EmailDashboard: React.FC<EmailDashboardProps> = ({ searchQuery = '' }) => 
         categories={emailCategories}
         searchQuery={searchQuery}
         itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onCategoryAdded={refreshCategories}
       />
     </div>
   );

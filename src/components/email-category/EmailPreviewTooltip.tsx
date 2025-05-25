@@ -352,15 +352,17 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   return (
     <div 
       ref={setTooltipRef}
-      className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-[9999]"
+      className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto"
       style={{
         left: `${currentPosition.x}px`,
         top: `${currentPosition.y}px`,
         transform: getTransform(),
-        position: 'fixed'
+        position: 'fixed',
+        zIndex: 20 // Task 1: High z-index for tooltip visibility
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave || onClose}
+      data-tooltip="email-preview" // Task 1: Data attribute for auto-scroll targeting
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-100 pb-2">

@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText, Search, Calendar, Plus } from 'lucide-react';
+import { Info, Pencil, FileText, Search, Calendar } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import { Dialog, DialogContent } from '../components/ui/dialog';
-import AutocompleteSearch from '../components/AutocompleteSearch';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import CalendarPopup from '../components/CalendarPopup';
-import CustomCategoryDialog from '../components/forms/CustomCategoryDialog';
-import { addCustomCategory } from '../utils/categoryUtils';
 import { 
   Pagination, 
   PaginationContent, 
@@ -26,42 +23,18 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { userRole, setUserRole } = useUserRole();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
 
   const handleNewEmail = (emailData: any) => {
-    // This is where you'll integrate with actual email sending
     console.log('New email to be sent:', emailData);
     
     toast({
       title: "Email Sent",
       description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
     });
-  };
-
-  const handleAddCustomCategory = (name: string): boolean => {
-    try {
-      addCustomCategory(name);
-      toast({
-        title: "Category Created",
-        description: `"${name}" has been added as a new category.`,
-      });
-      return true;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create category. Please try again.",
-        variant: "destructive",
-      });
-      return false;
-    }
   };
 
   // Keep the toggle function available for programmer use
@@ -77,7 +50,6 @@ const Index = () => {
   
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Removed the scrollIntoView behavior - no need for scrolling
   };
 
   // Generate page numbers for pagination
@@ -123,7 +95,7 @@ const Index = () => {
               </Popover>
             </p>
             
-            {/* Action buttons centered under the subheader with spacing */}
+            {/* Action buttons - Task 3: Removed "Create Category" button */}
             <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
               <Button
                 onClick={() => setShowNewEmailForm(true)}
@@ -149,15 +121,6 @@ const Index = () => {
               >
                 <Calendar className="mr-2 h-4 w-4" />
                 Calendar
-              </Button>
-
-              <Button
-                onClick={() => setShowCustomCategoryDialog(true)}
-                variant="outline"
-                className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-purple-300 hover:bg-purple-50 text-purple-700 flex items-center justify-center"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Create Category
               </Button>
             </div>
 
@@ -211,21 +174,7 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Role toggle button - Hidden from UI but available for programmer use */}
-        {/* Uncomment the block below for programmer testing:
-        <div className="flex justify-center mb-4">
-          <Button 
-            onClick={toggleUserRole}
-            variant="outline"
-            size="sm"
-            className="text-sm"
-          >
-            Switch to {userRole === 'primary-caregiver' ? 'Family Member' : 'Primary Caregiver'} View
-          </Button>
-        </div>
-        */}
-        
-        {/* Search Bar with Autocomplete - Styled to match Document Hub */}
+        {/* Search Bar with Autocomplete */}
         <div className="max-w-xs sm:max-w-md mx-auto mb-12 sm:mb-16">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -307,13 +256,6 @@ const Index = () => {
             <CalendarPopup showTrigger={false} />
           </DialogContent>
         </Dialog>
-
-        {/* Custom Category Dialog */}
-        <CustomCategoryDialog
-          isOpen={showCustomCategoryDialog}
-          onOpenChange={setShowCustomCategoryDialog}
-          onAddCategory={handleAddCustomCategory}
-        />
       </div>
     </div>
   );

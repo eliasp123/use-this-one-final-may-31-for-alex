@@ -28,17 +28,13 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isManuallyControlled, setIsManuallyControlled] = useState(false);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isScrollLocked, setIsScrollLocked] = useState(false);
-  const [isHoveringHeader, setIsHoveringHeader] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
-  const collapseTimeoutRef = useRef<NodeJS.Timeout>();
+  const expandTimeoutRef = useRef<NodeJS.Timeout>();
   const scrollLockTimeoutRef = useRef<NodeJS.Timeout>();
-  const headerHoverTimeoutRef = useRef<NodeJS.Timeout>();
-  const navigationTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
@@ -56,18 +52,15 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   // Listen for scroll events to activate scroll lock
   useEffect(() => {
     const handleScroll = () => {
-      // Activate scroll lock when scrolling occurs
       setIsScrollLocked(true);
       
-      // Clear any existing scroll lock timeout
       if (scrollLockTimeoutRef.current) {
         clearTimeout(scrollLockTimeoutRef.current);
       }
       
-      // Release scroll lock after scrolling stops for a while
       scrollLockTimeoutRef.current = setTimeout(() => {
         setIsScrollLocked(false);
-      }, 5000); // 5 seconds after scroll stops
+      }, 5000);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -82,7 +75,6 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   // Auto-scroll into view when accordion expands
   useEffect(() => {
     if (isExpanded && containerRef.current) {
-      // Small delay to ensure the expansion animation has started
       setTimeout(() => {
         if (containerRef.current) {
           containerRef.current.scrollIntoView({
@@ -91,7 +83,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
             inline: 'nearest'
           });
         }
-      }, 150); // Delay matches half the animation duration
+      }, 150);
     }
   }, [isExpanded]);
 
@@ -100,188 +92,133 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     return () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
       if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-      if (collapseTimeoutRef.current) clearTimeout(collapseTimeoutRef.current);
+      if (expandTimeoutRef.current) clearTimeout(expandTimeoutRef.current);
       if (scrollLockTimeoutRef.current) clearTimeout(scrollLockTimeoutRef.current);
-      if (headerHoverTimeoutRef.current) clearTimeout(headerHoverTimeoutRef.current);
-      if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     };
   }, []);
-  
-  const handleCardClick = () => {
-    // Only navigate if we're not in a hover interaction state
-    if (!isHoveringHeader) {
-      navigate(`/emails/${id}/all`);
-    }
-  };
 
-  const handleStatusClick = (status: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click from triggering
-    navigate(`/emails/${id}/${status}`);
-  };
-
-  const toggleExpanded = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click from triggering
-    setIsManuallyControlled(true);
-    setIsExpanded(!isExpanded);
-    
-    // Clear any pending auto-collapse
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current);
-    }
-  };
-
+  // Task 2: Accordion opens on hover with 300ms delay, stays open until manually closed
   const handleHeaderHover = () => {
-    // Don't expand during scroll lock
     if (isScrollLocked) return;
     
-    setIsHoveringHeader(true);
-    
-    // Clear any existing header timeout
-    if (headerHoverTimeoutRef.current) {
-      clearTimeout(headerHoverTimeoutRef.current);
+    if (expandTimeoutRef.current) {
+      clearTimeout(expandTimeoutRef.current);
     }
     
-    // Clear any navigation timeout
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
-    
-    // Wait longer before expanding to give user time to process
-    headerHoverTimeoutRef.current = setTimeout(() => {
-      // Reset manual control to allow repeated hover opening
-      setIsManuallyControlled(false);
+    expandTimeoutRef.current = setTimeout(() => {
       setIsExpanded(true);
-      
-      // Clear any pending auto-collapse
-      if (collapseTimeoutRef.current) {
-        clearTimeout(collapseTimeoutRef.current);
-      }
-    }, 1000); // Wait 1 second before expanding
+    }, 300); // 300ms delay as requested
   };
 
   const handleHeaderLeave = () => {
-    setIsHoveringHeader(false);
-    
-    // Clear header hover timeout to prevent expansion
-    if (headerHoverTimeoutRef.current) {
-      clearTimeout(headerHoverTimeoutRef.current);
+    // Clear expand timeout to prevent opening if user moves away quickly
+    if (expandTimeoutRef.current) {
+      clearTimeout(expandTimeoutRef.current);
     }
-    
-    // Only auto-collapse if not manually controlled and no tooltip is showing
-    if (!isManuallyControlled && !hoveredStatus) {
-      collapseTimeoutRef.current = setTimeout(() => {
-        setIsExpanded(false);
-      }, 2000); // Wait 2 seconds before collapsing
-    }
-    
-    // Set up navigation timeout - only navigate if user stays away
-    navigationTimeoutRef.current = setTimeout(() => {
-      if (!isHoveringHeader && !hoveredStatus) {
-        // User has left and stayed away - safe to allow navigation on next click
-        setIsHoveringHeader(false);
-      }
-    }, 3000); // Wait 3 seconds before allowing navigation
+    // DO NOT auto-close on leave - stays open until manually closed
   };
 
+  // Task 2: Click header to toggle accordion (no navigation)
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleCardContentClick = () => {
+    // Only allow navigation from the card content, not the header
+    navigate(`/emails/${id}/all`);
+  };
+
+  const handleStatusClick = (status: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/emails/${id}/${status}`);
+  };
+
+  // Task 1: Improved tooltip behavior with auto-scroll
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
-    // Don't show tooltips during scroll lock
     if (isScrollLocked) return;
     
-    // Clear any existing timeouts
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current);
-    }
 
-    // Capture the rect information immediately while event.currentTarget is valid
     const rect = event.currentTarget.getBoundingClientRect();
     const position = {
-      x: rect.left + rect.width / 2, // Center horizontally on the card
-      y: rect.top // Top of the hovered element
+      x: rect.left + rect.width / 2,
+      y: rect.top
     };
 
-    // Set timeout to show tooltip after delay
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 1200); // Longer delay before showing tooltip
+      
+      // Task 1: Auto-scroll tooltip into view
+      setTimeout(() => {
+        const tooltip = document.querySelector('[data-tooltip="email-preview"]');
+        if (tooltip) {
+          const tooltipRect = tooltip.getBoundingClientRect();
+          const viewport = {
+            top: 0,
+            bottom: window.innerHeight
+          };
+          
+          if (tooltipRect.top < viewport.top || tooltipRect.bottom > viewport.bottom) {
+            tooltip.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'nearest' 
+            });
+          }
+        }
+      }, 100);
+    }, 800);
   }, [isScrollLocked]);
 
   const handleStatusLeave = useCallback(() => {
-    // Clear show timeout to prevent showing tooltip
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     
-    // Only start hide timer if we're not already hiding
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
     
-    // Longer delay before hiding to allow moving to tooltip
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
-      
-      // If not manually controlled, also collapse accordion after tooltip closes
-      if (!isManuallyControlled) {
-        collapseTimeoutRef.current = setTimeout(() => {
-          setIsExpanded(false);
-        }, 2000); // Longer delay before collapsing
-      }
-    }, 1500); // Longer delay before hiding
-  }, [isManuallyControlled]);
+    }, 300);
+  }, []);
 
   const handleTooltipClose = useCallback(() => {
-    // Clear all timeouts and immediately hide
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current);
-    }
-    
     setHoveredStatus(null);
-    
-    // If not manually controlled, collapse accordion after tooltip closes
-    if (!isManuallyControlled) {
-      collapseTimeoutRef.current = setTimeout(() => {
-        setIsExpanded(false);
-      }, 2000); // Longer delay before collapsing
-    }
-  }, [isManuallyControlled]);
+  }, []);
 
   const handleTooltipMouseEnter = useCallback(() => {
-    // Cancel hide timeout when mouse enters tooltip
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
-    }
-    // Cancel collapse timeout when mouse enters tooltip
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current);
     }
   }, []);
 
   const handleTooltipMouseLeave = useCallback(() => {
-    // When leaving tooltip, close it and potentially collapse accordion
     handleTooltipClose();
   }, [handleTooltipClose]);
 
   return (
     <>
       <div className="space-y-0" ref={containerRef}>
-        {/* Compact Header - with hover activation and matching row 1 styling */}
+        {/* Compact Header - Task 2: Click to toggle, hover to open */}
         <div className="bg-white rounded-2xl border border-gray-200 hover:shadow-md transition-all duration-300">
           <div 
             className="flex items-center justify-between p-4 sm:p-6 hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={handleCardClick}
+            onClick={handleHeaderClick}
             onMouseEnter={handleHeaderHover}
             onMouseLeave={handleHeaderLeave}
           >
@@ -311,35 +248,27 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 {total} total
               </span>
               
-              <button 
-                className="p-1 hover:bg-gray-200 rounded transition-colors" 
-                onClick={toggleExpanded}
-              >
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                  isExpanded ? 'rotate-180' : 'rotate-0'
-                }`} />
-              </button>
+              <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                isExpanded ? 'rotate-180' : 'rotate-0'
+              }`} />
             </div>
           </div>
         </div>
 
-        {/* Expanded Full Card - without duplicate header */}
+        {/* Expanded Full Card */}
         <div 
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
             isExpanded 
               ? 'max-h-96 opacity-100 mt-4' 
               : 'max-h-0 opacity-0 mt-0'
           }`}
-          onMouseEnter={handleHeaderHover}
-          onMouseLeave={handleHeaderLeave}
         >
           <div className="animate-fade-in px-4 sm:px-6">
-            {/* Custom card content without the header since it's already shown above */}
             <div 
               className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
-              onClick={handleCardClick}
+              onClick={handleCardContentClick}
             >
-              {/* Stats - same as EmailCategoryCard but without header */}
+              {/* Stats with improved tooltip behavior */}
               <div className="space-y-4 sm:space-y-5">
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
@@ -401,18 +330,20 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         </div>
       </div>
 
-      {/* Email Preview Tooltip - Using createPortal to render outside component tree */}
+      {/* Email Preview Tooltip with enhanced z-index and auto-scroll */}
       {hoveredStatus && previewEmails.length > 0 && !isScrollLocked && createPortal(
-        <EmailPreviewTooltip
-          emails={previewEmails}
-          status={hoveredStatus}
-          category={id}
-          position={tooltipPosition}
-          onClose={handleTooltipClose}
-          onMouseEnter={handleTooltipMouseEnter}
-          onMouseLeave={handleTooltipMouseLeave}
-          categoryColor={color}
-        />,
+        <div data-tooltip="email-preview">
+          <EmailPreviewTooltip
+            emails={previewEmails}
+            status={hoveredStatus}
+            category={id}
+            position={tooltipPosition}
+            onClose={handleTooltipClose}
+            onMouseEnter={handleTooltipMouseEnter}
+            onMouseLeave={handleTooltipMouseLeave}
+            categoryColor={color}
+          />
+        </div>,
         document.body
       )}
     </>
