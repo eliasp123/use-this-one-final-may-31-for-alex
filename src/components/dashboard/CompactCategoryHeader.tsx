@@ -59,11 +59,10 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
                 {pending}
               </div>
             )}
+            <span className="text-xs sm:text-sm text-gray-500 text-right font-medium">
+              {total} total
+            </span>
           </div>
-          
-          <span className="text-xs sm:text-sm text-gray-500 min-w-[80px] text-right font-medium ml-2">
-            {total} total
-          </span>
           
           <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ml-2 ${
             isExpanded ? 'rotate-180' : 'rotate-0'
