@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
@@ -98,8 +99,8 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         {/* Separator line */}
         <Separator className="bg-gray-600" />
 
-        {/* Bottom section for upcoming appointments - decreased height */}
-        <div className="p-4 bg-gray-50 h-24">
+        {/* Bottom section for upcoming appointments - removed gray background */}
+        <div className="p-4 h-24">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
           <ScrollArea className="h-16">
             <div className="space-y-2 pr-4">
