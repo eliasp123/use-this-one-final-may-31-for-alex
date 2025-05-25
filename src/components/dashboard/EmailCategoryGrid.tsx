@@ -6,6 +6,7 @@ import AddNewCategoryButton from './AddNewCategoryButton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../ui/pagination';
 import { addCustomCategory } from '@/utils/categoryUtils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -52,11 +53,26 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     ? categories.filter(category => category.total > 0)
     : categories;
   
-  // Split categories: first 3 as priority (full cards), rest as compact
-  const priorityCategories = filteredCategories.slice(0, 3);
-  const compactCategories = filteredCategories.slice(3);
+  // Pagination settings: 9 categories per page (3 rows of 3)
+  const CATEGORIES_PER_PAGE = 9;
+  const totalPages = Math.ceil(filteredCategories.length / CATEGORIES_PER_PAGE);
   
-  // Handle page change (only used when showPagination is true and no external currentPage)
+  // Calculate which categories to show on current page
+  const startIndex = (activePage - 1) * CATEGORIES_PER_PAGE;
+  const endIndex = startIndex + CATEGORIES_PER_PAGE;
+  const currentPageCategories = filteredCategories.slice(startIndex, endIndex);
+  
+  // Split current page categories: first 3 as priority (full cards), rest as compact
+  const priorityCategories = currentPageCategories.slice(0, 3);
+  const compactCategories = currentPageCategories.slice(3);
+  
+  // Show "Add New Category" button only if:
+  // 1. We're on the last page and there's space (less than 9 categories on this page)
+  // 2. OR we're beyond the last page (empty page for the button)
+  const showAddButton = activePage > totalPages || 
+    (activePage === totalPages && currentPageCategories.length < CATEGORIES_PER_PAGE);
+  
+  // Handle page change
   const handlePageChange = (page: number) => {
     if (!currentPage) {
       setInternalCurrentPage(page);
@@ -125,23 +141,17 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                 category={category}
               />
             ))}
-            
-            {/* Dynamic Add New Category Button */}
-            <AddNewCategoryButton 
-              onClick={handleAddNewCategory}
-              categoriesInRow={compactCategories.length % 3}
-            />
           </div>
         </div>
       )}
 
-      {/* If no compact categories, show add button after priority categories */}
-      {compactCategories.length === 0 && priorityCategories.length > 0 && (
-        <div className="mt-8">
+      {/* Add New Category Button - only show when appropriate */}
+      {showAddButton && (
+        <div className={`${priorityCategories.length > 0 || compactCategories.length > 0 ? 'mt-8' : ''}`}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             <AddNewCategoryButton 
               onClick={handleAddNewCategory}
-              categoriesInRow={priorityCategories.length % 3}
+              categoriesInRow={0}
             />
           </div>
         </div>
@@ -151,6 +161,45 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       {filteredCategories.length === 0 && searchQuery.trim() && (
         <div className="text-center py-12">
           <p className="text-gray-500">No categories found matching your search.</p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {showPagination && totalPages > 1 && (
+        <div className="mt-12 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              {activePage > 1 && (
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => handlePageChange(activePage - 1)}
+                    className="cursor-pointer"
+                  />
+                </PaginationItem>
+              )}
+              
+              {Array.from({ length: Math.max(totalPages, activePage) }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page)}
+                    isActive={page === activePage}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              {activePage < Math.max(totalPages, activePage) && (
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => handlePageChange(activePage + 1)}
+                    className="cursor-pointer"
+                  />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
 
