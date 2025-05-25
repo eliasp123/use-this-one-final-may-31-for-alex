@@ -81,7 +81,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         </div>
       </div>
 
-      {/* Expanded Full Card - Using data attributes for CSS animation */}
+      {/* Expanded Full Card - with padding and proper styling */}
       <div 
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           isExpanded 
@@ -89,7 +89,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
             : 'max-h-0 opacity-0 mt-0'
         }`}
       >
-        <div className="animate-fade-in">
+        <div className="animate-fade-in px-4 sm:px-6">
           <EmailCategoryCard category={category} />
         </div>
       </div>
