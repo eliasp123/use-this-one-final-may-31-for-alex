@@ -68,7 +68,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       if (tooltipElement && !tooltipElement.matches(':hover')) {
         setHoveredDate(null);
       }
-    }, 300);
+    }, 1000);
   };
 
   const handleTooltipMouseEnter = () => {
