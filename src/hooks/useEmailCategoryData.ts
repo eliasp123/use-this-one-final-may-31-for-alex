@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getUnreadEmails, getPendingEmails, getUnrespondedEmails, getEmailsByCategory } from '../data/emailData';
 import { getAllCategories } from '../utils/categoryUtils';
 import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard, Folder } from 'lucide-react';
@@ -44,7 +44,7 @@ export const useEmailCategoryData = () => {
   const [totalUnresponded, setTotalUnresponded] = useState(0);
   const [emailCategories, setEmailCategories] = useState<EmailCategory[]>([]);
 
-  const loadCategories = () => {
+  const loadCategories = useCallback(() => {
     console.log('🔄 Loading categories...');
     setTotalUnread(getUnreadEmails().length);
     setTotalPending(getPendingEmails().length);
@@ -52,6 +52,7 @@ export const useEmailCategoryData = () => {
     
     const allCategories = getAllCategories();
     console.log('📂 All categories from utils:', allCategories);
+    console.log('📂 Categories keys:', Object.keys(allCategories));
     
     const categories = Object.entries(allCategories).map(([id, categoryData]) => {
       const unreadCount = getUnreadEmails(id).length;
@@ -82,10 +83,10 @@ export const useEmailCategoryData = () => {
         // Custom categories get actual email counts
         const categoryEmails = getEmailsByCategory(id);
         totalCount = categoryEmails.length;
-        console.log(`Custom category ${id} has ${totalCount} actual emails`);
+        console.log(`Custom category ${id} (${categoryData.title}) has ${totalCount} actual emails`);
       }
       
-      return {
+      const category = {
         id,
         title: categoryData.title,
         icon,
@@ -96,16 +97,20 @@ export const useEmailCategoryData = () => {
         bgColor: categoryData.bgColor,
         textColor
       };
+      
+      console.log(`✅ Created category: ${category.title} (${category.id})`);
+      return category;
     });
     
-    console.log('✅ Categories loaded:', categories.length, categories.map(c => c.title));
+    console.log('✅ Categories loaded:', categories.length, 'total categories');
+    console.log('📋 Category titles:', categories.map(c => c.title));
     setEmailCategories(categories);
-  };
+  }, []);
 
   // Load email counts and categories
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [loadCategories]);
 
   return {
     totalUnread,

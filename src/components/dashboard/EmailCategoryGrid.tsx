@@ -50,6 +50,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   // Debug logging to see all categories
   React.useEffect(() => {
     console.log('🔍 All categories in EmailCategoryGrid:', categories.map(c => ({ id: c.id, title: c.title })));
+    console.log('🔍 Total categories received:', categories.length);
   }, [categories]);
   
   // When there's a search query, only show categories that have emails
@@ -57,6 +58,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const filteredCategories = searchQuery.trim() 
     ? categories.filter(category => category.total > 0)
     : categories;
+  
+  console.log('📊 Filtered categories:', filteredCategories.length, 'from', categories.length, 'total');
   
   // Pagination settings: 9 categories per page (3 rows of 3)
   const CATEGORIES_PER_PAGE = 9;
@@ -109,7 +112,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     if (newCategoryName.trim()) {
       try {
         console.log('🆕 Creating category:', newCategoryName.trim());
-        addCustomCategory(newCategoryName.trim());
+        const newCategory = addCustomCategory(newCategoryName.trim());
+        console.log('✅ Category created successfully:', newCategory);
         
         toast({
           title: "Category Created",
@@ -118,6 +122,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         
         // Notify parent component to refresh categories
         if (onCategoryAdded) {
+          console.log('🔄 Calling onCategoryAdded to refresh categories');
           onCategoryAdded();
         }
         
