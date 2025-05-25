@@ -62,13 +62,10 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
               <Calendar className="h-4 w-4 text-gray-400" />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
-          </div>
-        </div>
-
-        {/* Status indicator below metadata, aligned with text not icon */}
-        <div className="pl-4 pr-4 pb-3">
-          <div className="ml-12 text-sm font-bold text-gray-500">
-            {attachment.direction === 'received' ? 'Received' : 'Sent'}
+            {/* Status indicator directly below the date */}
+            <div className="text-sm font-bold text-gray-500">
+              {attachment.direction === 'received' ? 'Received' : 'Sent'}
+            </div>
           </div>
         </div>
 
