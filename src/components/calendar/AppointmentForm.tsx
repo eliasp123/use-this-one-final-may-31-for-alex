@@ -69,11 +69,6 @@ const AppointmentForm = ({
     <div className="flex-1 flex overflow-hidden">
       {/* Left side - Form */}
       <div className="flex-1 flex flex-col p-6 overflow-y-auto">
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Add New Appointment</h2>
-          <p className="text-gray-600">Fill in the details for your new appointment.</p>
-        </div>
-
         <div className="flex-1 space-y-6">
           <AppointmentFormDatePicker
             selectedDate={selectedDate}

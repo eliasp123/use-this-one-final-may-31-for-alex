@@ -90,12 +90,28 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       {isDialogOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto bg-black/50">
           <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
+            {/* Header with styled sections */}
+            <div className="flex items-stretch rounded-t-lg overflow-hidden">
+              {/* Left side - Add New Appointment with light orange gradient */}
+              <div className="bg-gradient-to-r from-orange-300 to-orange-400 px-6 py-4 flex-1">
+                <h2 className="text-2xl font-semibold text-gray-800">Add New Appointment</h2>
+                <p className="text-gray-700 mt-1">Fill in the details for your new appointment.</p>
+              </div>
+              
+              {/* Right side - Date with beautiful orange background */}
+              <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 min-w-[300px] flex flex-col justify-center">
+                <h3 className="text-xl font-semibold text-white">
+                  Appointments on {date ? format(date, 'MMMM do') : 'Selected Date'}
+                </h3>
+              </div>
+            </div>
+
             {/* Close button */}
             <div className="absolute right-4 top-4 z-10">
               <button
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-purple-100 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 shadow-lg"
               >
                 <X className="h-4 w-4 text-gray-600" />
               </button>
