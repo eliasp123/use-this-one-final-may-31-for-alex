@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
-import { Download, Calendar, User, Building } from 'lucide-react';
+import { Download, Calendar, User, Building, ArrowDown, ArrowUp } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { getFileTypeInfo, formatDate } from '../../utils/fileTypeUtils';
 import StatusBadge from './StatusBadge';
@@ -62,9 +62,16 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
               <Calendar className="h-4 w-4 text-gray-400" />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
-            {/* Status indicator directly below the date */}
-            <div className="text-sm font-bold text-gray-500">
-              {attachment.direction === 'received' ? 'Received' : 'Sent'}
+            {/* Status indicator with arrow icon */}
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              {attachment.direction === 'received' ? (
+                <ArrowDown className="h-4 w-4 text-gray-400" />
+              ) : (
+                <ArrowUp className="h-4 w-4 text-gray-400" />
+              )}
+              <span className="font-bold text-gray-500">
+                {attachment.direction === 'received' ? 'Received' : 'Sent'}
+              </span>
             </div>
           </div>
         </div>
