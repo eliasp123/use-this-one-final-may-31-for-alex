@@ -11,12 +11,14 @@ interface CalendarPopupProps {
 }
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  // Initialize with today's date instead of a fixed date
+  const today = new Date();
+  const [date, setDate] = useState<Date | undefined>(today);
   const [selectedDateAppointments, setSelectedDateAppointments] = useState(
     APPOINTMENTS.filter(app => 
-      app.date.getDate() === new Date().getDate() && 
-      app.date.getMonth() === new Date().getMonth() && 
-      app.date.getFullYear() === new Date().getFullYear()
+      app.date.getDate() === today.getDate() && 
+      app.date.getMonth() === today.getMonth() && 
+      app.date.getFullYear() === today.getFullYear()
     )
   );
 
