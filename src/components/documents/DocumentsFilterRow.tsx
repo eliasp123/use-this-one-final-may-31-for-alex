@@ -31,7 +31,7 @@ const DocumentsFilterRow = ({
           Filter by:
         </div>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Person Filter */}
         <button
@@ -49,7 +49,7 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Organization Filter */}
         <button
@@ -67,7 +67,7 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Month Filter */}
         <button
@@ -85,7 +85,7 @@ const DocumentsFilterRow = ({
           </span>
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Grid Toggle */}
         <button
@@ -100,7 +100,7 @@ const DocumentsFilterRow = ({
           Grid
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* List Toggle */}
         <button
@@ -115,7 +115,7 @@ const DocumentsFilterRow = ({
           List
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* All Direction */}
         <button
@@ -129,7 +129,7 @@ const DocumentsFilterRow = ({
           All
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Received Direction */}
         <button
@@ -144,7 +144,7 @@ const DocumentsFilterRow = ({
           Received
         </button>
 
-        <div className="w-px bg-gray-300 my-2"></div>
+        <div className="w-px bg-gray-300"></div>
 
         {/* Sent Direction */}
         <button
@@ -153,7 +153,7 @@ const DocumentsFilterRow = ({
             directionFilter === 'sent' 
               ? "bg-orange-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
-          }`}
+          } rounded-r-2xl`}
         >
           <ArrowUp className="h-4 w-4 mr-2" />
           Sent
