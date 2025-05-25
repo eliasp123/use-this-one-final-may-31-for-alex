@@ -46,26 +46,26 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
           <h3 className="text-base sm:text-lg font-medium text-gray-800">{title}</h3>
         </div>
         
-        <div className="flex items-center gap-3">
-          {/* Status indicators */}
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          {/* Status indicators - right-justified */}
+          <div className="flex items-center justify-end gap-2">
             {unread > 0 && (
-              <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 rounded-full text-white text-xs font-medium">
+              <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 bg-purple-500 rounded-full text-white text-sm font-medium">
                 {unread}
               </div>
             )}
             {pending > 0 && (
-              <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-amber-500 rounded-full text-white text-xs font-medium">
+              <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 bg-amber-500 rounded-full text-white text-sm font-medium">
                 {pending}
               </div>
             )}
           </div>
           
-          <span className="text-xs sm:text-sm text-gray-500 min-w-[80px] text-right">
+          <span className="text-sm sm:text-base text-gray-500 min-w-[80px] text-right font-medium">
             {total} total
           </span>
           
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+          <ChevronDown className={`w-5 h-5 sm:w-6 sm:h-6 text-gray-400 transition-transform duration-200 ${
             isExpanded ? 'rotate-180' : 'rotate-0'
           }`} />
         </div>

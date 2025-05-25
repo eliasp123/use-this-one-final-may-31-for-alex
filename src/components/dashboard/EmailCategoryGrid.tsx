@@ -68,7 +68,6 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     }
   };
 
-  // Task 3: Handle segmented button clicks
   const handleViewMoreCategories = () => {
     const moreCategoriesSection = document.querySelector('[data-section="more-categories"]');
     if (moreCategoriesSection) {
@@ -113,23 +112,18 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
-      {/* Compact Categories Section - Task 3 & 4: Redesigned with new button, no subheader */}
+      {/* Compact Categories Section - Button moved to replace heading */}
       {compactCategories.length > 0 && (
         <div className="space-y-6" data-section="more-categories">
-          <div className="text-center">
-            <h2 className="text-lg font-medium text-gray-800 mb-6">More Categories</h2>
-            {/* Task 4: Removed "Additional email categories" subheader */}
-          </div>
-          
-          {/* Task 3: Redesigned segmented button */}
+          {/* Button replaces the "More Categories" heading */}
           <div className="flex justify-start mb-8">
             <div className="w-full max-w-md">
               <button 
-                className="w-full flex items-center justify-center border border-purple-600 rounded-md bg-purple-500 hover:bg-purple-600 text-white transition-colors"
+                className="w-full flex items-center justify-center border border-purple-500 rounded-md bg-purple-400 hover:bg-purple-500 text-white transition-colors"
                 onClick={handleViewMoreCategories}
               >
                 <span 
-                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-600 transition-colors rounded-l-md"
+                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-500 transition-colors rounded-l-md"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleViewMoreCategories();
@@ -137,9 +131,9 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                 >
                   View More Categories Below
                 </span>
-                <span className="border-l border-purple-400 h-6"></span>
+                <span className="border-l border-purple-300 h-6"></span>
                 <span 
-                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-600 transition-colors rounded-r-md"
+                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-500 transition-colors rounded-r-md"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleAddNewCategory();
