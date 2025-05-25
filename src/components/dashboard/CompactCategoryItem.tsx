@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -145,10 +144,18 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     navigate(`/emails/${id}/${status}`);
   };
 
-  // Enhanced tooltip behavior with grace period
+  // Enhanced tooltip behavior with grace period and debugging
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
+    console.log('🔍 Status hover triggered:', {
+      status,
+      tooltipGracePeriod,
+      hoveredStatus,
+      isInGracePeriod: tooltipGracePeriod && hoveredStatus
+    });
+
     // If we're in a grace period and a tooltip is already open, ignore new hovers
     if (tooltipGracePeriod && hoveredStatus) {
+      console.log('🚫 Grace period active - ignoring hover for:', status);
       return;
     }
 
@@ -166,23 +173,28 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     };
 
     hoverTimeoutRef.current = setTimeout(() => {
+      console.log('✅ Opening tooltip for:', status);
       setTooltipPosition(position);
       setHoveredStatus(status);
       
       // Start grace period when tooltip opens
       setTooltipGracePeriod(true);
+      console.log('🛡️ Grace period started for 8 seconds');
       
       if (gracePeriodTimeoutRef.current) {
         clearTimeout(gracePeriodTimeoutRef.current);
       }
       
       gracePeriodTimeoutRef.current = setTimeout(() => {
+        console.log('⏰ Grace period ended');
         setTooltipGracePeriod(false);
       }, 8000); // 8 second grace period
     }, 800);
   }, [tooltipGracePeriod, hoveredStatus]);
 
   const handleStatusLeave = useCallback(() => {
+    console.log('👋 Status leave triggered, grace period active:', tooltipGracePeriod);
+    
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -192,15 +204,17 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     }
     
     hideTimeoutRef.current = setTimeout(() => {
+      console.log('🔒 Closing tooltip after delay');
       setHoveredStatus(null);
       setTooltipGracePeriod(false);
       if (gracePeriodTimeoutRef.current) {
         clearTimeout(gracePeriodTimeoutRef.current);
       }
     }, 8300); // Increased from 300ms to 8300ms (8 seconds + 300ms) for better user experience with auto-scroll
-  }, []);
+  }, [tooltipGracePeriod]);
 
   const handleTooltipClose = useCallback(() => {
+    console.log('❌ Manual tooltip close');
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
