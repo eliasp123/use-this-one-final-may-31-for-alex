@@ -53,7 +53,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
         </div>
 
         {/* Metadata section with left-aligned text */}
-        <div className="p-4 pt-3 space-y-3 flex-1">
+        <div className="pl-4 pr-4 pt-3 space-y-3 flex-1">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <User className="h-4 w-4 text-gray-400" />
