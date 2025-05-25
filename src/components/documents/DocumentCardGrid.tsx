@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
-import { Button } from '../ui/button';
 import { Download, Calendar, User, Building } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { getFileTypeInfo, formatDate } from '../../utils/fileTypeUtils';
@@ -67,22 +66,22 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Single bottom action section */}
-        <div className="border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-          <div className="flex">
-            <Button
-              variant="ghost"
-              onClick={() => navigate(`/email/${attachment.emailId}`)}
-              className="flex-1 h-12 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-none rounded-bl-2xl border-r border-gray-200"
-            >
-              View Email
-            </Button>
-            <div 
-              className={`flex-1 h-12 ${fileInfo.badgeColor} flex items-center justify-center cursor-pointer hover:opacity-90 rounded-none rounded-br-2xl`}
-            >
-              <Download className="h-4 w-4 mr-2 text-white" />
-              <span className="text-sm font-medium text-white">Download</span>
-            </div>
+        {/* Single integrated action row - similar to filter row philosophy */}
+        <div className="bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 shadow-sm flex items-stretch h-12">
+          {/* View Email section */}
+          <button
+            onClick={() => navigate(`/email/${attachment.emailId}`)}
+            className="flex items-center justify-center flex-1 transition-all duration-200 h-full text-gray-700 hover:bg-gray-100 rounded-bl-2xl"
+          >
+            <span className="text-sm font-medium">View Email</span>
+          </button>
+
+          {/* Download section with file type color */}
+          <div 
+            className={`${fileInfo.badgeColor} text-white flex items-center justify-center flex-1 cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Download</span>
           </div>
         </div>
       </CardContent>
