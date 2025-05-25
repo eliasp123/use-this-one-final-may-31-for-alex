@@ -31,7 +31,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[372px]">
+    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[340px]">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with icon, file name, and status badge in same row */}
         <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center gap-0.5`}>
@@ -53,7 +53,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
         </div>
 
         {/* Metadata section with left-aligned text - vertically centered with increased height */}
-        <div className="pl-4 pr-4 flex-1 flex items-center py-5">
+        <div className="pl-4 pr-4 flex-1 flex items-center py-3">
           <div className="space-y-2 ml-12">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <User className="h-4 w-4 text-gray-400" />
