@@ -31,7 +31,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <Button
           onClick={() => navigate('/')}
           variant="outline"
-          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
+          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base"
         >
           <Mail className="mr-2 h-4 w-4" />
           Return to Communication Hub
@@ -40,7 +40,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <Button
           onClick={() => setShowCalendar(true)}
           variant="outline"
-          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
+          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base"
         >
           <Calendar className="mr-2 h-4 w-4" />
           Calendar
