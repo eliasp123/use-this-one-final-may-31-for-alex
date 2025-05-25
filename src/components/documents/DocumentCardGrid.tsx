@@ -31,26 +31,25 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[280px]">
+    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[292px]">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with file icon, name, and centered status badge */}
-        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex flex-col items-center`}>
-          {/* Centered status badge */}
-          <div className="mb-3">
-            <StatusBadge 
-              direction={attachment.direction} 
-              statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
-            />
+        {/* Top section with centered icon, file name, and status badge */}
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex flex-col items-center justify-center text-center`}>
+          {/* File icon */}
+          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+            <fileInfo.icon className="h-6 w-6 text-white" />
           </div>
           
-          <div className="flex items-center gap-3 flex-1 min-w-0 w-full">
-            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-              <fileInfo.icon className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="font-medium text-white text-sm leading-tight line-clamp-2">
-              {attachment.name}
-            </h3>
-          </div>
+          {/* File name */}
+          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 mb-3">
+            {attachment.name}
+          </h3>
+          
+          {/* Status badge */}
+          <StatusBadge 
+            direction={attachment.direction} 
+            statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
+          />
         </div>
 
         {/* Metadata section with centered text */}
