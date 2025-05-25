@@ -31,7 +31,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-lg hover:shadow-gray-300/25 transition-all duration-300 ease-out h-[340px] cursor-pointer">
+    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out h-[340px] cursor-pointer">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with icon and file name - removed status badge */}
         <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center gap-0.5`}>
