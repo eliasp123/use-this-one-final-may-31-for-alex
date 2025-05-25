@@ -151,23 +151,26 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     setSelectedDateAppointments([appointment]);
   };
 
-  // Get upcoming appointments from TODAY - FIXED to properly show 4 weeks (28 days)
+  // FIXED: Get upcoming appointments from TODAY to show exactly 4 weeks (28 days)
   const getUpcomingAppointments = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
     
-    // Fixed: Changed from 14 days to 28 days (4 weeks)
-    const fourWeeksFromNow = new Date(today);
-    fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
-    fourWeeksFromNow.setHours(23, 59, 59, 999);
+    // Calculate 4 weeks from today (28 days)
+    const fourWeeksFromToday = new Date(today);
+    fourWeeksFromToday.setDate(fourWeeksFromToday.getDate() + 28);
     
-    return APPOINTMENTS
+    console.log('Filtering appointments between:', today, 'and', fourWeeksFromToday);
+    
+    const filtered = APPOINTMENTS
       .filter(app => {
-        const appDate = new Date(app.date);
-        appDate.setHours(0, 0, 0, 0);
-        return appDate > today && appDate <= fourWeeksFromNow;
+        const appDate = new Date(app.date.getFullYear(), app.date.getMonth(), app.date.getDate());
+        return appDate >= today && appDate <= fourWeeksFromToday;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    console.log('Found upcoming appointments:', filtered.length);
+    return filtered;
   };
 
   const upcomingAppointments = getUpcomingAppointments();
