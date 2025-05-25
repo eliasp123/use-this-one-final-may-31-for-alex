@@ -77,7 +77,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   return (
     <>
-      {/* Priority Categories Section */}
+      {/* Priority Categories Section - Full Cards */}
       {priorityCategories.length > 0 && (
         <div className="space-y-8 sm:space-y-12 mb-12">
           <div className="text-center">
@@ -96,7 +96,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
-      {/* Non-Priority Categories Section */}
+      {/* Non-Priority Categories Section - Compact Accordion Items */}
       {nonPriorityCategories.length > 0 && (
         <div className="space-y-6">
           <div className="text-center">
