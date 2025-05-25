@@ -85,7 +85,7 @@ const DocumentsFilterRow = ({
             onClick={() => onViewModeChange('grid')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               viewMode === 'grid' 
-                ? "text-blue-600 bg-blue-50" 
+                ? "text-white bg-purple-500" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -98,7 +98,7 @@ const DocumentsFilterRow = ({
             onClick={() => onViewModeChange('list')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               viewMode === 'list' 
-                ? "text-blue-600 bg-blue-50" 
+                ? "text-white bg-purple-500" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -111,7 +111,7 @@ const DocumentsFilterRow = ({
             onClick={() => onDirectionFilterChange('all')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               directionFilter === 'all' 
-                ? "text-blue-600 bg-blue-50" 
+                ? "text-white bg-purple-500" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -123,7 +123,7 @@ const DocumentsFilterRow = ({
             onClick={() => onDirectionFilterChange('received')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               directionFilter === 'received' 
-                ? "text-green-600 bg-green-50" 
+                ? "text-white bg-purple-500" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -136,7 +136,7 @@ const DocumentsFilterRow = ({
             onClick={() => onDirectionFilterChange('sent')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full rounded-r-2xl ${
               directionFilter === 'sent' 
-                ? "text-orange-600 bg-orange-50" 
+                ? "text-white bg-purple-500" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
