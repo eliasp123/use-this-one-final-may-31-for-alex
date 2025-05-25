@@ -28,12 +28,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   const navigate = useNavigate();
   const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
 
-  // Calculate smart positioning with preference for left-right placement
+  // Calculate smart positioning with preference for left-right placement and minimal gap
   useEffect(() => {
     const tooltipHeight = 400; // Approximate height of tooltip
     const tooltipWidth = 480; // Max width from the component
     const margin = 20; // Safety margin from screen edges
-    const gap = 12; // Gap between trigger and tooltip
+    const gap = 2; // Minimal gap to create "unfolding" effect
 
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
@@ -48,11 +48,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
     // Check if we can fit horizontally (preferred)
     if (spaceRight >= tooltipWidth + gap) {
-      // Place to the right
+      // Place to the right - unfold from right edge
       placement = 'right';
       xPos = position.x + gap;
     } else if (spaceLeft >= tooltipWidth + gap) {
-      // Place to the left
+      // Place to the left - unfold from left edge
       placement = 'left';
       xPos = position.x - tooltipWidth - gap;
     } else {
@@ -73,10 +73,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       }
     }
 
-    // For horizontal placement, center vertically and keep within bounds
+    // For horizontal placement, align with the card's top edge and keep within bounds
     if (placement === 'left' || placement === 'right') {
-      const halfHeight = tooltipHeight / 2;
-      yPos = position.y - halfHeight;
+      // Start aligned with the card top for "unfolding" effect
+      yPos = position.y;
       
       // Keep within vertical bounds
       if (yPos < margin) {
@@ -118,11 +118,19 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   const handleEmailClick = (emailId: string) => {
     navigate(`/emails/${category}/all`);
     onClose();
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
   };
 
   const handleViewAll = () => {
     navigate(`/emails/${category}/${getStatusRoute()}`);
     onClose();
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
   };
 
   const truncateText = (text: string, maxLength: number) => {
@@ -165,12 +173,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return null;
   };
 
-  // Calculate transform based on placement
+  // Calculate transform based on placement - no transform for "unfolding" effect
   const getTransform = () => {
     switch (smartPosition.placement) {
       case 'left':
       case 'right':
-        return 'translate(0, 0)'; // No transform needed for horizontal placement
+        return 'translate(0, 0)'; // No transform for seamless unfolding
       case 'bottom':
         return 'translate(-50%, 8px)';
       case 'top':
