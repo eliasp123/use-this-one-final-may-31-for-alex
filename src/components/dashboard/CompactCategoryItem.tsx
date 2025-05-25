@@ -32,10 +32,13 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [isHoveringHeader, setIsHoveringHeader] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
   const collapseTimeoutRef = useRef<NodeJS.Timeout>();
   const scrollLockTimeoutRef = useRef<NodeJS.Timeout>();
+  const headerHoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const navigationTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
@@ -91,9 +94,24 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       }, 150); // Delay matches half the animation duration
     }
   }, [isExpanded]);
+
+  // Clean up all timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+      if (collapseTimeoutRef.current) clearTimeout(collapseTimeoutRef.current);
+      if (scrollLockTimeoutRef.current) clearTimeout(scrollLockTimeoutRef.current);
+      if (headerHoverTimeoutRef.current) clearTimeout(headerHoverTimeoutRef.current);
+      if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
+    };
+  }, []);
   
   const handleCardClick = () => {
-    navigate(`/emails/${id}/all`);
+    // Only navigate if we're not in a hover interaction state
+    if (!isHoveringHeader) {
+      navigate(`/emails/${id}/all`);
+    }
   };
 
   const handleStatusClick = (status: string, e: React.MouseEvent) => {
@@ -116,23 +134,53 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     // Don't expand during scroll lock
     if (isScrollLocked) return;
     
-    // Reset manual control to allow repeated hover opening
-    setIsManuallyControlled(false);
-    setIsExpanded(true);
+    setIsHoveringHeader(true);
     
-    // Clear any pending auto-collapse
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current);
+    // Clear any existing header timeout
+    if (headerHoverTimeoutRef.current) {
+      clearTimeout(headerHoverTimeoutRef.current);
     }
+    
+    // Clear any navigation timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    
+    // Wait longer before expanding to give user time to process
+    headerHoverTimeoutRef.current = setTimeout(() => {
+      // Reset manual control to allow repeated hover opening
+      setIsManuallyControlled(false);
+      setIsExpanded(true);
+      
+      // Clear any pending auto-collapse
+      if (collapseTimeoutRef.current) {
+        clearTimeout(collapseTimeoutRef.current);
+      }
+    }, 1000); // Wait 1 second before expanding
   };
 
   const handleHeaderLeave = () => {
+    setIsHoveringHeader(false);
+    
+    // Clear header hover timeout to prevent expansion
+    if (headerHoverTimeoutRef.current) {
+      clearTimeout(headerHoverTimeoutRef.current);
+    }
+    
     // Only auto-collapse if not manually controlled and no tooltip is showing
     if (!isManuallyControlled && !hoveredStatus) {
       collapseTimeoutRef.current = setTimeout(() => {
         setIsExpanded(false);
-      }, 300);
+      }, 2000); // Wait 2 seconds before collapsing
     }
+    
+    // Set up navigation timeout - only navigate if user stays away
+    navigationTimeoutRef.current = setTimeout(() => {
+      if (!isHoveringHeader && !hoveredStatus) {
+        // User has left and stayed away - safe to allow navigation on next click
+        setIsHoveringHeader(false);
+      }
+    }, 3000); // Wait 3 seconds before allowing navigation
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
@@ -161,7 +209,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 800);
+    }, 1200); // Longer delay before showing tooltip
   }, [isScrollLocked]);
 
   const handleStatusLeave = useCallback(() => {
@@ -175,7 +223,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       clearTimeout(hideTimeoutRef.current);
     }
     
-    // Delay before hiding to allow moving to tooltip
+    // Longer delay before hiding to allow moving to tooltip
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
       
@@ -183,9 +231,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       if (!isManuallyControlled) {
         collapseTimeoutRef.current = setTimeout(() => {
           setIsExpanded(false);
-        }, 300);
+        }, 2000); // Longer delay before collapsing
       }
-    }, 1200);
+    }, 1500); // Longer delay before hiding
   }, [isManuallyControlled]);
 
   const handleTooltipClose = useCallback(() => {
@@ -206,7 +254,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     if (!isManuallyControlled) {
       collapseTimeoutRef.current = setTimeout(() => {
         setIsExpanded(false);
-      }, 300);
+      }, 2000); // Longer delay before collapsing
     }
   }, [isManuallyControlled]);
 
