@@ -12,7 +12,7 @@ interface CalendarHoverOverlayProps {
 const CalendarHoverOverlay = ({ appointments, selectedDate }: CalendarHoverOverlayProps) => {
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (targetDate: Date) => {
@@ -23,104 +23,101 @@ const CalendarHoverOverlay = ({ appointments, selectedDate }: CalendarHoverOverl
     );
   };
 
-  // Generate calendar grid for current month
-  const generateCalendarDays = () => {
-    if (!selectedDate) return [];
+  useEffect(() => {
+    if (!containerRef.current || !selectedDate) return;
 
-    const year = selectedDate.getFullYear();
-    const month = selectedDate.getMonth();
+    const container = containerRef.current;
     
-    // Get first day of month and how many days
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    
-    // Get starting day of week (0 = Sunday)
-    const startingDayOfWeek = firstDay.getDay();
-    
-    const days = [];
-    
-    // Add empty cells for days before month starts
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null);
-    }
-    
-    // Add all days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
-    
-    return days;
-  };
-
-  const calendarDays = generateCalendarDays();
-
-  const handleMouseEnter = (date: Date, event: React.MouseEvent) => {
-    const dayAppointments = getAppointmentsForDate(date);
-    if (dayAppointments.length > 0) {
-      setHoveredDate(date);
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-      setHoverPosition({
-        x: rect.left + rect.width / 2,
-        y: rect.top - 10
+    // Find all calendar day buttons
+    const handleMouseEvents = () => {
+      // Target the actual calendar buttons with more specific selectors
+      const calendarButtons = container.querySelectorAll('[role="gridcell"] button, .rdp-day, button[name^="day-"]');
+      console.log('Found calendar buttons:', calendarButtons.length);
+      
+      calendarButtons.forEach((button) => {
+        const buttonElement = button as HTMLButtonElement;
+        
+        // Extract date from the button
+        const dateText = buttonElement.textContent?.trim();
+        if (!dateText || isNaN(parseInt(dateText))) return;
+        
+        const dayNumber = parseInt(dateText);
+        const buttonDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dayNumber);
+        
+        // Check if this date has appointments
+        const dayAppointments = getAppointmentsForDate(buttonDate);
+        if (dayAppointments.length === 0) return;
+        
+        console.log(`Setting up hover for date ${dayNumber} with ${dayAppointments.length} appointments`);
+        
+        const handleMouseEnter = (e: Event) => {
+          console.log('Mouse entered date:', dayNumber);
+          const target = e.target as HTMLElement;
+          const rect = target.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          
+          setHoveredDate(buttonDate);
+          setHoverPosition({
+            x: rect.left - containerRect.left + rect.width / 2,
+            y: rect.top - containerRect.top
+          });
+        };
+        
+        const handleMouseLeave = () => {
+          console.log('Mouse left date:', dayNumber);
+          setHoveredDate(null);
+        };
+        
+        // Remove existing listeners to avoid duplicates
+        buttonElement.removeEventListener('mouseenter', handleMouseEnter);
+        buttonElement.removeEventListener('mouseleave', handleMouseLeave);
+        
+        // Add new listeners
+        buttonElement.addEventListener('mouseenter', handleMouseEnter);
+        buttonElement.addEventListener('mouseleave', handleMouseLeave);
       });
-    }
-  };
+    };
 
-  const handleMouseLeave = () => {
-    setHoveredDate(null);
-  };
+    // Initial setup
+    handleMouseEvents();
+    
+    // Re-setup when calendar re-renders (month changes, etc.)
+    const observer = new MutationObserver(() => {
+      setTimeout(handleMouseEvents, 100); // Small delay to ensure DOM is updated
+    });
+    
+    observer.observe(container, { 
+      childList: true, 
+      subtree: true 
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [selectedDate, appointments]);
 
   const hoveredAppointments = hoveredDate ? getAppointmentsForDate(hoveredDate) : [];
 
   return (
     <>
-      {/* Invisible overlay that matches calendar grid */}
+      {/* Container to attach event listeners */}
       <div 
-        ref={overlayRef}
+        ref={containerRef}
         className="absolute inset-0 pointer-events-none"
-        style={{ 
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gridTemplateRows: 'auto repeat(6, 1fr)',
-          gap: '2px',
-          padding: '12px',
-          paddingTop: '120px' // Account for calendar header
-        }}
+        style={{ zIndex: 1 }}
       >
-        {/* Header row - days of week */}
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="h-10" />
-        ))}
-        
-        {/* Calendar days */}
-        {calendarDays.map((date, index) => {
-          if (!date) {
-            return <div key={`empty-${index}`} className="h-14" />;
-          }
-
-          const dayAppointments = getAppointmentsForDate(date);
-          const hasAppointments = dayAppointments.length > 0;
-
-          return (
-            <div
-              key={date.toISOString()}
-              className={`h-14 pointer-events-auto cursor-pointer ${hasAppointments ? 'relative' : ''}`}
-              onMouseEnter={(e) => handleMouseEnter(date, e)}
-              onMouseLeave={handleMouseLeave}
-            />
-          );
-        })}
+        {/* This div captures the calendar area for event delegation */}
       </div>
 
       {/* Hover popup */}
       {hoveredDate && hoveredAppointments.length > 0 && (
         <div
-          className="fixed z-[99999] bg-white border border-gray-200 shadow-xl rounded-lg p-4 w-80 pointer-events-none"
+          className="fixed pointer-events-none bg-white border border-gray-200 shadow-xl rounded-lg p-4 w-80"
           style={{
-            left: `${hoverPosition.x - 160}px`, // Center horizontally
+            left: `${hoverPosition.x}px`,
             top: `${hoverPosition.y - 20}px`,
-            transform: 'translateY(-100%)'
+            transform: 'translate(-50%, -100%)',
+            zIndex: 99999
           }}
         >
           <div className="space-y-3">
