@@ -15,6 +15,7 @@ interface AppointmentFormProps {
     organization: string;
     notes: string;
     to: string;
+    sendInvitation: boolean;
   }) => void;
   onCancel: () => void;
   onDateChange?: (selectedDate: Date | undefined) => void;
@@ -33,6 +34,7 @@ const AppointmentForm = ({
   const [organization, setOrganization] = useState('');
   const [to, setTo] = useState('');
   const [notes, setNotes] = useState('');
+  const [sendInvitation, setSendInvitation] = useState(false);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   // Get appointments for the selected date
@@ -60,7 +62,8 @@ const AppointmentForm = ({
         title: title.trim(),
         organization: organization.trim(),
         notes: notes.trim(),
-        to: to.trim()
+        to: to.trim(),
+        sendInvitation
       });
     }
   };
@@ -87,6 +90,8 @@ const AppointmentForm = ({
             setTo={setTo}
             notes={notes}
             setNotes={setNotes}
+            sendInvitation={sendInvitation}
+            setSendInvitation={setSendInvitation}
           />
         </div>
 
