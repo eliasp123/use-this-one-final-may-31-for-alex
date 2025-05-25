@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface ToFieldAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
+  organization?: string;
   placeholder?: string;
   className?: string;
 }
