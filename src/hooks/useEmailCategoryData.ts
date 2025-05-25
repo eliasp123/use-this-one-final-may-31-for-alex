@@ -45,11 +45,13 @@ export const useEmailCategoryData = () => {
   const [emailCategories, setEmailCategories] = useState<EmailCategory[]>([]);
 
   const loadCategories = () => {
+    console.log('🔄 Loading categories...');
     setTotalUnread(getUnreadEmails().length);
     setTotalPending(getPendingEmails().length);
     setTotalUnresponded(getUnrespondedEmails().length);
     
     const allCategories = getAllCategories();
+    console.log('📂 All categories from utils:', allCategories);
     
     const categories = Object.entries(allCategories).map(([id, categoryData]) => {
       const unreadCount = getUnreadEmails(id).length;
@@ -96,6 +98,7 @@ export const useEmailCategoryData = () => {
       };
     });
     
+    console.log('✅ Categories loaded:', categories.length, categories.map(c => c.title));
     setEmailCategories(categories);
   };
 
