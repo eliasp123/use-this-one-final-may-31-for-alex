@@ -61,16 +61,12 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const priorityCategories = filteredCategories.filter(cat => cat.unread > 0 || cat.pending > 0);
   const nonPriorityCategories = filteredCategories.filter(cat => cat.unread === 0 && cat.pending === 0);
   
-  // For pagination, we only paginate the priority categories if there are many
-  // Show up to 6 priority cards (2 rows), then show non-priority as compact items
-  const maxPriorityCards = 6;
-  const currentPriorityCategories = priorityCategories.slice(0, maxPriorityCards);
-  
-  // Split the current priority categories into rows of 3 for consistent spacing
-  const priorityRows = [];
-  for (let i = 0; i < currentPriorityCategories.length; i += 3) {
-    priorityRows.push(currentPriorityCategories.slice(i, i + 3));
-  }
+  console.log('Priority split:', {
+    priorityCount: priorityCategories.length,
+    nonPriorityCount: nonPriorityCategories.length,
+    priorityCategories: priorityCategories.map(c => ({ id: c.id, unread: c.unread, pending: c.pending })),
+    nonPriorityCategories: nonPriorityCategories.map(c => ({ id: c.id, unread: c.unread, pending: c.pending }))
+  });
   
   // Handle page change (only used when showPagination is true and no external currentPage)
   const handlePageChange = (page: number) => {
@@ -83,22 +79,20 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     <>
       {/* Priority Categories Section */}
       {priorityCategories.length > 0 && (
-        <div className="space-y-8 sm:space-y-12 mb-8">
+        <div className="space-y-8 sm:space-y-12 mb-12">
           <div className="text-center">
             <h2 className="text-lg font-medium text-gray-800 mb-2">Needs Attention</h2>
             <p className="text-sm text-gray-600">Categories with unread messages or pending replies</p>
           </div>
           
-          {priorityRows.map((row, rowIndex) => (
-            <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-              {row.map((category) => (
-                <EmailCategoryCard
-                  key={category.id}
-                  category={category}
-                />
-              ))}
-            </div>
-          ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            {priorityCategories.map((category) => (
+              <EmailCategoryCard
+                key={category.id}
+                category={category}
+              />
+            ))}
+          </div>
         </div>
       )}
 
@@ -125,16 +119,6 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       {filteredCategories.length === 0 && searchQuery.trim() && (
         <div className="text-center py-12">
           <p className="text-gray-500">No categories found matching your search.</p>
-        </div>
-      )}
-      
-      {/* Pagination - Only show if showPagination is true and we have many priority categories */}
-      {showPagination && priorityCategories.length > maxPriorityCards && (
-        <div className="mt-8 sm:mt-12 text-center">
-          <p className="text-sm text-gray-600">
-            Showing top {maxPriorityCards} priority categories. 
-            {priorityCategories.length - maxPriorityCards} more categories need attention.
-          </p>
         </div>
       )}
     </>
