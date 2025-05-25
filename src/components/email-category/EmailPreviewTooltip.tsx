@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -27,38 +26,70 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   categoryColor
 }) => {
   const navigate = useNavigate();
-  const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'top' });
+  const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
 
-  // Calculate smart positioning based on available screen space
+  // Calculate smart positioning with preference for left-right placement
   useEffect(() => {
     const tooltipHeight = 400; // Approximate height of tooltip
     const tooltipWidth = 480; // Max width from the component
     const margin = 20; // Safety margin from screen edges
-    const gap = 8; // Gap between trigger and tooltip
+    const gap = 12; // Gap between trigger and tooltip
 
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    // Determine vertical placement
-    const spaceAbove = position.y - margin;
-    const spaceBelow = viewportHeight - position.y - margin;
-    const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
-
-    // Determine horizontal centering with bounds checking
-    let xPos = position.x;
-    const halfWidth = tooltipWidth / 2;
+    // Determine horizontal placement first (preferred)
+    const spaceRight = viewportWidth - position.x - margin;
+    const spaceLeft = position.x - margin;
     
-    // Keep tooltip within horizontal bounds
-    if (xPos - halfWidth < margin) {
-      xPos = halfWidth + margin;
-    } else if (xPos + halfWidth > viewportWidth - margin) {
-      xPos = viewportWidth - halfWidth - margin;
+    let placement = 'right';
+    let xPos = position.x;
+    let yPos = position.y;
+
+    // Check if we can fit horizontally (preferred)
+    if (spaceRight >= tooltipWidth + gap) {
+      // Place to the right
+      placement = 'right';
+      xPos = position.x + gap;
+    } else if (spaceLeft >= tooltipWidth + gap) {
+      // Place to the left
+      placement = 'left';
+      xPos = position.x - tooltipWidth - gap;
+    } else {
+      // Fall back to vertical placement
+      const spaceAbove = position.y - margin;
+      const spaceBelow = viewportHeight - position.y - margin;
+      const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
+      
+      placement = shouldPlaceBelow ? 'bottom' : 'top';
+      xPos = position.x;
+      
+      // Keep tooltip within horizontal bounds for vertical placement
+      const halfWidth = tooltipWidth / 2;
+      if (xPos - halfWidth < margin) {
+        xPos = halfWidth + margin;
+      } else if (xPos + halfWidth > viewportWidth - margin) {
+        xPos = viewportWidth - halfWidth - margin;
+      }
+    }
+
+    // For horizontal placement, center vertically and keep within bounds
+    if (placement === 'left' || placement === 'right') {
+      const halfHeight = tooltipHeight / 2;
+      yPos = position.y - halfHeight;
+      
+      // Keep within vertical bounds
+      if (yPos < margin) {
+        yPos = margin;
+      } else if (yPos + tooltipHeight > viewportHeight - margin) {
+        yPos = viewportHeight - tooltipHeight - margin;
+      }
     }
 
     setSmartPosition({
       x: xPos,
-      y: position.y,
-      placement: shouldPlaceBelow ? 'bottom' : 'top'
+      y: yPos,
+      placement: placement as 'top' | 'bottom' | 'left' | 'right'
     });
   }, [position]);
 
@@ -132,14 +163,20 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   if (emails.length === 0) {
     return null;
-  }
+  };
 
-  // Calculate transform based on placement with improved gap handling
+  // Calculate transform based on placement
   const getTransform = () => {
-    if (smartPosition.placement === 'bottom') {
-      return 'translate(-50%, 8px)'; // Smaller gap to reduce mouse travel distance
+    switch (smartPosition.placement) {
+      case 'left':
+      case 'right':
+        return 'translate(0, 0)'; // No transform needed for horizontal placement
+      case 'bottom':
+        return 'translate(-50%, 8px)';
+      case 'top':
+      default:
+        return 'translate(-50%, calc(-100% - 8px))';
     }
-    return 'translate(-50%, calc(-100% - 8px))'; // Smaller gap for consistency
   };
 
   return (
@@ -149,7 +186,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         left: `${smartPosition.x}px`,
         top: `${smartPosition.y}px`,
         transform: getTransform(),
-        position: 'fixed' // Ensure it's truly fixed and won't affect layout
+        position: 'fixed'
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave || onClose}
