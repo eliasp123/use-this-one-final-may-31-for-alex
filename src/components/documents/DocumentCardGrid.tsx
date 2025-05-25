@@ -48,27 +48,35 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
 
         {/* Metadata section with left-aligned text - vertically centered with increased height */}
         <div className="pl-4 pr-4 flex-1 flex items-center py-3">
-          <div className="space-y-2 ml-12">
+          <div className="space-y-2" style={{ marginLeft: '12px' }}>
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <User className="h-4 w-4 text-gray-400" />
+              <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
+                <User className="h-4 w-4 text-gray-400" />
+              </div>
               <span className="font-medium text-gray-600">From:</span>
               <span>{attachment.senderName}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Building className="h-4 w-4 text-gray-400" />
+              <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
+                <Building className="h-4 w-4 text-gray-400" />
+              </div>
               <span>{attachment.senderOrganization}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Calendar className="h-4 w-4 text-gray-400" />
+              <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
+                <Calendar className="h-4 w-4 text-gray-400" />
+              </div>
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
             {/* Status indicator with arrow icon */}
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              {attachment.direction === 'received' ? (
-                <ArrowDown className="h-4 w-4 text-gray-400" />
-              ) : (
-                <ArrowUp className="h-4 w-4 text-gray-400" />
-              )}
+              <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
+                {attachment.direction === 'received' ? (
+                  <ArrowDown className="h-4 w-4 text-gray-400" />
+                ) : (
+                  <ArrowUp className="h-4 w-4 text-gray-400" />
+                )}
+              </div>
               <span className="font-bold text-gray-500">
                 {attachment.direction === 'received' ? 'Received' : 'Sent'}
               </span>
