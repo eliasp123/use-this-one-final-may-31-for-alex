@@ -52,7 +52,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           
           {/* New ribbon - shows when there are unread messages */}
           {unread > 0 && (
-            <div className="ml-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
+            <div className="ml-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
               NEW
             </div>
           )}
