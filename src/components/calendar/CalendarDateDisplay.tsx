@@ -8,8 +8,6 @@ import { Plus, X, Clock, Building } from 'lucide-react';
 import AppointmentForm from './AppointmentForm';
 import { Appointment } from '../../types/appointment';
 import { createPortal } from 'react-dom';
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
 
 interface CalendarDateDisplayProps {
   date: Date | undefined;
@@ -21,6 +19,8 @@ interface CalendarDateDisplayProps {
 
 const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment, appointments }: CalendarDateDisplayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (targetDate: Date) => {
@@ -31,95 +31,39 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     );
   };
 
-  // Custom Day component with hover functionality
-  const CustomDay = ({ date: dayDate, ...props }: any) => {
-    const dateString = format(dayDate, 'yyyy-MM-dd');
-    const dayAppointments = getAppointmentsForDate(dayDate);
-    const hasAppointments = dayAppointments.length > 0;
+  // Handle mouse events on calendar
+  const handleCalendarMouseOver = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const dayButton = target.closest('[role="gridcell"] button');
+    
+    if (dayButton && dayButton.getAttribute('aria-label')) {
+      const ariaLabel = dayButton.getAttribute('aria-label');
+      if (ariaLabel) {
+        try {
+          // Parse the date from aria-label (format varies by locale)
+          const dateMatch = ariaLabel.match(/(\d{1,2})/);
+          if (dateMatch && date) {
+            const dayNumber = parseInt(dateMatch[1]);
+            const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
+            
+            if (getAppointmentsForDate(hoveredDateObj).length > 0) {
+              const rect = dayButton.getBoundingClientRect();
+              setTooltipPosition({
+                x: rect.left + rect.width / 2,
+                y: rect.top - 10
+              });
+              setHoveredDate(hoveredDateObj);
+            }
+          }
+        } catch (error) {
+          console.log('Could not parse date from aria-label:', ariaLabel);
+        }
+      }
+    }
+  };
 
-    console.log(`Rendering day ${dayDate.getDate()}, has appointments: ${hasAppointments}`);
-
-    return (
-      <div className="relative">
-        <button
-          {...props}
-          data-tooltip-id={hasAppointments ? `tooltip-${dateString}` : undefined}
-          data-tooltip-place="top"
-          className={`h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100 ${
-            hasAppointments ? 'bg-orange-200 text-gray-600' : ''
-          } ${
-            props.selected ? 'bg-green-500 hover:bg-green-600 text-white' : ''
-          } ${
-            props.today ? 'bg-green-500 hover:bg-green-600 text-white' : ''
-          }`}
-          style={{ pointerEvents: 'auto' }}
-        >
-          {dayDate.getDate()}
-        </button>
-        
-        {hasAppointments && (
-          <Tooltip 
-            id={`tooltip-${dateString}`} 
-            className="custom-appointment-tooltip"
-            style={{ 
-              zIndex: 99999,
-              backgroundColor: 'white',
-              color: '#333',
-              border: '1px solid #e5e7eb',
-              borderRadius: '8px',
-              padding: '12px',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              maxWidth: '300px'
-            }}
-          >
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-gray-800">
-                  {format(dayDate, 'EEEE, MMMM d')}
-                </h4>
-                <span className="text-xs text-gray-500">
-                  {dayAppointments.length} appointment{dayAppointments.length > 1 ? 's' : ''}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {dayAppointments.map(appointment => (
-                  <div key={appointment.id} className="p-2 bg-gray-50 rounded border border-gray-100">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className={`w-2 h-2 rounded-full ${appointment.color}`}></div>
-                      <h5 className="font-medium text-amber-700 text-sm">{appointment.title}</h5>
-                    </div>
-                    <div className="space-y-1 text-xs text-gray-600">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="h-3 w-3" />
-                        <span>{appointment.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Building className="h-3 w-3" />
-                        <span>{appointment.organization}</span>
-                      </div>
-                      {appointment.to && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-gray-400">with</span>
-                          <span>{appointment.to}</span>
-                        </div>
-                      )}
-                    </div>
-                    {appointment.notes && (
-                      <div className="mt-1 p-1 bg-amber-50 rounded text-xs text-gray-700">
-                        {appointment.notes.length > 40 
-                          ? `${appointment.notes.substring(0, 40)}...` 
-                          : appointment.notes
-                        }
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Tooltip>
-        )}
-      </div>
-    );
+  const handleCalendarMouseLeave = () => {
+    setHoveredDate(null);
   };
 
   const handleSaveAppointment = (appointmentData: {
@@ -167,20 +111,89 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               </div>
             </div>
             
-            <div className="w-full md:w-2/3 p-4 bg-white relative" style={{ pointerEvents: 'auto' }}>
+            <div 
+              className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
+              style={{ pointerEvents: 'auto' }}
+              onMouseOver={handleCalendarMouseOver}
+              onMouseLeave={handleCalendarMouseLeave}
+            >
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={onDateSelect}
-                className="w-full pointer-events-auto"
-                components={{
-                  Day: CustomDay
+                className="w-full pointer-events-auto min-w-[300px]"
+                modifiers={{
+                  hasAppointment: (day) => isDayWithAppointment(day)
+                }}
+                modifiersStyles={{
+                  hasAppointment: {
+                    backgroundColor: '#fed7aa',
+                    color: '#374151'
+                  }
                 }}
               />
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Tooltip */}
+      {hoveredDate && createPortal(
+        <div 
+          className="fixed z-[99999] bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[300px] pointer-events-none"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-800">
+                {format(hoveredDate, 'EEEE, MMMM d')}
+              </h4>
+              <span className="text-xs text-gray-500">
+                {getAppointmentsForDate(hoveredDate).length} appointment{getAppointmentsForDate(hoveredDate).length > 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="space-y-2">
+              {getAppointmentsForDate(hoveredDate).map(appointment => (
+                <div key={appointment.id} className="p-2 bg-gray-50 rounded border border-gray-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`w-2 h-2 rounded-full ${appointment.color}`}></div>
+                    <h5 className="font-medium text-amber-700 text-sm">{appointment.title}</h5>
+                  </div>
+                  <div className="space-y-1 text-xs text-gray-600">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-3 w-3" />
+                      <span>{appointment.time}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Building className="h-3 w-3" />
+                      <span>{appointment.organization}</span>
+                    </div>
+                    {appointment.to && (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-gray-400">with</span>
+                        <span>{appointment.to}</span>
+                      </div>
+                    )}
+                  </div>
+                  {appointment.notes && (
+                    <div className="mt-1 p-1 bg-amber-50 rounded text-xs text-gray-700">
+                      {appointment.notes.length > 40 
+                        ? `${appointment.notes.substring(0, 40)}...` 
+                        : appointment.notes
+                      }
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
 
       {/* Portal the dialog to document.body to avoid nesting forms */}
       {isDialogOpen && createPortal(
