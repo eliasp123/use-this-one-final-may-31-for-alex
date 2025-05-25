@@ -43,8 +43,8 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
       </div>
       
       <CardContent className="p-0 flex flex-col flex-1 min-h-0">
-        {/* Top section for selected date appointments - increased height to move divider down */}
-        <div className="p-4 h-52 overflow-y-auto">
+        {/* Top section for selected date appointments - increased height more to center divider */}
+        <div className="p-4 h-64 overflow-y-auto">
           <div className="space-y-3">
             {selectedAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -99,9 +99,9 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         <Separator className="bg-gray-600" />
 
         {/* Bottom section for upcoming appointments - decreased height */}
-        <div className="p-4 bg-gray-50 h-36">
+        <div className="p-4 bg-gray-50 h-24">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
-          <ScrollArea className="h-28">
+          <ScrollArea className="h-16">
             <div className="space-y-2 pr-4">
               {limitedUpcomingAppointments.length === 0 ? (
                 <p className="text-gray-500 text-xs">No upcoming appointments in the next 4 weeks</p>
