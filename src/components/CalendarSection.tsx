@@ -23,7 +23,7 @@ const CalendarSection = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-full">
       <h2 className="text-2xl font-light text-gray-800 text-center mb-8">Upcoming Appointments</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
