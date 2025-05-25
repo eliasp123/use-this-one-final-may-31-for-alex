@@ -48,7 +48,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     status: hoveredStatus || 'unread' 
   });
 
-  // Listen for scroll events to activate scroll lock
+  // Listen for scroll events to activate scroll lock - but don't affect tooltip visibility
   useEffect(() => {
     const handleScroll = () => {
       setIsScrollLocked(true);
@@ -71,14 +71,14 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     };
   }, []);
 
-  // Gentle auto-scroll into view when accordion expands
+  // Gentle auto-scroll into view when accordion expands - increased padding to 44px
   useEffect(() => {
     if (isExpanded && containerRef.current) {
       setTimeout(() => {
         if (containerRef.current) {
           const rect = containerRef.current.getBoundingClientRect();
           const viewportHeight = window.innerHeight;
-          const padding = 24; // Extra padding as requested
+          const padding = 44; // Increased from 24px to 44px for extra height
           
           // Check if the expanded accordion needs adjustment
           if (rect.bottom > viewportHeight - padding || rect.top < padding) {
@@ -141,10 +141,8 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     navigate(`/emails/${id}/${status}`);
   };
 
-  // Simple tooltip behavior without auto-scroll
+  // Tooltip behavior - removed scroll lock interference
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
-    if (isScrollLocked) return;
-    
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -162,7 +160,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       setTooltipPosition(position);
       setHoveredStatus(status);
     }, 800);
-  }, [isScrollLocked]);
+  }, []);
 
   const handleStatusLeave = useCallback(() => {
     if (hoverTimeoutRef.current) {
@@ -255,7 +253,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
               className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
               onClick={handleCardContentClick}
             >
-              {/* Stats with tooltip behavior (no auto-scroll) */}
+              {/* Stats with tooltip behavior */}
               <div className="space-y-4 sm:space-y-5">
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
@@ -317,8 +315,8 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         </div>
       </div>
 
-      {/* Email Preview Tooltip without auto-scroll */}
-      {hoveredStatus && previewEmails.length > 0 && !isScrollLocked && createPortal(
+      {/* Email Preview Tooltip - now persists during scroll */}
+      {hoveredStatus && previewEmails.length > 0 && createPortal(
         <div data-tooltip="email-preview">
           <EmailPreviewTooltip
             emails={previewEmails}
