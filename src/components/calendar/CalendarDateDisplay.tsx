@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -137,14 +136,15 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
         </CardContent>
       </Card>
 
-      {/* Tooltip */}
+      {/* Tooltip with higher z-index for modal contexts */}
       {hoveredDate && createPortal(
         <div 
-          className="fixed z-[99999] bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[300px] pointer-events-none"
+          className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[300px] pointer-events-none"
           style={{
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
-            transform: 'translate(-50%, -100%)'
+            transform: 'translate(-50%, -100%)',
+            zIndex: 99999
           }}
         >
           <div className="space-y-2">
