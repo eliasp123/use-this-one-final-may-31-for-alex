@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -173,7 +174,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
-    }, 300);
+    }, 8300); // Increased from 300ms to 8300ms (8 seconds + 300ms) for better user experience with auto-scroll
   }, []);
 
   const handleTooltipClose = useCallback(() => {
