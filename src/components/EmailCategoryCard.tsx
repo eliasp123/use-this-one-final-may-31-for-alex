@@ -1,9 +1,10 @@
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { useEmailPreview } from '../hooks/useEmailPreview';
+import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import EmailPreviewTooltip from './email-category/EmailPreviewTooltip';
 
 interface EmailCategory {
@@ -29,8 +30,11 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   
-  // Always show not responded line with 1 or 2 count
-  const notRespondedCount = Math.floor(Math.random() * 2) + 1; // Random count of 1 or 2
+  // Get the actual count of unresponded emails for this category
+  const { getFilteredUnrespondedEmails } = useFilteredEmailData();
+  const notRespondedCount = useMemo(() => {
+    return getFilteredUnrespondedEmails(id).length;
+  }, [id, getFilteredUnrespondedEmails]);
   
   // Get preview emails for the currently hovered status
   const { previewEmails } = useEmailPreview({ 
@@ -129,13 +133,13 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           
           <div 
             className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
-            onClick={(e) => handleStatusClick('unresponded', e)}
-            onMouseEnter={(e) => handleStatusHover('unresponded', e)}
+            onClick={(e) => handleStatusClick('no-response', e)}
+            onMouseEnter={(e) => notRespondedCount > 0 && handleStatusHover('unresponded', e)}
             onMouseLeave={handleStatusLeave}
           >
             <span className="text-gray-600">Has not responded yet</span>
-            <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105">
-              {notRespondedCount}
+            <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${notRespondedCount > 0 ? 'bg-red-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
+              {notRespondedCount > 0 ? notRespondedCount : "-"}
             </div>
           </div>
         </div>
@@ -168,6 +172,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           category={id}
           position={tooltipPosition}
           onClose={handleTooltipClose}
+          categoryColor={color}
         />,
         document.body
       )}

@@ -11,6 +11,7 @@ interface EmailPreviewTooltipProps {
   category: string;
   position: { x: number; y: number };
   onClose: () => void;
+  categoryColor: string;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -18,7 +19,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   status,
   category,
   position,
-  onClose
+  onClose,
+  categoryColor
 }) => {
   const navigate = useNavigate();
 
@@ -74,13 +76,24 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return truncateText(preview, 120);
   };
 
+  // Extract the base color from the gradient for background styling
+  const getBackgroundStyle = () => {
+    // Extract color names from gradient classes like "from-rose-400 to-rose-500"
+    const gradientMatch = categoryColor.match(/(from|to)-(\w+)-\d+/g);
+    if (gradientMatch && gradientMatch[0]) {
+      const colorName = gradientMatch[0].replace(/(from|to)-/, '').replace(/-\d+/, '');
+      return `bg-${colorName}-50 border-${colorName}-200`;
+    }
+    return 'bg-gray-50 border-gray-200';
+  };
+
   if (emails.length === 0) {
     return null;
   }
 
   return (
     <div 
-      className="fixed bg-white border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-50"
+      className={`fixed border rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-50 ${getBackgroundStyle()}`}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -99,7 +112,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           {emails.map(email => (
             <div 
               key={email.id}
-              className="p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 cursor-pointer transition-colors"
+              className="p-3 bg-white/70 rounded-lg border border-gray-100 hover:bg-white cursor-pointer transition-colors"
               onClick={() => handleEmailClick(email.id)}
             >
               <div className="flex items-center gap-2 mb-2">
