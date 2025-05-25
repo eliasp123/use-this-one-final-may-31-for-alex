@@ -92,8 +92,8 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
           <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
             {/* Header with styled sections */}
             <div className="flex items-stretch rounded-t-lg overflow-hidden">
-              {/* Left side - Add New Appointment with light orange gradient */}
-              <div className="bg-gradient-to-r from-orange-300 to-orange-400 px-6 py-4 flex-1">
+              {/* Left side - Add New Appointment with very light orange */}
+              <div className="bg-orange-50 px-6 py-4 flex-1">
                 <h2 className="text-2xl font-semibold text-gray-800">Add New Appointment</h2>
                 <p className="text-gray-700 mt-1">Fill in the details for your new appointment.</p>
               </div>
