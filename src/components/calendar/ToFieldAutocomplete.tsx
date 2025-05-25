@@ -181,7 +181,7 @@ const ToFieldAutocomplete = ({
   };
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative w-full">
       <Input
         ref={inputRef}
         id="to"
@@ -197,34 +197,23 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Force visible dropdown for debugging */}
+      {/* Suggestions dropdown */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto z-[10000]"
-          style={{
-            position: 'absolute',
-            backgroundColor: '#ffffff',
-            border: '2px solid #d1d5db',
-            borderRadius: '8px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            zIndex: 10000
-          }}
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          style={{ zIndex: 9999 }}
         >
-          <div className="p-2 text-xs text-gray-500 border-b border-gray-200">
-            Debug: {filteredSuggestions.length} suggestions found
-          </div>
           {filteredSuggestions.map((suggestion, index) => (
             <div
               key={`${suggestion}-${index}`}
               className={cn(
-                "px-4 py-3 text-lg cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
-                index === activeSuggestion ? 'bg-orange-100 text-orange-800 font-medium' : 'hover:bg-gray-50 text-gray-900'
+                "px-4 py-3 text-sm cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
+                index === activeSuggestion 
+                  ? 'bg-blue-50 text-blue-900 font-medium' 
+                  : 'hover:bg-gray-50 text-gray-900'
               )}
               onClick={() => handleSuggestionClick(suggestion)}
               onMouseEnter={() => setActiveSuggestion(index)}
-              style={{
-                backgroundColor: index === activeSuggestion ? '#fed7aa' : 'transparent'
-              }}
             >
               {suggestion}
             </div>
