@@ -123,54 +123,6 @@ const Index = () => {
                 Calendar
               </Button>
             </div>
-
-            {/* Pagination - Centered under action buttons */}
-            {totalPages > 1 && (
-              <div className="mt-8 sm:mt-12">
-                <Pagination className="">
-                  <PaginationContent>
-                    {currentPage > 1 && (
-                      <PaginationItem>
-                        <PaginationPrevious 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handlePageChange(currentPage - 1);
-                          }} 
-                        />
-                      </PaginationItem>
-                    )}
-                    
-                    {pageNumbers.map((page) => (
-                      <PaginationItem key={page}>
-                        <PaginationLink 
-                          href="#" 
-                          isActive={page === currentPage}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handlePageChange(page);
-                          }}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
-                    
-                    {currentPage < totalPages && (
-                      <PaginationItem>
-                        <PaginationNext 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handlePageChange(currentPage + 1);
-                          }} 
-                        />
-                      </PaginationItem>
-                    )}
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            )}
           </div>
         </div>
         
