@@ -131,10 +131,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     });
   }, [position]);
 
-  // Auto-scroll tooltip into view when it appears
+  // Auto-scroll tooltip into view when it becomes visible
   useEffect(() => {
-    if (tooltipRef && emails.length > 0) {
-      // Small delay to ensure the tooltip is fully rendered
+    if (tooltipRef) {
+      // Small delay to ensure the tooltip is fully rendered and positioned
       setTimeout(() => {
         if (tooltipRef) {
           tooltipRef.scrollIntoView({
@@ -143,9 +143,9 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             inline: 'nearest'
           });
         }
-      }, 100);
+      }, 150); // Slightly longer delay to ensure positioning is complete
     }
-  }, [tooltipRef, emails.length]);
+  }, [tooltipRef]); // Trigger when tooltip ref is available (tooltip becomes visible)
 
   const getStatusLabel = () => {
     switch (status) {
