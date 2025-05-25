@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -90,18 +89,18 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       {/* Portal the dialog to document.body to avoid nesting forms */}
       {isDialogOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl border-2 border-gray-600 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
+          <div className="bg-white rounded-lg shadow-xl border-2 border-gray-600 w-[90vw] max-w-[1200px] min-h-[600px] max-h-[90vh] flex flex-col relative">
             {/* Header with styled sections */}
             <div className="flex items-stretch rounded-t-lg overflow-hidden">
               {/* Left side - Add New Appointment with very light orange */}
-              <div className="bg-orange-50 px-6 py-4" style={{ width: 'calc(100% - 320px)' }}>
-                <h2 className="text-2xl font-semibold text-gray-600">Add New Appointment</h2>
+              <div className="bg-orange-50 px-6 py-4" style={{ width: 'calc(100% - 288px)' }}>
+                <h2 className="text-xl font-semibold text-gray-600">Add New Appointment</h2>
                 <p className="text-gray-600 mt-1">Fill in the details for your new appointment.</p>
               </div>
               
               {/* Right side - Date with beautiful orange background - matching sidebar width */}
-              <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 w-80 flex flex-col justify-center">
-                <h3 className="text-xl font-semibold text-white">
+              <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 w-72 flex flex-col justify-center">
+                <h3 className="text-lg font-semibold text-white">
                   Appointments on {date ? format(date, 'MMMM do') : 'Selected Date'}
                 </h3>
               </div>
@@ -137,4 +136,3 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
 };
 
 export default CalendarDateDisplay;
-

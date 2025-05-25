@@ -68,7 +68,7 @@ const AppointmentForm = ({
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Left side - Form */}
-      <div className="flex-1 flex flex-col p-6 overflow-y-auto">
+      <div className="flex-1 flex flex-col p-5 overflow-y-auto">
         <div className="flex-1 space-y-6">
           <AppointmentFormDatePicker
             selectedDate={selectedDate}

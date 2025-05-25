@@ -28,7 +28,7 @@ const AppointmentFormFooter = ({ isFormValid, onSave, onCancel }: AppointmentFor
           type="button"
           onClick={handleSave}
           disabled={!isFormValid}
-          className="flex-1 bg-green-500 hover:bg-green-600 text-white text-lg py-6"
+          className="flex-1 bg-green-500 hover:bg-green-600 text-white text-lg py-5"
         >
           Save Appointment
         </Button>
@@ -36,7 +36,7 @@ const AppointmentFormFooter = ({ isFormValid, onSave, onCancel }: AppointmentFor
           type="button"
           onClick={handleCancel}
           variant="outline"
-          className="flex-1 text-lg py-6 hover:border-purple-500 hover:text-purple-600"
+          className="flex-1 text-lg py-5 hover:border-purple-500 hover:text-purple-600"
         >
           Cancel
         </Button>
