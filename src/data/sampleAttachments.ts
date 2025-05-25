@@ -199,5 +199,91 @@ export const sampleAttachments: { [emailId: string]: EmailAttachment[] } = {
       type: "image/jpeg",
       url: "/documents/weekly-schedule.jpg"
     }
+  ],
+  // New sent emails with attachments to recipients who also sent documents
+  "sent_004": [
+    {
+      id: "att_sent_006",
+      name: "PT_Progress_Report_November.pdf",
+      size: 950000,
+      type: "application/pdf",
+      url: "/documents/pt-progress-november.pdf"
+    },
+    {
+      id: "att_sent_007",
+      name: "Mobility_Improvement_Photos.jpg",
+      size: 1890000,
+      type: "image/jpeg",
+      url: "/documents/mobility-photos.jpg"
+    },
+    {
+      id: "att_sent_008",
+      name: "Therapist_Recommendations.docx",
+      size: 420000,
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      url: "/documents/therapist-recommendations.docx"
+    }
+  ],
+  "sent_005": [
+    {
+      id: "att_sent_009",
+      name: "Home_Modifications_Before_After.jpg",
+      size: 2150000,
+      type: "image/jpeg",
+      url: "/documents/home-modifications.jpg"
+    },
+    {
+      id: "att_sent_010",
+      name: "Contractor_Invoices_Permits.pdf",
+      size: 1320000,
+      type: "application/pdf",
+      url: "/documents/contractor-invoices.pdf"
+    },
+    {
+      id: "att_sent_011",
+      name: "Safety_Inspection_Reports.pdf",
+      size: 780000,
+      type: "application/pdf",
+      url: "/documents/safety-inspection.pdf"
+    }
+  ],
+  "sent_006": [
+    {
+      id: "att_sent_012",
+      name: "Medical_Expenses_Q4_2024.xlsx",
+      size: 1150000,
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      url: "/documents/medical-expenses-q4.xlsx"
+    },
+    {
+      id: "att_sent_013",
+      name: "Insurance_Claims_Documentation.pdf",
+      size: 1680000,
+      type: "application/pdf",
+      url: "/documents/insurance-claims.pdf"
+    }
+  ],
+  "sent_007": [
+    {
+      id: "att_sent_014",
+      name: "Healthcare_Directive_Signed.pdf",
+      size: 720000,
+      type: "application/pdf",
+      url: "/documents/healthcare-directive.pdf"
+    },
+    {
+      id: "att_sent_015",
+      name: "Financial_Power_of_Attorney.pdf",
+      size: 890000,
+      type: "application/pdf",
+      url: "/documents/financial-poa.pdf"
+    },
+    {
+      id: "att_sent_016",
+      name: "Updated_Will_Testament.pdf",
+      size: 1250000,
+      type: "application/pdf",
+      url: "/documents/will-testament.pdf"
+    }
   ]
 };

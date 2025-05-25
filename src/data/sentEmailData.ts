@@ -58,5 +58,82 @@ export const sentEmails: EmailData[] = [
     category: "housing",
     cc: [],
     bcc: []
+  },
+  // New sent emails to create mixed received/sent scenarios
+  {
+    id: "sent_004",
+    subject: "Updated Physical Therapy Progress Report",
+    sender: {
+      name: "Michael Johnson",
+      email: "michael.johnson@family.com", 
+      organization: "Johnson Family"
+    },
+    recipient: "Dr. Patricia Williams <dr.williams@citymedical.com>",
+    content: "Dear Dr. Williams,\n\nI'm sending you Dad's updated physical therapy progress report and some recent photos showing his improved mobility. The attached documents include:\n\n- Weekly progress measurements\n- Updated exercise routine photos\n- Therapist notes and recommendations\n\nHis improvement has been remarkable, and we're grateful for your guidance.\n\nBest regards,\nMichael Johnson",
+    date: "2024-11-20T11:15:00Z",
+    read: true,
+    replied: false,
+    responseReceived: false,
+    private: false,
+    category: "medical",
+    cc: [],
+    bcc: []
+  },
+  {
+    id: "sent_005",
+    subject: "Home Modifications Documentation",
+    sender: {
+      name: "Sarah Johnson",
+      email: "sarah.johnson@family.com",
+      organization: "Johnson Family"
+    },
+    recipient: "Jennifer Walsh <j.walsh@eldercare.org>",
+    content: "Dear Jennifer,\n\nAs requested, I'm sending the documentation for the home modifications we've completed. The attached files include:\n\n- Before and after photos of accessibility improvements\n- Contractor invoices and permits\n- Safety inspection reports\n\nThese modifications have greatly improved Dad's independence at home.\n\nThank you for your assistance,\nSarah Johnson",
+    date: "2024-11-19T13:45:00Z",
+    read: true,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "housing",
+    cc: [],
+    bcc: []
+  },
+  {
+    id: "sent_006",
+    subject: "Updated Insurance Claims and Medical Bills",
+    sender: {
+      name: "Michael Johnson",
+      email: "michael.johnson@family.com",
+      organization: "Johnson Family"
+    },
+    recipient: "Robert Chen <r.chen@veteransaffairs.gov>",
+    content: "Dear Mr. Chen,\n\nI'm forwarding the updated insurance claims and medical bills as requested for Dad's VA benefits review. The attached spreadsheet contains:\n\n- Detailed medical expenses for Q4 2024\n- Insurance claim documentation\n- Outstanding bills requiring VA assistance\n\nPlease let me know if you need any additional documentation.\n\nSincerely,\nMichael Johnson",
+    date: "2024-11-17T10:30:00Z",
+    read: true,
+    replied: false,
+    responseReceived: false,
+    private: false,
+    category: "insurance",
+    cc: [],
+    bcc: []
+  },
+  {
+    id: "sent_007",
+    subject: "Legal Documents Update and Power of Attorney",
+    sender: {
+      name: "Sarah Johnson",
+      email: "sarah.johnson@family.com",
+      organization: "Johnson Family"
+    },
+    recipient: "David Thompson <d.thompson@elderlaw.com>",
+    content: "Dear Mr. Thompson,\n\nFollowing our consultation, I'm sending the updated legal documents and signed power of attorney forms. The attached documents include:\n\n- Completed healthcare directive\n- Financial power of attorney (notarized)\n- Updated will and testament\n- Medical decision-making preferences\n\nAll documents have been reviewed and signed as discussed.\n\nBest regards,\nSarah Johnson",
+    date: "2024-11-16T14:20:00Z",
+    read: true,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "legal",
+    cc: ["michael.johnson@family.com"],
+    bcc: []
   }
 ];
