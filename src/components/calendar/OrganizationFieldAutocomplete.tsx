@@ -257,7 +257,7 @@ const OrganizationFieldAutocomplete = ({
     console.log('👆 Suggestion clicked:', organization);
     onChange(organization.name);
     setShowSuggestions(false);
-    inputRef.current?.focus();
+    // Remove the setTimeout and focus call that was causing the issue
   };
 
   const handleInputFocus = () => {
@@ -322,7 +322,10 @@ const OrganizationFieldAutocomplete = ({
                   ? 'bg-blue-50 text-blue-900' 
                   : 'hover:bg-gray-50 text-gray-900'
               )}
-              onClick={() => handleSuggestionClick(organization)}
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevent input blur
+                handleSuggestionClick(organization);
+              }}
               onMouseEnter={() => setActiveSuggestion(index)}
             >
               <div className="flex items-center justify-between">

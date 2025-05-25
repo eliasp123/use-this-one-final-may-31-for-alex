@@ -228,7 +228,7 @@ const ToFieldAutocomplete = ({
     console.log('👆 Suggestion clicked:', suggestion);
     onChange(suggestion);
     setShowSuggestions(false);
-    inputRef.current?.focus();
+    // Remove the setTimeout and focus call that was causing the issue
   };
 
   const handleInputFocus = () => {
@@ -279,7 +279,10 @@ const ToFieldAutocomplete = ({
                   ? 'bg-blue-50 text-blue-900' 
                   : 'hover:bg-gray-50 text-gray-900'
               )}
-              onClick={() => handleSuggestionClick(suggestion)}
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevent input blur
+                handleSuggestionClick(suggestion);
+              }}
               onMouseEnter={() => setActiveSuggestion(index)}
             >
               <div className="font-medium text-sm">{suggestion}</div>
