@@ -32,6 +32,9 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Add debug logging to see if events are firing
+  console.log('CalendarPopup hover state:', { hoveredDate, tooltipPosition });
+
   // Get appointments for a specific date - same as CalendarDateDisplay
   const getAppointmentsForDate = (targetDate: Date) => {
     return APPOINTMENTS.filter(app => 
@@ -57,8 +60,9 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     }, 3000); // 3 seconds delay
   };
 
-  // Handle mouse events on calendar - same as CalendarDateDisplay
+  // Handle mouse events on calendar - same as CalendarDateDisplay with debug logging
   const handleCalendarMouseMove = (e: React.MouseEvent) => {
+    console.log('CalendarPopup mouse move event fired');
     const target = e.target as HTMLElement;
     const dayButton = target.closest('[role="gridcell"] button, .rdp-day, .rdp-button_reset');
     
@@ -68,6 +72,8 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
       
       if (!isNaN(dayNumber) && date) {
         const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
+        
+        console.log('CalendarPopup hovering over date:', hoveredDateObj);
         
         // Clear any existing timeout when hovering over a date
         clearHideTimeout();
@@ -89,16 +95,19 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   };
 
   const handleCalendarMouseLeave = () => {
+    console.log('CalendarPopup mouse leave event fired');
     // Set timeout to hide tooltip when leaving calendar area
     setHideTimeout();
   };
 
   const handleTooltipMouseEnter = () => {
+    console.log('CalendarPopup tooltip mouse enter');
     // Keep the tooltip visible when hovering over it
     clearHideTimeout();
   };
 
   const handleTooltipMouseLeave = () => {
+    console.log('CalendarPopup tooltip mouse leave');
     // Hide tooltip when leaving the tooltip area
     setHideTimeout();
   };
@@ -193,7 +202,11 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                   
                   <div 
                     className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
-                    style={{ pointerEvents: 'auto' }}
+                    style={{ 
+                      pointerEvents: 'auto',
+                      position: 'relative',
+                      zIndex: 1
+                    }}
                     onMouseMove={handleCalendarMouseMove}
                     onMouseLeave={handleCalendarMouseLeave}
                   >
@@ -202,6 +215,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                       selected={date}
                       onSelect={handleSelect}
                       className="w-full pointer-events-auto min-w-[300px]"
+                      style={{ pointerEvents: 'auto' }}
                       modifiers={{
                         hasAppointment: (day) => isDayWithAppointment(day)
                       }}
@@ -229,16 +243,16 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>
       </div>
 
-      {/* Enhanced Tooltip with same hover handling as CalendarDateDisplay */}
+      {/* Enhanced Tooltip with higher z-index and debug info */}
       {hoveredDate && createPortal(
         <div 
           id="calendar-popup-tooltip"
-          className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[320px] pointer-events-auto"
+          className="fixed bg-white border border-gray-200 rounded-lg shadow-xl p-3 max-w-[320px] pointer-events-auto"
           style={{
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
             transform: 'translate(-50%, -100%)',
-            zIndex: 99999
+            zIndex: 999999 // Much higher z-index
           }}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
