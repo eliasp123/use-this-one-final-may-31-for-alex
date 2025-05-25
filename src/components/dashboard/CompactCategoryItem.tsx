@@ -36,7 +36,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       {/* Compact Header */}
       <div className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all duration-300">
         <div 
@@ -73,22 +73,26 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
               onClick={toggleExpanded}
               className="p-1 hover:bg-gray-200 rounded transition-colors"
             >
-              {isExpanded ? (
-                <ChevronDown className="w-4 h-4 text-gray-400" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              )}
+              <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                isExpanded ? 'rotate-180' : 'rotate-0'
+              }`} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Expanded Full Card */}
-      {isExpanded && (
-        <div className="pl-4">
+      {/* Expanded Full Card - Using data attributes for CSS animation */}
+      <div 
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isExpanded 
+            ? 'max-h-96 opacity-100 mt-4' 
+            : 'max-h-0 opacity-0 mt-0'
+        }`}
+      >
+        <div className="animate-fade-in">
           <EmailCategoryCard category={category} />
         </div>
-      )}
+      </div>
     </div>
   );
 };
