@@ -2,6 +2,7 @@
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import CompactCategoryItem from './CompactCategoryItem';
+import AddNewCategoryButton from './AddNewCategoryButton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -68,16 +69,6 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     }
   };
 
-  const handleViewMoreCategories = () => {
-    const moreCategoriesSection = document.querySelector('[data-section="more-categories"]');
-    if (moreCategoriesSection) {
-      moreCategoriesSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }
-  };
-
   const handleAddNewCategory = () => {
     setShowNewCategoryDialog(true);
   };
@@ -112,39 +103,9 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
-      {/* Compact Categories Section with centered button */}
+      {/* Compact Categories Section */}
       {compactCategories.length > 0 && (
         <div className="space-y-8" data-section="more-categories">
-          {/* Centered purple button with proper spacing */}
-          <div className="flex justify-center mb-12">
-            <div className="w-full max-w-lg">
-              <button 
-                className="w-full flex items-center justify-center border border-purple-500 rounded-md bg-purple-400 hover:bg-purple-500 text-white transition-colors"
-                onClick={handleViewMoreCategories}
-              >
-                <span 
-                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-500 transition-colors rounded-l-md"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleViewMoreCategories();
-                  }}
-                >
-                  View More Categories Below
-                </span>
-                <span className="border-l border-purple-300 h-6"></span>
-                <span 
-                  className="px-4 py-2 text-sm font-medium flex-1 hover:bg-purple-500 transition-colors rounded-r-md"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddNewCategory();
-                  }}
-                >
-                  Add New Category
-                </span>
-              </button>
-            </div>
-          </div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {compactCategories.map((category) => (
               <CompactCategoryItem
@@ -152,6 +113,24 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                 category={category}
               />
             ))}
+            
+            {/* Dynamic Add New Category Button */}
+            <AddNewCategoryButton 
+              onClick={handleAddNewCategory}
+              categoriesInRow={compactCategories.length % 3}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* If no compact categories, show add button after priority categories */}
+      {compactCategories.length === 0 && priorityCategories.length > 0 && (
+        <div className="mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            <AddNewCategoryButton 
+              onClick={handleAddNewCategory}
+              categoriesInRow={priorityCategories.length % 3}
+            />
           </div>
         </div>
       )}
