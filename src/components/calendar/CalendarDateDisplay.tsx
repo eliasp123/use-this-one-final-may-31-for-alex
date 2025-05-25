@@ -55,18 +55,32 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
   };
 
   // Custom day component with hover functionality
-  const CustomDay = ({ date: dayDate, ...props }: { date: Date }) => {
+  const CustomDay = ({ date: dayDate, ...props }: any) => {
     const dayAppointments = getAppointmentsForDate(dayDate);
     const hasAppointments = dayAppointments.length > 0;
 
     if (!hasAppointments) {
-      return <div {...props}>{dayDate.getDate()}</div>;
+      return (
+        <button
+          {...props}
+          className={props.className}
+          onClick={() => onDateSelect(dayDate)}
+        >
+          {dayDate.getDate()}
+        </button>
+      );
     }
 
     return (
       <HoverCard openDelay={300} closeDelay={100}>
         <HoverCardTrigger asChild>
-          <div {...props}>{dayDate.getDate()}</div>
+          <button
+            {...props}
+            className={props.className}
+            onClick={() => onDateSelect(dayDate)}
+          >
+            {dayDate.getDate()}
+          </button>
         </HoverCardTrigger>
         <HoverCardContent className="w-80 p-4 bg-white border border-gray-200 shadow-lg z-50">
           <div className="space-y-3">
