@@ -47,6 +47,11 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   // Use external currentPage if provided, otherwise use internal state
   const activePage = currentPage || internalCurrentPage;
   
+  // Debug logging to see all categories
+  React.useEffect(() => {
+    console.log('🔍 All categories in EmailCategoryGrid:', categories.map(c => ({ id: c.id, title: c.title })));
+  }, [categories]);
+  
   // When there's a search query, only show categories that have emails
   // When there's no search query, show all categories
   const filteredCategories = searchQuery.trim() 
@@ -86,6 +91,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const handleCreateCategory = () => {
     if (newCategoryName.trim()) {
       try {
+        console.log('🆕 Creating category:', newCategoryName.trim());
         addCustomCategory(newCategoryName.trim());
         
         toast({
@@ -101,6 +107,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         setNewCategoryName('');
         setShowNewCategoryDialog(false);
       } catch (error) {
+        console.error('❌ Error creating category:', error);
         toast({
           title: "Error",
           description: "Failed to create category. Please try again.",
@@ -116,9 +123,47 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       {priorityCategories.length > 0 && (
         <div className="space-y-8 sm:space-y-12 mb-16">
           <div className="text-center">
-            <h2 className="text-lg font-medium text-gray-800 mb-2">Needs Attention</h2>
-            <p className="text-sm text-gray-600">Your most important email categories</p>
+            <h2 className="text-lg font-medium text-gray-800 mb-2">Organized Emails For Your Review</h2>
           </div>
+          
+          {/* Pagination - moved under the title */}
+          {showPagination && totalPages > 1 && (
+            <div className="flex justify-center mb-8">
+              <Pagination>
+                <PaginationContent>
+                  {activePage > 1 && (
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        onClick={() => handlePageChange(activePage - 1)}
+                        className="cursor-pointer"
+                      />
+                    </PaginationItem>
+                  )}
+                  
+                  {Array.from({ length: Math.max(totalPages, activePage) }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(page)}
+                        isActive={page === activePage}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  {activePage < Math.max(totalPages, activePage) && (
+                    <PaginationItem>
+                      <PaginationNext 
+                        onClick={() => handlePageChange(activePage + 1)}
+                        className="cursor-pointer"
+                      />
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {priorityCategories.map((category) => (
@@ -161,45 +206,6 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       {filteredCategories.length === 0 && searchQuery.trim() && (
         <div className="text-center py-12">
           <p className="text-gray-500">No categories found matching your search.</p>
-        </div>
-      )}
-
-      {/* Pagination */}
-      {showPagination && totalPages > 1 && (
-        <div className="mt-12 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              {activePage > 1 && (
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => handlePageChange(activePage - 1)}
-                    className="cursor-pointer"
-                  />
-                </PaginationItem>
-              )}
-              
-              {Array.from({ length: Math.max(totalPages, activePage) }, (_, i) => i + 1).map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(page)}
-                    isActive={page === activePage}
-                    className="cursor-pointer"
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              {activePage < Math.max(totalPages, activePage) && (
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => handlePageChange(activePage + 1)}
-                    className="cursor-pointer"
-                  />
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
         </div>
       )}
 
