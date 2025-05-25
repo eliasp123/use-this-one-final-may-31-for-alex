@@ -61,6 +61,23 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
   };
 
   const handleCalendarMouseLeave = () => {
+    // Only hide tooltip if we're not hovering over the tooltip itself
+    // We'll use a small delay to allow mouse to move to tooltip
+    setTimeout(() => {
+      const tooltipElement = document.querySelector('#calendar-tooltip');
+      if (tooltipElement && !tooltipElement.matches(':hover')) {
+        setHoveredDate(null);
+      }
+    }, 100);
+  };
+
+  const handleTooltipMouseEnter = () => {
+    // Keep the tooltip visible when hovering over it
+    // hoveredDate should already be set, so we don't need to do anything
+  };
+
+  const handleTooltipMouseLeave = () => {
+    // Hide tooltip when leaving the tooltip area
     setHoveredDate(null);
   };
 
@@ -144,6 +161,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       {/* Enhanced Tooltip with Add Appointment button */}
       {hoveredDate && createPortal(
         <div 
+          id="calendar-tooltip"
           className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[320px] pointer-events-auto"
           style={{
             left: `${tooltipPosition.x}px`,
@@ -151,6 +169,8 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             transform: 'translate(-50%, -100%)',
             zIndex: 99999
           }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleTooltipMouseLeave}
         >
           <div className="space-y-3">
             <div className="flex items-center justify-between">
