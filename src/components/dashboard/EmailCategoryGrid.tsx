@@ -1,6 +1,7 @@
 
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
+import CompactCategoryItem from './CompactCategoryItem';
 import { 
   Pagination, 
   PaginationContent, 
@@ -56,92 +57,85 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     totalEmailsAcrossCategories: categories.reduce((sum, cat) => sum + cat.total, 0)
   });
   
-  // Calculate pagination values
-  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, filteredCategories.length);
-  const currentCategories = filteredCategories.slice(startIndex, endIndex);
+  // Split categories into priority (urgent) and non-priority
+  const priorityCategories = filteredCategories.filter(cat => cat.unread > 0 || cat.pending > 0);
+  const nonPriorityCategories = filteredCategories.filter(cat => cat.unread === 0 && cat.pending === 0);
+  
+  // For pagination, we only paginate the priority categories if there are many
+  // Show up to 6 priority cards (2 rows), then show non-priority as compact items
+  const maxPriorityCards = 6;
+  const currentPriorityCategories = priorityCategories.slice(0, maxPriorityCards);
+  
+  // Split the current priority categories into rows of 3 for consistent spacing
+  const priorityRows = [];
+  for (let i = 0; i < currentPriorityCategories.length; i += 3) {
+    priorityRows.push(currentPriorityCategories.slice(i, i + 3));
+  }
   
   // Handle page change (only used when showPagination is true and no external currentPage)
   const handlePageChange = (page: number) => {
     if (!currentPage) {
       setInternalCurrentPage(page);
     }
-    // Removed the scrollIntoView behavior - no need for scrolling
   };
-
-  // Split the current categories into rows of 3 for consistent spacing
-  const rows = [];
-  for (let i = 0; i < currentCategories.length; i += 3) {
-    rows.push(currentCategories.slice(i, i + 3));
-  }
-  
-  // Generate page numbers for pagination
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
   
   return (
     <>
-      {/* Email Category Grid with increased spacing by 4px */}
-      <div id="category-section" className="space-y-8 sm:space-y-12">
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            {row.map((category) => (
-              <EmailCategoryCard
+      {/* Priority Categories Section */}
+      {priorityCategories.length > 0 && (
+        <div className="space-y-8 sm:space-y-12 mb-8">
+          <div className="text-center">
+            <h2 className="text-lg font-medium text-gray-800 mb-2">Needs Attention</h2>
+            <p className="text-sm text-gray-600">Categories with unread messages or pending replies</p>
+          </div>
+          
+          {priorityRows.map((row, rowIndex) => (
+            <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+              {row.map((category) => (
+                <EmailCategoryCard
+                  key={category.id}
+                  category={category}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Non-Priority Categories Section */}
+      {nonPriorityCategories.length > 0 && (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-lg font-medium text-gray-800 mb-2">All Caught Up</h2>
+            <p className="text-sm text-gray-600">Categories with no urgent items</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {nonPriorityCategories.map((category) => (
+              <CompactCategoryItem
                 key={category.id}
                 category={category}
               />
             ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Show message if no categories after filtering */}
+      {filteredCategories.length === 0 && searchQuery.trim() && (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No categories found matching your search.</p>
+        </div>
+      )}
       
-      {/* Pagination - Only show if showPagination is true and we have more than one page */}
-      {showPagination && totalPages > 1 && (
-        <Pagination className="mt-8 sm:mt-12">
-          <PaginationContent>
-            {activePage > 1 && (
-              <PaginationItem>
-                <PaginationPrevious 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(activePage - 1);
-                  }} 
-                />
-              </PaginationItem>
-            )}
-            
-            {pageNumbers.map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink 
-                  href="#" 
-                  isActive={page === activePage}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(page);
-                  }}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            
-            {activePage < totalPages && (
-              <PaginationItem>
-                <PaginationNext 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(activePage + 1);
-                  }} 
-                />
-              </PaginationItem>
-            )}
-          </PaginationContent>
-        </Pagination>
+      {/* Pagination - Only show if showPagination is true and we have many priority categories */}
+      {showPagination && priorityCategories.length > maxPriorityCards && (
+        <div className="mt-8 sm:mt-12 text-center">
+          <p className="text-sm text-gray-600">
+            Showing top {maxPriorityCards} priority categories. 
+            {priorityCategories.length - maxPriorityCards} more categories need attention.
+          </p>
+        </div>
       )}
     </>
   );
