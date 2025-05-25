@@ -24,9 +24,9 @@ const DocumentsFilterRow = ({
 }: DocumentsFilterRowProps) => {
   return (
     <div className="w-full max-w-7xl mx-auto pt-8 mb-8">
-      <div className="flex items-stretch h-16 gap-4">
-        {/* Left card - Filter section (60% width) */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[6]">
+      <div className="flex items-stretch h-16">
+        {/* Single card containing all controls */}
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch w-full">
           {/* Filter by label with purple background */}
           <div className="bg-gradient-to-r from-purple-500 to-purple-500 text-white flex-1 rounded-l-2xl flex items-center justify-center h-full">
             Filter by:
@@ -67,7 +67,7 @@ const DocumentsFilterRow = ({
           {/* Month Filter */}
           <button
             onClick={() => onFilterChange('date')}
-            className={`flex items-center justify-center flex-[2] transition-all duration-200 h-full rounded-r-2xl ${
+            className={`flex items-center justify-center flex-[2] transition-all duration-200 h-full ${
               selectedFilter === 'date' 
                 ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
                 : "text-gray-700 hover:bg-gray-50"
@@ -79,16 +79,16 @@ const DocumentsFilterRow = ({
               {getFilterCount('date')}
             </span>
           </button>
-        </div>
 
-        {/* Right card - View and Direction section (40% width) */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[4]">
+          {/* Subtle separator before view controls */}
+          <div className="w-px bg-gray-200/40 mx-2"></div>
+
           {/* Grid Toggle */}
           <button
             onClick={() => onViewModeChange('grid')}
-            className={`flex items-center justify-center flex-1 transition-all duration-200 h-full rounded-l-2xl ${
+            className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               viewMode === 'grid' 
-                ? "bg-blue-500 text-white" 
+                ? "text-blue-600 bg-blue-50" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -101,7 +101,7 @@ const DocumentsFilterRow = ({
             onClick={() => onViewModeChange('list')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               viewMode === 'list' 
-                ? "bg-blue-500 text-white" 
+                ? "text-blue-600 bg-blue-50" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -110,14 +110,14 @@ const DocumentsFilterRow = ({
           </button>
 
           {/* Subtle separator before direction filters */}
-          <div className="w-px bg-gray-200/40"></div>
+          <div className="w-px bg-gray-200/40 mx-1"></div>
 
           {/* All Direction */}
           <button
             onClick={() => onDirectionFilterChange('all')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               directionFilter === 'all' 
-                ? "bg-blue-500 text-white" 
+                ? "text-blue-600 bg-blue-50" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -129,7 +129,7 @@ const DocumentsFilterRow = ({
             onClick={() => onDirectionFilterChange('received')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full ${
               directionFilter === 'received' 
-                ? "bg-green-500 text-white" 
+                ? "text-green-600 bg-green-50" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -142,7 +142,7 @@ const DocumentsFilterRow = ({
             onClick={() => onDirectionFilterChange('sent')}
             className={`flex items-center justify-center flex-1 transition-all duration-200 h-full rounded-r-2xl ${
               directionFilter === 'sent' 
-                ? "bg-orange-500 text-white" 
+                ? "text-orange-600 bg-orange-50" 
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
