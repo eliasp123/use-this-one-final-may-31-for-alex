@@ -144,48 +144,48 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       {/* Priority Categories Section - Full Cards (First Row Only) */}
       {(priorityCategories.length > 0 || addButtonInFirstRow) && (
         <div className="space-y-8 sm:space-y-12 mb-16">
-          <div className="text-center">
+          <div className="text-center space-y-6">
             <h2 className="text-lg font-medium text-gray-800 mb-2">Organized Emails For Your Review</h2>
+            
+            {/* Pagination - moved directly under the title and centered */}
+            {showPagination && totalPages > 1 && (
+              <div className="flex justify-center">
+                <Pagination>
+                  <PaginationContent>
+                    {activePage > 1 && (
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          onClick={() => handlePageChange(activePage - 1)}
+                          className="cursor-pointer"
+                        />
+                      </PaginationItem>
+                    )}
+                    
+                    {Array.from({ length: Math.max(totalPages, activePage) }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => handlePageChange(page)}
+                          isActive={page === activePage}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    
+                    {activePage < Math.max(totalPages, activePage) && (
+                      <PaginationItem>
+                        <PaginationNext 
+                          onClick={() => handlePageChange(activePage + 1)}
+                          className="cursor-pointer"
+                        />
+                      </PaginationItem>
+                    )}
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
           </div>
-          
-          {/* Pagination - moved under the title */}
-          {showPagination && totalPages > 1 && (
-            <div className="flex justify-center mb-8">
-              <Pagination>
-                <PaginationContent>
-                  {activePage > 1 && (
-                    <PaginationItem>
-                      <PaginationPrevious 
-                        onClick={() => handlePageChange(activePage - 1)}
-                        className="cursor-pointer"
-                      />
-                    </PaginationItem>
-                  )}
-                  
-                  {Array.from({ length: Math.max(totalPages, activePage) }, (_, i) => i + 1).map((page) => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        onClick={() => handlePageChange(page)}
-                        isActive={page === activePage}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  
-                  {activePage < Math.max(totalPages, activePage) && (
-                    <PaginationItem>
-                      <PaginationNext 
-                        onClick={() => handlePageChange(activePage + 1)}
-                        className="cursor-pointer"
-                      />
-                    </PaginationItem>
-                  )}
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {priorityCategories.map((category) => (
