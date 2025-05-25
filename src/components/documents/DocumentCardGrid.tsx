@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -31,12 +30,20 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full">
+    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[280px]">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with file icon and name - colored with file type */}
-        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl`}>
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shadow-sm">
+        {/* Top section with file icon, name, and status badge - colored with file type */}
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl relative`}>
+          {/* Status badge in top right */}
+          <div className="absolute top-3 right-3">
+            <StatusBadge 
+              direction={attachment.direction} 
+              statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
+            />
+          </div>
+          
+          <div className="flex items-center gap-3 flex-1 min-w-0 pr-20">
+            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
               <fileInfo.icon className="h-6 w-6 text-white" />
             </div>
             <h3 className="font-medium text-white text-sm leading-tight line-clamp-2">
@@ -64,8 +71,8 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Single integrated action row with status badge above download */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 shadow-sm flex items-stretch h-12">
+        {/* Single integrated action row */}
+        <div className="bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 flex items-stretch h-12">
           {/* View Email section */}
           <button
             onClick={() => navigate(`/email/${attachment.emailId}`)}
@@ -74,23 +81,12 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
             <span className="text-sm font-medium">View Email</span>
           </button>
 
-          {/* Download section with status badge above */}
-          <div className="flex-1 relative">
-            {/* Status badge positioned above download button */}
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-              <StatusBadge 
-                direction={attachment.direction} 
-                statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
-              />
-            </div>
-            
-            {/* Download button */}
-            <div 
-              className={`${fileInfo.badgeColor} text-white flex items-center justify-center cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">Download</span>
-            </div>
+          {/* Download section */}
+          <div 
+            className={`${fileInfo.badgeColor} text-white flex items-center justify-center flex-1 cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Download</span>
           </div>
         </div>
       </CardContent>
