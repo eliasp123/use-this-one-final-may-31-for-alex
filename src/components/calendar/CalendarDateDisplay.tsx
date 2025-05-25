@@ -88,7 +88,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       {/* Portal the dialog to document.body to avoid nesting forms */}
       {isDialogOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl border-2 border-purple-500 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
+          <div className="bg-white rounded-lg shadow-xl border-2 border-orange-500 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
             {/* Header with styled sections */}
             <div className="flex items-stretch rounded-t-lg overflow-hidden">
               {/* Left side - Add New Appointment with very light orange */}
@@ -110,7 +110,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               <button
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 shadow-lg"
+                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 shadow-lg"
               >
                 <X className="h-4 w-4 text-gray-600" />
               </button>
