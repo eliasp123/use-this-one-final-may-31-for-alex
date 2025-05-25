@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -72,18 +71,25 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     };
   }, []);
 
-  // Auto-scroll into view when accordion expands
+  // Gentle auto-scroll into view when accordion expands
   useEffect(() => {
     if (isExpanded && containerRef.current) {
       setTimeout(() => {
         if (containerRef.current) {
-          containerRef.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'nearest'
-          });
+          const rect = containerRef.current.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const padding = 24; // Extra padding as requested
+          
+          // Check if the expanded accordion needs adjustment
+          if (rect.bottom > viewportHeight - padding || rect.top < padding) {
+            containerRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center', // Center the accordion for best viewing
+              inline: 'nearest'
+            });
+          }
         }
-      }, 150);
+      }, 200); // Slight delay to allow expansion animation
     }
   }, [isExpanded]);
 
@@ -135,7 +141,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     navigate(`/emails/${id}/${status}`);
   };
 
-  // Task 1: Improved tooltip behavior with auto-scroll
+  // Simple tooltip behavior without auto-scroll
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
     if (isScrollLocked) return;
     
@@ -155,25 +161,6 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-      
-      // Task 1: Auto-scroll tooltip into view
-      setTimeout(() => {
-        const tooltip = document.querySelector('[data-tooltip="email-preview"]');
-        if (tooltip) {
-          const tooltipRect = tooltip.getBoundingClientRect();
-          const viewport = {
-            top: 0,
-            bottom: window.innerHeight
-          };
-          
-          if (tooltipRect.top < viewport.top || tooltipRect.bottom > viewport.bottom) {
-            tooltip.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'nearest' 
-            });
-          }
-        }
-      }, 100);
     }, 800);
   }, [isScrollLocked]);
 
@@ -268,7 +255,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
               className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
               onClick={handleCardContentClick}
             >
-              {/* Stats with improved tooltip behavior */}
+              {/* Stats with tooltip behavior (no auto-scroll) */}
               <div className="space-y-4 sm:space-y-5">
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
@@ -330,7 +317,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         </div>
       </div>
 
-      {/* Email Preview Tooltip with enhanced z-index and auto-scroll */}
+      {/* Email Preview Tooltip without auto-scroll */}
       {hoveredStatus && previewEmails.length > 0 && !isScrollLocked && createPortal(
         <div data-tooltip="email-preview">
           <EmailPreviewTooltip

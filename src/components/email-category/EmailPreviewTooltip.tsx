@@ -40,7 +40,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     const viewportWidth = window.innerWidth;
 
     // Find the card header element to align with its top edge
-    // We need to traverse up from the hovered element to find the card container
     const findCardTop = () => {
       // Look for elements with the card classes to find the actual card top
       const cards = document.querySelectorAll('.bg-white.rounded-2xl');
@@ -172,53 +171,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [position.x, position.y, smartPosition.placement, currentPosition.x]);
-
-  // FIXED: Much more conservative auto-scroll - only when tooltip is significantly cut off
-  useEffect(() => {
-    if (tooltipRef) {
-      setTimeout(() => {
-        const tooltipRect = tooltipRef.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const viewportWidth = window.innerWidth;
-        
-        // Much more strict criteria for scrolling
-        const significantCutoff = 50; // Only scroll if more than 50px is cut off
-        const isSignificantlyCutOff = 
-          tooltipRect.top < -significantCutoff || 
-          tooltipRect.bottom > viewportHeight + significantCutoff ||
-          tooltipRect.left < -significantCutoff ||
-          tooltipRect.right > viewportWidth + significantCutoff;
-        
-        if (!isSignificantlyCutOff) {
-          console.log('Tooltip is sufficiently visible, no scroll needed');
-          return;
-        }
-        
-        console.log('Tooltip is significantly cut off, minimal scroll adjustment');
-        
-        // Only scroll if tooltip is really cut off
-        let scrollNeeded = false;
-        let scrollY = window.scrollY;
-        
-        if (tooltipRect.top < 0) {
-          // Only scroll up if top is really cut off
-          scrollY += tooltipRect.top - 10; // Just bring it into view with 10px margin
-          scrollNeeded = true;
-        } else if (tooltipRect.bottom > viewportHeight) {
-          // Only scroll down if bottom is really cut off  
-          scrollY += (tooltipRect.bottom - viewportHeight) + 10; // Just bring it into view with 10px margin
-          scrollNeeded = true;
-        }
-        
-        if (scrollNeeded) {
-          window.scrollTo({
-            top: scrollY,
-            behavior: 'smooth'
-          });
-        }
-      }, 200); // Small delay to ensure tooltip is positioned
-    }
-  }, [tooltipRef]);
 
   const getStatusLabel = () => {
     switch (status) {
