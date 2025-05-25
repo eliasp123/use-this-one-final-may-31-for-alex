@@ -63,7 +63,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       // Release scroll lock after scrolling stops for a while
       scrollLockTimeoutRef.current = setTimeout(() => {
         setIsScrollLocked(false);
-      }, 1500); // 1.5 seconds after scroll stops
+      }, 5000); // 5 seconds after scroll stops
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -115,9 +115,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     // Don't expand during scroll lock
     if (isScrollLocked) return;
     
-    if (!isManuallyControlled) {
-      setIsExpanded(true);
-    }
+    // Reset manual control to allow repeated hover opening
+    setIsManuallyControlled(false);
+    setIsExpanded(true);
     
     // Clear any pending auto-collapse
     if (collapseTimeoutRef.current) {
