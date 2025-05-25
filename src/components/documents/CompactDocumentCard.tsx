@@ -2,21 +2,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { 
-  FileText, 
-  Image, 
-  FileSpreadsheet, 
-  File, 
-  Download, 
-  Calendar,
-  User,
-  Building
-} from 'lucide-react';
+import { Download, Calendar, User, Building } from 'lucide-react';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import FileIconDisplay from './FileIconDisplay';
-import DocumentMetadata from './DocumentMetadata';
-import DocumentActions from './DocumentActions';
 import StatusBadge from './StatusBadge';
 
 interface AttachmentWithContext {
@@ -67,15 +56,6 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
     };
   };
 
-  // Format file size
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
   // Format date
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -88,61 +68,75 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   const fileInfo = getFileTypeInfo(attachment.type);
 
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 border-2 border-gray-300 h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 bg-[size:40px_40px] [background-image:radial-gradient(circle_at_20px_20px,_rgba(0,0,0,0.02)_1px,_transparent_1px)]">
-      <CardContent className="p-6 flex flex-col h-full">
-        {/* File Name with Border - Now Above Icon */}
-        <div className="mb-4">
-          <div className="border-2 border-gray-300 rounded-lg p-3 bg-white/80 backdrop-blur-sm">
-            <h3 className="text-gray-600 text-lg leading-tight text-center line-clamp-2">
-              {attachment.name}
-            </h3>
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group hover:scale-[1.02] h-full bg-white border border-gray-200">
+          <CardContent className="p-4 flex flex-col h-full">
+            {/* Minimal content: File Icon + Name in single row + Status Badge */}
+            <div className="flex items-start gap-3 mb-4">
+              <div className="flex-shrink-0">
+                <FileIconDisplay type={attachment.type} size="small" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-gray-800 text-sm leading-tight line-clamp-2 mb-2">
+                  {attachment.name}
+                </h3>
+                <div className="flex justify-end">
+                  <StatusBadge 
+                    direction={attachment.direction} 
+                    statusBadgeColor="" 
+                  />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-80">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-semibold mb-1">{attachment.name}</h4>
+            <p className="text-xs text-gray-500">From: {attachment.emailSubject}</p>
           </div>
-        </div>
-
-        {/* File Icon - Now Below Name */}
-        <div className="flex flex-col items-center text-center mb-5">
-          <div className="transform scale-75">
-            <FileIconDisplay type={attachment.type} size="medium" />
-          </div>
-        </div>
-
-        {/* Metadata with icons and left-aligned text */}
-        <div className="flex-1 space-y-3 mb-5">
-          <div className="flex items-center gap-2 text-lg">
-            <User className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-700">From:</span>
-            <span className="text-gray-600 truncate">{attachment.senderName}</span>
-          </div>
-          <div className="flex items-center gap-2 text-lg">
-            <Building className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-700">Organization:</span>
-            <span className="text-gray-600 truncate">{attachment.senderOrganization}</span>
-          </div>
-          <div className="flex items-center gap-2 text-lg">
-            <Calendar className="h-4 w-4 text-gray-600 flex-shrink-0" />
-            <span className="font-semibold text-gray-700">Date:</span>
-            <span className="text-gray-600">{formatDate(attachment.emailDate)}</span>
-          </div>
-        </div>
-
-        {/* Left-aligned Status Badge with File Size Centered Underneath */}
-        <div className="flex flex-col mb-5 space-y-2">
-          <div className="flex justify-start">
-            <div className="flex flex-col items-center">
-              <StatusBadge direction={attachment.direction} statusBadgeColor="" />
-              <div className="text-xs font-medium text-gray-600 mt-2">{formatFileSize(attachment.size)}</div>
+          
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm">
+              <User className="h-4 w-4 text-gray-400" />
+              <span className="text-gray-600">From:</span>
+              <span className="font-medium">{attachment.senderName}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Building className="h-4 w-4 text-gray-400" />
+              <span className="text-gray-600">Organization:</span>
+              <span className="font-medium">{attachment.senderOrganization}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-gray-400" />
+              <span className="text-gray-600">Date Received:</span>
+              <span className="font-medium">{formatDate(attachment.emailDate)}</span>
             </div>
           </div>
-        </div>
 
-        {/* Actions */}
-        <DocumentActions 
-          emailId={attachment.emailId} 
-          badgeColor={fileInfo.badgeColor} 
-          layout="grid" 
-        />
-      </CardContent>
-    </Card>
+          <div className="flex gap-2 pt-2 border-t border-gray-100">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/email/${attachment.emailId}`)}
+              className="flex-1 text-xs h-8"
+            >
+              View Email
+            </Button>
+            <Button
+              size="sm"
+              className={`${fileInfo.badgeColor} text-white flex-1 text-xs h-8`}
+            >
+              <Download className="h-3 w-3 mr-1" />
+              Download
+            </Button>
+          </div>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
   );
 };
 
