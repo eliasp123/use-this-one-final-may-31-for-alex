@@ -58,17 +58,33 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
 
+  const extractContentPreview = (content: string) => {
+    // Remove HTML tags and get first sentence or two
+    const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+    const sentences = cleanContent.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    
+    if (sentences.length === 0) return '';
+    
+    // Get first sentence, or first two if they're short
+    let preview = sentences[0].trim();
+    if (sentences.length > 1 && preview.length < 50 && sentences[1]) {
+      preview += '. ' + sentences[1].trim();
+    }
+    
+    return truncateText(preview, 120);
+  };
+
   if (emails.length === 0) {
     return null;
   }
 
   return (
     <div 
-      className="fixed bg-white border border-gray-200 rounded-lg shadow-xl p-4 max-w-[320px] pointer-events-auto z-50"
+      className="fixed bg-white border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-50"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: 'translate(10px, -50%)'
+        transform: 'translate(-50%, calc(-100% - 10px))'
       }}
       onMouseEnter={() => {}} // Prevent tooltip from closing when hovering over it
       onMouseLeave={onClose}
@@ -79,28 +95,36 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           <span className="text-xs text-gray-500">{emails.length} item{emails.length > 1 ? 's' : ''}</span>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-3">
           {emails.map(email => (
             <div 
               key={email.id}
-              className="p-2 bg-gray-50 rounded border border-gray-100 hover:bg-gray-100 cursor-pointer transition-colors"
+              className="p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 cursor-pointer transition-colors"
               onClick={() => handleEmailClick(email.id)}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <Mail className="h-3 w-3 text-gray-400" />
+              <div className="flex items-center gap-2 mb-2">
+                <Mail className="h-3 w-3 text-gray-400 flex-shrink-0" />
                 <span className="font-medium text-gray-700 text-sm">
-                  {truncateText(email.sender.name, 20)}
+                  {truncateText(email.sender.name, 25)}
+                </span>
+                <span className="text-xs text-gray-500 ml-auto">
+                  {formatDistanceToNow(new Date(email.date), { addSuffix: true })}
                 </span>
               </div>
-              <div className="text-xs text-gray-600 mb-1">
-                {truncateText(email.sender.organization, 30)}
+              
+              <div className="text-xs text-gray-600 mb-2">
+                {truncateText(email.sender.organization, 40)}
               </div>
-              <div className="text-xs text-gray-800 mb-1">
-                {truncateText(email.subject, 45)}
+              
+              <div className="text-sm font-medium text-gray-800 mb-2">
+                {truncateText(email.subject, 60)}
               </div>
-              <div className="text-xs text-gray-500">
-                {formatDistanceToNow(new Date(email.date), { addSuffix: true })}
-              </div>
+              
+              {extractContentPreview(email.content) && (
+                <div className="text-xs text-gray-600 leading-relaxed">
+                  {extractContentPreview(email.content)}
+                </div>
+              )}
             </div>
           ))}
         </div>

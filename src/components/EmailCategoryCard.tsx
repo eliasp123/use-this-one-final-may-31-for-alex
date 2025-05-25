@@ -56,8 +56,8 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     // Capture the rect information immediately while event.currentTarget is valid
     const rect = event.currentTarget.getBoundingClientRect();
     const position = {
-      x: rect.right,
-      y: rect.top + rect.height / 2
+      x: rect.left + rect.width / 2, // Center horizontally on the card
+      y: rect.top // Top of the hovered element
     };
 
     // Set timeout to show tooltip after delay
