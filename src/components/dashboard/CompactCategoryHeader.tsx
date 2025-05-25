@@ -46,26 +46,26 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
           <h3 className="text-base sm:text-lg font-medium text-gray-800">{title}</h3>
         </div>
         
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {/* Status indicators - right-justified and closer to total */}
-          <div className="flex items-center justify-end gap-0.5">
+          <div className="flex items-center justify-end gap-1.5">
             {unread > 0 && (
               <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 rounded-full text-white text-xs font-medium">
-                <span className="text-right w-full">{unread}</span>
+                {unread}
               </div>
             )}
             {pending > 0 && (
               <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-amber-500 rounded-full text-white text-xs font-medium">
-                <span className="text-right w-full">{pending}</span>
+                {pending}
               </div>
             )}
           </div>
           
-          <span className="text-xs sm:text-sm text-gray-500 min-w-[80px] text-right font-medium ml-1">
+          <span className="text-xs sm:text-sm text-gray-500 min-w-[80px] text-right font-medium ml-2">
             {total} total
           </span>
           
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ml-1 ${
+          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ml-2 ${
             isExpanded ? 'rotate-180' : 'rotate-0'
           }`} />
         </div>
