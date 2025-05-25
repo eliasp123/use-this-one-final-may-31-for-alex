@@ -85,6 +85,7 @@ const ToFieldAutocomplete = ({
     
     if (value.trim() === '') {
       setFilteredSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
     
@@ -99,6 +100,14 @@ const ToFieldAutocomplete = ({
     });
     
     setFilteredSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+    setActiveSuggestion(0); // Reset active suggestion
+    
+    // Show suggestions if we have matches and input is focused
+    if (filtered.length > 0 && document.activeElement === inputRef.current) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
   }, [value, recipients]);
 
   // Handle clicking outside to close suggestions
@@ -121,19 +130,14 @@ const ToFieldAutocomplete = ({
     const newValue = e.target.value;
     console.log('Input changed:', { newValue, willShowSuggestions: newValue.trim() !== '' });
     onChange(newValue);
-    if (newValue.trim()) {
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
     setActiveSuggestion(0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log('Key pressed:', { key: e.key, suggestionsCount: filteredSuggestions.length });
+    console.log('Key pressed:', { key: e.key, suggestionsCount: filteredSuggestions.length, showSuggestions });
     
-    // If no suggestions, do nothing
-    if (filteredSuggestions.length === 0) return;
+    // If no suggestions are showing, do nothing
+    if (!showSuggestions || filteredSuggestions.length === 0) return;
 
     // Up arrow
     if (e.key === 'ArrowUp') {
@@ -146,7 +150,7 @@ const ToFieldAutocomplete = ({
       setActiveSuggestion(prev => (prev === filteredSuggestions.length - 1 ? 0 : prev + 1));
     }
     // Enter key
-    else if (e.key === 'Enter' && showSuggestions) {
+    else if (e.key === 'Enter') {
       e.preventDefault();
       e.stopPropagation();
       if (filteredSuggestions[activeSuggestion]) {
@@ -169,7 +173,8 @@ const ToFieldAutocomplete = ({
   };
 
   const handleInputFocus = () => {
-    console.log('Input focused:', { value: value.trim(), recipientsCount: recipients.length });
+    console.log('Input focused:', { value: value.trim(), recipientsCount: recipients.length, filteredCount: filteredSuggestions.length });
+    // Show suggestions if we have filtered suggestions for current value
     if (value.trim() !== '' && filteredSuggestions.length > 0) {
       setShowSuggestions(true);
     }
@@ -200,12 +205,13 @@ const ToFieldAutocomplete = ({
         >
           {filteredSuggestions.map((suggestion, index) => (
             <div
-              key={index}
+              key={`${suggestion}-${index}`}
               className={cn(
-                "px-4 py-3 text-lg cursor-pointer transition-colors",
+                "px-4 py-3 text-lg cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
                 index === activeSuggestion ? 'bg-orange-50 text-orange-700' : 'hover:bg-gray-50'
               )}
               onClick={() => handleSuggestionClick(suggestion)}
+              onMouseEnter={() => setActiveSuggestion(index)}
             >
               {suggestion}
             </div>
