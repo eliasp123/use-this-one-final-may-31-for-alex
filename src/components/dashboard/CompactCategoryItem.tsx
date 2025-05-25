@@ -50,6 +50,36 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     status: hoveredStatus || 'unread' 
   });
 
+  // Debug logging for pending emails
+  useEffect(() => {
+    console.log('📧 Category Debug:', {
+      categoryId: id,
+      categoryTitle: title,
+      pendingCount: pending,
+      unreadCount: unread,
+      notRespondedCount,
+      totalCount: total
+    });
+  }, [id, title, pending, unread, notRespondedCount, total]);
+
+  // Debug logging for preview emails
+  useEffect(() => {
+    if (hoveredStatus) {
+      console.log('🔍 Preview Debug:', {
+        categoryId: id,
+        hoveredStatus,
+        previewEmailsCount: previewEmails.length,
+        previewEmails: previewEmails.map(email => ({
+          id: email.id,
+          subject: email.subject,
+          read: email.read,
+          replied: email.replied,
+          responseReceived: email.responseReceived
+        }))
+      });
+    }
+  }, [hoveredStatus, previewEmails, id]);
+
   // Listen for scroll events to activate scroll lock - but don't affect tooltip visibility
   useEffect(() => {
     const handleScroll = () => {
@@ -150,7 +180,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       status,
       tooltipGracePeriod,
       hoveredStatus,
-      isInGracePeriod: tooltipGracePeriod && hoveredStatus
+      isInGracePeriod: tooltipGracePeriod && hoveredStatus,
+      categoryId: id,
+      pendingCount: pending
     });
 
     // If we're in a grace period and a tooltip is already open, ignore new hovers
@@ -173,7 +205,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     };
 
     hoverTimeoutRef.current = setTimeout(() => {
-      console.log('✅ Opening tooltip for:', status);
+      console.log('✅ Opening tooltip for:', status, 'in category:', id);
       setTooltipPosition(position);
       setHoveredStatus(status);
       
@@ -190,7 +222,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         setTooltipGracePeriod(false);
       }, 1500); // Reduced to 1.5 second grace period for more natural feel
     }, 800);
-  }, [tooltipGracePeriod, hoveredStatus]);
+  }, [tooltipGracePeriod, hoveredStatus, id, pending]);
 
   const handleStatusLeave = useCallback(() => {
     console.log('👋 Status leave triggered, grace period active:', tooltipGracePeriod);
@@ -300,7 +332,10 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
                   onClick={(e) => handleStatusClick('unread', e)}
-                  onMouseEnter={(e) => unread > 0 && handleStatusHover('unread', e)}
+                  onMouseEnter={(e) => {
+                    console.log('🔵 Unread hover:', { unread, categoryId: id });
+                    unread > 0 && handleStatusHover('unread', e);
+                  }}
                   onMouseLeave={handleStatusLeave}
                 >
                   <span className="text-gray-600">Unread messages</span>
@@ -312,7 +347,10 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
                   onClick={(e) => handleStatusClick('pending', e)}
-                  onMouseEnter={(e) => pending > 0 && handleStatusHover('pending', e)}
+                  onMouseEnter={(e) => {
+                    console.log('🟡 Pending hover:', { pending, categoryId: id });
+                    pending > 0 && handleStatusHover('pending', e);
+                  }}
                   onMouseLeave={handleStatusLeave}
                 >
                   <span className="text-gray-600">Pending replies</span>
@@ -324,7 +362,10 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 <div 
                   className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
                   onClick={(e) => handleStatusClick('no-response', e)}
-                  onMouseEnter={(e) => notRespondedCount > 0 && handleStatusHover('unresponded', e)}
+                  onMouseEnter={(e) => {
+                    console.log('🔴 Unresponded hover:', { notRespondedCount, categoryId: id });
+                    notRespondedCount > 0 && handleStatusHover('unresponded', e);
+                  }}
                   onMouseLeave={handleStatusLeave}
                 >
                   <span className="text-gray-600">Has not responded yet</span>
