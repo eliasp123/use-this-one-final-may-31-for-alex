@@ -46,8 +46,17 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor} group-hover:animate-pulse`} />
         </div>
         
-        {/* Title next to the icon */}
-        <h3 className="text-base sm:text-lg font-medium text-gray-800 ml-3 sm:ml-4 group-hover:text-gray-900 transition-colors">{title}</h3>
+        {/* Title next to the icon with New ribbon */}
+        <div className="flex items-center ml-3 sm:ml-4">
+          <h3 className="text-base sm:text-lg font-medium text-gray-800 group-hover:text-gray-900 transition-colors">{title}</h3>
+          
+          {/* New ribbon - shows when there are unread messages */}
+          {unread > 0 && (
+            <div className="ml-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
+              NEW
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Stats - Now with colored circles in the rows - adjusted to be 15% larger than the reduced size */}
