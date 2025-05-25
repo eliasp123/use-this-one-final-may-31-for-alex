@@ -36,7 +36,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
         {/* Top section with icon, file name, and status badge in same row */}
         <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center justify-center gap-3`}>
           {/* File icon */}
-          <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center">
             <fileInfo.icon className="h-6 w-6 text-white" />
           </div>
           
