@@ -107,13 +107,25 @@ const ToFieldAutocomplete = ({
     setShowSuggestions(filtered.length > 0);
   }, [value, recipients]);
 
-  // Debug effect to track showSuggestions state
+  // Debug effect to track showSuggestions state and positioning
   useEffect(() => {
-    console.log('📊 Suggestions state changed:', {
-      showSuggestions,
-      filteredCount: filteredSuggestions.length,
-      suggestions: filteredSuggestions
-    });
+    if (showSuggestions && inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      console.log('📊 Dropdown positioning debug:', {
+        showSuggestions,
+        filteredCount: filteredSuggestions.length,
+        suggestions: filteredSuggestions,
+        inputRect: {
+          top: rect.top,
+          bottom: rect.bottom,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height
+        },
+        calculatedTop: rect.bottom + window.scrollY + 4,
+        scrollY: window.scrollY
+      });
+    }
   }, [showSuggestions, filteredSuggestions]);
 
   // Handle clicking outside to close suggestions
@@ -180,6 +192,27 @@ const ToFieldAutocomplete = ({
     }
   };
 
+  // Calculate position for dropdown
+  const getDropdownStyle = () => {
+    if (!inputRef.current) return {};
+    
+    const rect = inputRef.current.getBoundingClientRect();
+    return {
+      position: 'fixed' as const,
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+      zIndex: 999999,
+      backgroundColor: 'white',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      maxHeight: '240px',
+      overflowY: 'auto' as const,
+      minWidth: '200px'
+    };
+  };
+
   return (
     <div ref={containerRef} className="relative w-full">
       <Input
@@ -197,19 +230,11 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Suggestions dropdown - using portal-like approach */}
+      {/* Suggestions dropdown with debugging */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
-          className="fixed bg-white border border-gray-300 rounded-md shadow-xl max-h-60 overflow-y-auto min-w-[200px]"
-          style={{
-            zIndex: 9999999,
-            top: inputRef.current ? inputRef.current.getBoundingClientRect().bottom + window.scrollY + 4 : '100%',
-            left: inputRef.current ? inputRef.current.getBoundingClientRect().left + window.scrollX : 0,
-            width: inputRef.current ? inputRef.current.getBoundingClientRect().width : 'auto',
-            visibility: 'visible',
-            display: 'block',
-            position: 'fixed'
-          }}
+          style={getDropdownStyle()}
+          data-testid="autocomplete-dropdown"
         >
           {filteredSuggestions.map((suggestion, index) => (
             <div
