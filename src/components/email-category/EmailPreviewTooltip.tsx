@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -132,12 +131,16 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     });
   }, [position]);
 
-  // Auto-scroll to ensure tooltip visibility when it becomes visible
+  // Smart scroll to ensure both card and tooltip are visible
   useEffect(() => {
     if (tooltipRef) {
-      // Small delay to ensure the tooltip is fully rendered and positioned
+      // Wait for tooltip to be fully rendered and positioned
       setTimeout(() => {
-        // Find the original trigger element (the hovered card section)
+        const tooltipRect = tooltipRef.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        
+        // Find the target card
         const cards = document.querySelectorAll('.bg-white.rounded-2xl');
         let targetCard = null;
         let minDistance = Infinity;
@@ -152,16 +155,46 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         });
 
         if (targetCard) {
-          // Scroll the target card into view to ensure the tooltip area is visible
-          targetCard.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'nearest'
-          });
+          const cardRect = targetCard.getBoundingClientRect();
+          
+          // Calculate the total area we need visible (card + tooltip)
+          const topBound = Math.min(cardRect.top, tooltipRect.top);
+          const bottomBound = Math.max(cardRect.bottom, tooltipRect.bottom);
+          const leftBound = Math.min(cardRect.left, tooltipRect.left);
+          const rightBound = Math.max(cardRect.right, tooltipRect.right);
+          
+          // Check if we need to scroll to make everything visible
+          let needsScroll = false;
+          let scrollOptions = {
+            behavior: 'smooth' as ScrollBehavior,
+            block: 'nearest' as ScrollLogicalPosition,
+            inline: 'nearest' as ScrollLogicalPosition
+          };
+          
+          // If tooltip or card extends beyond viewport vertically
+          if (topBound < 0 || bottomBound > viewportHeight) {
+            needsScroll = true;
+            // If more content is cut off at the top, prioritize showing the top
+            if (Math.abs(topBound) > (bottomBound - viewportHeight)) {
+              scrollOptions.block = 'start';
+            } else {
+              scrollOptions.block = 'end';
+            }
+          }
+          
+          // If tooltip or card extends beyond viewport horizontally
+          if (leftBound < 0 || rightBound > viewportWidth) {
+            needsScroll = true;
+            scrollOptions.inline = 'nearest';
+          }
+          
+          if (needsScroll) {
+            targetCard.scrollIntoView(scrollOptions);
+          }
         }
-      }, 200); // Longer delay to ensure tooltip positioning is complete
+      }, 250); // Longer delay to ensure tooltip is fully positioned
     }
-  }, [tooltipRef, position.x, position.y]); // Also depend on position to re-scroll if tooltip moves
+  }, [tooltipRef, position.x, position.y, smartPosition]); // Include smartPosition to trigger when tooltip position changes
 
   const getStatusLabel = () => {
     switch (status) {
