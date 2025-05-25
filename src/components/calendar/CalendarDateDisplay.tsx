@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -30,35 +31,33 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     );
   };
 
-  // Handle mouse events on calendar
-  const handleCalendarMouseOver = (e: React.MouseEvent) => {
+  // Handle mouse events on calendar with improved event detection
+  const handleCalendarMouseMove = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    const dayButton = target.closest('[role="gridcell"] button');
+    const dayButton = target.closest('[role="gridcell"] button, .rdp-day, .rdp-button_reset');
     
-    if (dayButton && dayButton.getAttribute('aria-label')) {
-      const ariaLabel = dayButton.getAttribute('aria-label');
-      if (ariaLabel) {
-        try {
-          // Parse the date from aria-label (format varies by locale)
-          const dateMatch = ariaLabel.match(/(\d{1,2})/);
-          if (dateMatch && date) {
-            const dayNumber = parseInt(dateMatch[1]);
-            const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
-            
-            if (getAppointmentsForDate(hoveredDateObj).length > 0) {
-              const rect = dayButton.getBoundingClientRect();
-              setTooltipPosition({
-                x: rect.left + rect.width / 2,
-                y: rect.top - 10
-              });
-              setHoveredDate(hoveredDateObj);
-            }
-          }
-        } catch (error) {
-          console.log('Could not parse date from aria-label:', ariaLabel);
+    if (dayButton && dayButton.textContent) {
+      const dayText = dayButton.textContent.trim();
+      const dayNumber = parseInt(dayText);
+      
+      if (!isNaN(dayNumber) && date) {
+        const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
+        
+        // Only show tooltip if this date has appointments
+        if (getAppointmentsForDate(hoveredDateObj).length > 0) {
+          const rect = dayButton.getBoundingClientRect();
+          setTooltipPosition({
+            x: rect.left + rect.width / 2,
+            y: rect.top - 10
+          });
+          setHoveredDate(hoveredDateObj);
+          return;
         }
       }
     }
+    
+    // If we get here, we're not hovering over a day with appointments
+    setHoveredDate(null);
   };
 
   const handleCalendarMouseLeave = () => {
@@ -113,7 +112,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             <div 
               className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
               style={{ pointerEvents: 'auto' }}
-              onMouseOver={handleCalendarMouseOver}
+              onMouseMove={handleCalendarMouseMove}
               onMouseLeave={handleCalendarMouseLeave}
             >
               <Calendar
