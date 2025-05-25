@@ -82,7 +82,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 250); // Slightly reduced delay for better responsiveness
+    }, 1000); // Increased to 1000ms for more stable behavior
   }, []);
 
   const handleStatusLeave = useCallback(() => {
@@ -94,7 +94,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     // Longer delay before hiding to allow moving to tooltip
     setTimeout(() => {
       setHoveredStatus(null);
-    }, 300); // Increased delay to prevent flickering
+    }, 300); // Keep existing delay for hiding
   }, []);
 
   const handleTooltipClose = useCallback(() => {
