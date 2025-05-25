@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -128,7 +129,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return null;
   }
 
-  // Calculate transform based on placement
+  // Calculate transform based on placement with fixed positioning
   const getTransform = () => {
     if (smartPosition.placement === 'bottom') {
       return 'translate(-50%, 10px)'; // Position below with small gap
@@ -138,11 +139,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
-      className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-50"
+      className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-[9999]"
       style={{
         left: `${smartPosition.x}px`,
         top: `${smartPosition.y}px`,
-        transform: getTransform()
+        transform: getTransform(),
+        position: 'fixed' // Ensure it's truly fixed and won't affect layout
       }}
       onMouseEnter={() => {}} // Prevent tooltip from closing when hovering over it
       onMouseLeave={onClose}

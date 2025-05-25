@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -83,7 +82,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 400); // 400ms delay
+    }, 300); // Reduced delay for better responsiveness
   }, []);
 
   const handleStatusLeave = useCallback(() => {
@@ -95,7 +94,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     // Small delay before hiding to allow moving to tooltip
     setTimeout(() => {
       setHoveredStatus(null);
-    }, 200);
+    }, 150); // Reduced delay to prevent rattling
   }, []);
 
   const handleTooltipClose = useCallback(() => {
@@ -226,7 +225,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
         </div>
       </div>
 
-      {/* Email Preview Tooltip */}
+      {/* Email Preview Tooltip - Using createPortal to render outside component tree */}
       {hoveredStatus && previewEmails.length > 0 && createPortal(
         <EmailPreviewTooltip
           emails={previewEmails}

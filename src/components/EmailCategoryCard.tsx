@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -68,7 +67,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 400); // 400ms delay
+    }, 300); // 300ms delay
   }, []);
 
   const handleStatusLeave = useCallback(() => {
