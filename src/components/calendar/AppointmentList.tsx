@@ -45,7 +45,7 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
       
       <CardContent className="p-0 flex flex-col flex-1 min-h-0">
         {/* Top section for selected date appointments - exactly half height */}
-        <div className="p-4 h-1/2 min-h-0">
+        <div className="flex-1 p-4">
           <ScrollArea className="h-full">
             <div className="space-y-3 pr-4">
               {selectedAppointments.length === 0 ? (
@@ -102,7 +102,7 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         <Separator className="bg-gray-600" />
 
         {/* Bottom section for upcoming appointments - exactly half height */}
-        <div className="p-4 h-1/2 min-h-0">
+        <div className="flex-1 p-4">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
           <ScrollArea className="h-full">
             <div className="space-y-2 pr-4">
@@ -112,7 +112,7 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
                 limitedUpcomingAppointments.map(appointment => (
                   <div 
                     key={appointment.id} 
-                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
+                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer"
                     onClick={() => onAppointmentClick(appointment)}
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
