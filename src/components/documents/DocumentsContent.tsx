@@ -35,9 +35,9 @@ const DocumentsContent = ({
               ) : null}
               
               {viewMode === 'grid' ? (
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-8">
                   {attachments.map((attachment) => (
-                    <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:scale-[1.02] px-1">
+                    <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200">
                       <CompactDocumentCard attachment={attachment} layout="grid" />
                     </div>
                   ))}
