@@ -14,7 +14,7 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   searchQuery = '',
   currentPage = 1
 }) => {
-  const { emailCategories } = useEmailCategoryData();
+  const { emailCategories, totalUnread, totalPending, totalUnresponded } = useEmailCategoryData();
   const { getFilteredAllEmails } = useFilteredEmailData();
   
   // Apply role-based filtering to categories
@@ -34,8 +34,8 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   const searchResults = hasSearchQuery 
     ? allEmails.filter(email => 
         email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        email.from.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        email.preview.toLowerCase().includes(searchQuery.toLowerCase())
+        email.sender.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        email.content.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
@@ -52,7 +52,11 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
   return (
     <div className="space-y-8 sm:space-y-16">
       {/* Summary Section */}
-      <SummarySection />
+      <SummarySection 
+        totalUnread={totalUnread}
+        totalPending={totalPending} 
+        totalUnresponded={totalUnresponded}
+      />
       
       {/* Search Results or No Results Message */}
       {hasSearchQuery && (
