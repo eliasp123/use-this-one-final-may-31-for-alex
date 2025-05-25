@@ -43,7 +43,7 @@ const DocumentsFilterRow = ({
           >
             <Users className="h-4 w-4 mr-2" />
             Person
-            <span className="ml-2 text-xs bg-black/10 px-2 py-0.5 rounded-full">
+            <span className="ml-2 text-sm font-bold text-purple-600">
               {getFilterCount('person')}
             </span>
           </button>
@@ -59,7 +59,7 @@ const DocumentsFilterRow = ({
           >
             <Building className="h-4 w-4 mr-2" />
             Organization
-            <span className="ml-2 text-xs bg-black/10 px-2 py-0.5 rounded-full">
+            <span className="ml-2 text-sm font-bold text-purple-600">
               {getFilterCount('organization')}
             </span>
           </button>
@@ -75,7 +75,7 @@ const DocumentsFilterRow = ({
           >
             <Calendar className="h-4 w-4 mr-2" />
             Month
-            <span className="ml-2 text-xs bg-black/10 px-2 py-0.5 rounded-full">
+            <span className="ml-2 text-sm font-bold text-purple-600">
               {getFilterCount('date')}
             </span>
           </button>
