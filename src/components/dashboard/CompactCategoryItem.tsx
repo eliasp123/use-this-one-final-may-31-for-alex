@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -211,7 +212,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       
       // Start grace period when tooltip opens
       setTooltipGracePeriod(true);
-      console.log('🛡️ Grace period started for 1.5 seconds');
+      console.log('🛡️ Grace period started for 1 second');
       
       if (gracePeriodTimeoutRef.current) {
         clearTimeout(gracePeriodTimeoutRef.current);
@@ -220,7 +221,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       gracePeriodTimeoutRef.current = setTimeout(() => {
         console.log('⏰ Grace period ended');
         setTooltipGracePeriod(false);
-      }, 1500); // Reduced to 1.5 second grace period for more natural feel
+      }, 1000); // Reduced to 1 second grace period
     }, 800);
   }, [tooltipGracePeriod, hoveredStatus, id, pending]);
 
@@ -242,7 +243,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       if (gracePeriodTimeoutRef.current) {
         clearTimeout(gracePeriodTimeoutRef.current);
       }
-    }, 1800); // Reduced to 1.8 seconds (1.5 seconds + 300ms)
+    }, 1300); // Reduced to 1.3 seconds (1 second + 300ms)
   }, [tooltipGracePeriod]);
 
   const handleTooltipClose = useCallback(() => {
