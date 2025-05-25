@@ -3,18 +3,11 @@ import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import CompactCategoryItem from './CompactCategoryItem';
 import AddNewCategoryButton from './AddNewCategoryButton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Plus } from 'lucide-react';
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from '../ui/pagination';
+import { addCustomCategory } from '@/utils/categoryUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface EmailCategory {
   id: string;
@@ -48,6 +41,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const [internalCurrentPage, setInternalCurrentPage] = React.useState(1);
   const [showNewCategoryDialog, setShowNewCategoryDialog] = React.useState(false);
   const [newCategoryName, setNewCategoryName] = React.useState('');
+  const { toast } = useToast();
   
   // Use external currentPage if provided, otherwise use internal state
   const activePage = currentPage || internalCurrentPage;
@@ -74,11 +68,29 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   };
 
   const handleCreateCategory = () => {
-    if (newCategoryName.trim() && onCategoryAdded) {
-      // This would integrate with the actual category creation logic
-      onCategoryAdded();
-      setNewCategoryName('');
-      setShowNewCategoryDialog(false);
+    if (newCategoryName.trim()) {
+      try {
+        addCustomCategory(newCategoryName.trim());
+        
+        toast({
+          title: "Category Created",
+          description: `"${newCategoryName.trim()}" has been added as a new category.`,
+        });
+        
+        // Notify parent component to refresh categories
+        if (onCategoryAdded) {
+          onCategoryAdded();
+        }
+        
+        setNewCategoryName('');
+        setShowNewCategoryDialog(false);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to create category. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
   
