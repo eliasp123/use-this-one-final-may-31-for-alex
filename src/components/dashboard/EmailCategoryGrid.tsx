@@ -95,7 +95,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     <>
       {/* Priority Categories Section - Full Cards (First Row Only) */}
       {priorityCategories.length > 0 && (
-        <div className="space-y-8 sm:space-y-12 mb-12">
+        <div className="space-y-8 sm:space-y-12 mb-16">
           <div className="text-center">
             <h2 className="text-lg font-medium text-gray-800 mb-2">Needs Attention</h2>
             <p className="text-sm text-gray-600">Your most important email categories</p>
@@ -112,12 +112,12 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
-      {/* Compact Categories Section - Button moved to replace heading */}
+      {/* Compact Categories Section with centered button */}
       {compactCategories.length > 0 && (
-        <div className="space-y-6" data-section="more-categories">
-          {/* Button replaces the "More Categories" heading */}
-          <div className="flex justify-start mb-8">
-            <div className="w-full max-w-md">
+        <div className="space-y-8" data-section="more-categories">
+          {/* Centered purple button with proper spacing */}
+          <div className="flex justify-center mb-12">
+            <div className="w-full max-w-lg">
               <button 
                 className="w-full flex items-center justify-center border border-purple-500 rounded-md bg-purple-400 hover:bg-purple-500 text-white transition-colors"
                 onClick={handleViewMoreCategories}
