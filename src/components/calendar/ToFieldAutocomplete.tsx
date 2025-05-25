@@ -29,28 +29,60 @@ const ToFieldAutocomplete = ({
     const emails = getAllEmailsWithAttachments();
     const recipientSet = new Set<string>();
     
+    console.log('ToFieldAutocomplete: Processing emails for recipients', { totalEmails: emails.length });
+    
     emails.forEach(email => {
+      console.log('Processing email:', { 
+        id: email.id, 
+        recipient: email.recipient, 
+        sender: email.sender 
+      });
+      
       // Extract recipient name from email strings like "Dr. Patricia Williams <dr.williams@citymedical.com>"
-      const recipientMatch = email.recipient.match(/^(.+?)\s*<.*>$/) || email.recipient.match(/^(.+)$/);
-      if (recipientMatch && recipientMatch[1]) {
-        const name = recipientMatch[1].trim();
-        if (name && name !== email.sender.name) { // Don't include self
-          recipientSet.add(name);
+      // or just plain names like "Dr. Patricia Williams"
+      let recipientName = '';
+      
+      if (email.recipient.includes('<')) {
+        // Format: "Name <email@domain.com>"
+        const match = email.recipient.match(/^(.+?)\s*<.*>$/);
+        if (match && match[1]) {
+          recipientName = match[1].trim();
         }
+      } else {
+        // Plain name or email
+        recipientName = email.recipient.trim();
+      }
+      
+      if (recipientName && recipientName !== 'you@example.com' && !recipientName.includes('@')) {
+        recipientSet.add(recipientName);
+        console.log('Added recipient:', recipientName);
+      }
+      
+      // Also extract from sender names (people who have emailed you)
+      if (email.sender.name && email.sender.name !== 'Johnson Family') {
+        recipientSet.add(email.sender.name);
+        console.log('Added sender as potential recipient:', email.sender.name);
       }
       
       // Also extract from sender organization names
       if (email.sender.organization && email.sender.organization !== 'Johnson Family') {
         recipientSet.add(email.sender.organization);
+        console.log('Added organization as potential recipient:', email.sender.organization);
       }
     });
     
     const uniqueRecipients = Array.from(recipientSet).sort();
+    console.log('ToFieldAutocomplete: Final recipients list', { 
+      count: uniqueRecipients.length, 
+      recipients: uniqueRecipients 
+    });
     setRecipients(uniqueRecipients);
   }, []);
 
   // Filter suggestions based on input
   useEffect(() => {
+    console.log('Filtering suggestions for input:', { value, recipientsCount: recipients.length });
+    
     if (value.trim() === '') {
       setFilteredSuggestions([]);
       return;
@@ -59,6 +91,13 @@ const ToFieldAutocomplete = ({
     const filtered = recipients.filter(
       recipient => recipient.toLowerCase().includes(value.toLowerCase())
     );
+    
+    console.log('Filtered suggestions:', { 
+      input: value, 
+      matchCount: filtered.length, 
+      matches: filtered 
+    });
+    
     setFilteredSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
   }, [value, recipients]);
 
@@ -80,6 +119,7 @@ const ToFieldAutocomplete = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    console.log('Input changed:', { newValue, willShowSuggestions: newValue.trim() !== '' });
     onChange(newValue);
     if (newValue.trim()) {
       setShowSuggestions(true);
@@ -90,6 +130,8 @@ const ToFieldAutocomplete = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    console.log('Key pressed:', { key: e.key, suggestionsCount: filteredSuggestions.length });
+    
     // If no suggestions, do nothing
     if (filteredSuggestions.length === 0) return;
 
@@ -108,6 +150,7 @@ const ToFieldAutocomplete = ({
       e.preventDefault();
       e.stopPropagation();
       if (filteredSuggestions[activeSuggestion]) {
+        console.log('Selected suggestion:', filteredSuggestions[activeSuggestion]);
         onChange(filteredSuggestions[activeSuggestion]);
         setShowSuggestions(false);
       }
@@ -119,9 +162,17 @@ const ToFieldAutocomplete = ({
   };
 
   const handleSuggestionClick = (suggestion: string) => {
+    console.log('Clicked suggestion:', suggestion);
     onChange(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
+  };
+
+  const handleInputFocus = () => {
+    console.log('Input focused:', { value: value.trim(), recipientsCount: recipients.length });
+    if (value.trim() !== '' && filteredSuggestions.length > 0) {
+      setShowSuggestions(true);
+    }
   };
 
   return (
@@ -133,7 +184,7 @@ const ToFieldAutocomplete = ({
         value={value}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        onFocus={() => value.trim() !== '' && setShowSuggestions(true)}
+        onFocus={handleInputFocus}
         placeholder={placeholder}
         className={cn(
           "text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400",
