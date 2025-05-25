@@ -104,7 +104,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
             <p className="text-sm text-gray-600">Additional email categories</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {compactCategories.map((category) => (
               <CompactCategoryItem
                 key={category.id}
