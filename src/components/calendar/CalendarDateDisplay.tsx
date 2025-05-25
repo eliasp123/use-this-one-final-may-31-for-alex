@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
@@ -20,9 +21,18 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [currentCalendarMonth, setCurrentCalendarMonth] = useState<Date>(date || new Date());
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const calendarContainerRef = useRef<HTMLDivElement>(null);
 
-  console.log('✅ WORKING HOVER CODE PRESERVED: Main calendar hover functionality is working correctly with handleCalendarMouseMove and getAppointmentsForDate');
+  console.log('✅ IMPROVED HOVER: Enhanced hover detection with month tracking and better element detection');
+
+  // Update current calendar month when date changes
+  useEffect(() => {
+    if (date) {
+      setCurrentCalendarMonth(date);
+    }
+  }, [date]);
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (targetDate: Date) => {
@@ -46,10 +56,10 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     clearHideTimeout();
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredDate(null);
-    }, 300); // Reduced to 300ms for more responsive hiding
+    }, 200);
   };
 
-  // Improved hover detection with better element matching
+  // Enhanced hover detection that works across all months
   const handleCalendarMouseMove = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     
@@ -59,16 +69,17 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       .rdp-day,
       .rdp-button_reset,
       button[name="day"],
-      [data-day]
+      [data-day],
+      button[class*="day"]
     `.replace(/\s+/g, ' ').trim()) as HTMLElement;
     
-    if (dayButton) {
-      // Try multiple ways to get the day number
+    if (dayButton && !dayButton.disabled && !dayButton.hasAttribute('disabled')) {
+      // Try multiple methods to get the day number
       let dayNumber: number | null = null;
       
-      // Method 1: Direct text content
+      // Method 1: Direct text content (most reliable)
       const textContent = dayButton.textContent?.trim();
-      if (textContent && !isNaN(parseInt(textContent))) {
+      if (textContent && !isNaN(parseInt(textContent)) && textContent.length <= 2) {
         dayNumber = parseInt(textContent);
       }
       
@@ -86,11 +97,25 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
         }
       }
       
-      if (dayNumber && dayNumber >= 1 && dayNumber <= 31 && date) {
-        const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
+      // Method 4: Check if button is in a cell with day info
+      if (!dayNumber) {
+        const cell = dayButton.closest('[role="gridcell"]');
+        if (cell) {
+          const cellText = cell.textContent?.trim();
+          if (cellText && !isNaN(parseInt(cellText)) && cellText.length <= 2) {
+            dayNumber = parseInt(cellText);
+          }
+        }
+      }
+      
+      if (dayNumber && dayNumber >= 1 && dayNumber <= 31) {
+        // Use current calendar month for date construction
+        const hoveredDateObj = new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth(), dayNumber);
         
-        // Validate the date is actually valid (handles month boundaries)
-        if (hoveredDateObj.getMonth() === date.getMonth()) {
+        // Validate the date is actually valid and in the current month
+        if (hoveredDateObj.getMonth() === currentCalendarMonth.getMonth() && 
+            hoveredDateObj.getFullYear() === currentCalendarMonth.getFullYear()) {
+          
           clearHideTimeout();
           
           const rect = dayButton.getBoundingClientRect();
@@ -135,6 +160,12 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     setHoveredDate(null);
     onDateSelect(targetDate);
     setIsDialogOpen(true);
+  };
+
+  // Handle month changes in calendar
+  const handleCalendarMonthChange = (newMonth: Date) => {
+    setCurrentCalendarMonth(newMonth);
+    setHoveredDate(null); // Clear hover when month changes
   };
 
   const handleSaveAppointment = (appointmentData: {
@@ -183,6 +214,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
             </div>
             
             <div 
+              ref={calendarContainerRef}
               className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
               style={{ pointerEvents: 'auto' }}
               onMouseMove={handleCalendarMouseMove}
@@ -192,6 +224,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
                 mode="single"
                 selected={date}
                 onSelect={onDateSelect}
+                onMonthChange={handleCalendarMonthChange}
                 className="w-full pointer-events-auto min-w-[300px]"
                 modifiers={{
                   hasAppointment: (day) => isDayWithAppointment(day)
