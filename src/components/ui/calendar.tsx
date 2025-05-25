@@ -36,10 +36,7 @@ function Calendar({
           "text-gray-400 rounded-md font-light text-[0.9rem] h-10 flex items-center justify-center uppercase flex-1",
         row: "flex w-full mt-4 justify-between border-t border-gray-100 pt-2",
         cell: "h-14 text-center text-sm p-0 relative flex items-center justify-center flex-1 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100"
-        ),
+        day: "pointer-events-auto", // Ensure custom day components are interactive
         day_range_end: "day-range-end",
         day_selected:
           "bg-green-500 hover:bg-green-600 text-white focus:bg-green-600 focus:text-white rounded-full",
@@ -59,6 +56,7 @@ function Calendar({
       styles={{
         day: {
           margin: '2px',
+          pointerEvents: 'auto', // Ensure all day elements are interactive
         },
         caption: {
           marginBottom: '24px',
@@ -78,6 +76,7 @@ function Calendar({
         cell: {
           width: 'auto',
           height: '56px',
+          pointerEvents: 'auto', // Ensure cells are interactive
         }
       }}
       {...props}

@@ -4,11 +4,12 @@ import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Clock, Building } from 'lucide-react';
 import AppointmentForm from './AppointmentForm';
-import CalendarHoverOverlay from './CalendarHoverOverlay';
 import { Appointment } from '../../types/appointment';
 import { createPortal } from 'react-dom';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
 interface CalendarDateDisplayProps {
   date: Date | undefined;
@@ -20,6 +21,106 @@ interface CalendarDateDisplayProps {
 
 const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment, appointments }: CalendarDateDisplayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Get appointments for a specific date
+  const getAppointmentsForDate = (targetDate: Date) => {
+    return appointments.filter(app => 
+      app.date.getDate() === targetDate.getDate() && 
+      app.date.getMonth() === targetDate.getMonth() && 
+      app.date.getFullYear() === targetDate.getFullYear()
+    );
+  };
+
+  // Custom Day component with hover functionality
+  const CustomDay = ({ date: dayDate, ...props }: any) => {
+    const dateString = format(dayDate, 'yyyy-MM-dd');
+    const dayAppointments = getAppointmentsForDate(dayDate);
+    const hasAppointments = dayAppointments.length > 0;
+
+    console.log(`Rendering day ${dayDate.getDate()}, has appointments: ${hasAppointments}`);
+
+    return (
+      <div className="relative">
+        <button
+          {...props}
+          data-tooltip-id={hasAppointments ? `tooltip-${dateString}` : undefined}
+          data-tooltip-place="top"
+          className={`h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100 ${
+            hasAppointments ? 'bg-orange-200 text-gray-600' : ''
+          } ${
+            props.selected ? 'bg-green-500 hover:bg-green-600 text-white' : ''
+          } ${
+            props.today ? 'bg-green-500 hover:bg-green-600 text-white' : ''
+          }`}
+          style={{ pointerEvents: 'auto' }}
+        >
+          {dayDate.getDate()}
+        </button>
+        
+        {hasAppointments && (
+          <Tooltip 
+            id={`tooltip-${dateString}`} 
+            className="custom-appointment-tooltip"
+            style={{ 
+              zIndex: 99999,
+              backgroundColor: 'white',
+              color: '#333',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              padding: '12px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              maxWidth: '300px'
+            }}
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold text-gray-800">
+                  {format(dayDate, 'EEEE, MMMM d')}
+                </h4>
+                <span className="text-xs text-gray-500">
+                  {dayAppointments.length} appointment{dayAppointments.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {dayAppointments.map(appointment => (
+                  <div key={appointment.id} className="p-2 bg-gray-50 rounded border border-gray-100">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className={`w-2 h-2 rounded-full ${appointment.color}`}></div>
+                      <h5 className="font-medium text-amber-700 text-sm">{appointment.title}</h5>
+                    </div>
+                    <div className="space-y-1 text-xs text-gray-600">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-3 w-3" />
+                        <span>{appointment.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Building className="h-3 w-3" />
+                        <span>{appointment.organization}</span>
+                      </div>
+                      {appointment.to && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-gray-400">with</span>
+                          <span>{appointment.to}</span>
+                        </div>
+                      )}
+                    </div>
+                    {appointment.notes && (
+                      <div className="mt-1 p-1 bg-amber-50 rounded text-xs text-gray-700">
+                        {appointment.notes.length > 40 
+                          ? `${appointment.notes.substring(0, 40)}...` 
+                          : appointment.notes
+                        }
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Tooltip>
+        )}
+      </div>
+    );
+  };
 
   const handleSaveAppointment = (appointmentData: {
     date: Date;
@@ -66,24 +167,15 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
               </div>
             </div>
             
-            <div className="w-full md:w-2/3 p-4 bg-white relative">
+            <div className="w-full md:w-2/3 p-4 bg-white relative" style={{ pointerEvents: 'auto' }}>
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={onDateSelect}
-                className="w-full"
-                modifiers={{
-                  hasAppointment: (date) => isDayWithAppointment(date),
+                className="w-full pointer-events-auto"
+                components={{
+                  Day: CustomDay
                 }}
-                modifiersClassNames={{
-                  hasAppointment: 'bg-orange-200 text-gray-600 rounded-full',
-                }}
-              />
-              
-              {/* Hover overlay */}
-              <CalendarHoverOverlay 
-                appointments={appointments}
-                selectedDate={date}
               />
             </div>
           </div>
