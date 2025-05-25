@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText, Search, Calendar } from 'lucide-react';
+import { Info, Pencil, FileText, Search, Calendar, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
 import { Dialog, DialogContent } from '../components/ui/dialog';
@@ -11,6 +11,8 @@ import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import CalendarPopup from '../components/CalendarPopup';
+import CustomCategoryDialog from '../components/forms/CustomCategoryDialog';
+import { addCustomCategory } from '../utils/categoryUtils';
 import { 
   Pagination, 
   PaginationContent, 
@@ -24,6 +26,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showCustomCategoryDialog, setShowCustomCategoryDialog] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { userRole, setUserRole } = useUserRole();
   const { toast } = useToast();
@@ -41,6 +44,24 @@ const Index = () => {
       title: "Email Sent",
       description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
     });
+  };
+
+  const handleAddCustomCategory = (name: string): boolean => {
+    try {
+      addCustomCategory(name);
+      toast({
+        title: "Category Created",
+        description: `"${name}" has been added as a new category.`,
+      });
+      return true;
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create category. Please try again.",
+        variant: "destructive",
+      });
+      return false;
+    }
   };
 
   // Keep the toggle function available for programmer use
@@ -129,6 +150,15 @@ const Index = () => {
                 <Calendar className="mr-2 h-4 w-4" />
                 Calendar
               </Button>
+
+              <Button
+                onClick={() => setShowCustomCategoryDialog(true)}
+                variant="outline"
+                className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-purple-300 hover:bg-purple-50 text-purple-700 flex items-center justify-center"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create Category
+              </Button>
             </div>
 
             {/* Pagination - Centered under action buttons */}
@@ -211,6 +241,54 @@ const Index = () => {
         
         <RoleAwareEmailDashboard searchQuery={searchQuery} currentPage={currentPage} />
 
+        {/* Bottom Pagination - Same as top */}
+        {totalPages > 1 && (
+          <div className="mt-12 sm:mt-16 flex justify-center">
+            <Pagination className="">
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage - 1);
+                      }} 
+                    />
+                  </PaginationItem>
+                )}
+                
+                {pageNumbers.map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink 
+                      href="#" 
+                      isActive={page === currentPage}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(page);
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage + 1);
+                      }} 
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+
         {/* Calendar Section with margin top for separation */}
         <div className="mt-10 sm:mt-16">
           <CalendarSection />
@@ -229,6 +307,13 @@ const Index = () => {
             <CalendarPopup showTrigger={false} />
           </DialogContent>
         </Dialog>
+
+        {/* Custom Category Dialog */}
+        <CustomCategoryDialog
+          isOpen={showCustomCategoryDialog}
+          onOpenChange={setShowCustomCategoryDialog}
+          onAddCategory={handleAddCustomCategory}
+        />
       </div>
     </div>
   );
