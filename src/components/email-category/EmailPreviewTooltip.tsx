@@ -173,7 +173,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [position.x, position.y, smartPosition.placement, currentPosition.x]);
 
-  // Smart scroll to ensure both card and tooltip are visible (with more aggressive scrolling)
+  // Smart scroll ONLY when tooltip is actually outside viewport
   useEffect(() => {
     if (tooltipRef) {
       // Wait for tooltip to be fully rendered and positioned
@@ -181,6 +181,21 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         const tooltipRect = tooltipRef.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
+        
+        // Check if tooltip is actually outside the viewport
+        const isOutsideViewport = 
+          tooltipRect.top < 0 || 
+          tooltipRect.bottom > viewportHeight ||
+          tooltipRect.left < 0 ||
+          tooltipRect.right > viewportWidth;
+        
+        // Only scroll if the tooltip is actually outside the viewport
+        if (!isOutsideViewport) {
+          console.log('Tooltip is fully visible, no scroll needed');
+          return;
+        }
+        
+        console.log('Tooltip is outside viewport, scrolling into view');
         
         // Find the target card
         const cards = document.querySelectorAll('.bg-white.rounded-2xl');
@@ -202,26 +217,19 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           // Calculate the total area we need visible (card + tooltip)
           const topBound = Math.min(cardRect.top, tooltipRect.top);
           const bottomBound = Math.max(cardRect.bottom, tooltipRect.bottom);
-          const leftBound = Math.min(cardRect.left, tooltipRect.left);
-          const rightBound = Math.max(cardRect.right, tooltipRect.right);
           
-          // Check if we need to scroll to make everything visible
+          // Only scroll if parts are actually cut off
           let needsScroll = false;
           let scrollAmount = 0;
           
           // Calculate how much we need to scroll vertically
           if (topBound < 0) {
-            // Need to scroll up - add extra margin for better visibility
-            scrollAmount = Math.abs(topBound) + 100; // Extra 100px margin
+            // Need to scroll up - add minimal margin
+            scrollAmount = Math.abs(topBound) + 20; // Minimal 20px margin
             needsScroll = true;
           } else if (bottomBound > viewportHeight) {
-            // Need to scroll down
-            scrollAmount = bottomBound - viewportHeight + 50; // Extra 50px margin
-            needsScroll = true;
-          }
-          
-          // If tooltip or card extends beyond viewport horizontally
-          if (leftBound < 0 || rightBound > viewportWidth) {
+            // Need to scroll down - add minimal margin
+            scrollAmount = bottomBound - viewportHeight + 20; // Minimal 20px margin
             needsScroll = true;
           }
           
@@ -231,27 +239,21 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             let targetScrollY = currentScrollY;
             
             if (topBound < 0) {
-              // Scroll up by the amount needed plus margin
-              targetScrollY = currentScrollY + topBound - 100;
+              // Scroll up by the amount needed plus minimal margin
+              targetScrollY = currentScrollY + topBound - 20;
             } else if (bottomBound > viewportHeight) {
-              // Scroll down
-              targetScrollY = currentScrollY + (bottomBound - viewportHeight) + 50;
+              // Scroll down by minimal amount
+              targetScrollY = currentScrollY + (bottomBound - viewportHeight) + 20;
             }
             
-            // Use smooth scroll with controlled timing
+            // Use smooth scroll
             window.scrollTo({
               top: targetScrollY,
               behavior: 'smooth'
             });
-            
-            // Add CSS to make scroll slower
-            document.documentElement.style.scrollBehavior = 'smooth';
-            setTimeout(() => {
-              document.documentElement.style.scrollBehavior = '';
-            }, 1000);
           }
         }
-      }, 250);
+      }, 150); // Reduced delay for better responsiveness
     }
   }, [tooltipRef, position.x, position.y, smartPosition]);
 
