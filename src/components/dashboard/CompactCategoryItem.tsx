@@ -31,10 +31,12 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [tooltipGracePeriod, setTooltipGracePeriod] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
   const expandTimeoutRef = useRef<NodeJS.Timeout>();
   const scrollLockTimeoutRef = useRef<NodeJS.Timeout>();
+  const gracePeriodTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
@@ -101,6 +103,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
       if (expandTimeoutRef.current) clearTimeout(expandTimeoutRef.current);
       if (scrollLockTimeoutRef.current) clearTimeout(scrollLockTimeoutRef.current);
+      if (gracePeriodTimeoutRef.current) clearTimeout(gracePeriodTimeoutRef.current);
     };
   }, []);
 
@@ -142,8 +145,13 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     navigate(`/emails/${id}/${status}`);
   };
 
-  // Tooltip behavior - removed scroll lock interference
+  // Enhanced tooltip behavior with grace period
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
+    // If we're in a grace period and a tooltip is already open, ignore new hovers
+    if (tooltipGracePeriod && hoveredStatus) {
+      return;
+    }
+
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -160,8 +168,19 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
+      
+      // Start grace period when tooltip opens
+      setTooltipGracePeriod(true);
+      
+      if (gracePeriodTimeoutRef.current) {
+        clearTimeout(gracePeriodTimeoutRef.current);
+      }
+      
+      gracePeriodTimeoutRef.current = setTimeout(() => {
+        setTooltipGracePeriod(false);
+      }, 8000); // 8 second grace period
     }, 800);
-  }, []);
+  }, [tooltipGracePeriod, hoveredStatus]);
 
   const handleStatusLeave = useCallback(() => {
     if (hoverTimeoutRef.current) {
@@ -174,6 +193,10 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
+      setTooltipGracePeriod(false);
+      if (gracePeriodTimeoutRef.current) {
+        clearTimeout(gracePeriodTimeoutRef.current);
+      }
     }, 8300); // Increased from 300ms to 8300ms (8 seconds + 300ms) for better user experience with auto-scroll
   }, []);
 
@@ -184,7 +207,11 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
+    if (gracePeriodTimeoutRef.current) {
+      clearTimeout(gracePeriodTimeoutRef.current);
+    }
     setHoveredStatus(null);
+    setTooltipGracePeriod(false);
   }, []);
 
   const handleTooltipMouseEnter = useCallback(() => {
