@@ -44,20 +44,20 @@ export const useCalendarLogic = () => {
     setSelectedDateAppointments([appointment]);
   };
 
-  // Get upcoming appointments from TODAY, limited to two weeks
+  // Get upcoming appointments from TODAY, limited to four weeks
   const getUpcomingAppointments = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
-    twoWeeksFromNow.setHours(23, 59, 59, 999);
+    const fourWeeksFromNow = new Date();
+    fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
+    fourWeeksFromNow.setHours(23, 59, 59, 999);
     
     return APPOINTMENTS
       .filter(app => {
         const appDate = new Date(app.date);
         appDate.setHours(0, 0, 0, 0);
-        return appDate > today && appDate <= twoWeeksFromNow;
+        return appDate > today && appDate <= fourWeeksFromNow;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };

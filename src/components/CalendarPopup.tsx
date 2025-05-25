@@ -151,19 +151,22 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     setSelectedDateAppointments([appointment]);
   };
 
-  // Get upcoming appointments from TODAY
+  // Get upcoming appointments from TODAY - updated to 4 weeks
   const getUpcomingAppointments = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    
+    const fourWeeksFromNow = new Date();
+    fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
+    fourWeeksFromNow.setHours(23, 59, 59, 999);
     
     return APPOINTMENTS
       .filter(app => {
         const appDate = new Date(app.date);
         appDate.setHours(0, 0, 0, 0);
-        return appDate > today;
+        return appDate > today && appDate <= fourWeeksFromNow;
       })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .slice(0, 3);
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
   const upcomingAppointments = getUpcomingAppointments();

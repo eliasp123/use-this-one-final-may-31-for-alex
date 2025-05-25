@@ -3,6 +3,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
+import { ScrollArea } from '../ui/scroll-area';
 import { Appointment } from '../../types/appointment';
 import { ENCOURAGING_MESSAGES } from '../../data/calendarData';
 
@@ -19,13 +20,13 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
     return ENCOURAGING_MESSAGES[dayOfWeek % ENCOURAGING_MESSAGES.length];
   };
 
-  // Filter upcoming appointments to two weeks maximum
-  const twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  // Filter upcoming appointments to four weeks maximum
+  const fourWeeksFromNow = new Date();
+  fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
   
   const limitedUpcomingAppointments = upcomingAppointments.filter(appointment => {
     const appointmentDate = new Date(appointment.date);
-    return appointmentDate <= twoWeeksFromNow;
+    return appointmentDate <= fourWeeksFromNow;
   });
 
   return (
@@ -98,38 +99,40 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         {/* Separator line */}
         <Separator className="bg-gray-600" />
 
-        {/* Bottom section for upcoming appointments - dynamic height with wrapping */}
-        <div className="p-4 bg-gray-50 flex-1 min-h-0 overflow-y-auto">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 2 Weeks)</h4>
-          <div className="space-y-2">
-            {limitedUpcomingAppointments.length === 0 ? (
-              <p className="text-gray-500 text-xs">No upcoming appointments in the next 2 weeks</p>
-            ) : (
-              limitedUpcomingAppointments.map(appointment => (
-                <div 
-                  key={appointment.id} 
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
-                  onClick={() => onAppointmentClick(appointment)}
-                >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-gray-800 truncate mb-1">
-                        {appointment.title}
-                      </p>
-                      <p className="text-xs text-gray-600 truncate mb-1">
-                        {appointment.organization}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        {format(new Date(appointment.date), 'MMM d')}
-                      </p>
+        {/* Bottom section for upcoming appointments with scroll area */}
+        <div className="p-4 bg-gray-50 flex-1 min-h-0">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
+          <ScrollArea className="h-full">
+            <div className="space-y-2 pr-4">
+              {limitedUpcomingAppointments.length === 0 ? (
+                <p className="text-gray-500 text-xs">No upcoming appointments in the next 4 weeks</p>
+              ) : (
+                limitedUpcomingAppointments.map(appointment => (
+                  <div 
+                    key={appointment.id} 
+                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
+                    onClick={() => onAppointmentClick(appointment)}
+                  >
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-gray-800 truncate mb-1">
+                          {appointment.title}
+                        </p>
+                        <p className="text-xs text-gray-600 truncate mb-1">
+                          {appointment.organization}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {format(new Date(appointment.date), 'MMM d')}
+                        </p>
+                      </div>
                     </div>
+                    <span className="text-xs text-gray-600 flex-shrink-0 ml-2">{appointment.time}</span>
                   </div>
-                  <span className="text-xs text-gray-600 flex-shrink-0 ml-2">{appointment.time}</span>
-                </div>
-              ))
-            )}
-          </div>
+                ))
+              )}
+            </div>
+          </ScrollArea>
         </div>
       </CardContent>
     </Card>
