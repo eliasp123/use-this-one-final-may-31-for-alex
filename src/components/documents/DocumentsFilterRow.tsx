@@ -26,17 +26,17 @@ const DocumentsFilterRow = ({
     <div className="w-full max-w-7xl mx-auto pt-8 mb-8">
       {/* Single button container spanning the width */}
       <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch h-16">
-        {/* Filter by label with purple background */}
-        <div className="bg-gradient-to-r from-purple-500 to-purple-500 text-white px-4 rounded-l-2xl font-medium flex items-center h-full">
+        {/* Filter by label with purple background - 1/9 width */}
+        <div className="bg-gradient-to-r from-purple-500 to-purple-500 text-white flex-1 rounded-l-2xl font-medium flex items-center justify-center h-full">
           Filter by:
         </div>
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Person Filter */}
+        {/* Person Filter - 1/9 width */}
         <button
           onClick={() => onFilterChange('person')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             selectedFilter === 'person' 
               ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
               : "text-gray-700 hover:bg-gray-50"
@@ -51,10 +51,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Organization Filter */}
+        {/* Organization Filter - 1/9 width */}
         <button
           onClick={() => onFilterChange('organization')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             selectedFilter === 'organization' 
               ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
               : "text-gray-700 hover:bg-gray-50"
@@ -69,10 +69,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Month Filter */}
+        {/* Month Filter - 1/9 width */}
         <button
           onClick={() => onFilterChange('date')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             selectedFilter === 'date' 
               ? "bg-gradient-to-r from-purple-500 to-purple-500 text-white shadow-lg shadow-purple-500/25" 
               : "text-gray-700 hover:bg-gray-50"
@@ -87,10 +87,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Grid Toggle */}
+        {/* Grid Toggle - 1/9 width */}
         <button
           onClick={() => onViewModeChange('grid')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             viewMode === 'grid' 
               ? "bg-blue-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
@@ -102,10 +102,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* List Toggle */}
+        {/* List Toggle - 1/9 width */}
         <button
           onClick={() => onViewModeChange('list')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             viewMode === 'list' 
               ? "bg-blue-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
@@ -117,10 +117,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* All Direction */}
+        {/* All Direction - 1/9 width */}
         <button
           onClick={() => onDirectionFilterChange('all')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             directionFilter === 'all' 
               ? "bg-blue-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
@@ -131,10 +131,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Received Direction */}
+        {/* Received Direction - 1/9 width */}
         <button
           onClick={() => onDirectionFilterChange('received')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             directionFilter === 'received' 
               ? "bg-green-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
@@ -146,10 +146,10 @@ const DocumentsFilterRow = ({
 
         <div className="w-px bg-gray-300"></div>
 
-        {/* Sent Direction */}
+        {/* Sent Direction - 1/9 width */}
         <button
           onClick={() => onDirectionFilterChange('sent')}
-          className={`flex items-center px-4 font-medium transition-all duration-200 h-full ${
+          className={`flex items-center justify-center flex-1 font-medium transition-all duration-200 h-full ${
             directionFilter === 'sent' 
               ? "bg-orange-500 text-white" 
               : "text-gray-700 hover:bg-gray-50"
