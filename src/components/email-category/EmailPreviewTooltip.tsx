@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
 import { Mail, ArrowRight } from 'lucide-react';
@@ -23,6 +22,39 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   categoryColor
 }) => {
   const navigate = useNavigate();
+  const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'top' });
+
+  // Calculate smart positioning based on available screen space
+  useEffect(() => {
+    const tooltipHeight = 400; // Approximate height of tooltip
+    const tooltipWidth = 480; // Max width from the component
+    const margin = 20; // Safety margin from screen edges
+
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    // Determine vertical placement
+    const spaceAbove = position.y - margin;
+    const spaceBelow = viewportHeight - position.y - margin;
+    const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
+
+    // Determine horizontal centering with bounds checking
+    let xPos = position.x;
+    const halfWidth = tooltipWidth / 2;
+    
+    // Keep tooltip within horizontal bounds
+    if (xPos - halfWidth < margin) {
+      xPos = halfWidth + margin;
+    } else if (xPos + halfWidth > viewportWidth - margin) {
+      xPos = viewportWidth - halfWidth - margin;
+    }
+
+    setSmartPosition({
+      x: xPos,
+      y: position.y,
+      placement: shouldPlaceBelow ? 'bottom' : 'top'
+    });
+  }, [position]);
 
   const getStatusLabel = () => {
     switch (status) {
@@ -96,13 +128,21 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return null;
   }
 
+  // Calculate transform based on placement
+  const getTransform = () => {
+    if (smartPosition.placement === 'bottom') {
+      return 'translate(-50%, 10px)'; // Position below with small gap
+    }
+    return 'translate(-50%, calc(-100% - 10px))'; // Position above with small gap
+  };
+
   return (
     <div 
       className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto z-50"
       style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        transform: 'translate(-50%, calc(-100% - 10px))'
+        left: `${smartPosition.x}px`,
+        top: `${smartPosition.y}px`,
+        transform: getTransform()
       }}
       onMouseEnter={() => {}} // Prevent tooltip from closing when hovering over it
       onMouseLeave={onClose}
