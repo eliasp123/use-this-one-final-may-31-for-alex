@@ -25,8 +25,8 @@ const DocumentsFilterRow = ({
   return (
     <div className="w-full max-w-7xl mx-auto pt-8 mb-8">
       <div className="flex items-stretch h-16 gap-4">
-        {/* Left card - Filter section (70% width) */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[7]">
+        {/* Left card - Filter section (60% width) */}
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[6]">
           {/* Filter by label with purple background */}
           <div className="bg-gradient-to-r from-purple-500 to-purple-500 text-white flex-1 rounded-l-2xl flex items-center justify-center h-full">
             Filter by:
@@ -81,8 +81,8 @@ const DocumentsFilterRow = ({
           </button>
         </div>
 
-        {/* Right card - View and Direction section (30% width) */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[3]">
+        {/* Right card - View and Direction section (40% width) */}
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch flex-[4]">
           {/* Grid Toggle */}
           <button
             onClick={() => onViewModeChange('grid')}
