@@ -22,7 +22,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
       <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
         <Button
           onClick={onNewEmailClick}
-          className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center"
+          className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center text-base"
         >
           <Pencil className="mr-2 h-4 w-4" />
           Compose New Email
@@ -31,16 +31,16 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <Button
           onClick={() => navigate('/')}
           variant="outline"
-          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base"
+          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base !h-12"
         >
           <Mail className="mr-2 h-4 w-4" />
-          Return to Communication Hub
+          Communication Hub
         </Button>
 
         <Button
           onClick={() => setShowCalendar(true)}
           variant="outline"
-          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base"
+          className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center text-base !h-12"
         >
           <Calendar className="mr-2 h-4 w-4" />
           Calendar
