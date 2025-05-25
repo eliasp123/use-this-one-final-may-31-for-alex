@@ -76,10 +76,10 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(hoverTimeoutRef.current);
     }
     
-    // Longer delay before hiding to allow moving to tooltip
+    // Longer delay before hiding to allow moving to tooltip - matching enter delay
     setTimeout(() => {
       setHoveredStatus(null);
-    }, 300); // Keep existing delay for hiding
+    }, 1200); // Increased to exceed enter delay to prevent timing conflicts
   }, []);
 
   const handleTooltipClose = useCallback(() => {
