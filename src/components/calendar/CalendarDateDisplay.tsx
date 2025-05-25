@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
 import { Card, CardContent } from '../ui/card';
@@ -20,6 +20,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Log the working hover functionality for future reference
   console.log('✅ WORKING HOVER CODE PRESERVED: Main calendar hover functionality is working correctly with handleCalendarMouseMove and getAppointmentsForDate');
@@ -31,6 +32,22 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       app.date.getMonth() === targetDate.getMonth() && 
       app.date.getFullYear() === targetDate.getFullYear()
     );
+  };
+
+  // Clear any existing timeout
+  const clearHideTimeout = () => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  // Set a timeout to hide the tooltip
+  const setHideTimeout = () => {
+    clearHideTimeout();
+    hideTimeoutRef.current = setTimeout(() => {
+      setHoveredDate(null);
+    }, 3000); // 3 seconds delay
   };
 
   // Handle mouse events on calendar with improved event detection
@@ -45,7 +62,10 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       if (!isNaN(dayNumber) && date) {
         const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
         
-        // Show tooltip for any valid date (not just dates with appointments)
+        // Clear any existing timeout when hovering over a date
+        clearHideTimeout();
+        
+        // Show tooltip for any valid date
         const rect = dayButton.getBoundingClientRect();
         setTooltipPosition({
           x: rect.left + rect.width / 2,
@@ -57,31 +77,27 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     }
     
     // If we get here, we're not hovering over a valid day
-    setHoveredDate(null);
+    // Set timeout to hide tooltip after delay
+    setHideTimeout();
   };
 
   const handleCalendarMouseLeave = () => {
-    // Only hide tooltip if we're not hovering over the tooltip itself
-    // We'll use a longer delay to allow mouse to move to tooltip
-    setTimeout(() => {
-      const tooltipElement = document.querySelector('#calendar-tooltip');
-      if (tooltipElement && !tooltipElement.matches(':hover')) {
-        setHoveredDate(null);
-      }
-    }, 1000);
+    // Set timeout to hide tooltip when leaving calendar area
+    setHideTimeout();
   };
 
   const handleTooltipMouseEnter = () => {
     // Keep the tooltip visible when hovering over it
-    // hoveredDate should already be set, so we don't need to do anything
+    clearHideTimeout();
   };
 
   const handleTooltipMouseLeave = () => {
     // Hide tooltip when leaving the tooltip area
-    setHoveredDate(null);
+    setHideTimeout();
   };
 
   const handleAddAppointmentFromTooltip = (targetDate: Date) => {
+    clearHideTimeout();
     setHoveredDate(null); // Hide tooltip
     onDateSelect(targetDate); // Select the date
     setIsDialogOpen(true); // Open appointment form
@@ -158,7 +174,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
         </CardContent>
       </Card>
 
-      {/* Enhanced Tooltip with Add Appointment button */}
+      {/* Enhanced Tooltip with better hover handling */}
       {hoveredDate && createPortal(
         <div 
           id="calendar-tooltip"
