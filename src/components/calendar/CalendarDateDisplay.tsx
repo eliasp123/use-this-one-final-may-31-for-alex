@@ -62,13 +62,13 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
 
   const handleCalendarMouseLeave = () => {
     // Only hide tooltip if we're not hovering over the tooltip itself
-    // We'll use a small delay to allow mouse to move to tooltip
+    // We'll use a longer delay to allow mouse to move to tooltip
     setTimeout(() => {
       const tooltipElement = document.querySelector('#calendar-tooltip');
       if (tooltipElement && !tooltipElement.matches(':hover')) {
         setHoveredDate(null);
       }
-    }, 100);
+    }, 300);
   };
 
   const handleTooltipMouseEnter = () => {
