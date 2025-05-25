@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -38,14 +37,8 @@ const AppointmentFormSidebarContent = ({
 
   return (
     <div className="w-80 border-l border-gray-200 bg-gray-50 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-medium text-gray-800">
-          {selectedDate ? `Appointments on ${format(selectedDate, 'MMMM d')}` : 'Select a date'}
-        </h3>
-      </div>
-      
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top section for selected date appointments */}
+        {/* Top section for selected date appointments - removed header and border */}
         <div className="flex-1 p-4 overflow-y-auto">
           {!selectedDate ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
