@@ -33,7 +33,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   return (
     <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[340px]">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with icon, file name, and status badge in same row */}
+        {/* Top section with icon and file name - removed status badge */}
         <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center gap-0.5`}>
           {/* File icon */}
           <div className="w-12 h-12 rounded-xl flex items-center justify-center">
@@ -44,12 +44,6 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 flex-1">
             {attachment.name}
           </h3>
-          
-          {/* Status badge */}
-          <StatusBadge 
-            direction={attachment.direction} 
-            statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
-          />
         </div>
 
         {/* Metadata section with left-aligned text - vertically centered with increased height */}
@@ -67,6 +61,10 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <Calendar className="h-4 w-4 text-gray-400" />
               <span>{formatDate(attachment.emailDate)}</span>
+            </div>
+            {/* Status indicator moved below date - now bold text instead of colored badge */}
+            <div className="text-sm font-bold text-gray-700">
+              {attachment.direction === 'received' ? 'Received' : 'Sent'}
             </div>
           </div>
         </div>
