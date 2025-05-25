@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -101,7 +102,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   };
 
   const toggleExpanded = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent card click from triggering
     setIsManuallyControlled(true);
     setIsExpanded(!isExpanded);
     
@@ -262,11 +263,14 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 {total} total
               </span>
               
-              <div className="p-1" onClick={toggleExpanded}>
+              <button 
+                className="p-1 hover:bg-gray-200 rounded transition-colors" 
+                onClick={toggleExpanded}
+              >
                 <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                   isExpanded ? 'rotate-180' : 'rotate-0'
                 }`} />
-              </div>
+              </button>
             </div>
           </div>
         </div>
