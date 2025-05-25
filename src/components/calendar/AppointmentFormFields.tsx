@@ -9,6 +9,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Appointment } from '../../types/appointment';
 import ToFieldAutocomplete from './ToFieldAutocomplete';
+import OrganizationFieldAutocomplete from './OrganizationFieldAutocomplete';
 
 interface AppointmentFormFieldsProps {
   selectedDate: Date | undefined;
@@ -153,22 +154,13 @@ const AppointmentFormFields = ({
         />
       </div>
 
-      {/* Organization */}
+      {/* Organization with Autocomplete */}
       <div className="space-y-3">
         <Label htmlFor="organization" className="text-lg font-medium">Organization</Label>
-        <Input
-          id="organization"
-          type="text"
+        <OrganizationFieldAutocomplete
           value={organization}
-          onChange={(e) => onOrganizationChange(e.target.value)}
+          onChange={onOrganizationChange}
           placeholder="e.g., City Hospital, ABC Clinic"
-          className="text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
         />
       </div>
 

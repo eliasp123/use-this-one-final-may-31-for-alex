@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
+import OrganizationFieldAutocomplete from './OrganizationFieldAutocomplete';
 
 interface AppointmentFormInputFieldsProps {
   title: string;
@@ -57,17 +57,15 @@ const AppointmentFormInputFields = ({
         />
       </div>
 
-      {/* Organization */}
+      {/* Organization with Autocomplete */}
       <div className="space-y-2">
         <Label htmlFor="organization" className="text-sm font-medium text-gray-700">
           Organization <span className="text-red-500">*</span>
         </Label>
-        <Input
-          id="organization"
-          type="text"
-          placeholder="e.g., City Hospital, ABC Clinic"
+        <OrganizationFieldAutocomplete
           value={organization}
-          onChange={(e) => setOrganization(e.target.value)}
+          onChange={setOrganization}
+          placeholder="e.g., City Hospital, ABC Clinic"
           className="w-full"
         />
       </div>
