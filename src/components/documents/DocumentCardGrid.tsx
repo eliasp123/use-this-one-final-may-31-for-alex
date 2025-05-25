@@ -34,14 +34,14 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
     <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[292px]">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with icon, file name, and status badge in same row */}
-        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center justify-center gap-3`}>
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center gap-3`}>
           {/* File icon */}
           <div className="w-12 h-12 rounded-xl flex items-center justify-center">
             <fileInfo.icon className="h-6 w-6 text-white" />
           </div>
           
           {/* File name */}
-          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 flex-1 text-center">
+          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 flex-1">
             {attachment.name}
           </h3>
           
