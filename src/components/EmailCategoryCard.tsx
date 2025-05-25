@@ -53,13 +53,16 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(hoverTimeoutRef.current);
     }
 
+    // Capture the rect information immediately while event.currentTarget is valid
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = {
+      x: rect.right,
+      y: rect.top + rect.height / 2
+    };
+
     // Set timeout to show tooltip after delay
     hoverTimeoutRef.current = setTimeout(() => {
-      const rect = event.currentTarget.getBoundingClientRect();
-      setTooltipPosition({
-        x: rect.right,
-        y: rect.top + rect.height / 2
-      });
+      setTooltipPosition(position);
       setHoveredStatus(status);
     }, 400); // 400ms delay
   }, []);
