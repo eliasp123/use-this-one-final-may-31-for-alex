@@ -1,17 +1,17 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
 import DocumentsHeader from '../components/documents/DocumentsHeader';
 import DocumentsSearchBar from '../components/documents/DocumentsSearchBar';
-import DocumentsFilterButtons from '../components/documents/DocumentsFilterButtons';
-import DocumentsViewToggle from '../components/documents/DocumentsViewToggle';
+import DocumentsFilterRow from '../components/documents/DocumentsFilterRow';
 import DocumentsContent from '../components/documents/DocumentsContent';
 import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../utils/folderUtils';
 import NewEmailForm from '../components/NewEmailForm';
 import { useToast } from '../hooks/use-toast';
 
-type FilterType = 'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date' | 'person';
+type FilterType = 'all' | 'person' | 'organization' | 'date';
 
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,7 +40,7 @@ const Documents = () => {
     ? folderFilteredAttachments 
     : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
 
-  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' || selectedFilter === 'person' ? 'all' : selectedFilter);
+  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, 'all');
   const stats = getAttachmentStats(allAttachments);
 
   const handleCreateFolder = (name: string) => {
@@ -60,7 +60,7 @@ const Documents = () => {
 
   // Group attachments by different criteria
   const groupAttachments = (attachments: AttachmentWithContext[], filterType: FilterType): [string, AttachmentWithContext[]][] => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
+    if (filterType === 'all') {
       return [['All Files', attachments]];
     }
 
@@ -106,12 +106,6 @@ const Documents = () => {
     const baseAttachments = directionFilter === 'all' ? allAttachments : 
       allAttachments.filter(attachment => attachment.direction === directionFilter);
     
-    const baseStats = getAttachmentStats(baseAttachments);
-    
-    if (filterType === 'all') return baseStats.total;
-    if (filterType === 'documents') return baseStats.documents;
-    if (filterType === 'images') return baseStats.images;
-    if (filterType === 'spreadsheets') return baseStats.spreadsheets;
     if (filterType === 'organization') {
       const uniqueOrgs = new Set(baseAttachments.map(a => a.senderOrganization));
       return uniqueOrgs.size;
@@ -154,17 +148,14 @@ const Documents = () => {
                 onSearchChange={setSearchQuery}
               />
 
-              <DocumentsFilterButtons 
+              <DocumentsFilterRow
                 selectedFilter={selectedFilter}
                 onFilterChange={handleFilterChange}
-                getFilterCount={getFilterCount}
-              />
-
-              <DocumentsViewToggle 
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
                 directionFilter={directionFilter}
                 onDirectionFilterChange={setDirectionFilter}
+                getFilterCount={getFilterCount}
               />
 
               <DocumentsContent 
