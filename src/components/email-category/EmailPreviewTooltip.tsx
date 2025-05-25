@@ -61,19 +61,35 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   };
 
   const extractContentPreview = (content: string) => {
-    // Remove HTML tags and get first sentence or two
+    // Remove HTML tags and get content
     const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+    
+    // Split into sentences and words to better control line breaks
     const sentences = cleanContent.split(/[.!?]+/).filter(s => s.trim().length > 0);
     
     if (sentences.length === 0) return '';
     
-    // Get first sentence, or first two if they're short
-    let preview = sentences[0].trim();
-    if (sentences.length > 1 && preview.length < 50 && sentences[1]) {
-      preview += '. ' + sentences[1].trim();
+    // Build preview text that will fit approximately 3 lines
+    let preview = '';
+    let totalLength = 0;
+    const maxLength = 240; // Increased to accommodate 3 lines
+    
+    for (const sentence of sentences) {
+      const trimmedSentence = sentence.trim();
+      if (totalLength + trimmedSentence.length + 2 <= maxLength) {
+        preview += (preview ? '. ' : '') + trimmedSentence;
+        totalLength = preview.length;
+      } else {
+        // If adding this sentence would exceed limit, truncate it
+        const remainingSpace = maxLength - totalLength - 2;
+        if (remainingSpace > 20) { // Only add partial sentence if there's meaningful space
+          preview += (preview ? '. ' : '') + trimmedSentence.substring(0, remainingSpace) + '...';
+        }
+        break;
+      }
     }
     
-    return truncateText(preview, 120);
+    return preview || cleanContent.substring(0, maxLength) + (cleanContent.length > maxLength ? '...' : '');
   };
 
   if (emails.length === 0) {
@@ -123,7 +139,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
               </div>
               
               {extractContentPreview(email.content) && (
-                <div className="text-xs text-gray-700 leading-relaxed p-2 bg-amber-50 border border-amber-100 rounded">
+                <div className="text-xs text-gray-700 leading-relaxed p-2 bg-amber-50 border border-amber-100 rounded min-h-[3.5rem]">
                   {extractContentPreview(email.content)}
                 </div>
               )}
