@@ -123,7 +123,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
               </div>
               
               {extractContentPreview(email.content) && (
-                <div className="text-xs text-gray-600 leading-relaxed">
+                <div className="text-xs text-gray-700 leading-relaxed p-2 bg-amber-50 border border-amber-100 rounded">
                   {extractContentPreview(email.content)}
                 </div>
               )}
