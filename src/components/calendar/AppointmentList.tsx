@@ -29,7 +29,7 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
   });
 
   return (
-    <Card className="h-[600px] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+    <Card className="h-[596px] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4 flex-shrink-0">
         <div className="text-white">
           <h3 className="text-lg font-light uppercase mb-1">
@@ -43,8 +43,8 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
       </div>
       
       <CardContent className="p-0 flex flex-col flex-1 min-h-0">
-        {/* Top section for selected date appointments - exactly 265.5px */}
-        <div className="h-[265.5px] p-4 flex flex-col overflow-y-auto scrollbar-visible">
+        {/* Top section for selected date appointments - exactly 264px */}
+        <div className="h-[264px] p-4 flex flex-col overflow-y-auto scrollbar-visible">
           <div className="space-y-3 pr-2">
             {selectedAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -98,8 +98,8 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         {/* Separator line */}
         <Separator className="bg-gray-300 flex-shrink-0" />
 
-        {/* Bottom section for upcoming appointments - exactly 265.5px */}
-        <div className="h-[265.5px] p-4 flex flex-col overflow-y-auto scrollbar-visible">
+        {/* Bottom section for upcoming appointments - exactly 264px */}
+        <div className="h-[264px] p-4 flex flex-col overflow-y-auto scrollbar-visible">
           <h4 className="text-sm font-medium text-gray-700 mb-3 flex-shrink-0">Upcoming Appointments (Next 4 Weeks)</h4>
           <div className="space-y-2 pr-2">
             {limitedUpcomingAppointments.length === 0 ? (
