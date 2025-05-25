@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './ui/calendar';
 import { Card, CardContent } from './ui/card';
@@ -7,7 +7,8 @@ import { Plus, Clock, Building } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
-import { APPOINTMENTS } from '../data/appointmentData';
+import { useCalendarLogic } from '../hooks/useCalendarLogic';
+import { useCalendarHover } from '../hooks/useCalendarHover';
 import { Appointment } from '../types/appointment';
 
 interface CalendarPopupProps {
@@ -16,164 +17,37 @@ interface CalendarPopupProps {
 }
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
-  // Initialize with today's date instead of a fixed date
-  const today = new Date();
-  const [date, setDate] = useState<Date | undefined>(today);
-  const [selectedDateAppointments, setSelectedDateAppointments] = useState(
-    APPOINTMENTS.filter(app => 
-      app.date.getDate() === today.getDate() && 
-      app.date.getMonth() === today.getMonth() && 
-      app.date.getFullYear() === today.getFullYear()
-    )
-  );
+  // Use shared calendar logic
+  const {
+    date,
+    selectedDateAppointments,
+    isDayWithAppointment,
+    handleSelect,
+    getUpcomingAppointments,
+    handleAppointmentClick
+  } = useCalendarLogic();
 
-  // Add hover state and timeout management - same as CalendarDateDisplay
-  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Add debug logging to see if events are firing
-  console.log('CalendarPopup hover state:', { hoveredDate, tooltipPosition });
-
-  // Get appointments for a specific date - same as CalendarDateDisplay
-  const getAppointmentsForDate = (targetDate: Date) => {
-    return APPOINTMENTS.filter(app => 
-      app.date.getDate() === targetDate.getDate() && 
-      app.date.getMonth() === targetDate.getMonth() && 
-      app.date.getFullYear() === targetDate.getFullYear()
-    );
-  };
-
-  // Clear any existing timeout - same as CalendarDateDisplay
-  const clearHideTimeout = () => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-      hideTimeoutRef.current = null;
-    }
-  };
-
-  // Set a timeout to hide the tooltip - same as CalendarDateDisplay
-  const setHideTimeout = () => {
-    clearHideTimeout();
-    hideTimeoutRef.current = setTimeout(() => {
-      setHoveredDate(null);
-    }, 3000); // 3 seconds delay
-  };
-
-  // Handle mouse events on calendar - EXACTLY the same as working CalendarDateDisplay
-  const handleCalendarMouseMove = (e: React.MouseEvent) => {
-    console.log('CalendarPopup mouse move event fired');
-    const target = e.target as HTMLElement;
-    const dayButton = target.closest('[role="gridcell"] button, .rdp-day, .rdp-button_reset');
-    
-    if (dayButton && dayButton.textContent) {
-      const dayText = dayButton.textContent.trim();
-      const dayNumber = parseInt(dayText);
-      
-      if (!isNaN(dayNumber) && date) {
-        const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
-        
-        console.log('CalendarPopup hovering over date:', hoveredDateObj);
-        
-        // Clear any existing timeout when hovering over a date
-        clearHideTimeout();
-        
-        // Show tooltip for any valid date
-        const rect = dayButton.getBoundingClientRect();
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top - 10
-        });
-        setHoveredDate(hoveredDateObj);
-        return;
-      }
-    }
-    
-    // If we get here, we're not hovering over a valid day
-    // Set timeout to hide tooltip after delay
-    setHideTimeout();
-  };
-
-  const handleCalendarMouseLeave = () => {
-    console.log('CalendarPopup mouse leave event fired');
-    // Set timeout to hide tooltip when leaving calendar area
-    setHideTimeout();
-  };
-
-  const handleTooltipMouseEnter = () => {
-    console.log('CalendarPopup tooltip mouse enter');
-    // Keep the tooltip visible when hovering over it
-    clearHideTimeout();
-  };
-
-  const handleTooltipMouseLeave = () => {
-    console.log('CalendarPopup tooltip mouse leave');
-    // Hide tooltip when leaving the tooltip area
-    setHideTimeout();
-  };
-
-  const handleAddAppointmentFromTooltip = (targetDate: Date) => {
-    clearHideTimeout();
-    setHoveredDate(null); // Hide tooltip
-    handleSelect(targetDate); // Select the date
-    // Note: This would need to trigger appointment form in the parent context
-    console.log('Add appointment for:', targetDate);
-  };
-
-  // Function to highlight dates with appointments
-  const isDayWithAppointment = (day: Date) => {
-    return APPOINTMENTS.some(app => 
-      app.date.getDate() === day.getDate() && 
-      app.date.getMonth() === day.getMonth() && 
-      app.date.getFullYear() === day.getFullYear()
-    );
-  };
-
-  // Handle date selection - no popup behavior
-  const handleSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    
-    if (selectedDate) {
-      const appointmentsOnDate = APPOINTMENTS.filter(app => 
-        app.date.getDate() === selectedDate.getDate() && 
-        app.date.getMonth() === selectedDate.getMonth() && 
-        app.date.getFullYear() === selectedDate.getFullYear()
-      );
-      setSelectedDateAppointments(appointmentsOnDate);
-    } else {
-      setSelectedDateAppointments([]);
-    }
-  };
-
-  // Handle appointment click from upcoming list
-  const handleAppointmentClick = (appointment: Appointment) => {
-    setDate(appointment.date);
-    setSelectedDateAppointments([appointment]);
-  };
-
-  // FIXED: Copy the exact logic from the working main calendar
-  const getUpcomingAppointments = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const fourWeeksFromNow = new Date();
-    fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
-    fourWeeksFromNow.setHours(23, 59, 59, 999);
-    
-    return APPOINTMENTS
-      .filter(app => {
-        const appDate = new Date(app.date);
-        appDate.setHours(0, 0, 0, 0);
-        return appDate > today && appDate <= fourWeeksFromNow;
-      })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  };
+  // Use shared hover functionality
+  const {
+    hoveredDate,
+    tooltipPosition,
+    getAppointmentsForDate,
+    handleCalendarMouseMove,
+    handleCalendarMouseLeave,
+    handleTooltipMouseEnter,
+    handleTooltipMouseLeave,
+    handleAddAppointmentFromTooltip
+  } = useCalendarHover();
 
   const upcomingAppointments = getUpcomingAppointments();
 
   const handleAddAppointment = () => {
     // Placeholder for add appointment functionality
     console.log('Add appointment clicked');
+  };
+
+  const handleAddFromTooltip = (targetDate: Date) => {
+    handleAddAppointmentFromTooltip(targetDate, handleSelect, handleAddAppointment);
   };
 
   return (
@@ -240,7 +114,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>
       </div>
 
-      {/* Enhanced Tooltip with higher z-index and debug info */}
+      {/* Enhanced Tooltip with higher z-index */}
       {hoveredDate && createPortal(
         <div 
           id="calendar-popup-tooltip"
@@ -249,7 +123,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
             transform: 'translate(-50%, -100%)',
-            zIndex: 999999 // Much higher z-index
+            zIndex: 999999
           }}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
@@ -268,7 +142,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
             
             {/* Add Appointment Button */}
             <Button
-              onClick={() => handleAddAppointmentFromTooltip(hoveredDate)}
+              onClick={() => handleAddFromTooltip(hoveredDate)}
               size="sm"
               className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs py-1.5"
             >
