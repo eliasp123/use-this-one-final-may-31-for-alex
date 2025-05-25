@@ -22,7 +22,6 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Log the working hover functionality for future reference
   console.log('✅ WORKING HOVER CODE PRESERVED: Main calendar hover functionality is working correctly with handleCalendarMouseMove and getAppointmentsForDate');
 
   // Get appointments for a specific date
@@ -47,60 +46,95 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
     clearHideTimeout();
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredDate(null);
-    }, 3000); // 3 seconds delay
+    }, 300); // Reduced to 300ms for more responsive hiding
   };
 
-  // Handle mouse events on calendar with improved event detection
+  // Improved hover detection with better element matching
   const handleCalendarMouseMove = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    const dayButton = target.closest('[role="gridcell"] button, .rdp-day, .rdp-button_reset');
     
-    if (dayButton && dayButton.textContent) {
-      const dayText = dayButton.textContent.trim();
-      const dayNumber = parseInt(dayText);
+    // More comprehensive day button detection
+    const dayButton = target.closest(`
+      [role="gridcell"] button,
+      .rdp-day,
+      .rdp-button_reset,
+      button[name="day"],
+      [data-day]
+    `.replace(/\s+/g, ' ').trim()) as HTMLElement;
+    
+    if (dayButton) {
+      // Try multiple ways to get the day number
+      let dayNumber: number | null = null;
       
-      if (!isNaN(dayNumber) && date) {
+      // Method 1: Direct text content
+      const textContent = dayButton.textContent?.trim();
+      if (textContent && !isNaN(parseInt(textContent))) {
+        dayNumber = parseInt(textContent);
+      }
+      
+      // Method 2: data attributes
+      if (!dayNumber && dayButton.dataset.day) {
+        dayNumber = parseInt(dayButton.dataset.day);
+      }
+      
+      // Method 3: aria-label parsing
+      if (!dayNumber && dayButton.getAttribute('aria-label')) {
+        const ariaLabel = dayButton.getAttribute('aria-label');
+        const match = ariaLabel?.match(/(\d+)/);
+        if (match) {
+          dayNumber = parseInt(match[1]);
+        }
+      }
+      
+      if (dayNumber && dayNumber >= 1 && dayNumber <= 31 && date) {
         const hoveredDateObj = new Date(date.getFullYear(), date.getMonth(), dayNumber);
         
-        // Clear any existing timeout when hovering over a date
-        clearHideTimeout();
-        
-        // Show tooltip for any valid date
-        const rect = dayButton.getBoundingClientRect();
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top - 10
-        });
-        setHoveredDate(hoveredDateObj);
-        return;
+        // Validate the date is actually valid (handles month boundaries)
+        if (hoveredDateObj.getMonth() === date.getMonth()) {
+          clearHideTimeout();
+          
+          const rect = dayButton.getBoundingClientRect();
+          const newPosition = {
+            x: rect.left + rect.width / 2,
+            y: rect.top - 10
+          };
+          
+          // Only update if position changed significantly or date changed
+          if (
+            !hoveredDate || 
+            hoveredDate.getTime() !== hoveredDateObj.getTime() ||
+            Math.abs(tooltipPosition.x - newPosition.x) > 5 ||
+            Math.abs(tooltipPosition.y - newPosition.y) > 5
+          ) {
+            setTooltipPosition(newPosition);
+            setHoveredDate(hoveredDateObj);
+          }
+          return;
+        }
       }
     }
     
-    // If we get here, we're not hovering over a valid day
-    // Set timeout to hide tooltip after delay
+    // If we get here, we're not over a valid day - set timeout to hide
     setHideTimeout();
   };
 
   const handleCalendarMouseLeave = () => {
-    // Set timeout to hide tooltip when leaving calendar area
     setHideTimeout();
   };
 
   const handleTooltipMouseEnter = () => {
-    // Keep the tooltip visible when hovering over it
     clearHideTimeout();
   };
 
   const handleTooltipMouseLeave = () => {
-    // Hide tooltip when leaving the tooltip area
     setHideTimeout();
   };
 
   const handleAddAppointmentFromTooltip = (targetDate: Date) => {
     clearHideTimeout();
-    setHoveredDate(null); // Hide tooltip
-    onDateSelect(targetDate); // Select the date
-    setIsDialogOpen(true); // Open appointment form
+    setHoveredDate(null);
+    onDateSelect(targetDate);
+    setIsDialogOpen(true);
   };
 
   const handleSaveAppointment = (appointmentData: {
@@ -174,16 +208,15 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
         </CardContent>
       </Card>
 
-      {/* Enhanced Tooltip with better hover handling */}
+      {/* Enhanced Tooltip with better positioning and stability */}
       {hoveredDate && createPortal(
         <div 
           id="calendar-tooltip"
-          className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[320px] pointer-events-auto"
+          className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[320px] pointer-events-auto z-[99999]"
           style={{
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
             transform: 'translate(-50%, -100%)',
-            zIndex: 99999
           }}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
