@@ -3,7 +3,7 @@ import React from 'react';
 import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
-import { APPOINTMENTS } from '../data/calendarData';
+import { APPOINTMENTS } from '../data/appointmentData';
 
 const CalendarSection = () => {
   const {

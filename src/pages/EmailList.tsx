@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -9,6 +10,7 @@ import EmailSidebar from '@/components/email-list/EmailSidebar';
 import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
 import EmailTable from '@/components/email-list/EmailTable';
+import CalendarSection from '@/components/CalendarSection';
 import NewEmailForm from '@/components/NewEmailForm';
 import { useToast } from '@/hooks/use-toast';
 
@@ -88,6 +90,11 @@ const EmailList = () => {
                 emails={filteredEmails}
                 formatDate={formatDate}
               />
+            </div>
+            
+            {/* Calendar Section - Added to the bottom */}
+            <div className="mt-16 mb-24">
+              <CalendarSection />
             </div>
           </div>
         </div>

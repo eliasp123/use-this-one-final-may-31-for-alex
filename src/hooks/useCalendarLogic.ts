@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { APPOINTMENTS } from '../data/calendarData';
+import { APPOINTMENTS } from '../data/appointmentData';
 import { Appointment } from '../types/appointment';
 
 export const useCalendarLogic = () => {
