@@ -151,12 +151,13 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     setSelectedDateAppointments([appointment]);
   };
 
-  // Get upcoming appointments from TODAY - updated to 4 weeks
+  // Get upcoming appointments from TODAY - FIXED to properly show 4 weeks (28 days)
   const getUpcomingAppointments = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const fourWeeksFromNow = new Date();
+    // Fixed: Changed from 14 days to 28 days (4 weeks)
+    const fourWeeksFromNow = new Date(today);
     fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
     fourWeeksFromNow.setHours(23, 59, 59, 999);
     
