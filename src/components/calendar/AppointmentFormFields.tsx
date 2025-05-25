@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Button } from '../ui/button';
@@ -9,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Appointment } from '../../types/appointment';
+import ToFieldAutocomplete from './ToFieldAutocomplete';
 
 interface AppointmentFormFieldsProps {
   selectedDate: Date | undefined;
@@ -143,22 +143,13 @@ const AppointmentFormFields = ({
         )}
       </div>
 
-      {/* To Field */}
+      {/* To Field with Autocomplete */}
       <div className="space-y-3">
         <Label htmlFor="to" className="text-lg font-medium">To</Label>
-        <Input
-          id="to"
-          type="text"
+        <ToFieldAutocomplete
           value={to}
-          onChange={(e) => onToChange(e.target.value)}
+          onChange={onToChange}
           placeholder="e.g., Dr. Smith, Family Member (optional)"
-          className="text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
         />
       </div>
 
