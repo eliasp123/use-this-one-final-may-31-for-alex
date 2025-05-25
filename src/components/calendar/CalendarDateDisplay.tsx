@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -73,68 +72,74 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       button[class*="day"]
     `.replace(/\s+/g, ' ').trim()) as HTMLElement;
     
-    if (dayButton && !dayButton.disabled && !dayButton.hasAttribute('disabled')) {
-      // Try multiple methods to get the day number
-      let dayNumber: number | null = null;
+    if (dayButton) {
+      // Check if it's a button element and if it's disabled
+      const isButton = dayButton instanceof HTMLButtonElement;
+      const isDisabled = isButton && (dayButton.disabled || dayButton.hasAttribute('disabled'));
       
-      // Method 1: Direct text content (most reliable)
-      const textContent = dayButton.textContent?.trim();
-      if (textContent && !isNaN(parseInt(textContent)) && textContent.length <= 2) {
-        dayNumber = parseInt(textContent);
-      }
-      
-      // Method 2: data attributes
-      if (!dayNumber && dayButton.dataset.day) {
-        dayNumber = parseInt(dayButton.dataset.day);
-      }
-      
-      // Method 3: aria-label parsing
-      if (!dayNumber && dayButton.getAttribute('aria-label')) {
-        const ariaLabel = dayButton.getAttribute('aria-label');
-        const match = ariaLabel?.match(/(\d+)/);
-        if (match) {
-          dayNumber = parseInt(match[1]);
-        }
-      }
-      
-      // Method 4: Check if button is in a cell with day info
-      if (!dayNumber) {
-        const cell = dayButton.closest('[role="gridcell"]');
-        if (cell) {
-          const cellText = cell.textContent?.trim();
-          if (cellText && !isNaN(parseInt(cellText)) && cellText.length <= 2) {
-            dayNumber = parseInt(cellText);
-          }
-        }
-      }
-      
-      if (dayNumber && dayNumber >= 1 && dayNumber <= 31) {
-        // Use current calendar month for date construction
-        const hoveredDateObj = new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth(), dayNumber);
+      if (!isDisabled) {
+        // Try multiple methods to get the day number
+        let dayNumber: number | null = null;
         
-        // Validate the date is actually valid and in the current month
-        if (hoveredDateObj.getMonth() === currentCalendarMonth.getMonth() && 
-            hoveredDateObj.getFullYear() === currentCalendarMonth.getFullYear()) {
-          
-          clearHideTimeout();
-          
-          const rect = dayButton.getBoundingClientRect();
-          const newPosition = {
-            x: rect.left + rect.width / 2,
-            y: rect.top - 10
-          };
-          
-          // Only update if position changed significantly or date changed
-          if (
-            !hoveredDate || 
-            hoveredDate.getTime() !== hoveredDateObj.getTime() ||
-            Math.abs(tooltipPosition.x - newPosition.x) > 5 ||
-            Math.abs(tooltipPosition.y - newPosition.y) > 5
-          ) {
-            setTooltipPosition(newPosition);
-            setHoveredDate(hoveredDateObj);
+        // Method 1: Direct text content (most reliable)
+        const textContent = dayButton.textContent?.trim();
+        if (textContent && !isNaN(parseInt(textContent)) && textContent.length <= 2) {
+          dayNumber = parseInt(textContent);
+        }
+        
+        // Method 2: data attributes
+        if (!dayNumber && dayButton.dataset.day) {
+          dayNumber = parseInt(dayButton.dataset.day);
+        }
+        
+        // Method 3: aria-label parsing
+        if (!dayNumber && dayButton.getAttribute('aria-label')) {
+          const ariaLabel = dayButton.getAttribute('aria-label');
+          const match = ariaLabel?.match(/(\d+)/);
+          if (match) {
+            dayNumber = parseInt(match[1]);
           }
-          return;
+        }
+        
+        // Method 4: Check if button is in a cell with day info
+        if (!dayNumber) {
+          const cell = dayButton.closest('[role="gridcell"]');
+          if (cell) {
+            const cellText = cell.textContent?.trim();
+            if (cellText && !isNaN(parseInt(cellText)) && cellText.length <= 2) {
+              dayNumber = parseInt(cellText);
+            }
+          }
+        }
+        
+        if (dayNumber && dayNumber >= 1 && dayNumber <= 31) {
+          // Use current calendar month for date construction
+          const hoveredDateObj = new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth(), dayNumber);
+          
+          // Validate the date is actually valid and in the current month
+          if (hoveredDateObj.getMonth() === currentCalendarMonth.getMonth() && 
+              hoveredDateObj.getFullYear() === currentCalendarMonth.getFullYear()) {
+            
+            clearHideTimeout();
+            
+            const rect = dayButton.getBoundingClientRect();
+            const newPosition = {
+              x: rect.left + rect.width / 2,
+              y: rect.top - 10
+            };
+            
+            // Only update if position changed significantly or date changed
+            if (
+              !hoveredDate || 
+              hoveredDate.getTime() !== hoveredDateObj.getTime() ||
+              Math.abs(tooltipPosition.x - newPosition.x) > 5 ||
+              Math.abs(tooltipPosition.y - newPosition.y) > 5
+            ) {
+              setTooltipPosition(newPosition);
+              setHoveredDate(hoveredDateObj);
+            }
+            return;
+          }
         }
       }
     }
