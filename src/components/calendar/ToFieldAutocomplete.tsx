@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '../ui/input';
 import { getAllEmailsWithAttachments } from '../../utils/emailDataUtils';
@@ -196,15 +197,18 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Suggestions dropdown with maximum z-index */}
+      {/* Suggestions dropdown - using portal-like approach */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
-          style={{ 
-            zIndex: 2147483647,
-            position: 'absolute',
-            backgroundColor: 'white',
-            border: '1px solid #d1d5db'
+          className="fixed bg-white border border-gray-300 rounded-md shadow-xl max-h-60 overflow-y-auto min-w-[200px]"
+          style={{
+            zIndex: 9999999,
+            top: inputRef.current ? inputRef.current.getBoundingClientRect().bottom + window.scrollY + 4 : '100%',
+            left: inputRef.current ? inputRef.current.getBoundingClientRect().left + window.scrollX : 0,
+            width: inputRef.current ? inputRef.current.getBoundingClientRect().width : 'auto',
+            visibility: 'visible',
+            display: 'block',
+            position: 'fixed'
           }}
         >
           {filteredSuggestions.map((suggestion, index) => (
