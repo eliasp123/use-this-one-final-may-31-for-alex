@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText } from 'lucide-react';
 import CompactDocumentCard from './CompactDocumentCard';
@@ -43,7 +44,7 @@ const DocumentsContent = ({
                   ))}
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-8">
                   {attachments.map((attachment) => (
                     <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200 hover:translate-x-1">
                       <DocumentCard attachment={attachment} isGridView={false} />
