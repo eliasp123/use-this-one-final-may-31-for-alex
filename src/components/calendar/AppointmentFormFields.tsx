@@ -87,7 +87,7 @@ const AppointmentFormFields = ({
               type="button"
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
+                "w-full justify-start text-left font-normal text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400",
                 !selectedDate && "text-muted-foreground"
               )}
               onClick={(e) => {
@@ -128,7 +128,7 @@ const AppointmentFormFields = ({
           onBlur={handleTitleBlur}
           placeholder="e.g., Doctor Visit, Physical Therapy"
           className={cn(
-            "text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500",
+            "text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400",
             showTitleError && "border-red-500 ring-2 ring-red-500"
           )}
           onKeyDown={(e) => {
@@ -152,7 +152,7 @@ const AppointmentFormFields = ({
           value={to}
           onChange={(e) => onToChange(e.target.value)}
           placeholder="e.g., Dr. Smith, Family Member (optional)"
-          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
@@ -171,7 +171,7 @@ const AppointmentFormFields = ({
           value={organization}
           onChange={(e) => onOrganizationChange(e.target.value)}
           placeholder="e.g., City Hospital, ABC Clinic"
-          className="text-lg py-6 border-gray-200 hover:border-purple-500 focus:border-purple-500 focus:ring-purple-500"
+          className="text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
@@ -190,7 +190,7 @@ const AppointmentFormFields = ({
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
           placeholder="Any additional notes or reminders..."
-          className="w-full rounded-md border border-gray-200 bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground hover:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-colors"
+          className="w-full rounded-md border border-gray-300 bg-background px-4 py-3 text-lg ring-offset-background placeholder:text-muted-foreground hover:border-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-colors"
           style={{ minHeight: '120px' }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
