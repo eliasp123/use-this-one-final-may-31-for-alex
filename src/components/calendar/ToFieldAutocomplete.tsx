@@ -11,6 +11,8 @@ interface ToFieldAutocompleteProps {
   className?: string;
 }
 
+const CUSTOM_RECIPIENTS_KEY = 'customRecipients';
+
 const ToFieldAutocomplete = ({
   value,
   onChange,
@@ -24,7 +26,45 @@ const ToFieldAutocomplete = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Extract unique recipients from email data
+  // Load custom recipients from localStorage
+  const loadCustomRecipients = (): string[] => {
+    try {
+      const stored = localStorage.getItem(CUSTOM_RECIPIENTS_KEY);
+      if (stored) {
+        const customRecipients = JSON.parse(stored);
+        console.log('📦 Loaded custom recipients:', customRecipients);
+        return customRecipients;
+      }
+    } catch (error) {
+      console.error('Error loading custom recipients:', error);
+    }
+    return [];
+  };
+
+  // Save custom recipient to localStorage
+  const saveCustomRecipient = (recipientName: string) => {
+    try {
+      const customRecipients = loadCustomRecipients();
+      const existingRecipient = customRecipients.find(recipient => recipient.toLowerCase() === recipientName.toLowerCase());
+      
+      if (!existingRecipient) {
+        const updatedRecipients = [...customRecipients, recipientName];
+        localStorage.setItem(CUSTOM_RECIPIENTS_KEY, JSON.stringify(updatedRecipients));
+        console.log('💾 Saved new custom recipient:', recipientName);
+        
+        // Update the recipients list
+        setRecipients(prev => {
+          const emailRecipients = prev.filter(recipient => !customRecipients.includes(recipient));
+          const allCustomRecipients = loadCustomRecipients();
+          return [...emailRecipients, ...allCustomRecipients].sort();
+        });
+      }
+    } catch (error) {
+      console.error('Error saving custom recipient:', error);
+    }
+  };
+
+  // Extract unique recipients from email data + custom recipients
   useEffect(() => {
     console.log('🔍 ToFieldAutocomplete: Starting recipient extraction...');
     const emails = getAllEmailsWithAttachments();
@@ -70,12 +110,19 @@ const ToFieldAutocomplete = ({
       }
     });
     
-    const uniqueRecipients = Array.from(recipientSet).sort();
+    const emailRecipients = Array.from(recipientSet);
+    
+    // Load custom recipients and combine
+    const customRecipients = loadCustomRecipients();
+    const allRecipients = [...emailRecipients, ...customRecipients].sort();
+    
     console.log('🎯 Final recipients list:', { 
-      count: uniqueRecipients.length, 
-      recipients: uniqueRecipients 
+      emailRecipients: emailRecipients.length,
+      customRecipients: customRecipients.length,
+      total: allRecipients.length, 
+      recipients: allRecipients 
     });
-    setRecipients(uniqueRecipients);
+    setRecipients(allRecipients);
   }, []);
 
   // Filter suggestions based on input
@@ -130,10 +177,29 @@ const ToFieldAutocomplete = ({
     setActiveSuggestion(0);
   };
 
+  const handleInputBlur = () => {
+    // Small delay to allow for suggestion clicks
+    setTimeout(() => {
+      if (value.trim() && !recipients.some(recipient => recipient.toLowerCase() === value.toLowerCase())) {
+        console.log('💾 Saving new recipient on blur:', value);
+        saveCustomRecipient(value.trim());
+      }
+    }, 200);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     console.log('⌨️ Key pressed:', { key: e.key, showSuggestions, suggestionsCount: filteredSuggestions.length });
     
-    if (!showSuggestions || filteredSuggestions.length === 0) return;
+    if (!showSuggestions || filteredSuggestions.length === 0) {
+      if (e.key === 'Enter' && value.trim()) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('💾 Saving new recipient on Enter:', value);
+        saveCustomRecipient(value.trim());
+        setShowSuggestions(false);
+      }
+      return;
+    }
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -181,6 +247,7 @@ const ToFieldAutocomplete = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         placeholder={placeholder}
         className={cn(
           "text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400",
@@ -188,10 +255,10 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Dropdown with same styling approach as Organization field */}
+      {/* Dropdown with exact same styling as Organization field */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-[99999]"
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-80 overflow-y-auto z-[99999]"
           data-testid="to-autocomplete-dropdown"
           style={{
             position: 'absolute',
