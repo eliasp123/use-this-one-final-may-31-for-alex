@@ -52,19 +52,19 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           />
         </div>
 
-        {/* Metadata section with centered text */}
-        <div className="p-4 pt-3 space-y-3 flex-1 text-center">
+        {/* Metadata section with left-aligned text */}
+        <div className="p-4 pt-3 space-y-3 flex-1">
           <div className="space-y-2">
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
               <User className="h-4 w-4 text-gray-400" />
               <span className="font-medium text-gray-600">From:</span>
               <span>{attachment.senderName}</span>
             </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
               <Building className="h-4 w-4 text-gray-400" />
               <span>{attachment.senderOrganization}</span>
             </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
               <Calendar className="h-4 w-4 text-gray-400" />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
