@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from '../ui/calendar';
@@ -89,7 +90,7 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
       {/* Portal the dialog to document.body to avoid nesting forms */}
       {isDialogOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl border-2 border-gray-400 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
+          <div className="bg-white rounded-lg shadow-xl border-2 border-gray-600 w-[98vw] max-w-[1400px] min-h-[700px] max-h-[95vh] flex flex-col relative">
             {/* Header with styled sections */}
             <div className="flex items-stretch rounded-t-lg overflow-hidden">
               {/* Left side - Add New Appointment with very light orange */}
@@ -136,3 +137,4 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
 };
 
 export default CalendarDateDisplay;
+
