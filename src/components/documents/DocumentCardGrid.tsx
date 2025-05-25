@@ -77,13 +77,12 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
             >
               View Email
             </Button>
-            <Button
-              variant="ghost"
-              className={`flex-1 h-12 text-sm font-medium ${fileInfo.badgeColor} text-white hover:opacity-90 rounded-none rounded-br-2xl`}
+            <div 
+              className={`flex-1 h-12 ${fileInfo.badgeColor} flex items-center justify-center cursor-pointer hover:opacity-90 rounded-none rounded-br-2xl`}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Download
-            </Button>
+              <Download className="h-4 w-4 mr-2 text-white" />
+              <span className="text-sm font-medium text-white">Download</span>
+            </div>
           </div>
         </div>
       </CardContent>
