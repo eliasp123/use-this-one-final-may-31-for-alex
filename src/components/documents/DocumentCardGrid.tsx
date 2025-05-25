@@ -33,18 +33,16 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   return (
     <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with file icon, name, and status badge */}
-        <div className="flex items-start justify-between p-4 pb-3 border-b border-gray-100">
+        {/* Top section with file icon and name - colored with file type */}
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl`}>
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <FileIcon type={attachment.type} size="md" />
-            <h3 className="font-medium text-gray-600 text-sm leading-tight line-clamp-2">
+            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shadow-sm">
+              <fileInfo.icon className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="font-medium text-white text-sm leading-tight line-clamp-2">
               {attachment.name}
             </h3>
           </div>
-          <StatusBadge 
-            direction={attachment.direction} 
-            statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
-          />
         </div>
 
         {/* Metadata section */}
@@ -66,7 +64,7 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Single integrated action row - similar to filter row philosophy */}
+        {/* Single integrated action row with status badge above download */}
         <div className="bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 shadow-sm flex items-stretch h-12">
           {/* View Email section */}
           <button
@@ -76,12 +74,23 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
             <span className="text-sm font-medium">View Email</span>
           </button>
 
-          {/* Download section with file type color */}
-          <div 
-            className={`${fileInfo.badgeColor} text-white flex items-center justify-center flex-1 cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">Download</span>
+          {/* Download section with status badge above */}
+          <div className="flex-1 relative">
+            {/* Status badge positioned above download button */}
+            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
+              <StatusBadge 
+                direction={attachment.direction} 
+                statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
+              />
+            </div>
+            
+            {/* Download button */}
+            <div 
+              className={`${fileInfo.badgeColor} text-white flex items-center justify-center cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Download</span>
+            </div>
           </div>
         </div>
       </CardContent>
