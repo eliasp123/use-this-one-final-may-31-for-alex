@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './ui/calendar';
@@ -36,13 +37,13 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     handleCalendarMouseLeave,
     handleTooltipMouseEnter,
     handleTooltipMouseLeave,
-    handleAddAppointmentFromTooltip
+    handleAddAppointmentFromTooltip,
+    handleCalendarMonthChange
   } = useCalendarHover();
 
   const upcomingAppointments = getUpcomingAppointments();
 
   const handleAddAppointment = () => {
-    // Placeholder for add appointment functionality
     console.log('Add appointment clicked');
   };
 
@@ -86,6 +87,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                       mode="single"
                       selected={date}
                       onSelect={handleSelect}
+                      onMonthChange={handleCalendarMonthChange}
                       className="w-full pointer-events-auto min-w-[300px]"
                       modifiers={{
                         hasAppointment: (day) => isDayWithAppointment(day)
@@ -114,7 +116,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>
       </div>
 
-      {/* Enhanced Tooltip with higher z-index */}
+      {/* Hover Tooltip */}
       {hoveredDate && createPortal(
         <div 
           id="calendar-popup-tooltip"
@@ -140,7 +142,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
               )}
             </div>
             
-            {/* Add Appointment Button */}
             <Button
               onClick={() => handleAddFromTooltip(hoveredDate)}
               size="sm"
@@ -150,7 +151,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
               Add Appointment
             </Button>
             
-            {/* Existing appointments */}
             {getAppointmentsForDate(hoveredDate).length > 0 && (
               <div className="space-y-2 border-t border-gray-100 pt-2">
                 {getAppointmentsForDate(hoveredDate).map(appointment => (
