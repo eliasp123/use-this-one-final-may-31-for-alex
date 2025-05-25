@@ -60,7 +60,7 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
     }, 3000); // 3 seconds delay
   };
 
-  // Handle mouse events on calendar - same as CalendarDateDisplay with debug logging
+  // Handle mouse events on calendar - EXACTLY the same as working CalendarDateDisplay
   const handleCalendarMouseMove = (e: React.MouseEvent) => {
     console.log('CalendarPopup mouse move event fired');
     const target = e.target as HTMLElement;
@@ -202,11 +202,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                   
                   <div 
                     className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
-                    style={{ 
-                      pointerEvents: 'auto',
-                      position: 'relative',
-                      zIndex: 1
-                    }}
                     onMouseMove={handleCalendarMouseMove}
                     onMouseLeave={handleCalendarMouseLeave}
                   >
@@ -215,7 +210,6 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                       selected={date}
                       onSelect={handleSelect}
                       className="w-full pointer-events-auto min-w-[300px]"
-                      style={{ pointerEvents: 'auto' }}
                       modifiers={{
                         hasAppointment: (day) => isDayWithAppointment(day)
                       }}
