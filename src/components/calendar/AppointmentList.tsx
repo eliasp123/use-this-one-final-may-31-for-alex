@@ -30,8 +30,8 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
   });
 
   return (
-    <Card className="h-full shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-      <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4">
+    <Card className="h-[600px] shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+      <div className="bg-gradient-to-br from-amber-400 to-orange-500 border-b border-gray-100 p-4 flex-shrink-0">
         <div className="text-white">
           <h3 className="text-lg font-light uppercase mb-1">
             {date ? format(date, 'EEEE') : 'No date selected'}
@@ -44,9 +44,9 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
       </div>
       
       <CardContent className="p-0 flex flex-col flex-1 min-h-0">
-        {/* Top section for selected date appointments - exactly half height */}
-        <div className="flex-1 p-4">
-          <ScrollArea className="h-full">
+        {/* Top section for selected date appointments - exactly half of remaining height */}
+        <div className="h-1/2 p-4 flex flex-col min-h-0">
+          <ScrollArea className="flex-1">
             <div className="space-y-3 pr-4">
               {selectedAppointments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 px-4">
@@ -99,12 +99,12 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
         </div>
 
         {/* Separator line */}
-        <Separator className="bg-gray-600" />
+        <Separator className="bg-gray-600 flex-shrink-0" />
 
-        {/* Bottom section for upcoming appointments - exactly half height */}
-        <div className="flex-1 p-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
-          <ScrollArea className="h-full">
+        {/* Bottom section for upcoming appointments - exactly half of remaining height */}
+        <div className="h-1/2 p-4 flex flex-col min-h-0">
+          <h4 className="text-sm font-medium text-gray-700 mb-3 flex-shrink-0">Upcoming Appointments (Next 4 Weeks)</h4>
+          <ScrollArea className="flex-1">
             <div className="space-y-2 pr-4">
               {limitedUpcomingAppointments.length === 0 ? (
                 <p className="text-gray-500 text-xs">No upcoming appointments in the next 4 weeks</p>
