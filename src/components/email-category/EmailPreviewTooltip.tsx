@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -11,6 +12,7 @@ interface EmailPreviewTooltipProps {
   position: { x: number; y: number };
   onClose: () => void;
   onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   categoryColor: string;
 }
 
@@ -21,6 +23,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   position,
   onClose,
   onMouseEnter,
+  onMouseLeave,
   categoryColor
 }) => {
   const navigate = useNavigate();
@@ -148,8 +151,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         transform: getTransform(),
         position: 'fixed' // Ensure it's truly fixed and won't affect layout
       }}
-      onMouseEnter={onMouseEnter} // Use the passed onMouseEnter handler
-      onMouseLeave={onClose}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave || onClose}
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-100 pb-2">

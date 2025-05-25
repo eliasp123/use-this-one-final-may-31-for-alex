@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -27,10 +28,12 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isManuallyControlled, setIsManuallyControlled] = useState(false);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
+  const collapseTimeoutRef = useRef<NodeJS.Timeout>();
   
   // Get the actual count of unresponded emails for this category
   const { getFilteredUnrespondedEmails } = useFilteredEmailData();
@@ -55,15 +58,33 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
 
   const toggleExpanded = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setIsManuallyControlled(true);
     setIsExpanded(!isExpanded);
+    
+    // Clear any pending auto-collapse
+    if (collapseTimeoutRef.current) {
+      clearTimeout(collapseTimeoutRef.current);
+    }
   };
 
   const handleHeaderHover = () => {
-    setIsExpanded(true);
+    if (!isManuallyControlled) {
+      setIsExpanded(true);
+    }
+    
+    // Clear any pending auto-collapse
+    if (collapseTimeoutRef.current) {
+      clearTimeout(collapseTimeoutRef.current);
+    }
   };
 
   const handleHeaderLeave = () => {
-    setIsExpanded(false);
+    // Only auto-collapse if not manually controlled and no tooltip is showing
+    if (!isManuallyControlled && !hoveredStatus) {
+      collapseTimeoutRef.current = setTimeout(() => {
+        setIsExpanded(false);
+      }, 300);
+    }
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
@@ -73,6 +94,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     }
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
+    }
+    if (collapseTimeoutRef.current) {
+      clearTimeout(collapseTimeoutRef.current);
     }
 
     // Capture the rect information immediately while event.currentTarget is valid
@@ -86,7 +110,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 800); // Reduced to 800ms for better responsiveness
+    }, 800);
   }, []);
 
   const handleStatusLeave = useCallback(() => {
@@ -103,8 +127,15 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     // Delay before hiding to allow moving to tooltip
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
-    }, 300);
-  }, []);
+      
+      // If not manually controlled, also collapse accordion after tooltip closes
+      if (!isManuallyControlled) {
+        collapseTimeoutRef.current = setTimeout(() => {
+          setIsExpanded(false);
+        }, 300);
+      }
+    }, 1200);
+  }, [isManuallyControlled]);
 
   const handleTooltipClose = useCallback(() => {
     // Clear all timeouts and immediately hide
@@ -114,15 +145,35 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
+    if (collapseTimeoutRef.current) {
+      clearTimeout(collapseTimeoutRef.current);
+    }
+    
     setHoveredStatus(null);
-  }, []);
+    
+    // If not manually controlled, collapse accordion after tooltip closes
+    if (!isManuallyControlled) {
+      collapseTimeoutRef.current = setTimeout(() => {
+        setIsExpanded(false);
+      }, 300);
+    }
+  }, [isManuallyControlled]);
 
   const handleTooltipMouseEnter = useCallback(() => {
     // Cancel hide timeout when mouse enters tooltip
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
+    // Cancel collapse timeout when mouse enters tooltip
+    if (collapseTimeoutRef.current) {
+      clearTimeout(collapseTimeoutRef.current);
+    }
   }, []);
+
+  const handleTooltipMouseLeave = useCallback(() => {
+    // When leaving tooltip, close it and potentially collapse accordion
+    handleTooltipClose();
+  }, [handleTooltipClose]);
 
   return (
     <>
@@ -161,7 +212,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
                 {total} total
               </span>
               
-              <div className="p-1">
+              <div className="p-1" onClick={toggleExpanded}>
                 <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                   isExpanded ? 'rotate-180' : 'rotate-0'
                 }`} />
@@ -257,6 +308,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
           position={tooltipPosition}
           onClose={handleTooltipClose}
           onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleTooltipMouseLeave}
           categoryColor={color}
         />,
         document.body
