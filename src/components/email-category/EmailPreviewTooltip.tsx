@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -28,35 +29,36 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   const navigate = useNavigate();
   const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
 
-  // Calculate smart positioning with preference for left-right placement and minimal gap
+  // Calculate smart positioning for seamless card unfolding
   useEffect(() => {
     const tooltipHeight = 400; // Approximate height of tooltip
     const tooltipWidth = 480; // Max width from the component
     const margin = 20; // Safety margin from screen edges
-    const gap = 2; // Minimal gap to create "unfolding" effect
 
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    // Determine horizontal placement first (preferred)
+    // Get the card dimensions from the position (this represents the card being hovered)
+    // For positioning, we want to align perfectly with the card edges
+    let placement = 'right';
+    let xPos = position.x;
+    let yPos = position.y; // Start at the exact top of the card
+
+    // Determine horizontal placement first (preferred for unfolding effect)
     const spaceRight = viewportWidth - position.x - margin;
     const spaceLeft = position.x - margin;
     
-    let placement = 'right';
-    let xPos = position.x;
-    let yPos = position.y;
-
-    // Check if we can fit horizontally (preferred)
-    if (spaceRight >= tooltipWidth + gap) {
-      // Place to the right - unfold from right edge
+    // Check if we can fit horizontally (preferred for card unfolding)
+    if (spaceRight >= tooltipWidth) {
+      // Unfold to the right - position at the right edge of the card
       placement = 'right';
-      xPos = position.x + gap;
-    } else if (spaceLeft >= tooltipWidth + gap) {
-      // Place to the left - unfold from left edge
+      xPos = position.x; // Start exactly at the card's right edge
+    } else if (spaceLeft >= tooltipWidth) {
+      // Unfold to the left - position at the left edge of the card
       placement = 'left';
-      xPos = position.x - tooltipWidth - gap;
+      xPos = position.x - tooltipWidth; // End exactly at the card's left edge
     } else {
-      // Fall back to vertical placement
+      // Fall back to vertical placement if horizontal doesn't fit
       const spaceAbove = position.y - margin;
       const spaceBelow = viewportHeight - position.y - margin;
       const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
@@ -75,14 +77,17 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
     // For horizontal placement, align with the card's top edge and keep within bounds
     if (placement === 'left' || placement === 'right') {
-      // Start aligned with the card top for "unfolding" effect
+      // Start at the exact same Y position as the card for perfect alignment
       yPos = position.y;
       
-      // Keep within vertical bounds
+      // Ensure tooltip doesn't go below viewport
+      if (yPos + tooltipHeight > viewportHeight - margin) {
+        yPos = viewportHeight - tooltipHeight - margin;
+      }
+      
+      // Ensure tooltip doesn't go above viewport
       if (yPos < margin) {
         yPos = margin;
-      } else if (yPos + tooltipHeight > viewportHeight - margin) {
-        yPos = viewportHeight - tooltipHeight - margin;
       }
     }
 
@@ -173,12 +178,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return null;
   };
 
-  // Calculate transform based on placement - no transform for "unfolding" effect
+  // No transform needed for seamless unfolding - position directly
   const getTransform = () => {
     switch (smartPosition.placement) {
       case 'left':
       case 'right':
-        return 'translate(0, 0)'; // No transform for seamless unfolding
+        return 'translate(0, 0)'; // Perfect alignment, no transform needed
       case 'bottom':
         return 'translate(-50%, 8px)';
       case 'top':
