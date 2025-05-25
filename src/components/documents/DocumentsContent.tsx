@@ -36,7 +36,7 @@ const DocumentsContent = ({
               ) : null}
               
               {viewMode === 'grid' ? (
-                <div className="grid grid-cols-3 gap-8">
+                <div className="grid grid-cols-3 gap-8 gap-y-12">
                   {attachments.map((attachment) => (
                     <div key={`${attachment.emailId}-${attachment.id}`} className="transform transition-all duration-200">
                       <DocumentCardGrid attachment={attachment} />

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
@@ -32,17 +33,17 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   return (
     <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-[280px]">
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with file icon, name, and status badge - colored with file type */}
-        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl relative`}>
-          {/* Status badge in top right */}
-          <div className="absolute top-3 right-3">
+        {/* Top section with file icon, name, and centered status badge */}
+        <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex flex-col items-center`}>
+          {/* Centered status badge */}
+          <div className="mb-3">
             <StatusBadge 
               direction={attachment.direction} 
               statusBadgeColor={attachment.direction === 'sent' ? 'bg-orange-400 text-white' : 'bg-green-400 text-white'} 
             />
           </div>
           
-          <div className="flex items-center gap-3 flex-1 min-w-0 pr-20">
+          <div className="flex items-center gap-3 flex-1 min-w-0 w-full">
             <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
               <fileInfo.icon className="h-6 w-6 text-white" />
             </div>
@@ -52,19 +53,19 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Metadata section */}
-        <div className="p-4 pt-3 space-y-3 flex-1">
+        {/* Metadata section with centered text */}
+        <div className="p-4 pt-3 space-y-3 flex-1 text-center">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
               <User className="h-4 w-4 text-gray-400" />
               <span className="font-medium text-gray-600">From:</span>
               <span>{attachment.senderName}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
               <Building className="h-4 w-4 text-gray-400" />
               <span>{attachment.senderOrganization}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
               <Calendar className="h-4 w-4 text-gray-400" />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
