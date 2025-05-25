@@ -26,53 +26,52 @@ const ToFieldAutocomplete = ({
 
   // Extract unique recipients from email data
   useEffect(() => {
+    console.log('🔍 ToFieldAutocomplete: Starting recipient extraction...');
     const emails = getAllEmailsWithAttachments();
     const recipientSet = new Set<string>();
     
-    console.log('ToFieldAutocomplete: Processing emails for recipients', { totalEmails: emails.length });
+    console.log('📧 Processing emails for recipients', { totalEmails: emails.length });
     
-    emails.forEach(email => {
-      console.log('Processing email:', { 
+    emails.forEach((email, index) => {
+      console.log(`📨 Email ${index + 1}:`, { 
         id: email.id, 
         recipient: email.recipient, 
-        sender: email.sender 
+        sender: email.sender.name,
+        organization: email.sender.organization
       });
       
       // Extract recipient name from email strings like "Dr. Patricia Williams <dr.williams@citymedical.com>"
-      // or just plain names like "Dr. Patricia Williams"
       let recipientName = '';
       
       if (email.recipient.includes('<')) {
-        // Format: "Name <email@domain.com>"
         const match = email.recipient.match(/^(.+?)\s*<.*>$/);
         if (match && match[1]) {
           recipientName = match[1].trim();
         }
-      } else {
-        // Plain name or email
+      } else if (!email.recipient.includes('@')) {
         recipientName = email.recipient.trim();
       }
       
-      if (recipientName && recipientName !== 'you@example.com' && !recipientName.includes('@')) {
+      if (recipientName && recipientName !== 'you@example.com') {
         recipientSet.add(recipientName);
-        console.log('Added recipient:', recipientName);
+        console.log('✅ Added recipient:', recipientName);
       }
       
-      // Also extract from sender names (people who have emailed you)
+      // Also extract from sender names
       if (email.sender.name && email.sender.name !== 'Johnson Family') {
         recipientSet.add(email.sender.name);
-        console.log('Added sender as potential recipient:', email.sender.name);
+        console.log('✅ Added sender as potential recipient:', email.sender.name);
       }
       
       // Also extract from sender organization names
       if (email.sender.organization && email.sender.organization !== 'Johnson Family') {
         recipientSet.add(email.sender.organization);
-        console.log('Added organization as potential recipient:', email.sender.organization);
+        console.log('✅ Added organization as potential recipient:', email.sender.organization);
       }
     });
     
     const uniqueRecipients = Array.from(recipientSet).sort();
-    console.log('ToFieldAutocomplete: Final recipients list', { 
+    console.log('🎯 Final recipients list:', { 
       count: uniqueRecipients.length, 
       recipients: uniqueRecipients 
     });
@@ -81,33 +80,44 @@ const ToFieldAutocomplete = ({
 
   // Filter suggestions based on input
   useEffect(() => {
-    console.log('Filtering suggestions for input:', { value, recipientsCount: recipients.length });
+    console.log('🔄 Filtering suggestions...', { 
+      inputValue: `"${value}"`, 
+      inputLength: value.length,
+      recipientsAvailable: recipients.length,
+      recipients: recipients.slice(0, 3) // Show first 3 for debugging
+    });
     
     if (value.trim() === '') {
+      console.log('❌ Empty input, clearing suggestions');
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       return;
     }
     
-    const filtered = recipients.filter(
-      recipient => recipient.toLowerCase().includes(value.toLowerCase())
-    );
-    
-    console.log('Filtered suggestions:', { 
-      input: value, 
-      matchCount: filtered.length, 
-      matches: filtered 
+    const searchTerm = value.toLowerCase();
+    const filtered = recipients.filter(recipient => {
+      const match = recipient.toLowerCase().includes(searchTerm);
+      if (match) {
+        console.log(`✅ Match found: "${recipient}" contains "${value}"`);
+      }
+      return match;
     });
     
-    setFilteredSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
-    setActiveSuggestion(0); // Reset active suggestion
+    console.log('🎯 Filtering results:', { 
+      searchTerm: `"${searchTerm}"`,
+      totalRecipients: recipients.length,
+      matchCount: filtered.length, 
+      matches: filtered,
+      isInputFocused: document.activeElement === inputRef.current
+    });
+    
+    setFilteredSuggestions(filtered.slice(0, 5));
+    setActiveSuggestion(0);
     
     // Show suggestions if we have matches and input is focused
-    if (filtered.length > 0 && document.activeElement === inputRef.current) {
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
+    const shouldShow = filtered.length > 0 && document.activeElement === inputRef.current;
+    console.log('👁️ Should show suggestions?', { shouldShow, filtered: filtered.length, focused: document.activeElement === inputRef.current });
+    setShowSuggestions(shouldShow);
   }, [value, recipients]);
 
   // Handle clicking outside to close suggestions
@@ -118,6 +128,7 @@ const ToFieldAutocomplete = ({
         !suggestionsRef.current.contains(event.target as Node) &&
         !inputRef.current?.contains(event.target as Node)
       ) {
+        console.log('👆 Clicked outside, hiding suggestions');
         setShowSuggestions(false);
       }
     };
@@ -128,57 +139,77 @@ const ToFieldAutocomplete = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    console.log('Input changed:', { newValue, willShowSuggestions: newValue.trim() !== '' });
+    console.log('⌨️ Input changed:', { 
+      from: `"${value}"`, 
+      to: `"${newValue}"`,
+      length: newValue.length
+    });
     onChange(newValue);
     setActiveSuggestion(0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log('Key pressed:', { key: e.key, suggestionsCount: filteredSuggestions.length, showSuggestions });
+    console.log('🔑 Key pressed:', { 
+      key: e.key, 
+      suggestionsCount: filteredSuggestions.length, 
+      showSuggestions,
+      activeSuggestion 
+    });
     
-    // If no suggestions are showing, do nothing
     if (!showSuggestions || filteredSuggestions.length === 0) return;
 
-    // Up arrow
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveSuggestion(prev => (prev === 0 ? filteredSuggestions.length - 1 : prev - 1));
     }
-    // Down arrow 
     else if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveSuggestion(prev => (prev === filteredSuggestions.length - 1 ? 0 : prev + 1));
     }
-    // Enter key
     else if (e.key === 'Enter') {
       e.preventDefault();
       e.stopPropagation();
       if (filteredSuggestions[activeSuggestion]) {
-        console.log('Selected suggestion:', filteredSuggestions[activeSuggestion]);
+        console.log('✅ Selected suggestion via Enter:', filteredSuggestions[activeSuggestion]);
         onChange(filteredSuggestions[activeSuggestion]);
         setShowSuggestions(false);
       }
     }
-    // Escape key
     else if (e.key === 'Escape') {
+      console.log('🚪 Escape pressed, hiding suggestions');
       setShowSuggestions(false);
     }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    console.log('Clicked suggestion:', suggestion);
+    console.log('🖱️ Clicked suggestion:', suggestion);
     onChange(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
   };
 
   const handleInputFocus = () => {
-    console.log('Input focused:', { value: value.trim(), recipientsCount: recipients.length, filteredCount: filteredSuggestions.length });
+    console.log('🎯 Input focused:', { 
+      currentValue: `"${value}"`,
+      valueLength: value.length,
+      recipientsCount: recipients.length, 
+      filteredCount: filteredSuggestions.length,
+      filteredSuggestions: filteredSuggestions.slice(0, 3)
+    });
+    
     // Show suggestions if we have filtered suggestions for current value
     if (value.trim() !== '' && filteredSuggestions.length > 0) {
+      console.log('📋 Showing suggestions on focus');
       setShowSuggestions(true);
     }
   };
+
+  console.log('🎨 Render state:', { 
+    showSuggestions, 
+    filteredCount: filteredSuggestions.length,
+    currentValue: `"${value}"`,
+    recipients: recipients.length
+  });
 
   return (
     <div className="relative">
@@ -196,6 +227,13 @@ const ToFieldAutocomplete = ({
           className
         )}
       />
+
+      {/* Debug info */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="absolute top-full left-0 text-xs text-gray-500 bg-yellow-50 p-2 border rounded mt-1 z-40">
+          Show: {showSuggestions.toString()} | Filtered: {filteredSuggestions.length} | Recipients: {recipients.length}
+        </div>
+      )}
 
       {/* Suggestions dropdown */}
       {showSuggestions && filteredSuggestions.length > 0 && (
