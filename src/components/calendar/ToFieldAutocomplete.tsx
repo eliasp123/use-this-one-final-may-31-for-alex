@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '../ui/input';
 import { getAllEmailsWithAttachments } from '../../utils/emailDataUtils';
@@ -80,44 +79,27 @@ const ToFieldAutocomplete = ({
 
   // Filter suggestions based on input
   useEffect(() => {
-    console.log('🔄 Filtering suggestions...', { 
-      inputValue: `"${value}"`, 
-      inputLength: value.length,
-      recipientsAvailable: recipients.length,
-      recipients: recipients.slice(0, 3) // Show first 3 for debugging
-    });
-    
     if (value.trim() === '') {
-      console.log('❌ Empty input, clearing suggestions');
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       return;
     }
     
     const searchTerm = value.toLowerCase();
-    const filtered = recipients.filter(recipient => {
-      const match = recipient.toLowerCase().includes(searchTerm);
-      if (match) {
-        console.log(`✅ Match found: "${recipient}" contains "${value}"`);
-      }
-      return match;
-    });
+    const filtered = recipients.filter(recipient => 
+      recipient.toLowerCase().includes(searchTerm)
+    );
     
     console.log('🎯 Filtering results:', { 
       searchTerm: `"${searchTerm}"`,
       totalRecipients: recipients.length,
       matchCount: filtered.length, 
-      matches: filtered,
-      isInputFocused: document.activeElement === inputRef.current
+      matches: filtered
     });
     
     setFilteredSuggestions(filtered.slice(0, 5));
     setActiveSuggestion(0);
-    
-    // Show suggestions if we have matches and input is focused
-    const shouldShow = filtered.length > 0 && document.activeElement === inputRef.current;
-    console.log('👁️ Should show suggestions?', { shouldShow, filtered: filtered.length, focused: document.activeElement === inputRef.current });
-    setShowSuggestions(shouldShow);
+    setShowSuggestions(filtered.length > 0);
   }, [value, recipients]);
 
   // Handle clicking outside to close suggestions
@@ -128,7 +110,6 @@ const ToFieldAutocomplete = ({
         !suggestionsRef.current.contains(event.target as Node) &&
         !inputRef.current?.contains(event.target as Node)
       ) {
-        console.log('👆 Clicked outside, hiding suggestions');
         setShowSuggestions(false);
       }
     };
@@ -139,23 +120,11 @@ const ToFieldAutocomplete = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    console.log('⌨️ Input changed:', { 
-      from: `"${value}"`, 
-      to: `"${newValue}"`,
-      length: newValue.length
-    });
     onChange(newValue);
     setActiveSuggestion(0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log('🔑 Key pressed:', { 
-      key: e.key, 
-      suggestionsCount: filteredSuggestions.length, 
-      showSuggestions,
-      activeSuggestion 
-    });
-    
     if (!showSuggestions || filteredSuggestions.length === 0) return;
 
     if (e.key === 'ArrowUp') {
@@ -170,46 +139,26 @@ const ToFieldAutocomplete = ({
       e.preventDefault();
       e.stopPropagation();
       if (filteredSuggestions[activeSuggestion]) {
-        console.log('✅ Selected suggestion via Enter:', filteredSuggestions[activeSuggestion]);
         onChange(filteredSuggestions[activeSuggestion]);
         setShowSuggestions(false);
       }
     }
     else if (e.key === 'Escape') {
-      console.log('🚪 Escape pressed, hiding suggestions');
       setShowSuggestions(false);
     }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    console.log('🖱️ Clicked suggestion:', suggestion);
     onChange(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
   };
 
   const handleInputFocus = () => {
-    console.log('🎯 Input focused:', { 
-      currentValue: `"${value}"`,
-      valueLength: value.length,
-      recipientsCount: recipients.length, 
-      filteredCount: filteredSuggestions.length,
-      filteredSuggestions: filteredSuggestions.slice(0, 3)
-    });
-    
-    // Show suggestions if we have filtered suggestions for current value
     if (value.trim() !== '' && filteredSuggestions.length > 0) {
-      console.log('📋 Showing suggestions on focus');
       setShowSuggestions(true);
     }
   };
-
-  console.log('🎨 Render state:', { 
-    showSuggestions, 
-    filteredCount: filteredSuggestions.length,
-    currentValue: `"${value}"`,
-    recipients: recipients.length
-  });
 
   return (
     <div className="relative">
@@ -228,18 +177,19 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Debug info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="absolute top-full left-0 text-xs text-gray-500 bg-yellow-50 p-2 border rounded mt-1 z-40">
-          Show: {showSuggestions.toString()} | Filtered: {filteredSuggestions.length} | Recipients: {recipients.length}
-        </div>
-      )}
-
-      {/* Suggestions dropdown */}
+      {/* Suggestions dropdown with fixed positioning */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
           ref={suggestionsRef} 
-          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl max-h-60 overflow-y-auto"
+          style={{ 
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            backgroundColor: 'white',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+          }}
         >
           {filteredSuggestions.map((suggestion, index) => (
             <div
