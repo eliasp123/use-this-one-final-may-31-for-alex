@@ -57,15 +57,15 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     totalEmailsAcrossCategories: categories.reduce((sum, cat) => sum + cat.total, 0)
   });
   
-  // Split categories into priority (urgent) and non-priority
-  const priorityCategories = filteredCategories.filter(cat => cat.unread > 0 || cat.pending > 0);
-  const nonPriorityCategories = filteredCategories.filter(cat => cat.unread === 0 && cat.pending === 0);
+  // Split categories: first 3 as priority (full cards), rest as compact
+  const priorityCategories = filteredCategories.slice(0, 3);
+  const compactCategories = filteredCategories.slice(3);
   
   console.log('Priority split:', {
     priorityCount: priorityCategories.length,
-    nonPriorityCount: nonPriorityCategories.length,
+    compactCount: compactCategories.length,
     priorityCategories: priorityCategories.map(c => ({ id: c.id, unread: c.unread, pending: c.pending })),
-    nonPriorityCategories: nonPriorityCategories.map(c => ({ id: c.id, unread: c.unread, pending: c.pending }))
+    compactCategories: compactCategories.map(c => ({ id: c.id, unread: c.unread, pending: c.pending }))
   });
   
   // Handle page change (only used when showPagination is true and no external currentPage)
@@ -77,12 +77,12 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   return (
     <>
-      {/* Priority Categories Section - Full Cards */}
+      {/* Priority Categories Section - Full Cards (First Row Only) */}
       {priorityCategories.length > 0 && (
         <div className="space-y-8 sm:space-y-12 mb-12">
           <div className="text-center">
             <h2 className="text-lg font-medium text-gray-800 mb-2">Needs Attention</h2>
-            <p className="text-sm text-gray-600">Categories with unread messages or pending replies</p>
+            <p className="text-sm text-gray-600">Your most important email categories</p>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
@@ -96,16 +96,16 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
-      {/* Non-Priority Categories Section - Compact Accordion Items */}
-      {nonPriorityCategories.length > 0 && (
+      {/* Compact Categories Section - Accordion Items (Additional Categories) */}
+      {compactCategories.length > 0 && (
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-lg font-medium text-gray-800 mb-2">All Caught Up</h2>
-            <p className="text-sm text-gray-600">Categories with no urgent items</p>
+            <h2 className="text-lg font-medium text-gray-800 mb-2">More Categories</h2>
+            <p className="text-sm text-gray-600">Additional email categories</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {nonPriorityCategories.map((category) => (
+            {compactCategories.map((category) => (
               <CompactCategoryItem
                 key={category.id}
                 category={category}
