@@ -17,7 +17,10 @@ interface OrganizationData {
   category: string;
   categoryTitle: string;
   count: number;
+  isCustom?: boolean;
 }
+
+const CUSTOM_ORGANIZATIONS_KEY = 'customOrganizations';
 
 const OrganizationFieldAutocomplete = ({
   value,
@@ -32,7 +35,64 @@ const OrganizationFieldAutocomplete = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Extract unique organizations from email data
+  // Load custom organizations from localStorage
+  const loadCustomOrganizations = (): OrganizationData[] => {
+    try {
+      const stored = localStorage.getItem(CUSTOM_ORGANIZATIONS_KEY);
+      if (stored) {
+        const customOrgs = JSON.parse(stored);
+        console.log('📦 Loaded custom organizations:', customOrgs);
+        return customOrgs.map((org: any) => ({
+          ...org,
+          isCustom: true
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading custom organizations:', error);
+    }
+    return [];
+  };
+
+  // Save custom organization to localStorage
+  const saveCustomOrganization = (orgName: string) => {
+    try {
+      const customOrgs = loadCustomOrganizations();
+      const existingOrg = customOrgs.find(org => org.name.toLowerCase() === orgName.toLowerCase());
+      
+      if (!existingOrg) {
+        const newOrg: OrganizationData = {
+          name: orgName,
+          category: 'other-professionals',
+          categoryTitle: 'Other Professionals',
+          count: 1,
+          isCustom: true
+        };
+        
+        const updatedOrgs = [...customOrgs, newOrg];
+        localStorage.setItem(CUSTOM_ORGANIZATIONS_KEY, JSON.stringify(updatedOrgs));
+        console.log('💾 Saved new custom organization:', orgName);
+        
+        // Update the organizations list
+        setOrganizations(prev => {
+          const emailOrgs = prev.filter(org => !org.isCustom);
+          const allCustomOrgs = loadCustomOrganizations();
+          return [...emailOrgs, ...allCustomOrgs].sort((a, b) => {
+            if (a.category !== b.category) {
+              return a.categoryTitle.localeCompare(b.categoryTitle);
+            }
+            if (a.count !== b.count) {
+              return b.count - a.count;
+            }
+            return a.name.localeCompare(b.name);
+          });
+        });
+      }
+    } catch (error) {
+      console.error('Error saving custom organization:', error);
+    }
+  };
+
+  // Extract unique organizations from email data + custom organizations
   useEffect(() => {
     console.log('🏢 OrganizationAutocomplete: Starting organization extraction...');
     const emails = getAllEmailsWithAttachments();
@@ -64,12 +124,17 @@ const OrganizationFieldAutocomplete = ({
       }
     });
     
-    const organizationList = Array.from(organizationMap.entries()).map(([name, data]) => ({
+    const emailOrganizations = Array.from(organizationMap.entries()).map(([name, data]) => ({
       name,
       category: data.category,
       categoryTitle: categories[data.category]?.title || 'Other Professionals',
-      count: data.count
-    })).sort((a, b) => {
+      count: data.count,
+      isCustom: false
+    }));
+
+    // Load custom organizations and combine
+    const customOrganizations = loadCustomOrganizations();
+    const allOrganizations = [...emailOrganizations, ...customOrganizations].sort((a, b) => {
       // Sort by category first, then by count (descending), then alphabetically
       if (a.category !== b.category) {
         return a.categoryTitle.localeCompare(b.categoryTitle);
@@ -81,10 +146,12 @@ const OrganizationFieldAutocomplete = ({
     });
     
     console.log('🎯 Final organizations list:', { 
-      count: organizationList.length, 
-      organizations: organizationList 
+      emailOrgs: emailOrganizations.length,
+      customOrgs: customOrganizations.length,
+      total: allOrganizations.length, 
+      organizations: allOrganizations 
     });
-    setOrganizations(organizationList);
+    setOrganizations(allOrganizations);
   }, []);
 
   // Filter suggestions based on input
@@ -108,7 +175,7 @@ const OrganizationFieldAutocomplete = ({
       searchTerm: `"${searchTerm}"`,
       totalOrganizations: organizations.length,
       matchCount: filtered.length, 
-      matches: filtered.map(o => ({ name: o.name, category: o.categoryTitle })),
+      matches: filtered.map(o => ({ name: o.name, category: o.categoryTitle, isCustom: o.isCustom })),
       willShow: filtered.length > 0
     });
     
@@ -140,10 +207,29 @@ const OrganizationFieldAutocomplete = ({
     setActiveSuggestion(0);
   };
 
+  const handleInputBlur = () => {
+    // Small delay to allow for suggestion clicks
+    setTimeout(() => {
+      if (value.trim() && !organizations.some(org => org.name.toLowerCase() === value.toLowerCase())) {
+        console.log('💾 Saving new organization on blur:', value);
+        saveCustomOrganization(value.trim());
+      }
+    }, 200);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     console.log('⌨️ Key pressed:', { key: e.key, showSuggestions, suggestionsCount: filteredSuggestions.length });
     
-    if (!showSuggestions || filteredSuggestions.length === 0) return;
+    if (!showSuggestions || filteredSuggestions.length === 0) {
+      if (e.key === 'Enter' && value.trim()) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('💾 Saving new organization on Enter:', value);
+        saveCustomOrganization(value.trim());
+        setShowSuggestions(false);
+      }
+      return;
+    }
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -205,6 +291,7 @@ const OrganizationFieldAutocomplete = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         placeholder={placeholder}
         className={cn(
           "text-lg py-6 border-gray-300 hover:border-gray-400 focus:border-gray-400 focus:ring-gray-400",
@@ -249,7 +336,7 @@ const OrganizationFieldAutocomplete = ({
                       {organization.categoryTitle}
                     </span>
                     <span className="text-xs text-gray-500">
-                      {organization.count} email{organization.count !== 1 ? 's' : ''}
+                      {organization.isCustom ? 'Custom' : `${organization.count} email${organization.count !== 1 ? 's' : ''}`}
                     </span>
                   </div>
                 </div>
