@@ -30,9 +30,11 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   const [isManuallyControlled, setIsManuallyControlled] = useState(false);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [isScrollLocked, setIsScrollLocked] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
   const collapseTimeoutRef = useRef<NodeJS.Timeout>();
+  const scrollLockTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
@@ -46,6 +48,32 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
     category: id, 
     status: hoveredStatus || 'unread' 
   });
+
+  // Listen for scroll events to activate scroll lock
+  useEffect(() => {
+    const handleScroll = () => {
+      // Activate scroll lock when scrolling occurs
+      setIsScrollLocked(true);
+      
+      // Clear any existing scroll lock timeout
+      if (scrollLockTimeoutRef.current) {
+        clearTimeout(scrollLockTimeoutRef.current);
+      }
+      
+      // Release scroll lock after scrolling stops for a while
+      scrollLockTimeoutRef.current = setTimeout(() => {
+        setIsScrollLocked(false);
+      }, 1500); // 1.5 seconds after scroll stops
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollLockTimeoutRef.current) {
+        clearTimeout(scrollLockTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Auto-scroll into view when accordion expands
   useEffect(() => {
@@ -84,6 +112,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   };
 
   const handleHeaderHover = () => {
+    // Don't expand during scroll lock
+    if (isScrollLocked) return;
+    
     if (!isManuallyControlled) {
       setIsExpanded(true);
     }
@@ -104,6 +135,9 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
+    // Don't show tooltips during scroll lock
+    if (isScrollLocked) return;
+    
     // Clear any existing timeouts
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
@@ -127,7 +161,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       setTooltipPosition(position);
       setHoveredStatus(status);
     }, 800);
-  }, []);
+  }, [isScrollLocked]);
 
   const handleStatusLeave = useCallback(() => {
     // Clear show timeout to prevent showing tooltip
@@ -316,7 +350,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
       </div>
 
       {/* Email Preview Tooltip - Using createPortal to render outside component tree */}
-      {hoveredStatus && previewEmails.length > 0 && createPortal(
+      {hoveredStatus && previewEmails.length > 0 && !isScrollLocked && createPortal(
         <EmailPreviewTooltip
           emails={previewEmails}
           status={hoveredStatus}
