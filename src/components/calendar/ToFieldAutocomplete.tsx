@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '../ui/input';
 import { getAllEmailsWithAttachments } from '../../utils/emailDataUtils';
@@ -21,7 +22,7 @@ const ToFieldAutocomplete = ({
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [recipients, setRecipients] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Extract unique recipients from email data
   useEffect(() => {
@@ -79,7 +80,10 @@ const ToFieldAutocomplete = ({
 
   // Filter suggestions based on input
   useEffect(() => {
+    console.log('🔍 Filter effect triggered:', { value, recipients: recipients.length });
+    
     if (value.trim() === '') {
+      console.log('❌ Empty value, hiding suggestions');
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       return;
@@ -94,7 +98,8 @@ const ToFieldAutocomplete = ({
       searchTerm: `"${searchTerm}"`,
       totalRecipients: recipients.length,
       matchCount: filtered.length, 
-      matches: filtered
+      matches: filtered,
+      willShow: filtered.length > 0
     });
     
     setFilteredSuggestions(filtered.slice(0, 5));
@@ -102,14 +107,23 @@ const ToFieldAutocomplete = ({
     setShowSuggestions(filtered.length > 0);
   }, [value, recipients]);
 
+  // Debug effect to track showSuggestions state
+  useEffect(() => {
+    console.log('📊 Suggestions state changed:', {
+      showSuggestions,
+      filteredCount: filteredSuggestions.length,
+      suggestions: filteredSuggestions
+    });
+  }, [showSuggestions, filteredSuggestions]);
+
   // Handle clicking outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        suggestionsRef.current && 
-        !suggestionsRef.current.contains(event.target as Node) &&
-        !inputRef.current?.contains(event.target as Node)
+        containerRef.current && 
+        !containerRef.current.contains(event.target as Node)
       ) {
+        console.log('👆 Clicked outside, hiding suggestions');
         setShowSuggestions(false);
       }
     };
@@ -120,11 +134,14 @@ const ToFieldAutocomplete = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    console.log('✏️ Input changed:', { newValue });
     onChange(newValue);
     setActiveSuggestion(0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    console.log('⌨️ Key pressed:', { key: e.key, showSuggestions, suggestionsCount: filteredSuggestions.length });
+    
     if (!showSuggestions || filteredSuggestions.length === 0) return;
 
     if (e.key === 'ArrowUp') {
@@ -139,6 +156,7 @@ const ToFieldAutocomplete = ({
       e.preventDefault();
       e.stopPropagation();
       if (filteredSuggestions[activeSuggestion]) {
+        console.log('🎯 Selected suggestion:', filteredSuggestions[activeSuggestion]);
         onChange(filteredSuggestions[activeSuggestion]);
         setShowSuggestions(false);
       }
@@ -149,19 +167,21 @@ const ToFieldAutocomplete = ({
   };
 
   const handleSuggestionClick = (suggestion: string) => {
+    console.log('👆 Suggestion clicked:', suggestion);
     onChange(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
   };
 
   const handleInputFocus = () => {
+    console.log('🎯 Input focused:', { value, hasFilteredSuggestions: filteredSuggestions.length > 0 });
     if (value.trim() !== '' && filteredSuggestions.length > 0) {
       setShowSuggestions(true);
     }
   };
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <Input
         ref={inputRef}
         id="to"
@@ -177,29 +197,34 @@ const ToFieldAutocomplete = ({
         )}
       />
 
-      {/* Suggestions dropdown with fixed positioning */}
+      {/* Force visible dropdown for debugging */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
-          ref={suggestionsRef} 
-          className="absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl max-h-60 overflow-y-auto"
-          style={{ 
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto z-[10000]"
+          style={{
             position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            backgroundColor: 'white',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+            backgroundColor: '#ffffff',
+            border: '2px solid #d1d5db',
+            borderRadius: '8px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            zIndex: 10000
           }}
         >
+          <div className="p-2 text-xs text-gray-500 border-b border-gray-200">
+            Debug: {filteredSuggestions.length} suggestions found
+          </div>
           {filteredSuggestions.map((suggestion, index) => (
             <div
               key={`${suggestion}-${index}`}
               className={cn(
                 "px-4 py-3 text-lg cursor-pointer transition-colors border-b border-gray-100 last:border-b-0",
-                index === activeSuggestion ? 'bg-orange-50 text-orange-700' : 'hover:bg-gray-50'
+                index === activeSuggestion ? 'bg-orange-100 text-orange-800 font-medium' : 'hover:bg-gray-50 text-gray-900'
               )}
               onClick={() => handleSuggestionClick(suggestion)}
               onMouseEnter={() => setActiveSuggestion(index)}
+              style={{
+                backgroundColor: index === activeSuggestion ? '#fed7aa' : 'transparent'
+              }}
             >
               {suggestion}
             </div>
