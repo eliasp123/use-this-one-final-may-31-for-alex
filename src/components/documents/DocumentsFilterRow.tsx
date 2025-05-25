@@ -92,7 +92,7 @@ const DocumentsFilterRow = ({
           onClick={() => onViewModeChange('grid')}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
             viewMode === 'grid' 
-              ? "bg-blue-500 text-white" 
+              ? "bg-blue-400 text-white" 
               : "text-gray-700 hover:bg-gray-50"
           }`}
         >
@@ -107,7 +107,7 @@ const DocumentsFilterRow = ({
           onClick={() => onViewModeChange('list')}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
             viewMode === 'list' 
-              ? "bg-blue-500 text-white" 
+              ? "bg-blue-400 text-white" 
               : "text-gray-700 hover:bg-gray-50"
           }`}
         >
@@ -122,7 +122,7 @@ const DocumentsFilterRow = ({
           onClick={() => onDirectionFilterChange('all')}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
             directionFilter === 'all' 
-              ? "bg-blue-500 text-white" 
+              ? "bg-blue-400 text-white" 
               : "text-gray-700 hover:bg-gray-50"
           }`}
         >
@@ -136,7 +136,7 @@ const DocumentsFilterRow = ({
           onClick={() => onDirectionFilterChange('received')}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
             directionFilter === 'received' 
-              ? "bg-green-500 text-white" 
+              ? "bg-green-400 text-white" 
               : "text-gray-700 hover:bg-gray-50"
           }`}
         >
@@ -151,7 +151,7 @@ const DocumentsFilterRow = ({
           onClick={() => onDirectionFilterChange('sent')}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
             directionFilter === 'sent' 
-              ? "bg-orange-500 text-white" 
+              ? "bg-orange-400 text-white" 
               : "text-gray-700 hover:bg-gray-50"
           }`}
         >
