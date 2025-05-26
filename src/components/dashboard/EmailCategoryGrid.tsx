@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import CompactCategoryItem from './CompactCategoryItem';
@@ -48,22 +49,21 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   // Debug logging to see all categories
   React.useEffect(() => {
-    console.log('🔍 All categories in EmailCategoryGrid:', categories.map(c => ({ id: c.id, title: c.title })));
+    console.log('🔍 All categories in EmailCategoryGrid:', categories.map(c => ({ id: c.id, title: c.title, total: c.total })));
     console.log('🔍 Total categories received:', categories.length);
-  }, [categories]);
+    console.log('🔍 Search query:', searchQuery);
+  }, [categories, searchQuery]);
   
-  // Fixed filtering logic: when there's a search query, only show categories that have emails
-  // When there's no search query, show ALL categories (including empty custom ones)
+  // Updated filtering logic: Show ALL categories when no search query
+  // Only filter when there's a search query
   const filteredCategories = searchQuery.trim() 
     ? categories.filter(category => 
-        category.total > 0 && 
         category.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : categories; // Show all categories when no search query
+    : categories; // Show ALL categories (including empty ones) when no search
   
   console.log('📊 Filtered categories:', filteredCategories.length, 'from', categories.length, 'total');
-  console.log('📊 Search query:', searchQuery);
-  console.log('📊 Filtered category titles:', filteredCategories.map(c => c.title));
+  console.log('📊 Filtered category details:', filteredCategories.map(c => ({ title: c.title, total: c.total })));
   
   // Pagination settings: 9 categories per page (3 rows of 3)
   const CATEGORIES_PER_PAGE = 9;
@@ -73,6 +73,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const startIndex = (activePage - 1) * CATEGORIES_PER_PAGE;
   const endIndex = startIndex + CATEGORIES_PER_PAGE;
   const currentPageCategories = filteredCategories.slice(startIndex, endIndex);
+  
+  console.log('📄 Current page categories:', currentPageCategories.map(c => ({ title: c.title, total: c.total })));
   
   // Determine where to place the "Add New Category" button
   const totalCategoriesOnPage = currentPageCategories.length;
@@ -237,6 +239,14 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         </div>
       )}
 
+      {/* Debug info when no categories are showing */}
+      {filteredCategories.length === 0 && !searchQuery.trim() && (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No categories available.</p>
+          <p className="text-xs text-gray-400 mt-2">Debug: {categories.length} total categories received</p>
+        </div>
+      )}
+
       {/* New Category Dialog */}
       <Dialog open={showNewCategoryDialog} onOpenChange={setShowNewCategoryDialog}>
         <DialogContent className="sm:max-w-md">
@@ -254,7 +264,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
                   handleCreateCategory();
                 }
               }}
-              className="text-gray-800"
+              className="text-gray-600"
             />
             <Button 
               onClick={handleCreateCategory} 
