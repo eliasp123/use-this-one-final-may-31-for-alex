@@ -7,8 +7,8 @@ import { Search } from 'lucide-react';
 interface DocumentsFiltersProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
-  selectedFilter: 'all' | 'documents' | 'images' | 'spreadsheets' | 'other';
-  onFilterChange: (filter: 'all' | 'documents' | 'images' | 'spreadsheets' | 'other') => void;
+  selectedFilter: 'all' | 'documents' | 'images' | 'spreadsheets';
+  onFilterChange: (filter: 'all' | 'documents' | 'images' | 'spreadsheets') => void;
 }
 
 const DocumentsFilters = ({ searchQuery, onSearchChange, selectedFilter, onFilterChange }: DocumentsFiltersProps) => {
@@ -16,8 +16,7 @@ const DocumentsFilters = ({ searchQuery, onSearchChange, selectedFilter, onFilte
     { key: 'all', label: 'All Files' },
     { key: 'documents', label: 'Documents' },
     { key: 'images', label: 'Images' },
-    { key: 'spreadsheets', label: 'Spreadsheets' },
-    { key: 'other', label: 'Other' }
+    { key: 'spreadsheets', label: 'Spreadsheets' }
   ];
 
   return (
