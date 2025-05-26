@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { Appointment } from '../../types/appointment';
 import { Separator } from '../ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
+import { APPOINTMENTS } from '../../data/appointmentData';
 
 interface AppointmentFormSidebarContentProps {
   selectedDate?: Date;
@@ -16,7 +17,7 @@ const AppointmentFormSidebarContent = ({
   selectedDate, 
   selectedDateAppointments 
 }: AppointmentFormSidebarContentProps) => {
-  // Get upcoming appointments from existing appointments data (next 4 weeks)
+  // Get upcoming appointments from actual appointments data (next 4 weeks)
   const getUpcomingAppointments = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -25,33 +26,7 @@ const AppointmentFormSidebarContent = ({
     fourWeeksFromNow.setDate(fourWeeksFromNow.getDate() + 28);
     fourWeeksFromNow.setHours(23, 59, 59, 999);
     
-    // This would normally come from APPOINTMENTS data, but for now we'll use sample data
-    const sampleUpcoming: Appointment[] = [
-      {
-        id: 1,
-        title: 'Medicare Benefits Review',
-        date: new Date(2025, 5, 2), // June 2, 2025
-        category: 'federal-benefits',
-        color: 'bg-amber-500',
-        organization: 'Medicare Services Office',
-        textColor: 'text-amber-700',
-        time: '9:00 AM',
-        to: 'Medicare Representative'
-      },
-      {
-        id: 2,
-        title: 'Legal Consultation',
-        date: new Date(2025, 5, 10), // June 10, 2025
-        category: 'attorneys',
-        color: 'bg-amber-500',
-        organization: 'Elder Law Associates',
-        textColor: 'text-amber-700',
-        time: '3:30 PM',
-        to: 'Attorney Williams'
-      }
-    ];
-    
-    return sampleUpcoming
+    return APPOINTMENTS
       .filter(app => {
         const appDate = new Date(app.date);
         appDate.setHours(0, 0, 0, 0);
