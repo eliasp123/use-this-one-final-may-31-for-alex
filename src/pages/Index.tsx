@@ -10,6 +10,8 @@ import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import CalendarPopup from '../components/CalendarPopup';
+import CalendarDateDisplay from '../components/calendar/CalendarDateDisplay';
+import { useCalendarLogic } from '../hooks/useCalendarLogic';
 import { 
   Pagination, 
   PaginationContent, 
@@ -28,6 +30,17 @@ const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Use the same calendar logic as the bottom calendar
+  const {
+    date,
+    selectedDateAppointments,
+    isDayWithAppointment,
+    handleSelect,
+    getUpcomingAppointments,
+    handleAppointmentClick,
+    appointments
+  } = useCalendarLogic();
+
   const handleNewEmail = (emailData: any) => {
     console.log('New email to be sent:', emailData);
     
@@ -35,6 +48,10 @@ const Index = () => {
       title: "Email Sent",
       description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
     });
+  };
+
+  const handleAddAppointment = () => {
+    console.log('Add appointment clicked from top calendar');
   };
 
   // Keep the toggle function available for programmer use
@@ -202,10 +219,16 @@ const Index = () => {
           onSend={handleNewEmail}
         />
 
-        {/* Calendar Popup */}
+        {/* Calendar Popup - Now using the same functional calendar as the bottom */}
         <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
           <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-            <CalendarPopup showTrigger={false} />
+            <CalendarDateDisplay
+              date={date}
+              onDateSelect={handleSelect}
+              isDayWithAppointment={isDayWithAppointment}
+              onAddAppointment={handleAddAppointment}
+              appointments={appointments}
+            />
           </DialogContent>
         </Dialog>
       </div>
