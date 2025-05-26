@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
@@ -77,14 +78,14 @@ const AppointmentFormInputFields = ({
         />
       </div>
 
-      {/* Send Calendar Invite Section with purple styling */}
+      {/* Send Calendar Invite Section with blue styling */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between py-3 px-4 bg-purple-50 rounded-lg border border-purple-200">
+        <div className="flex items-center justify-between py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
           <div className="flex flex-col">
-            <Label htmlFor="send-invitation" className="text-sm font-medium text-purple-700">
+            <Label htmlFor="send-invitation" className="text-sm font-medium text-blue-700">
               Send Calendar Invite
             </Label>
-            <p className="text-xs text-purple-600 mt-1">
+            <p className="text-xs text-blue-600 mt-1">
               Send a calendar invitation via email
             </p>
           </div>
@@ -92,46 +93,46 @@ const AppointmentFormInputFields = ({
             id="send-invitation"
             checked={sendInvitation}
             onCheckedChange={setSendInvitation}
-            className="data-[state=checked]:bg-purple-600"
+            className="data-[state=checked]:bg-blue-600"
           />
         </div>
 
         {/* Email fields - show when send invitation is enabled */}
         {sendInvitation && (
-          <div className="space-y-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+          <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="space-y-2">
-              <Label htmlFor="email-to" className="text-sm font-medium text-purple-700">
+              <Label htmlFor="email-to" className="text-sm font-medium text-blue-700">
                 To: (Email addresses)
               </Label>
               <Input
                 id="email-to"
                 type="email"
                 placeholder="email@example.com, another@example.com"
-                className="w-full focus:border-purple-400 focus:ring-purple-400"
+                className="w-full focus:border-blue-400 focus:ring-blue-400"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email-cc" className="text-sm font-medium text-purple-700">
+              <Label htmlFor="email-cc" className="text-sm font-medium text-blue-700">
                 CC: (Optional)
               </Label>
               <Input
                 id="email-cc"
                 type="email"
                 placeholder="cc@example.com"
-                className="w-full focus:border-purple-400 focus:ring-purple-400"
+                className="w-full focus:border-blue-400 focus:ring-blue-400"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email-bcc" className="text-sm font-medium text-purple-700">
+              <Label htmlFor="email-bcc" className="text-sm font-medium text-blue-700">
                 BCC: (Optional)
               </Label>
               <Input
                 id="email-bcc"
                 type="email"
                 placeholder="bcc@example.com"
-                className="w-full focus:border-purple-400 focus:ring-purple-400"
+                className="w-full focus:border-blue-400 focus:ring-blue-400"
               />
             </div>
           </div>
