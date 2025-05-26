@@ -135,47 +135,45 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         </CollapsibleTrigger>
         
         <CollapsibleContent className="mt-4">
-          <div className="flex justify-center">
-            <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg border border-gray-200 p-6">
-              <SidebarProvider defaultOpen={true}>
-                <div className="flex w-full min-h-[600px]">
-                  <DocumentSidebar 
-                    key={folderRefreshKey}
-                    selectedFolderId={selectedFolderId}
-                    onFolderSelect={setSelectedFolderId}
-                    onCreateFolder={handleCreateFolder}
-                  />
-                  
-                  <div className="flex-1 px-6">
-                    <div className="space-y-6">
-                      <DocumentsStats 
-                        total={stats.total}
-                        documents={stats.documents}
-                        images={stats.images}
-                        spreadsheets={stats.spreadsheets}
-                        other={stats.other}
-                      />
-                      
-                      <DocumentsFilters
-                        searchQuery={searchQuery}
-                        onSearchChange={setSearchQuery}
-                        selectedFilter={selectedFilter}
-                        onFilterChange={setSelectedFilter}
-                      />
+          <div className="w-full bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+            <SidebarProvider defaultOpen={true}>
+              <div className="flex w-full min-h-[600px]">
+                <DocumentSidebar 
+                  key={folderRefreshKey}
+                  selectedFolderId={selectedFolderId}
+                  onFolderSelect={setSelectedFolderId}
+                  onCreateFolder={handleCreateFolder}
+                />
+                
+                <div className="flex-1 px-6">
+                  <div className="space-y-6">
+                    <DocumentsStats 
+                      total={stats.total}
+                      documents={stats.documents}
+                      images={stats.images}
+                      spreadsheets={stats.spreadsheets}
+                      other={stats.other}
+                    />
+                    
+                    <DocumentsFilters
+                      searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
+                      selectedFilter={selectedFilter}
+                      onFilterChange={setSelectedFilter}
+                    />
 
-                      <DocumentsContent
-                        groupedAttachments={groupedAttachments}
-                        selectedFilter={selectedFilter}
-                        filteredAttachments={filteredAttachments}
-                        searchQuery={searchQuery}
-                        selectedFolderId={selectedFolderId}
-                        viewMode={viewMode}
-                      />
-                    </div>
+                    <DocumentsContent
+                      groupedAttachments={groupedAttachments}
+                      selectedFilter={selectedFilter}
+                      filteredAttachments={filteredAttachments}
+                      searchQuery={searchQuery}
+                      selectedFolderId={selectedFolderId}
+                      viewMode={viewMode}
+                    />
                   </div>
                 </div>
-              </SidebarProvider>
-            </div>
+              </div>
+            </SidebarProvider>
           </div>
         </CollapsibleContent>
       </Collapsible>
