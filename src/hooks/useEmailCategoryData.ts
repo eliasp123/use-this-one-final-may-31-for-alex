@@ -81,9 +81,9 @@ export const useEmailCategoryData = () => {
         // Predefined categories get random counts for demo purposes
         totalCount = Math.floor(Math.random() * 15) + 5;
       } else {
-        // Custom categories get actual email counts
+        // Custom categories get actual email counts (can be 0)
         const categoryEmails = getEmailsByCategory(id);
-        totalCount = categoryEmails.length;
+        totalCount = categoryEmails.length; // This will be 0 for new categories
         console.log(`Custom category ${id} (${categoryData.title}) has ${totalCount} actual emails`);
       }
       
@@ -93,18 +93,19 @@ export const useEmailCategoryData = () => {
         icon,
         unread: unreadCount,
         pending: pendingCount,
-        total: totalCount,
+        total: totalCount, // Keep 0 for new custom categories
         color: categoryData.color.replace('bg-gradient-to-r ', ''),
         bgColor: categoryData.bgColor,
         textColor
       };
       
-      console.log(`✅ Created category: ${category.title} (${category.id})`);
+      console.log(`✅ Created category: ${category.title} (${category.id}) with total: ${category.total}`);
       return category;
     });
     
     console.log('✅ Categories loaded:', categories.length, 'total categories');
     console.log('📋 Category titles:', categories.map(c => c.title));
+    console.log('📋 Category totals:', categories.map(c => ({ title: c.title, total: c.total })));
     setEmailCategories(categories);
   }, [refreshTrigger]);
 
