@@ -43,9 +43,10 @@ export const useEmailCategoryData = () => {
   const [totalPending, setTotalPending] = useState(0);
   const [totalUnresponded, setTotalUnresponded] = useState(0);
   const [emailCategories, setEmailCategories] = useState<EmailCategory[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const loadCategories = useCallback(() => {
-    console.log('🔄 Loading categories...');
+    console.log('🔄 Loading categories... (trigger:', refreshTrigger, ')');
     setTotalUnread(getUnreadEmails().length);
     setTotalPending(getPendingEmails().length);
     setTotalUnresponded(getUnrespondedEmails().length);
@@ -105,18 +106,24 @@ export const useEmailCategoryData = () => {
     console.log('✅ Categories loaded:', categories.length, 'total categories');
     console.log('📋 Category titles:', categories.map(c => c.title));
     setEmailCategories(categories);
-  }, []);
+  }, [refreshTrigger]);
 
   // Load email counts and categories
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
 
+  // Force refresh function that triggers a re-load
+  const refreshCategories = useCallback(() => {
+    console.log('🔄 Force refreshing categories...');
+    setRefreshTrigger(prev => prev + 1);
+  }, []);
+
   return {
     totalUnread,
     totalPending,
     totalUnresponded,
     emailCategories,
-    refreshCategories: loadCategories
+    refreshCategories
   };
 };
