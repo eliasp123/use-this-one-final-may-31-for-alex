@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -6,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import DocumentSidebar from '../documents/DocumentSidebar';
+import SimpleFolderList from '../documents/SimpleFolderList';
 import DocumentsStats from '../documents/DocumentsStats';
 import DocumentsFilters from '../documents/DocumentsFilters';
 import DocumentsContent from '../documents/DocumentsContent';
@@ -136,7 +137,7 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
           <div className="w-full bg-white rounded-lg shadow-lg border border-gray-200 p-6">
             <div className="flex w-full min-h-[600px]">
               <div className="min-w-[240px] max-w-[280px] border-r border-gray-200 pr-4">
-                <DocumentSidebar 
+                <SimpleFolderList
                   key={folderRefreshKey}
                   selectedFolderId={selectedFolderId}
                   onFolderSelect={setSelectedFolderId}
