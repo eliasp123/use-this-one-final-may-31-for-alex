@@ -5,14 +5,9 @@ import NewEmailForm from '../components/NewEmailForm';
 import { Info, Pencil, FileText, Search, Calendar } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Button } from '../components/ui/button';
-import { Dialog, DialogContent } from '../components/ui/dialog';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import CalendarPopup from '../components/CalendarPopup';
-import CalendarDateDisplay from '../components/calendar/CalendarDateDisplay';
-import { useCalendarLogic } from '../hooks/useCalendarLogic';
-import { APPOINTMENTS } from '../data/appointmentData';
 import { 
   Pagination, 
   PaginationContent, 
@@ -25,21 +20,10 @@ import {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { userRole, setUserRole } = useUserRole();
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  // Use the same calendar logic as the bottom calendar
-  const {
-    date,
-    selectedDateAppointments,
-    isDayWithAppointment,
-    handleSelect,
-    getUpcomingAppointments,
-    handleAppointmentClick
-  } = useCalendarLogic();
 
   const handleNewEmail = (emailData: any) => {
     console.log('New email to be sent:', emailData);
@@ -50,14 +34,18 @@ const Index = () => {
     });
   };
 
-  const handleAddAppointment = () => {
-    console.log('Add appointment clicked from top calendar');
-  };
-
   // Keep the toggle function available for programmer use
   const toggleUserRole = () => {
     const newRole = userRole === 'primary-caregiver' ? 'family-member' : 'primary-caregiver';
     setUserRole(newRole);
+  };
+
+  // Scroll to calendar section
+  const handleCalendarClick = () => {
+    const calendarSection = document.getElementById('calendar-section');
+    if (calendarSection) {
+      calendarSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
   
   // Pagination logic
@@ -132,7 +120,7 @@ const Index = () => {
               </Button>
 
               <Button
-                onClick={() => setShowCalendar(true)}
+                onClick={handleCalendarClick}
                 variant="outline"
                 className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
               >
@@ -207,8 +195,8 @@ const Index = () => {
           </div>
         )}
 
-        {/* Calendar Section with margin top for separation */}
-        <div className="mt-10 sm:mt-16">
+        {/* Calendar Section with margin top for separation and ID for scrolling */}
+        <div id="calendar-section" className="mt-10 sm:mt-16">
           <CalendarSection />
         </div>
 
@@ -218,19 +206,6 @@ const Index = () => {
           onClose={() => setShowNewEmailForm(false)}
           onSend={handleNewEmail}
         />
-
-        {/* Calendar Popup - Now using the same functional calendar as the bottom */}
-        <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
-          <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-            <CalendarDateDisplay
-              date={date}
-              onDateSelect={handleSelect}
-              isDayWithAppointment={isDayWithAppointment}
-              onAddAppointment={handleAddAppointment}
-              appointments={APPOINTMENTS}
-            />
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
