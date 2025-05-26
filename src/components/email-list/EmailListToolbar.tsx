@@ -53,7 +53,7 @@ const EmailListToolbar: React.FC<EmailListToolbarProps> = ({
           
           <button 
             onClick={onComposeClick}
-            className="text-gray-600 hover:text-green-600 transition-colors cursor-pointer text-sm"
+            className="text-purple-600 hover:text-purple-700 transition-colors cursor-pointer text-sm"
           >
             + Compose Email
           </button>
