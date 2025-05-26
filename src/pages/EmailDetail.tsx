@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -161,10 +160,7 @@ const EmailDetail = () => {
         {/* Main Content */}
         <div className="flex-1 pl-24 pr-32">
           <div className="container mx-auto px-4 py-8">
-            <EmailDetailHeader 
-              email={email}
-              onComposeClick={() => setShowNewEmailForm(true)}
-            />
+            <EmailDetailHeader email={email} />
             
             <EmailDetailCard email={email} />
             
@@ -174,6 +170,7 @@ const EmailDetail = () => {
               onMarkAsReplied={handleMarkAsReplied}
               onMarkAsResponseReceived={handleMarkAsResponseReceived}
               onMarkAsPrivate={handleMarkAsPrivate}
+              onComposeClick={() => setShowNewEmailForm(true)}
               showReplyForm={showReplyForm}
             />
             

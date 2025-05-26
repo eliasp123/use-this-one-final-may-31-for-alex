@@ -1,21 +1,18 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ArrowLeft, Home, Pencil, FileText } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
-import DocumentHubPopup from './DocumentHubPopup';
 
 interface EmailDetailHeaderProps {
   email: EmailData;
-  onComposeClick: () => void;
 }
 
-const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeClick }) => {
+const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   const navigate = useNavigate();
-  const [showDocumentHub, setShowDocumentHub] = useState(false);
   
   // Determine status for display
   let statusBadge;
@@ -52,26 +49,6 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
             <Home className="mr-1 h-4 w-4" /> Back to Dashboard
           </Button>
         </div>
-
-        <div className="flex gap-2">
-          <Button
-            onClick={onComposeClick}
-            className="bg-green-500 hover:bg-green-600 text-white"
-            size="sm"
-          >
-            <Pencil className="mr-2 h-4 w-4" />
-            Compose New Email
-          </Button>
-
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="bg-orange-500 hover:bg-orange-600 text-white"
-            onClick={() => setShowDocumentHub(true)}
-          >
-            <FileText className="mr-1 h-4 w-4" /> Document Hub
-          </Button>
-        </div>
       </div>
       
       <div className="flex justify-between items-center">
@@ -87,12 +64,6 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
           </div>
         </div>
       </div>
-      
-      {/* Document Hub Popup */}
-      <DocumentHubPopup 
-        isOpen={showDocumentHub}
-        onClose={() => setShowDocumentHub(false)}
-      />
     </div>
   );
 };
