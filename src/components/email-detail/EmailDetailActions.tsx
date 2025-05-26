@@ -8,12 +8,14 @@ import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { SidebarProvider } from '../ui/sidebar';
 import DocumentSidebar from '../documents/DocumentSidebar';
-import DocumentHubHeader from './DocumentHubHeader';
-import DocumentHubStats from './DocumentHubStats';
-import DocumentHubSearchFilters from './DocumentHubSearchFilters';
-import DocumentHubContent from './DocumentHubContent';
+import DocumentsHeader from '../documents/DocumentsHeader';
+import DocumentsSearchBar from '../documents/DocumentsSearchBar';
+import DocumentsFilterRow from '../documents/DocumentsFilterRow';
+import DocumentsContent from '../documents/DocumentsContent';
 import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../../utils/folderUtils';
+import NewEmailForm from '../NewEmailForm';
+import { useToast } from '../../hooks/use-toast';
 
 interface EmailDetailActionsProps {
   email: EmailData;
@@ -23,6 +25,8 @@ interface EmailDetailActionsProps {
   onMarkAsPrivate: () => void;
   showReplyForm: boolean;
 }
+
+type FilterType = 'all' | 'person' | 'organization' | 'date';
 
 const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   email,
@@ -35,13 +39,14 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   const navigate = useNavigate();
   const currentCategory = categoryInfo[email.category];
   const [showDocumentHub, setShowDocumentHub] = useState(false);
+  const { toast } = useToast();
   
-  // Document Hub state
+  // Document Hub state - using same structure as Documents page
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-  const [folderRefreshKey, setFolderRefreshKey] = useState(0);
+  const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('all');
 
   const allAttachments = getAllAttachments();
@@ -62,26 +67,27 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
     ? folderFilteredAttachments 
     : folderFilteredAttachments.filter(attachment => attachment.direction === directionFilter);
 
-  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, selectedFilter === 'organization' || selectedFilter === 'date' ? 'all' : selectedFilter);
+  const filteredAttachments = filterAttachments(directionFilteredAttachments, searchQuery, 'all');
   const stats = getAttachmentStats(allAttachments);
 
   const handleCreateFolder = (name: string) => {
     if (name.trim()) {
       createFolder(name.trim());
-      setFolderRefreshKey(prev => prev + 1);
     }
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-    if (value.trim() && directionFilter !== 'all') {
-      setDirectionFilter('all');
-    }
+  const handleNewEmail = (emailData: any) => {
+    console.log('New email to be sent:', emailData);
+    
+    toast({
+      title: "Email Sent",
+      description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
+    });
   };
 
-  // Group attachments by different criteria
-  const groupAttachments = (attachments: AttachmentWithContext[], filterType: string): [string, AttachmentWithContext[]][] => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
+  // Group attachments by different criteria - same as Documents page
+  const groupAttachments = (attachments: AttachmentWithContext[], filterType: FilterType): [string, AttachmentWithContext[]][] => {
+    if (filterType === 'all') {
       return [['All Files', attachments]];
     }
 
@@ -89,6 +95,16 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
       const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const key = attachment.senderOrganization || 'Unknown Organization';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(attachment);
+      });
+      return Object.entries(groups);
+    }
+
+    if (filterType === 'person') {
+      const groups: Record<string, AttachmentWithContext[]> = {};
+      attachments.forEach(attachment => {
+        const key = attachment.senderName || 'Unknown Person';
         if (!groups[key]) groups[key] = [];
         groups[key].push(attachment);
       });
@@ -110,6 +126,33 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   };
 
   const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
+
+  // Calculate counts for each filter
+  const getFilterCount = (filterType: string) => {
+    const baseAttachments = directionFilter === 'all' ? allAttachments : 
+      allAttachments.filter(attachment => attachment.direction === directionFilter);
+    
+    if (filterType === 'organization') {
+      const uniqueOrgs = new Set(baseAttachments.map(a => a.senderOrganization));
+      return uniqueOrgs.size;
+    }
+    if (filterType === 'person') {
+      const uniquePersons = new Set(baseAttachments.map(a => a.senderName));
+      return uniquePersons.size;
+    }
+    if (filterType === 'date') {
+      const uniqueMonths = new Set(baseAttachments.map(a => {
+        const date = new Date(a.emailDate);
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+      }));
+      return uniqueMonths.size;
+    }
+    return 0;
+  };
+
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter as FilterType);
+  };
   
   return (
     <div className="space-y-6">
@@ -170,41 +213,53 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         </CollapsibleTrigger>
         
         <CollapsibleContent className="mt-4">
-          <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg p-6">
-            <DocumentHubHeader />
-            
+          <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
             <SidebarProvider defaultOpen={true}>
-              <div className="flex h-full min-h-[600px] w-full mt-6">
+              <div className="flex gap-6 w-full">
                 <DocumentSidebar 
-                  key={folderRefreshKey}
                   selectedFolderId={selectedFolderId}
                   onFolderSelect={setSelectedFolderId}
                   onCreateFolder={handleCreateFolder}
                 />
                 
-                <div className="flex-1 flex flex-col space-y-6 px-6">
-                  <DocumentHubStats stats={stats} />
+                {/* Main content area - centered and wider */}
+                <div className="flex-1 min-w-0 flex justify-center">
+                  <div className="w-full max-w-[1920px] mx-auto px-6 py-4 sm:py-8 pt-16">
+                    <DocumentsHeader onNewEmailClick={() => setShowNewEmailForm(true)} />
+                    
+                    <DocumentsSearchBar 
+                      searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
+                    />
 
-                  <DocumentHubSearchFilters
-                    searchQuery={searchQuery}
-                    onSearchChange={handleSearchChange}
-                    selectedFilter={selectedFilter}
-                    onFilterChange={setSelectedFilter}
-                    directionFilter={directionFilter}
-                    onDirectionFilterChange={setDirectionFilter}
-                  />
+                    <DocumentsFilterRow
+                      selectedFilter={selectedFilter}
+                      onFilterChange={handleFilterChange}
+                      viewMode={viewMode}
+                      onViewModeChange={setViewMode}
+                      directionFilter={directionFilter}
+                      onDirectionFilterChange={setDirectionFilter}
+                      getFilterCount={getFilterCount}
+                    />
 
-                  <DocumentHubContent
-                    groupedAttachments={groupedAttachments}
-                    selectedFilter={selectedFilter}
-                    filteredAttachments={filteredAttachments}
-                    searchQuery={searchQuery}
-                    selectedFolderId={selectedFolderId}
-                    viewMode={viewMode}
-                    onViewModeChange={setViewMode}
-                  />
+                    <DocumentsContent 
+                      groupedAttachments={groupedAttachments}
+                      selectedFilter={selectedFilter}
+                      filteredAttachments={filteredAttachments}
+                      searchQuery={searchQuery}
+                      selectedFolderId={selectedFolderId}
+                      viewMode={viewMode}
+                    />
+                  </div>
                 </div>
               </div>
+
+              {/* New Email Form */}
+              <NewEmailForm
+                isOpen={showNewEmailForm}
+                onClose={() => setShowNewEmailForm(false)}
+                onSend={handleNewEmail}
+              />
             </SidebarProvider>
           </div>
         </CollapsibleContent>
