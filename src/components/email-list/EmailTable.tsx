@@ -52,7 +52,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
         <TableHeader>
           <TableRow>
             <TableHead className={isTablet ? "w-[400px]" : "w-[280px]"}>Sender</TableHead>
-            <TableHead className={isTablet ? "w-[600px]" : "w-[400px]"}>Subject</TableHead>
+            <TableHead className={isTablet ? "w-[500px]" : "w-[400px]"}>Subject</TableHead>
             {!isTablet && <TableHead className="w-[400px]">Attachments</TableHead>}
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
@@ -130,7 +130,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 
                 {/* Attachments row for tablet - only show if there are attachments */}
                 {isTablet && email.attachments && email.attachments.length > 0 && (
-                  <TableRow className="border-t-0">
+                  <TableRow className="border-t-0 hover:bg-gray-50" onClick={() => handleRowClick(email.id)}>
                     <TableCell colSpan={4} className="py-2 pl-8 pr-4 bg-gray-50/50">
                       <div className="flex flex-wrap gap-2">
                         {email.attachments.slice(0, 3).map((attachment, index) => (

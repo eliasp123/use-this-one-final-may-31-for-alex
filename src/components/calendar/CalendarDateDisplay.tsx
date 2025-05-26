@@ -8,6 +8,7 @@ import AppointmentForm from './AppointmentForm';
 import { Appointment } from '../../types/appointment';
 import { createPortal } from 'react-dom';
 import { useCalendarHover } from '../../hooks/useCalendarHover';
+import { useIsTablet } from '@/hooks/use-tablet';
 
 interface CalendarDateDisplayProps {
   date: Date | undefined;
@@ -20,6 +21,7 @@ interface CalendarDateDisplayProps {
 const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAppointment, appointments }: CalendarDateDisplayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const calendarContainerRef = useRef<HTMLDivElement>(null);
+  const isTablet = useIsTablet();
 
   console.log('✅ IMPROVED HOVER: Enhanced hover detection with month tracking and better element detection');
 
@@ -79,10 +81,12 @@ const CalendarDateDisplay = ({ date, onDateSelect, isDayWithAppointment, onAddAp
                 <Button
                   type="button"
                   onClick={() => setIsDialogOpen(true)}
-                  className="bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full"
+                  className={`bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full ${
+                    isTablet ? 'text-sm' : ''
+                  }`}
                 >
-                  <Plus className="mr-2 h-5 w-5" />
-                  Add Appointment
+                  <Plus className={`mr-2 ${isTablet ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                  {isTablet ? 'Add' : 'Add Appointment'}
                 </Button>
               </div>
               
