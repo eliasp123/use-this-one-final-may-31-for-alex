@@ -46,20 +46,28 @@ const AppointmentFormDatePicker = ({
   // Check if device is touch-enabled
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  // Custom Day component with tooltip functionality
+  // Custom Day component with fixed pointer events
   const CustomDay = ({ date, ...props }: any) => {
     const dateString = format(date, 'yyyy-MM-dd');
     const appointments = getAppointmentsForDate(date);
     const hasAppointments = appointments.length > 0;
 
     return (
-      <div className="relative">
+      <div 
+        className="relative"
+        style={{ pointerEvents: 'none' }}
+      >
         <button
           {...props}
           className={cn(
             "h-12 w-12 p-0 font-normal text-base rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100",
             hasAppointments && "bg-orange-200 text-gray-600"
           )}
+          style={{ pointerEvents: 'auto' }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (props.onClick) props.onClick(e);
+          }}
           data-tooltip-id={hasAppointments ? `datepicker-tooltip-${dateString}` : undefined}
           data-tooltip-place="top"
           data-tooltip-event={isTouchDevice ? 'click' : undefined}
@@ -79,7 +87,8 @@ const AppointmentFormDatePicker = ({
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
               padding: '12px',
               maxWidth: '320px',
-              zIndex: 9999
+              zIndex: 9999,
+              pointerEvents: 'auto'
             }}
           >
             <div className="space-y-3">
