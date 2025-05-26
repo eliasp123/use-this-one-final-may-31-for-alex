@@ -139,9 +139,10 @@ const AppointmentFormDatePicker = ({
     );
   };
 
+  // Modified to NOT automatically close the date picker
   const handleDateSelect = (date: Date | undefined) => {
     onDateSelect(date);
-    setDatePickerOpen(false);
+    // Removed: setDatePickerOpen(false); - Let users continue browsing dates
   };
 
   return (
