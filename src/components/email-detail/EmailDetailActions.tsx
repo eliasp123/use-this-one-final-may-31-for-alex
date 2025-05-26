@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -75,30 +74,28 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
       </div>
 
       {/* Document Hub Accordion */}
-      <div className="flex justify-center">
-        <div className="w-full max-w-6xl">
-          <Collapsible open={showDocumentHub} onOpenChange={setShowDocumentHub}>
-            <CollapsibleTrigger asChild>
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300 w-full justify-between"
-              >
-                <div className="flex items-center">
-                  <FileText className="mr-2 h-4 w-4" /> Document Hub
-                </div>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showDocumentHub ? 'rotate-180' : ''}`} />
-              </Button>
-            </CollapsibleTrigger>
-            
-            <CollapsibleContent className="mt-4">
-              <div className="flex justify-center">
-                <Documents />
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-      </div>
+      <Collapsible open={showDocumentHub} onOpenChange={setShowDocumentHub}>
+        <CollapsibleTrigger asChild>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300 w-full justify-between"
+          >
+            <div className="flex items-center">
+              <FileText className="mr-2 h-4 w-4" /> Document Hub
+            </div>
+            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showDocumentHub ? 'rotate-180' : ''}`} />
+          </Button>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent className="mt-4">
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 bg-white">
+            <div className="w-full max-w-7xl mx-auto px-4">
+              <Documents />
+            </div>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 };
