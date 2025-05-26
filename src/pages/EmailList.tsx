@@ -83,6 +83,7 @@ const EmailList = () => {
               onTabChange={handleTabChange}
               searchQuery={searchQuery}
               onSearch={handleSearch}
+              onComposeClick={() => setShowNewEmailForm(true)}
             />
             
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-50">

@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Plus, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 interface EmailHeaderProps {
   currentCategory: any;
@@ -42,19 +42,11 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
       
       <div className="flex gap-3">
         <Button
-          onClick={() => navigate('/documents')}
+          onClick={() => navigate('/')}
           className="bg-orange-500 hover:bg-orange-600 text-white"
         >
           <FileText className="mr-2 h-4 w-4" />
-          Back to Document Hub
-        </Button>
-        
-        <Button
-          onClick={onComposeClick}
-          className="bg-green-500 hover:bg-green-600 text-white"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Compose Email
+          Back to Communication Hub
         </Button>
       </div>
     </div>
