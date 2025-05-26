@@ -51,9 +51,9 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className={isTablet ? "w-[200px]" : "w-[280px]"}>Sender</TableHead>
-            <TableHead className={isTablet ? "w-[450px]" : "w-[400px]"}>Subject</TableHead>
-            <TableHead className={isTablet ? "w-[250px]" : "w-[400px]"}>Attachments</TableHead>
+            <TableHead className={isTablet ? "w-[250px]" : "w-[280px]"}>Sender</TableHead>
+            <TableHead className={isTablet ? "w-[550px]" : "w-[400px]"}>Subject</TableHead>
+            <TableHead className={isTablet ? "w-[180px]" : "w-[400px]"}>Attachments</TableHead>
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
           </TableRow>
@@ -69,8 +69,10 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 <TableCell className="py-4">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
-                      <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
-                      <span className={`text-sm text-gray-500 ${isTablet ? 'break-words' : ''}`}>
+                      <span className={`${!email.read ? 'font-medium' : ''} ${isTablet ? 'text-sm' : ''}`}>
+                        {email.sender.name}
+                      </span>
+                      <span className={`text-gray-500 break-words ${isTablet ? 'text-xs' : 'text-sm'}`}>
                         {email.sender.organization}
                       </span>
                     </div>
@@ -78,27 +80,31 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
-                    <span className={`${!email.read ? 'font-medium' : ''} break-words`}>{email.subject}</span>
-                    <span className={`text-sm text-gray-500 break-words ${isTablet ? 'line-clamp-3' : ''}`}>
-                      {email.content.substring(0, isTablet ? 150 : 120)}...
+                    <span className={`${!email.read ? 'font-medium' : ''} break-words ${isTablet ? 'text-sm' : ''}`}>
+                      {email.subject}
+                    </span>
+                    <span className={`text-gray-500 break-words line-clamp-3 ${isTablet ? 'text-xs' : 'text-sm'}`}>
+                      {email.content.substring(0, isTablet ? 100 : 120)}...
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   {email.attachments && email.attachments.length > 0 ? (
                     <div className="flex flex-col gap-1">
-                      {email.attachments.slice(0, isTablet ? 2 : 3).map((attachment, index) => (
-                        <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
+                      {email.attachments.slice(0, isTablet ? 1 : 3).map((attachment, index) => (
+                        <div key={index} className="flex items-center gap-2 text-gray-600">
                           {getFileIcon(attachment.type)}
-                          <span className="break-words line-clamp-1" title={attachment.name}>
+                          <span className={`break-words line-clamp-1 ${isTablet ? 'text-xs' : 'text-sm'}`} title={attachment.name}>
                             {attachment.name}
                           </span>
                         </div>
                       ))}
-                      {email.attachments.length > (isTablet ? 2 : 3) && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <Paperclip className="w-3 h-3" />
-                          <span>+{email.attachments.length - (isTablet ? 2 : 3)} more</span>
+                      {email.attachments.length > (isTablet ? 1 : 3) && (
+                        <div className="flex items-center gap-2 text-gray-500">
+                          <Paperclip className={isTablet ? "w-3 h-3" : "w-3 h-3"} />
+                          <span className={isTablet ? "text-xs" : "text-xs"}>
+                            +{email.attachments.length - (isTablet ? 1 : 3)} more
+                          </span>
                         </div>
                       )}
                     </div>
