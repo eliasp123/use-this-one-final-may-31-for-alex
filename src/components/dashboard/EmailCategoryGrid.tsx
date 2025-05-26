@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import CompactCategoryItem from './CompactCategoryItem';
@@ -53,13 +52,18 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     console.log('🔍 Total categories received:', categories.length);
   }, [categories]);
   
-  // When there's a search query, only show categories that have emails
-  // When there's no search query, show all categories
+  // Fixed filtering logic: when there's a search query, only show categories that have emails
+  // When there's no search query, show ALL categories (including empty custom ones)
   const filteredCategories = searchQuery.trim() 
-    ? categories.filter(category => category.total > 0)
-    : categories;
+    ? categories.filter(category => 
+        category.total > 0 && 
+        category.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : categories; // Show all categories when no search query
   
   console.log('📊 Filtered categories:', filteredCategories.length, 'from', categories.length, 'total');
+  console.log('📊 Search query:', searchQuery);
+  console.log('📊 Filtered category titles:', filteredCategories.map(c => c.title));
   
   // Pagination settings: 9 categories per page (3 rows of 3)
   const CATEGORIES_PER_PAGE = 9;
