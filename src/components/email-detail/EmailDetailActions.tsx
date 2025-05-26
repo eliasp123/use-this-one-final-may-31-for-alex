@@ -7,7 +7,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import { useScrollBehavior } from '../../hooks/useScrollBehavior';
 import Documents from '../../pages/Documents';
 
 interface EmailDetailActionsProps {
@@ -31,9 +30,6 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   const currentCategory = categoryInfo[email.category];
   const [showDocumentHub, setShowDocumentHub] = useState(false);
   const { toast } = useToast();
-  
-  // Use scroll behavior hook for centering view when accordion opens
-  const { containerRef } = useScrollBehavior(showDocumentHub);
   
   return (
     <div className="space-y-6">
@@ -79,25 +75,29 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
       </div>
 
       {/* Document Hub Accordion */}
-      <div ref={containerRef}>
-        <Collapsible open={showDocumentHub} onOpenChange={setShowDocumentHub}>
-          <CollapsibleTrigger asChild>
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300 w-full justify-between"
-            >
-              <div className="flex items-center">
-                <FileText className="mr-2 h-4 w-4" /> Document Hub
+      <div className="flex justify-center">
+        <div className="w-full max-w-6xl">
+          <Collapsible open={showDocumentHub} onOpenChange={setShowDocumentHub}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm transition-all duration-300 w-full justify-between"
+              >
+                <div className="flex items-center">
+                  <FileText className="mr-2 h-4 w-4" /> Document Hub
+                </div>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showDocumentHub ? 'rotate-180' : ''}`} />
+              </Button>
+            </CollapsibleTrigger>
+            
+            <CollapsibleContent className="mt-4">
+              <div className="flex justify-center">
+                <Documents />
               </div>
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showDocumentHub ? 'rotate-180' : ''}`} />
-            </Button>
-          </CollapsibleTrigger>
-          
-          <CollapsibleContent className="mt-4">
-            <Documents />
-          </CollapsibleContent>
-        </Collapsible>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
       </div>
     </div>
   );
