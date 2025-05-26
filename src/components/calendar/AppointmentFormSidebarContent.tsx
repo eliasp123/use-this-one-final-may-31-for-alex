@@ -105,39 +105,41 @@ const AppointmentFormSidebarContent = ({
             {/* Separator line */}
             <Separator className="bg-gray-600" />
 
-            {/* Bottom section - Upcoming appointments with scroll */}
-            <div className="bg-gray-50 flex-1 min-h-0">
+            {/* Bottom section - Upcoming appointments with fixed height and scroll */}
+            <div className="bg-gray-50 h-48 flex flex-col">
               <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
-              <ScrollArea className="h-full">
-                <div className="space-y-2 pr-4">
-                  {upcomingAppointments.length === 0 ? (
-                    <p className="text-gray-500 text-xs">No upcoming appointments in the next 4 weeks</p>
-                  ) : (
-                    upcomingAppointments.map(appointment => (
-                      <div 
-                        key={appointment.id} 
-                        className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
-                      >
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-gray-800 truncate mb-1">
-                              {appointment.title}
-                            </p>
-                            <p className="text-xs text-gray-600 truncate mb-1">
-                              {appointment.organization}
-                            </p>
-                            <p className="text-xs text-gray-600">
-                              {format(new Date(appointment.date), 'MMM d')}
-                            </p>
+              <div className="flex-1 min-h-0">
+                <ScrollArea className="h-full">
+                  <div className="space-y-2 pr-4 pb-4">
+                    {upcomingAppointments.length === 0 ? (
+                      <p className="text-gray-500 text-xs">No upcoming appointments in the next 4 weeks</p>
+                    ) : (
+                      upcomingAppointments.map(appointment => (
+                        <div 
+                          key={appointment.id} 
+                          className="flex items-center justify-between py-2 px-3 rounded-lg bg-white hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer min-h-0"
+                        >
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <div className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0"></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium text-gray-800 truncate mb-1">
+                                {appointment.title}
+                              </p>
+                              <p className="text-xs text-gray-600 truncate mb-1">
+                                {appointment.organization}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {format(new Date(appointment.date), 'MMM d')}
+                              </p>
+                            </div>
                           </div>
+                          <span className="text-xs text-gray-600 flex-shrink-0 ml-2">{appointment.time}</span>
                         </div>
-                        <span className="text-xs text-gray-600 flex-shrink-0 ml-2">{appointment.time}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
+                      ))
+                    )}
+                  </div>
+                </ScrollArea>
+              </div>
             </div>
           </div>
         ) : (
