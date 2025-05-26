@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -37,7 +38,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onComposeC
         <div className="flex gap-2">
           <Button 
             size="sm"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/emails/${email.category}/all`)}
             className="bg-purple-500 hover:bg-purple-600 text-white"
           >
             <ArrowLeft className="mr-1 h-4 w-4" /> Back to Conversation

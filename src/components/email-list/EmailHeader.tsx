@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -50,7 +51,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <div>
           <h1 className="text-3xl font-light text-gray-800 mb-2">
             {currentCategory 
-              ? `${currentCategory.title} Conversations` 
+              ? `Conversation: ${currentCategory.title}` 
               : 'All Conversations'}
           </h1>
           
