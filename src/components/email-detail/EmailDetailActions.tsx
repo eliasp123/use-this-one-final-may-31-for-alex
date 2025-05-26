@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -89,8 +90,8 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         </CollapsibleTrigger>
         
         <CollapsibleContent className="mt-4">
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 bg-white">
-            <div className="w-full max-w-7xl mx-auto px-4">
+          <div className="flex justify-center">
+            <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg border border-gray-200">
               <Documents />
             </div>
           </div>
