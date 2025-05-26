@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -7,7 +6,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import { SidebarProvider } from '../ui/sidebar';
 import DocumentSidebar from '../documents/DocumentSidebar';
 import DocumentsStats from '../documents/DocumentsStats';
 import DocumentsFilters from '../documents/DocumentsFilters';
@@ -136,44 +134,44 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         
         <CollapsibleContent className="mt-4">
           <div className="w-full bg-white rounded-lg shadow-lg border border-gray-200 p-6">
-            <SidebarProvider defaultOpen={true}>
-              <div className="flex w-full min-h-[600px]">
+            <div className="flex w-full min-h-[600px]">
+              <div className="min-w-[240px] max-w-[280px] border-r border-gray-200 pr-4">
                 <DocumentSidebar 
                   key={folderRefreshKey}
                   selectedFolderId={selectedFolderId}
                   onFolderSelect={setSelectedFolderId}
                   onCreateFolder={handleCreateFolder}
                 />
-                
-                <div className="flex-1 px-6">
-                  <div className="space-y-6">
-                    <DocumentsStats 
-                      total={stats.total}
-                      documents={stats.documents}
-                      images={stats.images}
-                      spreadsheets={stats.spreadsheets}
-                      other={stats.other}
-                    />
-                    
-                    <DocumentsFilters
-                      searchQuery={searchQuery}
-                      onSearchChange={setSearchQuery}
-                      selectedFilter={selectedFilter}
-                      onFilterChange={setSelectedFilter}
-                    />
+              </div>
+              
+              <div className="flex-1 px-6">
+                <div className="space-y-6">
+                  <DocumentsStats 
+                    total={stats.total}
+                    documents={stats.documents}
+                    images={stats.images}
+                    spreadsheets={stats.spreadsheets}
+                    other={stats.other}
+                  />
+                  
+                  <DocumentsFilters
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    selectedFilter={selectedFilter}
+                    onFilterChange={setSelectedFilter}
+                  />
 
-                    <DocumentsContent
-                      groupedAttachments={groupedAttachments}
-                      selectedFilter={selectedFilter}
-                      filteredAttachments={filteredAttachments}
-                      searchQuery={searchQuery}
-                      selectedFolderId={selectedFolderId}
-                      viewMode={viewMode}
-                    />
-                  </div>
+                  <DocumentsContent
+                    groupedAttachments={groupedAttachments}
+                    selectedFilter={selectedFilter}
+                    filteredAttachments={filteredAttachments}
+                    searchQuery={searchQuery}
+                    selectedFolderId={selectedFolderId}
+                    viewMode={viewMode}
+                  />
                 </div>
               </div>
-            </SidebarProvider>
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>
