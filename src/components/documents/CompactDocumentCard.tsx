@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Download, User, Building, Calendar } from 'lucide-react';
 import FileIconDisplay from './FileIconDisplay';
 import StatusBadge from './StatusBadge';
+import { useIsTablet } from '@/hooks/use-tablet';
 
 interface AttachmentWithContext {
   id: string;
@@ -28,6 +29,8 @@ interface CompactDocumentCardProps {
 
 const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCardProps) => {
   const navigate = useNavigate();
+  const isTablet = useIsTablet();
+  const [isPressed, setIsPressed] = React.useState(false);
 
   // Get file type colors for badge
   const getFileTypeInfo = (type: string) => {
@@ -66,14 +69,30 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
 
   const fileInfo = getFileTypeInfo(attachment.type);
 
+  const handleCardPress = () => {
+    if (isTablet) {
+      setIsPressed(true);
+      setTimeout(() => setIsPressed(false), 150);
+    }
+  };
+
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full">
+    <Card 
+      className={`rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full ${
+        isTablet ? 'active:scale-98' : ''
+      } ${isPressed ? 'scale-98' : ''}`}
+      onTouchStart={handleCardPress}
+    >
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with file icon, name, and status badge */}
-        <div className="flex items-start justify-between p-4 pb-3 border-b border-gray-100">
+        <div className={`flex items-start justify-between border-b border-gray-100 ${
+          isTablet ? 'p-3 pb-2' : 'p-4 pb-3'
+        }`}>
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <FileIconDisplay type={attachment.type} size="small" />
-            <h3 className="font-medium text-gray-900 text-sm leading-tight line-clamp-2">
+            <h3 className={`font-medium text-gray-900 leading-tight line-clamp-2 ${
+              isTablet ? 'text-xs' : 'text-sm'
+            }`}>
               {attachment.name}
             </h3>
           </div>
@@ -83,40 +102,44 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
           />
         </div>
 
-        {/* Metadata section */}
-        <div className="p-4 pt-3 space-y-3 flex-1">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <User className="h-4 w-4 text-gray-400" />
+        {/* Metadata section - tablet optimized */}
+        <div className={`pt-3 space-y-3 flex-1 ${isTablet ? 'p-3' : 'p-4'}`}>
+          <div className={`space-y-2 ${isTablet ? 'space-y-1.5' : ''}`}>
+            <div className={`flex items-center gap-2 text-gray-600 ${isTablet ? 'text-xs' : 'text-sm'}`}>
+              <User className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
               <span className="font-medium text-gray-900">From:</span>
-              <span>{attachment.senderName}</span>
+              <span className="break-words">{attachment.senderName}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Building className="h-4 w-4 text-gray-400" />
-              <span>{attachment.senderOrganization}</span>
+            <div className={`flex items-center gap-2 text-gray-600 ${isTablet ? 'text-xs' : 'text-sm'}`}>
+              <Building className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
+              <span className="break-words">{attachment.senderOrganization}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="h-4 w-4 text-gray-400" />
+            <div className={`flex items-center gap-2 text-gray-600 ${isTablet ? 'text-xs' : 'text-sm'}`}>
+              <Calendar className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
           </div>
         </div>
 
-        {/* Action buttons at bottom */}
-        <div className="p-4 pt-0 flex gap-2">
+        {/* Action buttons at bottom - tablet optimized touch targets */}
+        <div className={`pt-0 flex gap-2 ${isTablet ? 'p-3' : 'p-4'}`}>
           <Button
             size="sm"
             variant="outline"
             onClick={() => navigate(`/email/${attachment.emailId}`)}
-            className="flex-1 text-xs h-9 border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-100"
+            className={`flex-1 border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-100 ${
+              isTablet ? 'text-xs h-10 active:bg-gray-200' : 'text-xs h-9'
+            }`}
           >
             View Email
           </Button>
           <Button
             size="sm"
-            className={`${fileInfo.badgeColor} text-white flex-1 text-xs h-9 hover:opacity-90`}
+            className={`${fileInfo.badgeColor} text-white flex-1 hover:opacity-90 ${
+              isTablet ? 'text-xs h-10 active:opacity-80' : 'text-xs h-9'
+            }`}
           >
-            <Download className="h-3 w-3 mr-1" />
+            <Download className={`mr-1 ${isTablet ? 'h-3 w-3' : 'h-3 w-3'}`} />
             Download
           </Button>
         </div>

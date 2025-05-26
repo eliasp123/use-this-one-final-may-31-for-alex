@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Mail, Paperclip, FileText, Image, FileSpreadsheet, File } from 'lucide-react';
+import { useIsTablet } from '@/hooks/use-tablet';
 
 interface EmailTableProps {
   emails: EmailData[];
@@ -39,6 +40,7 @@ const getFileIcon = (type: string) => {
 
 const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
   const navigate = useNavigate();
+  const isTablet = useIsTablet();
 
   const handleRowClick = (emailId: string) => {
     navigate(`/email/${emailId}`);
@@ -49,9 +51,9 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[280px]">Sender</TableHead>
-            <TableHead className="w-[400px]">Subject</TableHead>
-            <TableHead className="w-[400px]">Attachments</TableHead>
+            <TableHead className={isTablet ? "w-[200px]" : "w-[280px]"}>Sender</TableHead>
+            <TableHead className={isTablet ? "w-[450px]" : "w-[400px]"}>Subject</TableHead>
+            <TableHead className={isTablet ? "w-[250px]" : "w-[400px]"}>Attachments</TableHead>
             <TableHead className="text-right">Date</TableHead>
             <TableHead className="w-[100px] text-center">Status</TableHead>
           </TableRow>
@@ -68,33 +70,35 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
                       <span className={!email.read ? 'font-medium' : ''}>{email.sender.name}</span>
-                      <span className="text-sm text-gray-500">{email.sender.organization}</span>
+                      <span className={`text-sm text-gray-500 ${isTablet ? 'break-words' : ''}`}>
+                        {email.sender.organization}
+                      </span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex flex-col">
                     <span className={`${!email.read ? 'font-medium' : ''} break-words`}>{email.subject}</span>
-                    <span className="text-sm text-gray-500 break-words">
-                      {email.content.substring(0, 120)}...
+                    <span className={`text-sm text-gray-500 break-words ${isTablet ? 'line-clamp-3' : ''}`}>
+                      {email.content.substring(0, isTablet ? 150 : 120)}...
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
                   {email.attachments && email.attachments.length > 0 ? (
                     <div className="flex flex-col gap-1">
-                      {email.attachments.slice(0, 3).map((attachment, index) => (
+                      {email.attachments.slice(0, isTablet ? 2 : 3).map((attachment, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
                           {getFileIcon(attachment.type)}
-                          <span className="break-words" title={attachment.name}>
+                          <span className="break-words line-clamp-1" title={attachment.name}>
                             {attachment.name}
                           </span>
                         </div>
                       ))}
-                      {email.attachments.length > 3 && (
+                      {email.attachments.length > (isTablet ? 2 : 3) && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <Paperclip className="w-3 h-3" />
-                          <span>+{email.attachments.length - 3} more</span>
+                          <span>+{email.attachments.length - (isTablet ? 2 : 3)} more</span>
                         </div>
                       )}
                     </div>

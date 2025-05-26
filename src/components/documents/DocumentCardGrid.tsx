@@ -7,6 +7,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { getFileTypeInfo, formatDate } from '../../utils/fileTypeUtils';
 import StatusBadge from './StatusBadge';
 import FileIcon from './FileIcon';
+import { useIsTablet } from '@/hooks/use-tablet';
 
 interface AttachmentWithContext {
   id: string;
@@ -29,11 +30,25 @@ interface DocumentCardGridProps {
 const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
   const navigate = useNavigate();
   const fileInfo = getFileTypeInfo(attachment.type);
+  const isTablet = useIsTablet();
+  const [isPressed, setIsPressed] = React.useState(false);
+
+  const handleCardPress = () => {
+    if (isTablet) {
+      setIsPressed(true);
+      setTimeout(() => setIsPressed(false), 150);
+    }
+  };
 
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out h-[340px] cursor-pointer">
+    <Card 
+      className={`rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl transition-all duration-300 ease-out h-[340px] cursor-pointer ${
+        isTablet ? 'active:scale-95' : 'hover:-translate-y-1'
+      } ${isPressed ? 'scale-95' : ''}`}
+      onTouchStart={handleCardPress}
+    >
       <CardContent className="p-0 flex flex-col h-full">
-        {/* Top section with icon and file name - removed status badge */}
+        {/* Top section with icon and file name */}
         <div className={`${fileInfo.badgeColor} p-4 pb-3 rounded-t-2xl flex items-center gap-0.5`}>
           {/* File icon */}
           <div className="w-12 h-12 rounded-xl flex items-center justify-center">
@@ -41,40 +56,42 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
           
           {/* File name */}
-          <h3 className="font-medium text-white text-sm leading-tight line-clamp-2 flex-1">
+          <h3 className={`font-medium text-white leading-tight line-clamp-2 flex-1 ${
+            isTablet ? 'text-sm' : 'text-sm'
+          }`}>
             {attachment.name}
           </h3>
         </div>
 
-        {/* Metadata section with left-aligned text - vertically centered with increased height */}
-        <div className="pl-4 pr-4 flex-1 flex items-center py-3">
-          <div className="space-y-2" style={{ marginLeft: '12px' }}>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+        {/* Metadata section - tablet optimized spacing */}
+        <div className={`pl-4 pr-4 flex-1 flex items-center ${isTablet ? 'py-2' : 'py-3'}`}>
+          <div className={`space-y-2 ${isTablet ? 'space-y-1.5' : ''}`} style={{ marginLeft: '12px' }}>
+            <div className={`flex items-center gap-2 text-gray-500 ${isTablet ? 'text-xs' : 'text-sm'}`}>
               <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
-                <User className="h-4 w-4 text-gray-400" />
+                <User className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
               </div>
               <span className="font-medium text-gray-600">From:</span>
-              <span>{attachment.senderName}</span>
+              <span className="break-words">{attachment.senderName}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className={`flex items-center gap-2 text-gray-500 ${isTablet ? 'text-xs' : 'text-sm'}`}>
               <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
-                <Building className="h-4 w-4 text-gray-400" />
+                <Building className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
               </div>
-              <span>{attachment.senderOrganization}</span>
+              <span className="break-words">{attachment.senderOrganization}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className={`flex items-center gap-2 text-gray-500 ${isTablet ? 'text-xs' : 'text-sm'}`}>
               <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
-                <Calendar className="h-4 w-4 text-gray-400" />
+                <Calendar className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
               </div>
               <span>{formatDate(attachment.emailDate)}</span>
             </div>
             {/* Status indicator with arrow icon */}
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className={`flex items-center gap-2 text-gray-500 ${isTablet ? 'text-xs' : 'text-sm'}`}>
               <div className="icon-container" style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
                 {attachment.direction === 'received' ? (
-                  <ArrowDown className="h-4 w-4 text-gray-400" />
+                  <ArrowDown className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
                 ) : (
-                  <ArrowUp className="h-4 w-4 text-gray-400" />
+                  <ArrowUp className={`text-gray-400 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
                 )}
               </div>
               <span className="font-bold text-gray-500">
@@ -84,22 +101,28 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
           </div>
         </div>
 
-        {/* Single integrated action row */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 flex items-stretch h-12">
+        {/* Single integrated action row - tablet optimized touch targets */}
+        <div className={`bg-white/50 backdrop-blur-sm rounded-b-2xl border-t border-gray-200/60 flex items-stretch ${
+          isTablet ? 'h-14' : 'h-12'
+        }`}>
           {/* View Email section */}
           <button
             onClick={() => navigate(`/email/${attachment.emailId}`)}
-            className="flex items-center justify-center flex-1 transition-all duration-200 h-full text-gray-700 hover:bg-gray-100 rounded-bl-2xl"
+            className={`flex items-center justify-center flex-1 transition-all duration-200 h-full text-gray-700 hover:bg-gray-100 rounded-bl-2xl ${
+              isTablet ? 'active:bg-gray-200' : ''
+            }`}
           >
-            <span className="text-sm font-medium">View Email</span>
+            <span className={`font-medium ${isTablet ? 'text-sm' : 'text-sm'}`}>View Email</span>
           </button>
 
           {/* Download section */}
           <div 
-            className={`${fileInfo.badgeColor} text-white flex items-center justify-center flex-1 cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl`}
+            className={`${fileInfo.badgeColor} text-white flex items-center justify-center flex-1 cursor-pointer hover:opacity-90 transition-all duration-200 h-full rounded-br-2xl ${
+              isTablet ? 'active:opacity-80' : ''
+            }`}
           >
-            <Download className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">Download</span>
+            <Download className={`mr-2 ${isTablet ? 'h-3 w-3' : 'h-4 w-4'}`} />
+            <span className={`font-medium ${isTablet ? 'text-sm' : 'text-sm'}`}>Download</span>
           </div>
         </div>
       </CardContent>
