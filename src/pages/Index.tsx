@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import CalendarPopup from '../components/CalendarPopup';
 import CalendarDateDisplay from '../components/calendar/CalendarDateDisplay';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
+import { APPOINTMENTS } from '../data/appointmentData';
 import { 
   Pagination, 
   PaginationContent, 
@@ -37,8 +38,7 @@ const Index = () => {
     isDayWithAppointment,
     handleSelect,
     getUpcomingAppointments,
-    handleAppointmentClick,
-    appointments
+    handleAppointmentClick
   } = useCalendarLogic();
 
   const handleNewEmail = (emailData: any) => {
@@ -227,7 +227,7 @@ const Index = () => {
               onDateSelect={handleSelect}
               isDayWithAppointment={isDayWithAppointment}
               onAddAppointment={handleAddAppointment}
-              appointments={appointments}
+              appointments={APPOINTMENTS}
             />
           </DialogContent>
         </Dialog>
