@@ -11,6 +11,7 @@ import AppointmentList from './calendar/AppointmentList';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
 import { useCalendarHover } from '../hooks/useCalendarHover';
 import { Appointment } from '../types/appointment';
+import { useIsTablet } from '@/hooks/use-tablet';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -18,6 +19,8 @@ interface CalendarPopupProps {
 }
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
+  const isTablet = useIsTablet();
+
   // Use shared calendar logic
   const {
     date,
@@ -64,10 +67,12 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                       <Button
                         type="button"
                         onClick={handleAddAppointment}
-                        className="bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full"
+                        className={`bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full ${
+                          isTablet ? 'text-sm' : ''
+                        }`}
                       >
-                        <Plus className="mr-2 h-5 w-5" />
-                        Add Appointment
+                        <Plus className={`mr-2 ${isTablet ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                        {isTablet ? 'Add' : 'Add Appointment'}
                       </Button>
                     </div>
                     
