@@ -114,11 +114,22 @@ export const useEmailCategoryData = () => {
     loadCategories();
   }, [loadCategories]);
 
-  // Listen for localStorage changes (including from other tabs/components)
+  // Listen for custom events (from our own components)
+  useEffect(() => {
+    const handleCustomCategoriesChanged = (e: CustomEvent) => {
+      console.log('📢 Custom categories changed event detected, refreshing categories');
+      setRefreshTrigger(prev => prev + 1);
+    };
+
+    window.addEventListener('customCategoriesChanged', handleCustomCategoriesChanged as EventListener);
+    return () => window.removeEventListener('customCategoriesChanged', handleCustomCategoriesChanged as EventListener);
+  }, []);
+
+  // Listen for localStorage changes (from other tabs/windows)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'custom-email-categories') {
-        console.log('📢 localStorage change detected, refreshing categories');
+        console.log('📢 localStorage change detected from external source, refreshing categories');
         setRefreshTrigger(prev => prev + 1);
       }
     };
@@ -133,7 +144,7 @@ export const useEmailCategoryData = () => {
     // Use setTimeout to ensure localStorage has been updated
     setTimeout(() => {
       setRefreshTrigger(prev => prev + 1);
-    }, 50);
+    }, 100); // Increased timeout to ensure localStorage is fully updated
   }, []);
 
   return {

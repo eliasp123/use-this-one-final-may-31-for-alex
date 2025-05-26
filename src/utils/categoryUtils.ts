@@ -72,8 +72,11 @@ export const saveCustomCategories = (categories: CustomCategory[]): void => {
     localStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(categories));
     console.log('💾 Saved custom categories to localStorage:', categories);
     
-    // Dispatch a custom event to notify other components
-    window.dispatchEvent(new CustomEvent('customCategoriesChanged', { detail: categories }));
+    // Dispatch a custom event to notify other components with a small delay
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('customCategoriesChanged', { detail: categories }));
+      console.log('📤 Dispatched customCategoriesChanged event');
+    }, 50);
   } catch (error) {
     console.error('❌ Error saving custom categories:', error);
   }
