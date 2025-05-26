@@ -32,6 +32,15 @@ const AppointmentFormInputFields = ({
   sendInvitation,
   setSendInvitation
 }: AppointmentFormInputFieldsProps) => {
+  // Calculate textarea height based on content
+  const calculateTextareaHeight = (text: string) => {
+    const baseHeight = 120; // minimum height in pixels
+    const lineHeight = 20; // approximate line height
+    const lines = text.split('\n').length;
+    const contentLines = Math.max(lines, 6); // minimum 6 lines
+    return Math.max(baseHeight, contentLines * lineHeight);
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -69,15 +78,15 @@ const AppointmentFormInputFields = ({
         />
       </div>
 
-      {/* Send Invitation Toggle - only show if contact person is entered */}
-      {to.trim() && (
+      {/* Send Calendar Invite Section */}
+      <div className="space-y-4">
         <div className="flex items-center justify-between py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
           <div className="flex flex-col">
             <Label htmlFor="send-invitation" className="text-sm font-medium text-gray-700">
-              Send calendar invitation
+              Send Calendar Invite
             </Label>
             <p className="text-xs text-gray-500 mt-1">
-              Send a calendar invite to {to.trim()} when saving this appointment
+              Send a calendar invitation via email
             </p>
           </div>
           <Switch
@@ -86,7 +95,48 @@ const AppointmentFormInputFields = ({
             onCheckedChange={setSendInvitation}
           />
         </div>
-      )}
+
+        {/* Email fields - show when send invitation is enabled */}
+        {sendInvitation && (
+          <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="space-y-2">
+              <Label htmlFor="email-to" className="text-sm font-medium text-gray-700">
+                To: (Email addresses)
+              </Label>
+              <Input
+                id="email-to"
+                type="email"
+                placeholder="email@example.com, another@example.com"
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email-cc" className="text-sm font-medium text-gray-700">
+                CC: (Optional)
+              </Label>
+              <Input
+                id="email-cc"
+                type="email"
+                placeholder="cc@example.com"
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email-bcc" className="text-sm font-medium text-gray-700">
+                BCC: (Optional)
+              </Label>
+              <Input
+                id="email-bcc"
+                type="email"
+                placeholder="bcc@example.com"
+                className="w-full"
+              />
+            </div>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="notes" className="text-sm font-medium text-gray-700">
@@ -97,7 +147,11 @@ const AppointmentFormInputFields = ({
           placeholder="Add any additional notes or details"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="w-full min-h-[100px] resize-none"
+          className="w-full resize-none transition-all duration-200"
+          style={{ 
+            height: `${calculateTextareaHeight(notes)}px`,
+            minHeight: '120px'
+          }}
         />
       </div>
     </div>
