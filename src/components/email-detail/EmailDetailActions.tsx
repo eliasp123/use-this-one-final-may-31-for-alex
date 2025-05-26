@@ -12,7 +12,7 @@ import DocumentSidebar from '../documents/DocumentSidebar';
 import DocumentsStats from '../documents/DocumentsStats';
 import DocumentsFilters from '../documents/DocumentsFilters';
 import DocumentsContent from '../documents/DocumentsContent';
-import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
+import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../../utils/folderUtils';
 
 interface EmailDetailActionsProps {
@@ -39,7 +39,7 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   
   // Document Hub state
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'other'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [folderRefreshKey, setFolderRefreshKey] = useState(0);
@@ -67,8 +67,8 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   };
 
   // Group attachments by different criteria
-  const groupAttachments = (attachments: any[], filterType: string) => {
-    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets' || filterType === 'other') {
+  const groupAttachments = (attachments: AttachmentWithContext[], filterType: string): [string, AttachmentWithContext[]][] => {
+    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
       return [['All Files', attachments]];
     }
     return [['All Files', attachments]];
@@ -148,7 +148,13 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
                   
                   <div className="flex-1 px-6">
                     <div className="space-y-6">
-                      <DocumentsStats attachments={allAttachments} />
+                      <DocumentsStats 
+                        total={stats.total}
+                        documents={stats.documents}
+                        images={stats.images}
+                        spreadsheets={stats.spreadsheets}
+                        other={stats.other}
+                      />
                       
                       <DocumentsFilters
                         searchQuery={searchQuery}
