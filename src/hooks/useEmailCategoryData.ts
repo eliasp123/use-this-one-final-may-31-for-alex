@@ -47,13 +47,14 @@ export const useEmailCategoryData = () => {
 
   const loadCategories = useCallback(() => {
     console.log('🔄 Loading categories... (trigger:', refreshTrigger, ')');
+    
+    // Force a fresh read from localStorage by calling getAllCategories again
+    const allCategories = getAllCategories();
+    console.log('📂 Fresh categories from localStorage:', Object.keys(allCategories));
+    
     setTotalUnread(getUnreadEmails().length);
     setTotalPending(getPendingEmails().length);
     setTotalUnresponded(getUnrespondedEmails().length);
-    
-    const allCategories = getAllCategories();
-    console.log('📂 All categories from utils:', allCategories);
-    console.log('📂 Categories keys:', Object.keys(allCategories));
     
     const categories = Object.entries(allCategories).map(([id, categoryData]) => {
       const unreadCount = getUnreadEmails(id).length;
@@ -105,7 +106,6 @@ export const useEmailCategoryData = () => {
     
     console.log('✅ Categories loaded:', categories.length, 'total categories');
     console.log('📋 Category titles:', categories.map(c => c.title));
-    console.log('📋 Category totals:', categories.map(c => ({ title: c.title, total: c.total })));
     setEmailCategories(categories);
   }, [refreshTrigger]);
 
@@ -114,10 +114,26 @@ export const useEmailCategoryData = () => {
     loadCategories();
   }, [loadCategories]);
 
+  // Listen for localStorage changes (including from other tabs/components)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'custom-email-categories') {
+        console.log('📢 localStorage change detected, refreshing categories');
+        setRefreshTrigger(prev => prev + 1);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Force refresh function that triggers a re-load
   const refreshCategories = useCallback(() => {
     console.log('🔄 Force refreshing categories...');
-    setRefreshTrigger(prev => prev + 1);
+    // Use setTimeout to ensure localStorage has been updated
+    setTimeout(() => {
+      setRefreshTrigger(prev => prev + 1);
+    }, 50);
   }, []);
 
   return {

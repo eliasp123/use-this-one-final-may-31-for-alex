@@ -57,8 +57,11 @@ interface CustomCategory {
 export const getCustomCategories = (): CustomCategory[] => {
   try {
     const stored = localStorage.getItem(CUSTOM_CATEGORIES_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
+    const categories = stored ? JSON.parse(stored) : [];
+    console.log('📦 Retrieved custom categories from localStorage:', categories);
+    return categories;
+  } catch (error) {
+    console.error('❌ Error reading custom categories:', error);
     return [];
   }
 };
@@ -67,15 +70,28 @@ export const getCustomCategories = (): CustomCategory[] => {
 export const saveCustomCategories = (categories: CustomCategory[]): void => {
   try {
     localStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(categories));
-  } catch {
-    // Handle storage errors silently
+    console.log('💾 Saved custom categories to localStorage:', categories);
+    
+    // Dispatch a custom event to notify other components
+    window.dispatchEvent(new CustomEvent('customCategoriesChanged', { detail: categories }));
+  } catch (error) {
+    console.error('❌ Error saving custom categories:', error);
   }
 };
 
 // Add a new custom category
 export const addCustomCategory = (title: string): CustomCategory => {
+  console.log('🆕 Adding new custom category:', title);
+  
   const customCategories = getCustomCategories();
   const id = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  
+  // Check if category already exists
+  const existingCategory = customCategories.find(cat => cat.id === id);
+  if (existingCategory) {
+    console.log('⚠️ Category already exists:', existingCategory);
+    return existingCategory;
+  }
   
   // Generate a random color from available options
   const colorOptions = [
@@ -99,11 +115,13 @@ export const addCustomCategory = (title: string): CustomCategory => {
   const updatedCategories = [...customCategories, newCategory];
   saveCustomCategories(updatedCategories);
   
+  console.log('✅ Successfully added new category:', newCategory);
   return newCategory;
 };
 
-// Get all categories (predefined + custom)
+// Get all categories (predefined + custom) - always fresh read
 export const getAllCategories = (): Record<string, { title: string, color: string, bgColor: string }> => {
+  // Always get fresh custom categories from localStorage
   const customCategories = getCustomCategories();
   const customCategoryInfo = customCategories.reduce((acc, category) => {
     acc[category.id] = {
@@ -114,7 +132,9 @@ export const getAllCategories = (): Record<string, { title: string, color: strin
     return acc;
   }, {} as Record<string, { title: string, color: string, bgColor: string }>);
   
-  return { ...categoryInfo, ...customCategoryInfo };
+  const allCategories = { ...categoryInfo, ...customCategoryInfo };
+  console.log('📂 getAllCategories returning:', Object.keys(allCategories));
+  return allCategories;
 };
 
 // Check if a category exists
