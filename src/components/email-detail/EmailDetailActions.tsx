@@ -12,7 +12,7 @@ import DocumentHubHeader from './DocumentHubHeader';
 import DocumentHubStats from './DocumentHubStats';
 import DocumentHubSearchFilters from './DocumentHubSearchFilters';
 import DocumentHubContent from './DocumentHubContent';
-import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
+import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../../utils/folderUtils';
 
 interface EmailDetailActionsProps {
@@ -80,13 +80,13 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   };
 
   // Group attachments by different criteria
-  const groupAttachments = (attachments: any[], filterType: string) => {
+  const groupAttachments = (attachments: AttachmentWithContext[], filterType: string): [string, AttachmentWithContext[]][] => {
     if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets') {
       return [['All Files', attachments]];
     }
 
     if (filterType === 'organization') {
-      const groups: Record<string, any[]> = {};
+      const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const key = attachment.senderOrganization || 'Unknown Organization';
         if (!groups[key]) groups[key] = [];
@@ -96,7 +96,7 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
     }
 
     if (filterType === 'date') {
-      const groups: Record<string, any[]> = {};
+      const groups: Record<string, AttachmentWithContext[]> = {};
       attachments.forEach(attachment => {
         const date = new Date(attachment.emailDate);
         const key = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
