@@ -139,12 +139,6 @@ const AppointmentFormDatePicker = ({
     );
   };
 
-  // Modified to NOT automatically close the date picker
-  const handleDateSelect = (date: Date | undefined) => {
-    onDateSelect(date);
-    // Removed: setDatePickerOpen(false); - Let users continue browsing dates
-  };
-
   return (
     <div className="space-y-2">
       <Label htmlFor="date" className="text-sm font-medium text-gray-700">
@@ -167,7 +161,7 @@ const AppointmentFormDatePicker = ({
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={handleDateSelect}
+            onSelect={onDateSelect}
             initialFocus
             className="pointer-events-auto"
             components={{
