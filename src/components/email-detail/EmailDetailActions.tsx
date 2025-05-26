@@ -7,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import SimpleFolderList from '../documents/SimpleFolderList';
+import DocumentSidebar from '../documents/DocumentSidebar';
 import DocumentsStats from '../documents/DocumentsStats';
 import DocumentsFilters from '../documents/DocumentsFilters';
 import DocumentsContent from '../documents/DocumentsContent';
@@ -136,14 +136,12 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         <CollapsibleContent className="mt-4">
           <div className="w-full bg-white rounded-lg shadow-lg border border-gray-200 p-6">
             <div className="flex w-full min-h-[600px]">
-              <div className="min-w-[240px] max-w-[280px] border-r border-gray-200 pr-4">
-                <SimpleFolderList
-                  key={folderRefreshKey}
-                  selectedFolderId={selectedFolderId}
-                  onFolderSelect={setSelectedFolderId}
-                  onCreateFolder={handleCreateFolder}
-                />
-              </div>
+              <DocumentSidebar 
+                key={folderRefreshKey}
+                selectedFolderId={selectedFolderId}
+                onFolderSelect={setSelectedFolderId}
+                onCreateFolder={handleCreateFolder}
+              />
               
               <div className="flex-1 px-6">
                 <div className="space-y-6">
