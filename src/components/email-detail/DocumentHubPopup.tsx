@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
 import { SidebarProvider } from '../ui/sidebar';
@@ -14,9 +15,10 @@ import { AttachmentWithContext } from '../../utils/attachmentUtils';
 interface DocumentHubPopupProps {
   isOpen: boolean;
   onClose: () => void;
+  isAccordionMode?: boolean;
 }
 
-const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) => {
+const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose, isAccordionMode = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'organization' | 'date'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
@@ -107,6 +109,47 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 
   const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
 
+  // If in accordion mode, render without dialog wrapper
+  if (isAccordionMode) {
+    return (
+      <div className="bg-gradient-to-br from-gray-50 to-white p-6">
+        <SidebarProvider defaultOpen={true}>
+          <div className="flex h-full min-h-[600px] w-full">
+            <DocumentSidebar 
+              key={folderRefreshKey}
+              selectedFolderId={selectedFolderId}
+              onFolderSelect={setSelectedFolderId}
+              onCreateFolder={handleCreateFolder}
+            />
+            
+            <div className="flex-1 flex flex-col space-y-6 px-6">
+              <DocumentHubStats stats={stats} />
+
+              <DocumentHubSearchFilters
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                selectedFilter={selectedFilter}
+                onFilterChange={setSelectedFilter}
+                directionFilter={directionFilter}
+                onDirectionFilterChange={setDirectionFilter}
+              />
+
+              <DocumentHubContent
+                groupedAttachments={groupedAttachments}
+                selectedFilter={selectedFilter}
+                filteredAttachments={filteredAttachments}
+                searchQuery={searchQuery}
+                selectedFolderId={selectedFolderId}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+              />
+            </div>
+          </div>
+        </SidebarProvider>
+      </div>
+    );
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[1424px] w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-50 to-white">
@@ -151,3 +194,4 @@ const DocumentHubPopup: React.FC<DocumentHubPopupProps> = ({ isOpen, onClose }) 
 };
 
 export default DocumentHubPopup;
+

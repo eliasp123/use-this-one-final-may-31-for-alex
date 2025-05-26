@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -7,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import Documents from '../../pages/Documents';
+import DocumentHubPopup from './DocumentHubPopup';
 
 interface EmailDetailActionsProps {
   email: EmailData;
@@ -92,7 +93,7 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         <CollapsibleContent className="mt-4">
           <div className="flex justify-center">
             <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg border border-gray-200">
-              <Documents />
+              <DocumentHubPopup isOpen={true} onClose={() => {}} isAccordionMode={true} />
             </div>
           </div>
         </CollapsibleContent>
@@ -102,3 +103,4 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
 };
 
 export default EmailDetailActions;
+
