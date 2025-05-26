@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -8,7 +7,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { EmailData } from '../../types/email';
 import { categoryInfo } from '../../utils/categoryUtils';
 import { useToast } from '../../hooks/use-toast';
-import DocumentHubPopup from './DocumentHubPopup';
+import { SidebarProvider } from '../ui/sidebar';
+import DocumentSidebar from '../documents/DocumentSidebar';
+import DocumentsStats from '../documents/DocumentsStats';
+import DocumentsFilters from '../documents/DocumentsFilters';
+import DocumentsContent from '../documents/DocumentsContent';
+import { getAllAttachments, filterAttachments, getAttachmentStats } from '../../utils/attachmentUtils';
+import { getDocumentsInFolder, createFolder } from '../../utils/folderUtils';
 
 interface EmailDetailActionsProps {
   email: EmailData;
@@ -31,6 +36,45 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
   const currentCategory = categoryInfo[email.category];
   const [showDocumentHub, setShowDocumentHub] = useState(false);
   const { toast } = useToast();
+  
+  // Document Hub state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'documents' | 'images' | 'spreadsheets' | 'other'>('all');
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [folderRefreshKey, setFolderRefreshKey] = useState(0);
+
+  const allAttachments = getAllAttachments();
+  
+  // Filter attachments by folder first, then by other criteria
+  const folderFilteredAttachments = selectedFolderId 
+    ? allAttachments.filter(attachment => {
+        const folderAssignments = getDocumentsInFolder(selectedFolderId);
+        return folderAssignments.some(assignment => 
+          assignment.documentId === attachment.name && assignment.emailId === attachment.emailId
+        );
+      })
+    : allAttachments;
+
+  const filteredAttachments = filterAttachments(folderFilteredAttachments, searchQuery, selectedFilter);
+  const stats = getAttachmentStats(allAttachments);
+
+  const handleCreateFolder = (name: string) => {
+    if (name.trim()) {
+      createFolder(name.trim());
+      setFolderRefreshKey(prev => prev + 1);
+    }
+  };
+
+  // Group attachments by different criteria
+  const groupAttachments = (attachments: any[], filterType: string) => {
+    if (filterType === 'all' || filterType === 'documents' || filterType === 'images' || filterType === 'spreadsheets' || filterType === 'other') {
+      return [['All Files', attachments]];
+    }
+    return [['All Files', attachments]];
+  };
+
+  const groupedAttachments = groupAttachments(filteredAttachments, selectedFilter);
   
   return (
     <div className="space-y-6">
@@ -92,8 +136,39 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
         
         <CollapsibleContent className="mt-4">
           <div className="flex justify-center">
-            <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg border border-gray-200">
-              <DocumentHubPopup isOpen={true} onClose={() => {}} isAccordionMode={true} />
+            <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+              <SidebarProvider defaultOpen={true}>
+                <div className="flex w-full min-h-[600px]">
+                  <DocumentSidebar 
+                    key={folderRefreshKey}
+                    selectedFolderId={selectedFolderId}
+                    onFolderSelect={setSelectedFolderId}
+                    onCreateFolder={handleCreateFolder}
+                  />
+                  
+                  <div className="flex-1 px-6">
+                    <div className="space-y-6">
+                      <DocumentsStats attachments={allAttachments} />
+                      
+                      <DocumentsFilters
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        selectedFilter={selectedFilter}
+                        onFilterChange={setSelectedFilter}
+                      />
+
+                      <DocumentsContent
+                        groupedAttachments={groupedAttachments}
+                        selectedFilter={selectedFilter}
+                        filteredAttachments={filteredAttachments}
+                        searchQuery={searchQuery}
+                        selectedFolderId={selectedFolderId}
+                        viewMode={viewMode}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </SidebarProvider>
             </div>
           </div>
         </CollapsibleContent>
@@ -103,4 +178,3 @@ const EmailDetailActions: React.FC<EmailDetailActionsProps> = ({
 };
 
 export default EmailDetailActions;
-
