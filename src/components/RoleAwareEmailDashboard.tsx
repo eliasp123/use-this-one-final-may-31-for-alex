@@ -3,7 +3,7 @@ import React from 'react';
 import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
-import SummarySection from './dashboard/SummarySection';
+import ConsolidatedSummaryBar from './dashboard/ConsolidatedSummaryBar';
 
 interface RoleAwareEmailDashboardProps {
   searchQuery?: string;
@@ -51,8 +51,8 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
 
   return (
     <div className="space-y-8 sm:space-y-16">
-      {/* Summary Section */}
-      <SummarySection 
+      {/* Consolidated Summary Bar */}
+      <ConsolidatedSummaryBar 
         totalUnread={totalUnread}
         totalPending={totalPending} 
         totalUnresponded={totalUnresponded}
