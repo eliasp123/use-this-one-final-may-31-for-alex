@@ -1,5 +1,3 @@
-
-
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -324,6 +322,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               onMouseEnter={handleTooltipMouseEnter}
               onMouseLeave={handleTooltipMouseLeave}
               categoryColor={color}
+              isEmailRowTooltip={false}
             />
           </div>,
           document.body
@@ -341,6 +340,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               onMouseEnter={() => {}} // Keep tooltip open when hovering over it
               onMouseLeave={() => setHoveredEmailId(null)}
               categoryColor={color}
+              isEmailRowTooltip={true}
             />
           </div>,
           document.body
@@ -351,4 +351,3 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 };
 
 export default EmailCategoryListItem;
-

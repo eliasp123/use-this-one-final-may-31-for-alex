@@ -13,6 +13,7 @@ interface EmailPreviewTooltipProps {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   categoryColor: string;
+  isEmailRowTooltip?: boolean; // New prop to distinguish tooltip types
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -23,7 +24,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   onClose,
   onMouseEnter,
   onMouseLeave,
-  categoryColor
+  categoryColor,
+  isEmailRowTooltip = false // Default to false for backward compatibility
 }) => {
   const navigate = useNavigate();
   const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
@@ -32,6 +34,18 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   // Calculate smart positioning for seamless card unfolding
   useEffect(() => {
+    // If this is an email row tooltip, use the exact position passed and skip smart positioning
+    if (isEmailRowTooltip) {
+      setSmartPosition({
+        x: position.x,
+        y: position.y,
+        placement: 'right'
+      });
+      setCurrentPosition({ x: position.x, y: position.y });
+      return;
+    }
+
+    // Smart positioning logic for status circle tooltips (existing logic)
     const tooltipHeight = 400; // Approximate height of tooltip
     const tooltipWidth = 480; // Max width from the component
     const margin = 20; // Safety margin from screen edges
@@ -131,10 +145,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     });
     
     setCurrentPosition({ x: xPos, y: yPos });
-  }, [position]);
+  }, [position, isEmailRowTooltip]);
 
-  // Update tooltip position when scrolling
+  // Update tooltip position when scrolling (only for status circle tooltips)
   useEffect(() => {
+    if (isEmailRowTooltip) return; // Skip scroll handling for email row tooltips
+
     const handleScroll = () => {
       // Find the target card again to get its current position
       const cards = document.querySelectorAll('.bg-white.rounded-2xl');
@@ -170,7 +186,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [position.x, position.y, smartPosition.placement, currentPosition.x]);
+  }, [position.x, position.y, smartPosition.placement, currentPosition.x, isEmailRowTooltip]);
 
   const getStatusLabel = () => {
     switch (status) {
@@ -254,6 +270,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   // No transform needed for seamless unfolding - position directly
   const getTransform = () => {
+    if (isEmailRowTooltip) {
+      return 'translate(0, 0)'; // No transform for email row tooltips
+    }
+
     switch (smartPosition.placement) {
       case 'left':
       case 'right':
