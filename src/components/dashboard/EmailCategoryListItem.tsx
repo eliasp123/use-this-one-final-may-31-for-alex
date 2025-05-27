@@ -94,21 +94,25 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 
   // Handle email row hover
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     const tooltipWidth = 480; // Approximate tooltip width
     
+    // Find the category card to align with its top
+    const categoryCard = e.currentTarget.closest('.bg-white.rounded-lg.shadow-sm');
+    const cardRect = categoryCard?.getBoundingClientRect();
+    
     // Determine positioning based on screen space
-    let x = rect.right + 10; // Default to right side
+    let x = emailRect.right + 10; // Default to right side
     
     // If not enough space on the right, position on the left
-    if (rect.right + tooltipWidth > screenWidth - 20) {
-      x = rect.left - tooltipWidth - 10;
+    if (emailRect.right + tooltipWidth > screenWidth - 20) {
+      x = emailRect.left - tooltipWidth - 10;
     }
     
     setEmailTooltipPosition({
       x,
-      y: rect.top
+      y: cardRect ? cardRect.top : emailRect.top // Align with category card top
     });
     setHoveredEmailId(emailId);
   };
