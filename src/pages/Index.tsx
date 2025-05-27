@@ -103,7 +103,7 @@ const Index = () => {
             
             {/* Consolidated Action Bar */}
             <div className="w-full max-w-7xl mx-auto mt-6 sm:mt-8">
-              <div className="flex items-stretch h-16">
+              <div className="flex items-stretch h-12">
                 <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch w-full">
                   {/* Compose New Email - Green background */}
                   <button
@@ -112,7 +112,7 @@ const Index = () => {
                   >
                     <div className="flex items-center">
                       <Pencil className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-base">Compose New Email</span>
+                      <span className="font-medium text-sm">Compose New Email</span>
                     </div>
                   </button>
 
@@ -123,7 +123,7 @@ const Index = () => {
                   >
                     <div className="flex items-center">
                       <FileText className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-base">View Documents</span>
+                      <span className="font-medium text-sm">View Documents</span>
                     </div>
                   </button>
 
@@ -134,7 +134,7 @@ const Index = () => {
                   >
                     <div className="flex items-center">
                       <Calendar className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-base">Calendar</span>
+                      <span className="font-medium text-sm">Calendar</span>
                     </div>
                   </button>
                 </div>
