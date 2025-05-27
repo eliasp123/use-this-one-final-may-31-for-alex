@@ -20,8 +20,8 @@ const SearchResultsPreview: React.FC<SearchResultsPreviewProps> = ({ searchQuery
 
   return (
     <div className="max-w-lg mx-auto">
-      <AppointmentPreview appointments={filteredAppointments} />
       <DocumentPreview documents={filteredDocuments} />
+      <AppointmentPreview appointments={filteredAppointments} />
     </div>
   );
 };
