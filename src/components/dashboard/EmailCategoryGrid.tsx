@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
 import EmailCategoryGridContent from './EmailCategoryGridContent';
+import EmailCategoryListContent from './EmailCategoryListContent';
 import EmailCategoryGridPagination from './EmailCategoryGridPagination';
 import SearchResultsDisplay from './SearchResultsDisplay';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
@@ -25,6 +26,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   showPagination = true,
   onCategoryAdded
 }) => {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
   // Search logic
   const allEmails = getAllEmailsWithAttachments();
   const hasSearchQuery = searchQuery.trim().length > 0;
@@ -72,8 +75,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         totalPages={totalPages}
         showPagination={showPagination && totalPages > 1 && !hasSearchQuery}
         onPageChange={handlePageChange}
-        viewMode="grid"
-        onViewModeChange={() => {}}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
       <SearchResultsDisplay
@@ -84,13 +87,21 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         filteredCategoriesCount={filteredCategories.length}
       />
 
-      <EmailCategoryGridContent
-        priorityCategories={priorityCategories}
-        compactCategories={compactCategories}
-        addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
-        addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
-        onAddNewCategory={onCategoryAdded || (() => {})}
-      />
+      {viewMode === 'grid' ? (
+        <EmailCategoryGridContent
+          priorityCategories={priorityCategories}
+          compactCategories={compactCategories}
+          addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
+          addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
+          onAddNewCategory={onCategoryAdded || (() => {})}
+        />
+      ) : (
+        <EmailCategoryListContent
+          categories={filteredCategories}
+          onAddNewCategory={onCategoryAdded || (() => {})}
+          showAddButton={!hasSearchQuery}
+        />
+      )}
 
       {showPagination && totalPages > 1 && !hasSearchQuery && (
         <EmailCategoryGridPagination 
