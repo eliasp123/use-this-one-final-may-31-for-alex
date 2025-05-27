@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
 import EmailCategoryGridContent from './EmailCategoryGridContent';
 import EmailCategoryGridDialog from './EmailCategoryGridDialog';
+import EmailCategoryListItem from './EmailCategoryListItem';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 
 interface EmailCategory {
@@ -38,6 +39,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
 }) => {
   const [showNewCategoryDialog, setShowNewCategoryDialog] = React.useState(false);
   const [newCategoryName, setNewCategoryName] = React.useState('');
+  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   const { toast } = useToast();
   
   // Debug logging to see all categories
@@ -104,23 +106,37 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   
   return (
     <>
-      {/* Priority Categories Section - Full Cards (First Row Only) */}
-      {(priorityCategories.length > 0 || addButtonInFirstRow) && (
+      {/* Header with view toggle */}
+      {(filteredCategories.length > 0) && (
         <div className="space-y-8 sm:space-y-12 mb-16">
           <EmailCategoryGridHeader
             activePage={activePage}
             totalPages={totalPages}
             showPagination={showPagination}
             onPageChange={handlePageChange}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
           />
           
-          <EmailCategoryGridContent
-            priorityCategories={priorityCategories}
-            compactCategories={compactCategories}
-            addButtonInFirstRow={addButtonInFirstRow}
-            addButtonInCompactRows={addButtonInCompactRows}
-            onAddNewCategory={handleAddNewCategory}
-          />
+          {/* Content based on view mode */}
+          {viewMode === 'grid' ? (
+            <EmailCategoryGridContent
+              priorityCategories={priorityCategories}
+              compactCategories={compactCategories}
+              addButtonInFirstRow={addButtonInFirstRow}
+              addButtonInCompactRows={addButtonInCompactRows}
+              onAddNewCategory={handleAddNewCategory}
+            />
+          ) : (
+            <div className="space-y-3">
+              {[...priorityCategories, ...compactCategories].map((category) => (
+                <EmailCategoryListItem
+                  key={category.id}
+                  category={category}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 

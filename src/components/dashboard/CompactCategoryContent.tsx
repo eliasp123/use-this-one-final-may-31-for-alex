@@ -45,13 +45,13 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
     >
       <div className="animate-fade-in px-4 sm:px-6">
         <div 
-          className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
+          className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
           onClick={onCardContentClick}
         >
-          {/* Stats with tooltip behavior - further reduced spacing for more compact layout */}
-          <div className="space-y-1 sm:space-y-1.5">
+          {/* Stats with tooltip behavior - reduced spacing for more compact layout */}
+          <div className="space-y-0.5 sm:space-y-1">
             <div 
-              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
+              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
               onClick={(e) => onStatusClick('unread', e)}
               onMouseEnter={(e) => {
                 console.log('🔵 Unread hover:', { unread, categoryId: id });
@@ -66,7 +66,7 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
             </div>
             
             <div 
-              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
+              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
               onClick={(e) => onStatusClick('pending', e)}
               onMouseEnter={(e) => {
                 console.log('🟡 Pending hover:', { pending, categoryId: id });
@@ -81,7 +81,7 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
             </div>
             
             <div 
-              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
+              className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
               onClick={(e) => onStatusClick('no-response', e)}
               onMouseEnter={(e) => {
                 console.log('🔴 Unresponded hover:', { notRespondedCount, categoryId: id });
@@ -97,7 +97,7 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
           </div>
 
           {/* Progress indicator */}
-          <div className="mt-6">
+          <div className="mt-4">
             <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
               <div 
                 className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
@@ -110,7 +110,7 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
           </div>
           
           {/* Total conversations */}
-          <div className={`flex items-center justify-between text-xs sm:text-sm mt-6 sm:mt-8 p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
+          <div className={`flex items-center justify-between text-xs sm:text-sm mt-4 sm:mt-5 p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
             <span className="text-white font-medium">Total conversations</span>
             <span className="text-white font-bold">{total}</span>
           </div>
