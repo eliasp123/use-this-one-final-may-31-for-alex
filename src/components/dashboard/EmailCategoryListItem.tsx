@@ -156,6 +156,16 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     };
   };
 
+  // Add back the formatEmailDate function
+  const formatEmailDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+    });
+  };
+
   // Helper function to get email status indicators
   const getEmailStatusIndicators = (email: any) => {
     const indicators = [];
