@@ -91,44 +91,42 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // Handle email row hover - completely rewritten positioning logic
+  // COMPLETELY REWRITTEN: Handle email row hover - use the ACTUAL email row position
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
-    const emailRect = e.currentTarget.getBoundingClientRect();
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+    const emailRow = e.currentTarget as HTMLElement;
+    const emailRect = emailRow.getBoundingClientRect();
     const tooltipWidth = 480;
     const tooltipHeight = 300;
     
-    // Calculate horizontal position (left or right of the email row)
-    let x = emailRect.right + 10; // Default to right side
-    if (emailRect.right + tooltipWidth > screenWidth - 20) {
-      x = emailRect.left - tooltipWidth - 10; // Position on left if no space on right
+    console.log('=== EMAIL ROW HOVER DEBUG ===');
+    console.log('Email row rect:', {
+      top: emailRect.top,
+      bottom: emailRect.bottom,
+      left: emailRect.left,
+      right: emailRect.right,
+      width: emailRect.width,
+      height: emailRect.height
+    });
+    
+    // Position tooltip to the RIGHT of the email row, aligned with the row's top
+    let x = emailRect.right + 10;
+    let y = emailRect.top;
+    
+    // If no space on right, position on left
+    if (x + tooltipWidth > window.innerWidth - 20) {
+      x = emailRect.left - tooltipWidth - 10;
     }
     
-    // Calculate vertical position (centered on the email row)
-    let y = emailRect.top + (emailRect.height / 2) - (tooltipHeight / 2);
-    
-    // Ensure tooltip doesn't go above the top of the screen
+    // Keep tooltip within screen bounds vertically
+    if (y + tooltipHeight > window.innerHeight - 20) {
+      y = window.innerHeight - tooltipHeight - 20;
+    }
     if (y < 20) {
       y = 20;
     }
     
-    // Ensure tooltip doesn't go below the bottom of the screen
-    if (y + tooltipHeight > screenHeight - 20) {
-      y = screenHeight - tooltipHeight - 20;
-    }
-    
-    console.log('Email hover positioning:', {
-      emailRect: {
-        top: emailRect.top,
-        bottom: emailRect.bottom,
-        left: emailRect.left,
-        right: emailRect.right,
-        height: emailRect.height
-      },
-      calculatedPosition: { x, y },
-      screenDimensions: { width: screenWidth, height: screenHeight }
-    });
+    console.log('Final tooltip position:', { x, y });
+    console.log('========================');
     
     setEmailTooltipPosition({ x, y });
     setHoveredEmailId(emailId);
