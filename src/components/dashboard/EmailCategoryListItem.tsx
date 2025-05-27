@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -91,15 +92,15 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // COMPLETELY REWRITTEN: Handle email row hover - use the ACTUAL email row position
+  // FIXED: Handle email row hover - position relative to the actual email row
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
-    const emailRow = e.currentTarget as HTMLElement;
-    const emailRect = emailRow.getBoundingClientRect();
+    const emailRowElement = e.currentTarget as HTMLElement;
+    const emailRect = emailRowElement.getBoundingClientRect();
     const tooltipWidth = 480;
     const tooltipHeight = 300;
     
-    console.log('=== EMAIL ROW HOVER DEBUG ===');
-    console.log('Email row rect:', {
+    console.log('=== EMAIL ROW HOVER POSITIONING DEBUG ===');
+    console.log('Email row getBoundingClientRect():', {
       top: emailRect.top,
       bottom: emailRect.bottom,
       left: emailRect.left,
@@ -107,26 +108,33 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       width: emailRect.width,
       height: emailRect.height
     });
+    console.log('Viewport dimensions:', {
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
     
-    // Position tooltip to the RIGHT of the email row, aligned with the row's top
+    // Position tooltip to the right of the email row
     let x = emailRect.right + 10;
     let y = emailRect.top;
     
-    // If no space on right, position on left
+    // If tooltip would go off-screen on the right, position it on the left
     if (x + tooltipWidth > window.innerWidth - 20) {
       x = emailRect.left - tooltipWidth - 10;
+      console.log('Positioning on left side due to space constraints');
     }
     
-    // Keep tooltip within screen bounds vertically
+    // Ensure tooltip stays within viewport vertically
     if (y + tooltipHeight > window.innerHeight - 20) {
       y = window.innerHeight - tooltipHeight - 20;
+      console.log('Adjusted Y position to fit in viewport');
     }
     if (y < 20) {
       y = 20;
+      console.log('Adjusted Y position - was too high');
     }
     
-    console.log('Final tooltip position:', { x, y });
-    console.log('========================');
+    console.log('Final calculated tooltip position:', { x, y });
+    console.log('==========================================');
     
     setEmailTooltipPosition({ x, y });
     setHoveredEmailId(emailId);
