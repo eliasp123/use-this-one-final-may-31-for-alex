@@ -91,29 +91,46 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // Handle email row hover with simplified positioning
+  // Handle email row hover - completely rewritten positioning logic
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
     const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
-    const tooltipWidth = 480; // Approximate tooltip width
-    const tooltipHeight = 300; // Approximate tooltip height
+    const screenHeight = window.innerHeight;
+    const tooltipWidth = 480;
+    const tooltipHeight = 300;
     
-    // Determine horizontal positioning based on available space
+    // Calculate horizontal position (left or right of the email row)
     let x = emailRect.right + 10; // Default to right side
-    
-    // If not enough space on the right, position on the left
     if (emailRect.right + tooltipWidth > screenWidth - 20) {
-      x = emailRect.left - tooltipWidth - 10;
+      x = emailRect.left - tooltipWidth - 10; // Position on left if no space on right
     }
     
-    // Center the tooltip vertically on the email row
-    const emailRowHeight = emailRect.height;
-    const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2);
+    // Calculate vertical position (centered on the email row)
+    let y = emailRect.top + (emailRect.height / 2) - (tooltipHeight / 2);
     
-    setEmailTooltipPosition({
-      x,
-      y
+    // Ensure tooltip doesn't go above the top of the screen
+    if (y < 20) {
+      y = 20;
+    }
+    
+    // Ensure tooltip doesn't go below the bottom of the screen
+    if (y + tooltipHeight > screenHeight - 20) {
+      y = screenHeight - tooltipHeight - 20;
+    }
+    
+    console.log('Email hover positioning:', {
+      emailRect: {
+        top: emailRect.top,
+        bottom: emailRect.bottom,
+        left: emailRect.left,
+        right: emailRect.right,
+        height: emailRect.height
+      },
+      calculatedPosition: { x, y },
+      screenDimensions: { width: screenWidth, height: screenHeight }
     });
+    
+    setEmailTooltipPosition({ x, y });
     setHoveredEmailId(emailId);
   };
 
@@ -137,15 +154,6 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       x,
       y: basePosition.y - 40 // Align with category row
     };
-  };
-
-  const formatEmailDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
-    });
   };
 
   // Helper function to get email status indicators
