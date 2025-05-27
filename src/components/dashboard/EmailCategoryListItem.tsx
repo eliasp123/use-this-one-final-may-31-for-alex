@@ -128,8 +128,8 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 
               {/* Right side - Status indicators and total */}
               <div className="flex items-center gap-4">
-                {/* Status badges */}
-                <div className="flex items-center gap-2">
+                {/* Status badges with increased spacing */}
+                <div className="flex items-center gap-4">
                   {unread > 0 && (
                     <div 
                       className="flex items-center justify-center w-5 h-5 bg-purple-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
