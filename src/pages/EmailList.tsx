@@ -17,7 +17,16 @@ import { useToast } from '@/hooks/use-toast';
 const EmailList = () => {
   const { category, status } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>(status || 'all');
+  
+  // Map old URL parameter to new tab value
+  const normalizeStatusParam = (statusParam: string | undefined) => {
+    if (statusParam === 'unresponded') {
+      return 'no-response';
+    }
+    return statusParam || 'all';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(normalizeStatusParam(status));
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const { emailCategories, refreshCategories } = useEmailCategoryData();
