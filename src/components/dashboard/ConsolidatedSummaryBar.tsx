@@ -32,11 +32,7 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
           {/* Unread Messages */}
           <button
             onClick={() => handleSectionClick('unread')}
-            className={`flex items-center justify-center flex-[3] transition-all duration-200 h-full ${
-              totalUnread > 0 
-                ? "text-purple-600 bg-purple-100 hover:bg-purple-200" 
-                : "text-gray-500 hover:bg-gray-50"
-            }`}
+            className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
           >
             <div className="flex items-center">
               <span className="mr-3 text-sm font-medium">Unread Messages</span>
@@ -51,11 +47,7 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
           {/* Pending Replies */}
           <button
             onClick={() => handleSectionClick('pending')}
-            className={`flex items-center justify-center flex-[3] transition-all duration-200 h-full ${
-              totalPending > 0 
-                ? "text-amber-600 bg-amber-100 hover:bg-amber-200" 
-                : "text-gray-500 hover:bg-gray-50"
-            }`}
+            className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
           >
             <div className="flex items-center">
               <span className="mr-3 text-sm font-medium">Pending Replies</span>
@@ -70,11 +62,7 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
           {/* Has Not Responded Yet */}
           <button
             onClick={() => handleSectionClick('unresponded')}
-            className={`flex items-center justify-center flex-[3] transition-all duration-200 h-full rounded-r-2xl ${
-              totalUnresponded > 0 
-                ? "text-red-600 bg-red-100 hover:bg-red-200" 
-                : "text-gray-500 hover:bg-gray-50"
-            }`}
+            className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700 rounded-r-2xl"
           >
             <div className="flex items-center">
               <span className="mr-3 text-sm font-medium">Has Not Responded Yet</span>
