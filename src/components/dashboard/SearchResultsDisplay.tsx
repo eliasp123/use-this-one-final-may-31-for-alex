@@ -21,7 +21,7 @@ const SearchResultsDisplay: React.FC<SearchResultsDisplayProps> = ({
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto mb-8 sm:mb-12">
+    <div className="max-w-lg mx-auto mb-8 sm:mb-12">
       {hasNoEmailResults ? (
         <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
           <p className="text-gray-500 text-base text-center">No emails found matching "{searchQuery}"</p>

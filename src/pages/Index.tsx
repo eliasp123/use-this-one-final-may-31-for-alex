@@ -96,8 +96,8 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Search Bar with Autocomplete - increased padding for better visual separation */}
-        <div className="max-w-xs sm:max-w-md mx-auto mb-26 sm:mb-32">
+        {/* Search Bar with Autocomplete - reduced width by 50% */}
+        <div className="max-w-48 sm:max-w-56 mx-auto mb-26 sm:mb-32">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
