@@ -91,16 +91,19 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // FIXED: Use Grok's simpler positioning approach
+  // Updated positioning to prefer left side
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
     const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     const tooltipWidth = 480; // Approximate tooltip width
     const tooltipHeight = 300; // Approximate tooltip height
 
-    let x = emailRect.right + 10; // Default to right side
-    if (emailRect.right + tooltipWidth > screenWidth - 20) {
-      x = emailRect.left - tooltipWidth - 10;
+    // Prefer left side positioning
+    let x = emailRect.left - tooltipWidth - 10; // Default to left side
+    
+    // Only show on right if not enough space on the left
+    if (emailRect.left - tooltipWidth < 20) {
+      x = emailRect.right + 10;
     }
 
     const emailRowHeight = emailRect.height;
@@ -110,7 +113,8 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       emailRectTop: emailRect.top, 
       emailRectHeight: emailRect.height, 
       calculatedX: x, 
-      calculatedY: y 
+      calculatedY: y,
+      preferredSide: emailRect.left - tooltipWidth < 20 ? 'right' : 'left'
     });
 
     setEmailTooltipPosition({ x, y });
