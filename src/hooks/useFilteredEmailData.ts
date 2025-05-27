@@ -57,12 +57,17 @@ export const useFilteredEmailData = () => {
     return filterPrivateEmails(getAllEmails());
   };
 
+  const getFilteredEmailData = () => {
+    return filterPrivateEmails(getAllEmails());
+  };
+
   return {
     filteredEmailsByCategory,
     getFilteredEmailsByCategory,
     getFilteredUnreadEmails,
     getFilteredPendingEmails,
     getFilteredUnrespondedEmails,
-    getFilteredAllEmails
+    getFilteredAllEmails,
+    getFilteredEmailData
   };
 };
