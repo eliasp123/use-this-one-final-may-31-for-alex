@@ -36,8 +36,8 @@ const SearchResultsDisplay: React.FC<SearchResultsDisplayProps> = ({
       ) : (
         <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
           <p className="text-gray-700 text-sm font-medium text-center">
-            Found <span className="text-amber-500 font-medium">{searchResultsCount}</span> email{searchResultsCount !== 1 ? 's' : ''} and <span className="text-amber-500 font-medium">{documentCount}</span> document{documentCount !== 1 ? 's' : ''} for "<span className="text-gray-700 font-medium">{searchQuery}</span>" 
-            in <span className="text-amber-500 font-medium">{filteredCategoriesCount}</span> categor{filteredCategoriesCount !== 1 ? 'ies' : 'y'}
+            Found <span className="text-amber-500 font-bold">{searchResultsCount}</span> email{searchResultsCount !== 1 ? 's' : ''} and <span className="text-amber-500 font-bold">{documentCount}</span> document{documentCount !== 1 ? 's' : ''} for "<span className="text-gray-700 font-medium">{searchQuery}</span>" 
+            in <span className="text-amber-500 font-bold">{filteredCategoriesCount}</span> categor{filteredCategoriesCount !== 1 ? 'ies' : 'y'}
           </p>
         </div>
       )}
