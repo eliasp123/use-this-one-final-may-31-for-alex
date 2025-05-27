@@ -6,6 +6,7 @@ import EmailCategoryGridContent from './EmailCategoryGridContent';
 import EmailCategoryGridPagination from './EmailCategoryGridPagination';
 import SearchResultsDisplay from './SearchResultsDisplay';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
+import { getAllEmailsWithAttachments } from '../../utils/emailDataUtils';
 
 interface EmailCategoryGridProps {
   categories: EmailCategory[];
@@ -24,33 +25,55 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   showPagination = true,
   onCategoryAdded
 }) => {
+  // Search logic
+  const allEmails = getAllEmailsWithAttachments();
+  const hasSearchQuery = searchQuery.trim().length > 0;
+  const searchResults = hasSearchQuery 
+    ? allEmails.filter(email => {
+        const query = searchQuery.toLowerCase().trim();
+        const searchTerms = query.split(/\s+/);
+        const searchableText = [
+          email.subject,
+          email.sender.name,
+          email.sender.email,
+          email.sender.organization,
+          email.content
+        ].join(' ').toLowerCase();
+        return searchTerms.every(term => searchableText.includes(term));
+      })
+    : [];
+
+  const hasNoEmailResults = hasSearchQuery && searchResults.length === 0;
+  const filteredCategories = hasSearchQuery 
+    ? categories.filter(category => {
+        const categoriesWithMatches = new Set(searchResults.map(email => email.category));
+        return categoriesWithMatches.has(category.id);
+      })
+    : categories;
+
+  // Use the existing hook for pagination
   const {
-    isListView,
-    setIsListView,
-    isExpanded,
-    setIsExpanded,
-    showDialog,
-    setShowDialog,
-    paginatedCategories,
+    activePage,
     totalPages,
-    hasSearchQuery,
-    searchResults,
-    filteredCategories,
-    hasNoEmailResults
+    priorityCategories,
+    compactCategories,
+    addButtonInFirstRow,
+    addButtonInCompactRows,
+    handlePageChange
   } = useEmailCategoryGridLogic({
-    categories,
-    searchQuery,
-    itemsPerPage,
+    categories: filteredCategories,
     currentPage
   });
 
   return (
     <div className="space-y-6">
       <EmailCategoryGridHeader 
-        isListView={isListView}
-        setIsListView={setIsListView}
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
+        activePage={activePage}
+        totalPages={totalPages}
+        showPagination={showPagination && totalPages > 1 && !hasSearchQuery}
+        onPageChange={handlePageChange}
+        viewMode="grid"
+        onViewModeChange={() => {}}
       />
 
       <SearchResultsDisplay
@@ -62,19 +85,19 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       />
 
       <EmailCategoryGridContent
-        categories={paginatedCategories}
-        isListView={isListView}
-        isExpanded={isExpanded}
-        showAddButton={!hasSearchQuery} // Hide "Add New Category" when searching
-        showDialog={showDialog}
-        setShowDialog={setShowDialog}
-        onCategoryAdded={onCategoryAdded}
+        priorityCategories={priorityCategories}
+        compactCategories={compactCategories}
+        addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
+        addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
+        onAddNewCategory={onCategoryAdded || (() => {})}
       />
 
       {showPagination && totalPages > 1 && !hasSearchQuery && (
         <EmailCategoryGridPagination 
-          totalPages={totalPages} 
-          currentPage={currentPage} 
+          activePage={activePage}
+          totalPages={totalPages}
+          showPagination={true}
+          onPageChange={handlePageChange}
         />
       )}
     </div>
