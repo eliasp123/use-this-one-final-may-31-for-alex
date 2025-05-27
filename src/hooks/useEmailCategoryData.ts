@@ -8,10 +8,23 @@ import {
   Briefcase, 
   Shield, 
   Activity, 
-  CreditCard 
+  CreditCard,
+  LucideIcon
 } from 'lucide-react';
 import { useFilteredEmailData } from './useFilteredEmailData';
 import { getCustomCategories } from '../utils/categoryUtils';
+
+export interface EmailCategory {
+  id: string;
+  title: string;
+  icon: LucideIcon;
+  unread: number;
+  pending: number;
+  total: number;
+  color: string;
+  bgColor: string;
+  textColor: string;
+}
 
 export const useEmailCategoryData = () => {
   const { 
@@ -94,7 +107,11 @@ export const useEmailCategoryData = () => {
     // Get custom categories and add them to the list
     const customCategories = getCustomCategories();
     
-    const allCategories = [...predefinedCategories, ...customCategories];
+    const allCategories = [...predefinedCategories, ...customCategories.map(custom => ({
+      ...custom,
+      icon: Briefcase, // Default icon for custom categories
+      textColor: 'text-gray-600' // Default text color for custom categories
+    }))];
 
     return allCategories.map(category => {
       const unread = getFilteredUnreadEmails(category.id).length;
@@ -106,7 +123,7 @@ export const useEmailCategoryData = () => {
         unread,
         pending,
         total
-      };
+      } as EmailCategory;
     });
   }, [getFilteredUnreadEmails, getFilteredPendingEmails, getFilteredEmailsByCategory]);
 

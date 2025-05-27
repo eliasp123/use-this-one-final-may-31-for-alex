@@ -1,23 +1,11 @@
 
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { useEmailPreview } from '../hooks/useEmailPreview';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
+import { EmailCategory } from '../hooks/useEmailCategoryData';
 import EmailPreviewTooltip from './email-category/EmailPreviewTooltip';
-
-interface EmailCategory {
-  id: string;
-  title: string;
-  icon: LucideIcon;
-  unread: number;
-  pending: number;
-  total: number;
-  color: string;
-  bgColor: string;
-  textColor: string;
-}
 
 interface EmailCategoryCardProps {
   category: EmailCategory;
