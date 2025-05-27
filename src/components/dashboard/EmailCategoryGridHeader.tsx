@@ -33,7 +33,7 @@ const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
         {viewMode === 'list' && onCollapseAll && (
           <button
             onClick={onCollapseAll}
-            className="px-3 py-2 text-sm text-blue-600 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+            className="px-3 py-2 text-sm text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
           >
             Collapse All
           </button>
