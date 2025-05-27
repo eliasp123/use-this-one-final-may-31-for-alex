@@ -32,7 +32,7 @@ const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
   onAddNewCategory
 }) => {
   return (
-    <>
+    <div className="space-y-8">
       {/* Priority Categories Section - Full Cards (First Row Only) */}
       {(priorityCategories.length > 0 || addButtonInFirstRow) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
@@ -72,7 +72,7 @@ const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
