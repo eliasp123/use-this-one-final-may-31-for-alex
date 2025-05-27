@@ -17,7 +17,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   
   return (
     <div className="mb-6">
-      <div className="flex gap-3 mb-4">
+      <div className="flex justify-center gap-3 mb-4">
         <Button
           onClick={() => navigate(-1)}
           variant="outline"

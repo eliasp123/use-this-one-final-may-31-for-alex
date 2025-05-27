@@ -31,7 +31,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
 
   return (
     <div className="mb-6">
-      <div className="flex gap-3 mb-4">
+      <div className="flex justify-center gap-3 mb-4">
         <Button
           onClick={() => navigate('/')}
           className="bg-orange-500 hover:bg-orange-600 text-white"
