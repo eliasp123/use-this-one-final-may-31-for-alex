@@ -2,8 +2,11 @@
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { useFilteredEmailData } from '../../hooks/useFilteredEmailData';
+import { useEmailPreview } from '../../hooks/useEmailPreview';
 import { useTabletTooltipBehavior } from '../../hooks/useTabletTooltipBehavior';
+import EmailPreviewTooltip from '../email-category/EmailPreviewTooltip';
 import { 
   Collapsible, 
   CollapsibleContent, 
@@ -58,6 +61,12 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     handleTooltipMouseEnter,
     handleTooltipMouseLeave
   } = useTabletTooltipBehavior();
+
+  // Get preview emails for the currently hovered status
+  const { previewEmails } = useEmailPreview({ 
+    category: id, 
+    status: hoveredStatus || 'unread' 
+  });
   
   const handleClick = () => {
     navigate(`/emails/${id}/all`);
@@ -73,44 +82,6 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  const renderTooltipContent = () => {
-    if (!hoveredStatus) return null;
-
-    let content = '';
-    let count = 0;
-
-    switch (hoveredStatus) {
-      case 'unread':
-        content = unread === 1 ? 'unread message' : 'unread messages';
-        count = unread;
-        break;
-      case 'pending':
-        content = pending === 1 ? 'pending reply' : 'pending replies';
-        count = pending;
-        break;
-      case 'unresponded':
-        content = notRespondedCount === 1 ? 'has not responded yet' : 'have not responded yet';
-        count = notRespondedCount;
-        break;
-    }
-
-    return (
-      <div 
-        className="fixed z-50 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-auto"
-        style={{
-          left: `${tooltipPosition.x}px`,
-          top: `${tooltipPosition.y - 35}px`,
-          transform: 'translateX(-50%)'
-        }}
-        onMouseEnter={handleTooltipMouseEnter}
-        onMouseLeave={handleTooltipMouseLeave}
-        data-tooltip-content="true"
-      >
-        {count} {content}
-      </div>
-    );
-  };
-
   const formatEmailDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -118,6 +89,21 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       day: 'numeric',
       year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
     });
+  };
+
+  // Helper function to get email status indicators
+  const getEmailStatusIndicators = (email: any) => {
+    const indicators = [];
+    if (!email.read) {
+      indicators.push({ type: 'unread', color: 'bg-purple-500' });
+    }
+    if (email.read && !email.replied) {
+      indicators.push({ type: 'pending', color: 'bg-amber-500' });
+    }
+    if (email.replied && !email.responseReceived) {
+      indicators.push({ type: 'unresponded', color: 'bg-red-500' });
+    }
+    return indicators;
   };
 
   return (
@@ -131,11 +117,12 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                 <div className={`w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className={`w-5 h-5 ${textColor}`} />
                 </div>
-                <h3 className="text-base font-medium text-gray-800 group-hover:text-gray-900 transition-colors mr-2">{title}</h3>
+                <h3 className="text-base font-medium text-gray-800 group-hover:text-gray-900 transition-colors mr-3">{title}</h3>
+                {/* Bigger, more prominent chevron */}
                 {isExpanded ? (
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-500" />
+                  <ChevronRight className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                 )}
               </div>
 
@@ -203,30 +190,41 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
         <CollapsibleContent className="px-4 pb-4">
           <div className="mt-2 space-y-2 border-t pt-4">
             {categoryEmails.length > 0 ? (
-              categoryEmails.slice(0, 5).map((email) => (
-                <div
-                  key={email.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                  onClick={(e) => handleEmailClick(email.id, e)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {email.subject}
+              categoryEmails.slice(0, 5).map((email) => {
+                const statusIndicators = getEmailStatusIndicators(email);
+                return (
+                  <div
+                    key={email.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                    onClick={(e) => handleEmailClick(email.id, e)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {email.subject}
+                        </p>
+                        {/* Status indicators for each email */}
+                        {statusIndicators.map((indicator, index) => (
+                          <span 
+                            key={index}
+                            className={`w-2 h-2 ${indicator.color} rounded-full flex-shrink-0`}
+                          ></span>
+                        ))}
+                      </div>
+                      {/* Show From/To information */}
+                      <p className="text-xs text-gray-600 truncate">
+                        From: {email.sender.name} ({email.sender.organization})
                       </p>
-                      {!email.read && (
-                        <span className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></span>
-                      )}
+                      <p className="text-xs text-gray-500 truncate">
+                        To: {email.recipient}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-600 truncate">
-                      {email.sender.name} • {email.sender.organization}
-                    </p>
+                    <div className="text-xs text-gray-500 ml-4 flex-shrink-0">
+                      {formatEmailDate(email.date)}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500 ml-4 flex-shrink-0">
-                    {formatEmailDate(email.date)}
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className="text-sm text-gray-500 text-center py-4">
                 No emails in this category
@@ -246,8 +244,22 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
         </CollapsibleContent>
       </div>
 
-      {/* Tooltip */}
-      {hoveredStatus && renderTooltipContent()}
+      {/* Email Preview Tooltip - Same as grid view */}
+      {hoveredStatus && previewEmails.length > 0 && createPortal(
+        <div data-tooltip="email-preview">
+          <EmailPreviewTooltip
+            emails={previewEmails}
+            status={hoveredStatus}
+            category={id}
+            position={tooltipPosition}
+            onClose={handleTooltipClose}
+            onMouseEnter={handleTooltipMouseEnter}
+            onMouseLeave={handleTooltipMouseLeave}
+            categoryColor={color}
+          />
+        </div>,
+        document.body
+      )}
     </Collapsible>
   );
 };
