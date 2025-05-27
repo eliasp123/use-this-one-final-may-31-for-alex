@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -133,9 +134,9 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                     <div className="flex items-center gap-6">
                       {unread > 0 && (
                         <div 
-                          className="flex items-center justify-center w-6 h-6 bg-purple-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          className="flex items-center justify-center w-8 h-8 bg-purple-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
                           onClick={(e) => handleStatusClick('unread', e)}
-                          onMouseEnter={(e) => handleStatusHover('unread', e, id, pending)}
+                          onMouseEnter={(e) => handleStatusHover('unread', e, id, unread)}
                           onMouseLeave={handleStatusLeave}
                           data-tooltip-trigger="true"
                           title={`${unread} unread messages`}
@@ -145,7 +146,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                       )}
                       {pending > 0 && (
                         <div 
-                          className="flex items-center justify-center w-6 h-6 bg-amber-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          className="flex items-center justify-center w-8 h-8 bg-amber-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
                           onClick={(e) => handleStatusClick('pending', e)}
                           onMouseEnter={(e) => handleStatusHover('pending', e, id, pending)}
                           onMouseLeave={handleStatusLeave}
@@ -157,9 +158,9 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                       )}
                       {notRespondedCount > 0 && (
                         <div 
-                          className="flex items-center justify-center w-6 h-6 bg-red-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          className="flex items-center justify-center w-8 h-8 bg-red-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
                           onClick={(e) => handleStatusClick('no-response', e)}
-                          onMouseEnter={(e) => handleStatusHover('unresponded', e, id, pending)}
+                          onMouseEnter={(e) => handleStatusHover('unresponded', e, id, notRespondedCount)}
                           onMouseLeave={handleStatusLeave}
                           data-tooltip-trigger="true"
                           title={`${notRespondedCount} have not responded yet`}
@@ -244,27 +245,27 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               </div>
             </CollapsibleContent>
           </div>
-
-          {/* Email Preview Tooltip - Aligned with category row */}
-          {hoveredStatus && previewEmails.length > 0 && createPortal(
-            <div data-tooltip="email-preview">
-              <EmailPreviewTooltip
-                emails={previewEmails}
-                status={hoveredStatus}
-                category={id}
-                position={{
-                  x: tooltipPosition.x,
-                  y: tooltipPosition.y + 20 // Align better with the category row
-                }}
-                onClose={handleTooltipClose}
-                onMouseEnter={handleTooltipMouseEnter}
-                onMouseLeave={handleTooltipMouseLeave}
-                categoryColor={color}
-              />
-            </div>,
-            document.body
-          )}
         </Collapsible>
+
+        {/* Email Preview Tooltip - Fixed positioning to align with category row */}
+        {hoveredStatus && previewEmails.length > 0 && createPortal(
+          <div data-tooltip="email-preview">
+            <EmailPreviewTooltip
+              emails={previewEmails}
+              status={hoveredStatus}
+              category={id}
+              position={{
+                x: tooltipPosition.x,
+                y: tooltipPosition.y - 40 // Better alignment with the category row
+              }}
+              onClose={handleTooltipClose}
+              onMouseEnter={handleTooltipMouseEnter}
+              onMouseLeave={handleTooltipMouseLeave}
+              categoryColor={color}
+            />
+          </div>,
+          document.body
+        )}
       </div>
     </div>
   );
