@@ -4,7 +4,6 @@ import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
 import { getAllEmailsWithAttachments } from '../utils/emailDataUtils';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import ConsolidatedSummaryBar from './dashboard/ConsolidatedSummaryBar';
-import SearchResultsDisplay from './dashboard/SearchResultsDisplay';
 
 interface RoleAwareEmailDashboardProps {
   searchQuery?: string;
@@ -80,14 +79,6 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
         totalUnread={totalUnread}
         totalPending={totalPending} 
         totalUnresponded={totalUnresponded}
-      />
-      
-      <SearchResultsDisplay
-        hasSearchQuery={hasSearchQuery}
-        hasNoEmailResults={hasNoEmailResults}
-        searchQuery={searchQuery}
-        searchResultsCount={searchResults.length}
-        filteredCategoriesCount={filteredCategories.length}
       />
       
       <EmailCategoryGrid
