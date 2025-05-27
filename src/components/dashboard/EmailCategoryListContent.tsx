@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import EmailCategoryListItem from './EmailCategoryListItem';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 
@@ -9,11 +9,15 @@ interface EmailCategoryListContentProps {
   showAddButton: boolean;
 }
 
-const EmailCategoryListContent: React.FC<EmailCategoryListContentProps> = ({
+export interface EmailCategoryListContentRef {
+  collapseAll: () => void;
+}
+
+const EmailCategoryListContent = forwardRef<EmailCategoryListContentRef, EmailCategoryListContentProps>(({
   categories,
   onAddNewCategory,
   showAddButton
-}) => {
+}, ref) => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const toggleCategory = (categoryId: string) => {
@@ -28,8 +32,16 @@ const EmailCategoryListContent: React.FC<EmailCategoryListContentProps> = ({
     });
   };
 
+  const collapseAll = () => {
+    setExpandedCategories(new Set());
+  };
+
+  useImperativeHandle(ref, () => ({
+    collapseAll
+  }));
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
       {categories.map((category) => (
         <EmailCategoryListItem
           key={category.id}
@@ -40,15 +52,21 @@ const EmailCategoryListContent: React.FC<EmailCategoryListContentProps> = ({
       ))}
       
       {showAddButton && (
-        <button
-          onClick={onAddNewCategory}
-          className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors text-gray-500 hover:text-gray-600"
-        >
-          + Add New Category
-        </button>
+        <div className="flex justify-center">
+          <div className="w-1/2">
+            <button
+              onClick={onAddNewCategory}
+              className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors text-gray-500 hover:text-gray-600"
+            >
+              + Add New Category
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
-};
+});
+
+EmailCategoryListContent.displayName = 'EmailCategoryListContent';
 
 export default EmailCategoryListContent;

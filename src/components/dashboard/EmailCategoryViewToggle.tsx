@@ -11,7 +11,8 @@ const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
   onViewModeChange
 }) => {
   return (
-    <div className="inline-flex items-center gap-1 text-sm text-gray-600 bg-purple-50 rounded-lg px-3 py-2">
+    <div className="inline-flex items-center gap-2 text-base text-gray-600 bg-purple-50 rounded-lg px-4 py-2">
+      <span className="text-gray-700 font-medium">View as:</span>
       <span 
         className={`px-2 py-1 rounded cursor-pointer transition-colors ${
           viewMode === 'grid' 

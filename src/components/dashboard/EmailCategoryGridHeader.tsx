@@ -10,6 +10,7 @@ interface EmailCategoryGridHeaderProps {
   onPageChange: (page: number) => void;
   viewMode: 'grid' | 'list';
   onViewModeChange: (mode: 'grid' | 'list') => void;
+  onCollapseAll?: () => void;
 }
 
 const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
@@ -18,15 +19,25 @@ const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
   showPagination,
   onPageChange,
   viewMode,
-  onViewModeChange
+  onViewModeChange,
+  onCollapseAll
 }) => {
   return (
     <div className="text-center space-y-4">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center gap-4">
         <EmailCategoryViewToggle 
           viewMode={viewMode}
           onViewModeChange={onViewModeChange}
         />
+        
+        {viewMode === 'list' && onCollapseAll && (
+          <button
+            onClick={onCollapseAll}
+            className="px-3 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          >
+            Collapse All
+          </button>
+        )}
       </div>
       
       <EmailCategoryGridPagination
