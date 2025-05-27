@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -96,7 +97,7 @@ const Index = () => {
         </div>
         
         {/* Search Bar with Autocomplete - slightly more gray background */}
-        <div className="max-w-xs sm:max-w-md mx-auto mb-12 sm:mb-16">
+        <div className="max-w-xs sm:max-w-md mx-auto mb-20 sm:mb-24">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
