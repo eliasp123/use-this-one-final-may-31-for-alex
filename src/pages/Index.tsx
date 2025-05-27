@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -135,7 +136,7 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Search Bar with Autocomplete */}
+        {/* Search Bar with Autocomplete - slightly more gray background */}
         <div className="max-w-xs sm:max-w-md mx-auto mb-12 sm:mb-16">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -144,7 +145,7 @@ const Index = () => {
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 text-base bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full h-14 pl-12 pr-4 text-base bg-gray-50 border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
