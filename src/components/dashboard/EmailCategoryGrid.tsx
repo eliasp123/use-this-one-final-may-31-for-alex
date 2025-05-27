@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailCategoryCard from '../EmailCategoryCard';
 import CompactCategoryItem from './CompactCategoryItem';
@@ -54,16 +53,12 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     console.log('🔍 Search query:', searchQuery);
   }, [categories, searchQuery]);
   
-  // Updated filtering logic: Show ALL categories when no search query
-  // Only filter when there's a search query
-  const filteredCategories = searchQuery.trim() 
-    ? categories.filter(category => 
-        category.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : categories; // Show ALL categories (including empty ones) when no search
+  // FIXED: Use the categories as they are already filtered by RoleAwareEmailDashboard
+  // Don't apply additional filtering here
+  const filteredCategories = categories;
   
-  console.log('📊 Filtered categories:', filteredCategories.length, 'from', categories.length, 'total');
-  console.log('📊 Filtered category details:', filteredCategories.map(c => ({ title: c.title, total: c.total })));
+  console.log('📊 FIXED - Using pre-filtered categories:', filteredCategories.length, 'categories');
+  console.log('📊 FIXED - Category details:', filteredCategories.map(c => ({ title: c.title, total: c.total })));
   
   // Pagination settings: 9 categories per page (3 rows of 3)
   const CATEGORIES_PER_PAGE = 9;
