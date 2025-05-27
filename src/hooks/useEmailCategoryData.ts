@@ -1,157 +1,138 @@
 
-import { useEffect, useState, useCallback } from 'react';
-import { getUnreadEmails, getPendingEmails, getUnrespondedEmails, getEmailsByCategory } from '../data/emailData';
-import { getAllCategories } from '../utils/categoryUtils';
-import { Heart, Home, Shield, Scale, Users, Award, Activity, CreditCard, Folder } from 'lucide-react';
-
-export interface EmailCategory {
-  id: string;
-  title: string;
-  icon: any;
-  unread: number;
-  pending: number;
-  total: number;
-  color: string;
-  bgColor: string;
-  textColor: string;
-}
-
-const categoryIconMap: Record<string, any> = {
-  'senior-living': Heart,
-  'home-care': Home,
-  'government': Shield,
-  'attorneys': Scale,
-  'other-professionals': Users,
-  'va': Award,
-  'physical-therapy': Activity,
-  'paying-for-care': CreditCard,
-};
-
-const categoryTextColorMap: Record<string, string> = {
-  'senior-living': 'text-rose-700',
-  'home-care': 'text-blue-700',
-  'government': 'text-emerald-700',
-  'attorneys': 'text-amber-700',
-  'other-professionals': 'text-indigo-700',
-  'va': 'text-teal-700',
-  'physical-therapy': 'text-cyan-700',
-  'paying-for-care': 'text-lime-700',
-};
+import { useMemo } from 'react';
+import { 
+  Building2, 
+  Home, 
+  Building, 
+  Scale, 
+  Briefcase, 
+  Shield, 
+  Activity, 
+  CreditCard 
+} from 'lucide-react';
+import { useFilteredEmailData } from './useFilteredEmailData';
+import { getCustomCategories } from '../utils/categoryUtils';
 
 export const useEmailCategoryData = () => {
-  const [totalUnread, setTotalUnread] = useState(0);
-  const [totalPending, setTotalPending] = useState(0);
-  const [totalUnresponded, setTotalUnresponded] = useState(0);
-  const [emailCategories, setEmailCategories] = useState<EmailCategory[]>([]);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { 
+    getFilteredUnreadEmails, 
+    getFilteredPendingEmails, 
+    getFilteredUnrespondedEmails,
+    getFilteredEmailsByCategory 
+  } = useFilteredEmailData();
 
-  const loadCategories = useCallback(() => {
-    console.log('🔄 Loading categories... (trigger:', refreshTrigger, ')');
-    
-    // Force a fresh read from localStorage by calling getAllCategories again
-    const allCategories = getAllCategories();
-    console.log('📂 Fresh categories from localStorage:', Object.keys(allCategories));
-    
-    setTotalUnread(getUnreadEmails().length);
-    setTotalPending(getPendingEmails().length);
-    setTotalUnresponded(getUnrespondedEmails().length);
-    
-    const categories = Object.entries(allCategories).map(([id, categoryData]) => {
-      const unreadCount = getUnreadEmails(id).length;
-      const pendingCount = getPendingEmails(id).length;
-      
-      // Use predefined icon for known categories, Folder icon for custom ones
-      const icon = categoryIconMap[id] || Folder;
-      
-      // Generate text color based on background color for custom categories
-      let textColor = categoryTextColorMap[id];
-      if (!textColor) {
-        // For custom categories, derive text color from background color
-        if (categoryData.bgColor.includes('purple')) textColor = 'text-purple-700';
-        else if (categoryData.bgColor.includes('pink')) textColor = 'text-pink-700';
-        else if (categoryData.bgColor.includes('red')) textColor = 'text-red-700';
-        else if (categoryData.bgColor.includes('orange')) textColor = 'text-orange-700';
-        else if (categoryData.bgColor.includes('yellow')) textColor = 'text-yellow-700';
-        else if (categoryData.bgColor.includes('green')) textColor = 'text-green-700';
-        else textColor = 'text-slate-700';
+  // Memoize the email categories calculation
+  const emailCategories = useMemo(() => {
+    // Base predefined categories - Government moved to first position
+    const predefinedCategories = [
+      {
+        id: 'government',
+        title: 'Government',
+        icon: Building,
+        color: 'from-blue-400 to-blue-600',
+        bgColor: 'bg-blue-100',
+        textColor: 'text-blue-600'
+      },
+      {
+        id: 'senior-living',
+        title: 'Senior Living',
+        icon: Building2,
+        color: 'from-purple-400 to-purple-500',
+        bgColor: 'bg-purple-100',
+        textColor: 'text-purple-600'
+      },
+      {
+        id: 'home-care',
+        title: 'Home Care',
+        icon: Home,
+        color: 'from-green-400 to-green-500',
+        bgColor: 'bg-green-100',
+        textColor: 'text-green-600'
+      },
+      {
+        id: 'attorneys',
+        title: 'Attorneys',
+        icon: Scale,
+        color: 'from-red-400 to-red-600',
+        bgColor: 'bg-red-100',
+        textColor: 'text-red-600'
+      },
+      {
+        id: 'other-professionals',
+        title: 'Other Professionals',
+        icon: Briefcase,
+        color: 'from-gray-400 to-gray-600',
+        bgColor: 'bg-gray-100',
+        textColor: 'text-gray-600'
+      },
+      {
+        id: 'va',
+        title: 'VA',
+        icon: Shield,
+        color: 'from-indigo-400 to-indigo-600',
+        bgColor: 'bg-indigo-100',
+        textColor: 'text-indigo-600'
+      },
+      {
+        id: 'physical-therapy',
+        title: 'Physical Therapy',
+        icon: Activity,
+        color: 'from-teal-400 to-teal-600',
+        bgColor: 'bg-teal-100',
+        textColor: 'text-teal-600'
+      },
+      {
+        id: 'paying-for-care',
+        title: 'Paying for Care',
+        icon: CreditCard,
+        color: 'from-orange-400 to-orange-600',
+        bgColor: 'bg-orange-100',
+        textColor: 'text-orange-600'
       }
-      
-      // Calculate total based on actual emails for custom categories, random for predefined ones
-      let totalCount;
-      if (categoryIconMap[id]) {
-        // Predefined categories get random counts for demo purposes
-        totalCount = Math.floor(Math.random() * 15) + 5;
-      } else {
-        // Custom categories get actual email counts (can be 0)
-        const categoryEmails = getEmailsByCategory(id);
-        totalCount = categoryEmails.length; // This will be 0 for new categories
-        console.log(`Custom category ${id} (${categoryData.title}) has ${totalCount} actual emails`);
-      }
-      
-      const category = {
-        id,
-        title: categoryData.title,
-        icon,
-        unread: unreadCount,
-        pending: pendingCount,
-        total: totalCount, // Keep 0 for new custom categories
-        color: categoryData.color.replace('bg-gradient-to-r ', ''),
-        bgColor: categoryData.bgColor,
-        textColor
+    ];
+
+    // Get custom categories and add them to the list
+    const customCategories = getCustomCategories();
+    
+    const allCategories = [...predefinedCategories, ...customCategories];
+
+    return allCategories.map(category => {
+      const unread = getFilteredUnreadEmails(category.id).length;
+      const pending = getFilteredPendingEmails(category.id).length;
+      const total = getFilteredEmailsByCategory(category.id).length;
+
+      return {
+        ...category,
+        unread,
+        pending,
+        total
       };
-      
-      console.log(`✅ Created category: ${category.title} (${category.id}) with total: ${category.total}`);
-      return category;
     });
-    
-    console.log('✅ Categories loaded:', categories.length, 'total categories');
-    console.log('📋 Category titles:', categories.map(c => c.title));
-    setEmailCategories(categories);
-  }, [refreshTrigger]);
+  }, [getFilteredUnreadEmails, getFilteredPendingEmails, getFilteredEmailsByCategory]);
 
-  // Load email counts and categories
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+  // Calculate totals across all categories
+  const totalUnread = useMemo(() => {
+    return getFilteredUnreadEmails().length;
+  }, [getFilteredUnreadEmails]);
 
-  // Listen for custom events (from our own components)
-  useEffect(() => {
-    const handleCustomCategoriesChanged = (e: CustomEvent) => {
-      console.log('📢 Custom categories changed event detected, refreshing categories');
-      setRefreshTrigger(prev => prev + 1);
-    };
+  const totalPending = useMemo(() => {
+    return getFilteredPendingEmails().length;
+  }, [getFilteredPendingEmails]);
 
-    window.addEventListener('customCategoriesChanged', handleCustomCategoriesChanged as EventListener);
-    return () => window.removeEventListener('customCategoriesChanged', handleCustomCategoriesChanged as EventListener);
-  }, []);
+  const totalUnresponded = useMemo(() => {
+    return getFilteredUnrespondedEmails().length;
+  }, [getFilteredUnrespondedEmails]);
 
-  // Listen for localStorage changes (from other tabs/windows)
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'custom-email-categories') {
-        console.log('📢 localStorage change detected from external source, refreshing categories');
-        setRefreshTrigger(prev => prev + 1);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  // Force refresh function that triggers a re-load
-  const refreshCategories = useCallback(() => {
-    console.log('🔄 Force refreshing categories...');
-    // Use setTimeout to ensure localStorage has been updated
-    setTimeout(() => {
-      setRefreshTrigger(prev => prev + 1);
-    }, 100); // Increased timeout to ensure localStorage is fully updated
-  }, []);
+  const refreshCategories = () => {
+    // This function can be called to trigger a re-render of categories
+    // The useMemo dependencies will handle the actual refresh
+  };
 
   return {
+    emailCategories,
     totalUnread,
     totalPending,
     totalUnresponded,
-    emailCategories,
     refreshCategories
   };
 };

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -108,6 +109,31 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(hideTimeoutRef.current);
     }
   }, []);
+
+  // Create array of active statuses (only show rows with activity)
+  const activeStatuses = [
+    ...(unread > 0 ? [{
+      label: 'Unread messages',
+      count: unread,
+      color: 'bg-purple-500',
+      status: 'unread' as const,
+      navStatus: 'unread'
+    }] : []),
+    ...(pending > 0 ? [{
+      label: 'Pending replies',
+      count: pending,
+      color: 'bg-amber-500',
+      status: 'pending' as const,
+      navStatus: 'pending'
+    }] : []),
+    ...(notRespondedCount > 0 ? [{
+      label: 'Has not responded yet',
+      count: notRespondedCount,
+      color: 'bg-red-500',
+      status: 'unresponded' as const,
+      navStatus: 'no-response'
+    }] : [])
+  ];
   
   return (
     <>
@@ -115,7 +141,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
         onClick={handleCardClick}
       >
-        {/* Header - Restructured to have icon and title on the same row */}
+        {/* Header - Icon and title on the same row */}
         <div className="flex items-center mb-4 sm:mb-5">
           <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
             <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor} group-hover:animate-pulse`} />
@@ -127,57 +153,48 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           </div>
         </div>
 
-        {/* Stats - Now with colored circles in the rows - reduced spacing for more compact layout */}
-        <div className="space-y-0.5 sm:space-y-1">
-          <div 
-            className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
-            onClick={(e) => handleStatusClick('unread', e)}
-            onMouseEnter={(e) => unread > 0 && handleStatusHover('unread', e)}
-            onMouseLeave={handleStatusLeave}
-          >
-            <span className="text-gray-600">Unread messages</span>
-            <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${unread > 0 ? 'bg-purple-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
-              {unread > 0 ? unread : "-"}
-            </div>
+        {/* Stats - Only show active statuses */}
+        {activeStatuses.length > 0 && (
+          <div className="space-y-0.5 sm:space-y-1">
+            {activeStatuses.map((statusItem) => (
+              <div 
+                key={statusItem.status}
+                className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
+                onClick={(e) => handleStatusClick(statusItem.navStatus, e)}
+                onMouseEnter={(e) => handleStatusHover(statusItem.status, e)}
+                onMouseLeave={handleStatusLeave}
+              >
+                <span className="text-gray-600">{statusItem.label}</span>
+                <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
+                  {statusItem.count}
+                </div>
+              </div>
+            ))}
           </div>
-          
-          <div 
-            className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
-            onClick={(e) => handleStatusClick('pending', e)}
-            onMouseEnter={(e) => pending > 0 && handleStatusHover('pending', e)}
-            onMouseLeave={handleStatusLeave}
-          >
-            <span className="text-gray-600">Pending replies</span>
-            <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${pending > 0 ? 'bg-amber-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
-              {pending > 0 ? pending : "-"}
-            </div>
-          </div>
-          
-          <div 
-            className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
-            onClick={(e) => handleStatusClick('no-response', e)}
-            onMouseEnter={(e) => notRespondedCount > 0 && handleStatusHover('unresponded', e)}
-            onMouseLeave={handleStatusLeave}
-          >
-            <span className="text-gray-600">Has not responded yet</span>
-            <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${notRespondedCount > 0 ? 'bg-red-500' : 'bg-gray-300'} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
-              {notRespondedCount > 0 ? notRespondedCount : "-"}
-            </div>
-          </div>
-        </div>
+        )}
 
-        {/* Progress indicator */}
-        <div className="mt-4">
-          <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
-            <div 
-              className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
-              style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
-            ></div>
+        {/* Show message when no activity */}
+        {activeStatuses.length === 0 && (
+          <div className="text-center py-4">
+            <p className="text-gray-500 text-sm">All caught up!</p>
+            <p className="text-gray-400 text-xs mt-1">No pending items</p>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
-          </p>
-        </div>
+        )}
+
+        {/* Progress indicator - only show if there's activity */}
+        {activeStatuses.length > 0 && (
+          <div className="mt-4">
+            <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
+              <div 
+                className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
+                style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
+              ></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
+            </p>
+          </div>
+        )}
         
         {/* Total conversations - styled with category color and white text */}
         <div className={`flex items-center justify-between text-xs sm:text-sm mt-4 sm:mt-5 p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
