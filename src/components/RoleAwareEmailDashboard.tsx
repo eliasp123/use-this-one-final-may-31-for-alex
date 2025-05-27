@@ -47,7 +47,9 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
     totalEmailsFound: searchResults.length,
     hasNoEmailResults,
     originalCategories: emailCategories.length,
-    filteredCategories: filteredCategories.length
+    filteredCategories: filteredCategories.length,
+    filteredCategoryIds: filteredCategories.map(c => c.id),
+    searchResultCategories: searchResults.map(email => email.category)
   });
 
   return (
