@@ -91,20 +91,14 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // Handle email row hover
+  // Handle email row hover with simplified positioning
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
     const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     const tooltipWidth = 480; // Approximate tooltip width
+    const tooltipHeight = 300; // Approximate tooltip height
     
-    // Find the specific category card container that wraps this entire component
-    // Look for the closest element with our specific category card classes
-    const categoryCard = e.currentTarget.closest('[data-category-card]') || 
-                        e.currentTarget.closest('.bg-white.rounded-lg.shadow-sm.border.border-gray-200');
-    
-    const cardRect = categoryCard?.getBoundingClientRect();
-    
-    // Determine positioning based on screen space
+    // Determine horizontal positioning based on available space
     let x = emailRect.right + 10; // Default to right side
     
     // If not enough space on the right, position on the left
@@ -112,9 +106,13 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       x = emailRect.left - tooltipWidth - 10;
     }
     
+    // Center the tooltip vertically on the email row
+    const emailRowHeight = emailRect.height;
+    const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2);
+    
     setEmailTooltipPosition({
       x,
-      y: cardRect ? cardRect.top : emailRect.top // Align with category card top
+      y
     });
     setHoveredEmailId(emailId);
   };
