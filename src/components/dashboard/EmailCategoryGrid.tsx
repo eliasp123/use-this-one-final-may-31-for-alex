@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
 import EmailCategoryGridContent from './EmailCategoryGridContent';
-import EmailCategoryListContent from './EmailCategoryListContent';
+import EmailCategoryListContent, { EmailCategoryListContentRef } from './EmailCategoryListContent';
 import EmailCategoryGridPagination from './EmailCategoryGridPagination';
 import SearchResultsDisplay from './SearchResultsDisplay';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
@@ -27,6 +27,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   onCategoryAdded
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const listContentRef = useRef<EmailCategoryListContentRef>(null);
 
   // Search logic
   const allEmails = getAllEmailsWithAttachments();
@@ -68,6 +69,10 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     currentPage
   });
 
+  const handleCollapseAll = () => {
+    listContentRef.current?.collapseAll();
+  };
+
   return (
     <div className="space-y-6">
       <EmailCategoryGridHeader 
@@ -77,6 +82,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         onPageChange={handlePageChange}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        onCollapseAll={viewMode === 'list' ? handleCollapseAll : undefined}
       />
 
       <SearchResultsDisplay
@@ -87,21 +93,24 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         filteredCategoriesCount={filteredCategories.length}
       />
 
-      {viewMode === 'grid' ? (
-        <EmailCategoryGridContent
-          priorityCategories={priorityCategories}
-          compactCategories={compactCategories}
-          addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
-          addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
-          onAddNewCategory={onCategoryAdded || (() => {})}
-        />
-      ) : (
-        <EmailCategoryListContent
-          categories={filteredCategories}
-          onAddNewCategory={onCategoryAdded || (() => {})}
-          showAddButton={!hasSearchQuery}
-        />
-      )}
+      <div className="pt-3">
+        {viewMode === 'grid' ? (
+          <EmailCategoryGridContent
+            priorityCategories={priorityCategories}
+            compactCategories={compactCategories}
+            addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
+            addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
+            onAddNewCategory={onCategoryAdded || (() => {})}
+          />
+        ) : (
+          <EmailCategoryListContent
+            ref={listContentRef}
+            categories={filteredCategories}
+            onAddNewCategory={onCategoryAdded || (() => {})}
+            showAddButton={!hasSearchQuery}
+          />
+        )}
+      </div>
 
       {showPagination && totalPages > 1 && !hasSearchQuery && (
         <EmailCategoryGridPagination 
