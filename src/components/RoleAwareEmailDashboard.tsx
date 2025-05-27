@@ -4,6 +4,7 @@ import { useEmailCategoryData } from '../hooks/useEmailCategoryData';
 import { getAllEmailsWithAttachments } from '../utils/emailDataUtils';
 import EmailCategoryGrid from './dashboard/EmailCategoryGrid';
 import ConsolidatedSummaryBar from './dashboard/ConsolidatedSummaryBar';
+import SearchResultsDisplay from './dashboard/SearchResultsDisplay';
 
 interface RoleAwareEmailDashboardProps {
   searchQuery?: string;
@@ -75,34 +76,20 @@ const RoleAwareEmailDashboard: React.FC<RoleAwareEmailDashboardProps> = ({
 
   return (
     <div className="space-y-8 sm:space-y-16">
-      {/* Consolidated Summary Bar */}
       <ConsolidatedSummaryBar 
         totalUnread={totalUnread}
         totalPending={totalPending} 
         totalUnresponded={totalUnresponded}
       />
       
-      {/* Search Results or No Results Message */}
-      {hasSearchQuery && (
-        <div className="text-center">
-          {hasNoEmailResults ? (
-            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
-              <p className="text-gray-500 text-lg">No emails found matching "{searchQuery}"</p>
-              <p className="text-gray-400 text-sm mt-2">Try adjusting your search terms or browse categories below</p>
-            </div>
-          ) : (
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <p className="text-gray-700 text-lg font-medium">
-                Found {searchResults.length} email{searchResults.length !== 1 ? 's' : ''} matching "{searchQuery}" 
-                in {filteredCategories.length} categor{filteredCategories.length !== 1 ? 'ies' : 'y'}
-              </p>
-              <p className="text-gray-500 text-sm mt-2">Showing only categories with matching conversations</p>
-            </div>
-          )}
-        </div>
-      )}
+      <SearchResultsDisplay
+        hasSearchQuery={hasSearchQuery}
+        hasNoEmailResults={hasNoEmailResults}
+        searchQuery={searchQuery}
+        searchResultsCount={searchResults.length}
+        filteredCategoriesCount={filteredCategories.length}
+      />
       
-      {/* Email Categories Grid - now properly filtered */}
       <EmailCategoryGrid
         categories={filteredCategories}
         searchQuery={searchQuery}

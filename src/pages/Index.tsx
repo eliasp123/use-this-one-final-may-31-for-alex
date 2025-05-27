@@ -1,22 +1,14 @@
-
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
 import NewEmailForm from '../components/NewEmailForm';
-import { Info, Pencil, FileText, Search, Calendar } from 'lucide-react';
+import IndexActionButtons from './IndexActionButtons';
+import IndexPagination from './IndexPagination';
+import { Info, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
-import { Button } from '../components/ui/button';
 import { useUserRole } from '../hooks/useUserRole';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from '../components/ui/pagination';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -57,12 +49,6 @@ const Index = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  // Generate page numbers for pagination
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -101,38 +87,11 @@ const Index = () => {
               </Popover>
             </p>
             
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-6 mt-6 sm:mt-8 w-full max-w-2xl">
-              <button
-                onClick={() => setShowNewEmailForm(true)}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-white h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 hover:shadow-xl"
-              >
-                <div className="flex items-center">
-                  <Pencil className="mr-2 h-4 w-4" />
-                  <span className="font-medium">Compose New Email</span>
-                </div>
-              </button>
-              
-              <button
-                onClick={() => navigate('/documents')}
-                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
-              >
-                <div className="flex items-center">
-                  <FileText className="mr-2 h-4 w-4" />
-                  <span className="font-medium">View Documents</span>
-                </div>
-              </button>
-              
-              <button
-                onClick={handleCalendarClick}
-                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
-              >
-                <div className="flex items-center">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  <span className="font-medium">Calendar</span>
-                </div>
-              </button>
-            </div>
+            <IndexActionButtons
+              onNewEmail={() => setShowNewEmailForm(true)}
+              onViewDocuments={() => navigate('/documents')}
+              onCalendarClick={handleCalendarClick}
+            />
           </div>
         </div>
         
@@ -152,53 +111,11 @@ const Index = () => {
         
         <RoleAwareEmailDashboard searchQuery={searchQuery} currentPage={currentPage} />
 
-        {/* Bottom Pagination - Same as top */}
-        {totalPages > 1 && (
-          <div className="mt-12 sm:mt-16 flex justify-center">
-            <Pagination className="">
-              <PaginationContent>
-                {currentPage > 1 && (
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handlePageChange(currentPage - 1);
-                      }} 
-                    />
-                  </PaginationItem>
-                )}
-                
-                {pageNumbers.map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink 
-                      href="#" 
-                      isActive={page === currentPage}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handlePageChange(page);
-                      }}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                
-                {currentPage < totalPages && (
-                  <PaginationItem>
-                    <PaginationNext 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handlePageChange(currentPage + 1);
-                      }} 
-                    />
-                  </PaginationItem>
-                )}
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+        <IndexPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
 
         {/* Calendar Section with margin top for separation and ID for scrolling */}
         <div id="calendar-section" className="mt-10 sm:mt-16">
