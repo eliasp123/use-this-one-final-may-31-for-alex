@@ -93,58 +93,28 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // FIXED: Handle email row hover - ensure tooltip never goes off-screen
+  // FIXED: Use Grok's simpler positioning approach
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
-    const emailRowElement = e.currentTarget as HTMLElement;
-    const emailRect = emailRowElement.getBoundingClientRect();
-    const tooltipWidth = 480;
-    const tooltipHeight = 300;
-    
-    console.log('=== EMAIL ROW HOVER POSITIONING DEBUG ===');
-    console.log('Email row getBoundingClientRect():', {
-      top: emailRect.top,
-      bottom: emailRect.bottom,
-      left: emailRect.left,
-      right: emailRect.right,
-      width: emailRect.width,
-      height: emailRect.height
+    const emailRect = e.currentTarget.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+    const tooltipWidth = 480; // Approximate tooltip width
+    const tooltipHeight = 300; // Approximate tooltip height
+
+    let x = emailRect.right + 10; // Default to right side
+    if (emailRect.right + tooltipWidth > screenWidth - 20) {
+      x = emailRect.left - tooltipWidth - 10;
+    }
+
+    const emailRowHeight = emailRect.height;
+    const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2); // Center the tooltip
+
+    console.log('Email Row Position:', { 
+      emailRectTop: emailRect.top, 
+      emailRectHeight: emailRect.height, 
+      calculatedX: x, 
+      calculatedY: y 
     });
-    console.log('Viewport dimensions:', {
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-    
-    // Start with positioning to the right of the email row
-    let x = emailRect.right + 10;
-    let y = emailRect.top;
-    
-    // If tooltip would go off-screen on the right, try positioning on the left
-    if (x + tooltipWidth > window.innerWidth - 20) {
-      const leftPosition = emailRect.left - tooltipWidth - 10;
-      if (leftPosition >= 20) {
-        // Only position on left if it won't go off-screen
-        x = leftPosition;
-        console.log('Positioning on left side');
-      } else {
-        // If both sides don't work, position at viewport edge with margin
-        x = Math.max(20, Math.min(window.innerWidth - tooltipWidth - 20, emailRect.left));
-        console.log('Positioning at viewport edge to avoid off-screen');
-      }
-    }
-    
-    // Ensure tooltip stays within viewport vertically
-    if (y + tooltipHeight > window.innerHeight - 20) {
-      y = window.innerHeight - tooltipHeight - 20;
-      console.log('Adjusted Y position to fit in viewport');
-    }
-    if (y < 20) {
-      y = 20;
-      console.log('Adjusted Y position - was too high');
-    }
-    
-    console.log('Final calculated tooltip position:', { x, y });
-    console.log('==========================================');
-    
+
     setEmailTooltipPosition({ x, y });
     setHoveredEmailId(emailId);
   };
