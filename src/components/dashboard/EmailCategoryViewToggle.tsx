@@ -11,12 +11,12 @@ const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
   onViewModeChange
 }) => {
   return (
-    <div className="inline-flex items-center gap-1 text-sm text-gray-600">
+    <div className="inline-flex items-center gap-1 text-sm text-gray-600 bg-purple-50 rounded-lg px-3 py-2">
       <span 
         className={`px-2 py-1 rounded cursor-pointer transition-colors ${
           viewMode === 'grid' 
-            ? 'bg-gray-100 text-gray-800' 
-            : 'hover:bg-gray-50'
+            ? 'bg-white text-gray-800 shadow-sm' 
+            : 'hover:bg-purple-100'
         }`}
         onClick={() => onViewModeChange('grid')}
       >
@@ -26,8 +26,8 @@ const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
       <span 
         className={`px-2 py-1 rounded cursor-pointer transition-colors ${
           viewMode === 'list' 
-            ? 'bg-gray-100 text-gray-800' 
-            : 'hover:bg-gray-50'
+            ? 'bg-white text-gray-800 shadow-sm' 
+            : 'hover:bg-purple-100'
         }`}
         onClick={() => onViewModeChange('list')}
       >
