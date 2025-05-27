@@ -58,9 +58,9 @@ export const useEmailCategoryData = () => {
         id: 'home-care',
         title: 'Home Care',
         icon: Home,
-        color: 'from-green-400 to-green-500',
-        bgColor: 'bg-green-100',
-        textColor: 'text-green-600'
+        color: 'from-teal-600 to-teal-700',
+        bgColor: 'bg-teal-100',
+        textColor: 'text-teal-600'
       },
       {
         id: 'attorneys',

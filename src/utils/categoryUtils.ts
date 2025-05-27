@@ -8,8 +8,8 @@ export const categoryInfo: Record<string, { title: string, color: string, bgColo
   },
   'home-care': { 
     title: 'Home Care', 
-    color: 'bg-gradient-to-r from-blue-400 to-blue-500',
-    bgColor: 'bg-blue-50' 
+    color: 'bg-gradient-to-r from-teal-600 to-teal-700',
+    bgColor: 'bg-teal-50' 
   },
   'government': { 
     title: 'Government', 
