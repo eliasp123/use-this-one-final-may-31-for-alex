@@ -5,6 +5,7 @@ import NewEmailForm from '../components/NewEmailForm';
 import IndexActionButtons from './IndexActionButtons';
 import IndexPagination from './IndexPagination';
 import SearchResultsPreview from '../components/search/SearchResultsPreview';
+import DocumentPreviewAfterSearch from '../components/search/DocumentPreviewAfterSearch';
 import { Info, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { useUserRole } from '../hooks/useUserRole';
@@ -114,6 +115,9 @@ const Index = () => {
         <SearchResultsPreview searchQuery={searchQuery} />
         
         <RoleAwareEmailDashboard searchQuery={searchQuery} currentPage={currentPage} />
+
+        {/* Document Preview After Search Results */}
+        <DocumentPreviewAfterSearch searchQuery={searchQuery} />
 
         <IndexPagination
           currentPage={currentPage}
