@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -107,160 +106,167 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   };
 
   return (
-    <Collapsible open={isExpanded} onOpenChange={onToggle}>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group hover:translate-y-[-2px]">
-        <CollapsibleTrigger asChild>
-          <div className="p-4 cursor-pointer">
-            <div className="flex items-center justify-between">
-              {/* Left side - Icon, Title, and Chevron */}
-              <div className="flex items-center">
-                <div className={`w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className={`w-5 h-5 ${textColor}`} />
+    <div className="flex justify-center">
+      <div className="w-1/2">
+        <Collapsible open={isExpanded} onOpenChange={onToggle}>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group hover:translate-y-[-2px]">
+            <CollapsibleTrigger asChild>
+              <div className="p-4 cursor-pointer">
+                <div className="flex items-center justify-between">
+                  {/* Left side - Icon, Title, and Chevron */}
+                  <div className="flex items-center">
+                    <div className={`w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className={`w-5 h-5 ${textColor}`} />
+                    </div>
+                    <h3 className="text-base font-medium text-gray-800 group-hover:text-gray-900 transition-colors mr-3">{title}</h3>
+                    {/* Bigger, more prominent chevron */}
+                    {isExpanded ? (
+                      <ChevronDown className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                    ) : (
+                      <ChevronRight className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                    )}
+                  </div>
+
+                  {/* Right side - Status indicators and total */}
+                  <div className="flex items-center gap-4">
+                    {/* Status badges with increased spacing and larger hover areas */}
+                    <div className="flex items-center gap-6">
+                      {unread > 0 && (
+                        <div 
+                          className="flex items-center justify-center w-6 h-6 bg-purple-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          onClick={(e) => handleStatusClick('unread', e)}
+                          onMouseEnter={(e) => handleStatusHover('unread', e, id, pending)}
+                          onMouseLeave={handleStatusLeave}
+                          data-tooltip-trigger="true"
+                          title={`${unread} unread messages`}
+                        >
+                          {unread}
+                        </div>
+                      )}
+                      {pending > 0 && (
+                        <div 
+                          className="flex items-center justify-center w-6 h-6 bg-amber-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          onClick={(e) => handleStatusClick('pending', e)}
+                          onMouseEnter={(e) => handleStatusHover('pending', e, id, pending)}
+                          onMouseLeave={handleStatusLeave}
+                          data-tooltip-trigger="true"
+                          title={`${pending} pending replies`}
+                        >
+                          {pending}
+                        </div>
+                      )}
+                      {notRespondedCount > 0 && (
+                        <div 
+                          className="flex items-center justify-center w-6 h-6 bg-red-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform p-2"
+                          onClick={(e) => handleStatusClick('no-response', e)}
+                          onMouseEnter={(e) => handleStatusHover('unresponded', e, id, pending)}
+                          onMouseLeave={handleStatusLeave}
+                          data-tooltip-trigger="true"
+                          title={`${notRespondedCount} have not responded yet`}
+                        >
+                          {notRespondedCount}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Total count */}
+                    <span className="text-sm text-gray-500 font-medium min-w-[60px] text-right">
+                      {total} total
+                    </span>
+
+                    {/* Progress bar */}
+                    <div className="w-20">
+                      <div className="w-full bg-gray-100 rounded-full h-1">
+                        <div 
+                          className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300`}
+                          style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-base font-medium text-gray-800 group-hover:text-gray-900 transition-colors mr-3">{title}</h3>
-                {/* Bigger, more prominent chevron */}
-                {isExpanded ? (
-                  <ChevronDown className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+              </div>
+            </CollapsibleTrigger>
+
+            <CollapsibleContent className="px-4 pb-4">
+              <div className="mt-2 space-y-2 border-t pt-4">
+                {categoryEmails.length > 0 ? (
+                  categoryEmails.slice(0, 5).map((email) => {
+                    const statusIndicators = getEmailStatusIndicators(email);
+                    return (
+                      <div
+                        key={email.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                        onClick={(e) => handleEmailClick(email.id, e)}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {email.subject}
+                            </p>
+                            {/* Status indicators for each email */}
+                            {statusIndicators.map((indicator, index) => (
+                              <span 
+                                key={index}
+                                className={`w-2 h-2 ${indicator.color} rounded-full flex-shrink-0`}
+                              ></span>
+                            ))}
+                          </div>
+                          {/* Show From/To information */}
+                          <p className="text-xs text-gray-600 truncate">
+                            From: {email.sender.name} ({email.sender.organization})
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            To: {email.recipient}
+                          </p>
+                        </div>
+                        <div className="text-xs text-gray-500 ml-4 flex-shrink-0">
+                          {formatEmailDate(email.date)}
+                        </div>
+                      </div>
+                    );
+                  })
                 ) : (
-                  <ChevronRight className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                  <p className="text-sm text-gray-500 text-center py-4">
+                    No emails in this category
+                  </p>
+                )}
+                {categoryEmails.length > 5 && (
+                  <div className="text-center pt-2">
+                    <button
+                      onClick={handleClick}
+                      className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View all {categoryEmails.length} emails →
+                    </button>
+                  </div>
                 )}
               </div>
-
-              {/* Right side - Status indicators and total */}
-              <div className="flex items-center gap-4">
-                {/* Status badges with increased spacing */}
-                <div className="flex items-center gap-4">
-                  {unread > 0 && (
-                    <div 
-                      className="flex items-center justify-center w-5 h-5 bg-purple-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
-                      onClick={(e) => handleStatusClick('unread', e)}
-                      onMouseEnter={(e) => handleStatusHover('unread', e, id, pending)}
-                      onMouseLeave={handleStatusLeave}
-                      data-tooltip-trigger="true"
-                      title={`${unread} unread messages`}
-                    >
-                      {unread}
-                    </div>
-                  )}
-                  {pending > 0 && (
-                    <div 
-                      className="flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
-                      onClick={(e) => handleStatusClick('pending', e)}
-                      onMouseEnter={(e) => handleStatusHover('pending', e, id, pending)}
-                      onMouseLeave={handleStatusLeave}
-                      data-tooltip-trigger="true"
-                      title={`${pending} pending replies`}
-                    >
-                      {pending}
-                    </div>
-                  )}
-                  {notRespondedCount > 0 && (
-                    <div 
-                      className="flex items-center justify-center w-5 h-5 bg-red-500 rounded-full text-white text-xs font-medium cursor-pointer hover:scale-105 transition-transform"
-                      onClick={(e) => handleStatusClick('no-response', e)}
-                      onMouseEnter={(e) => handleStatusHover('unresponded', e, id, pending)}
-                      onMouseLeave={handleStatusLeave}
-                      data-tooltip-trigger="true"
-                      title={`${notRespondedCount} have not responded yet`}
-                    >
-                      {notRespondedCount}
-                    </div>
-                  )}
-                </div>
-
-                {/* Total count */}
-                <span className="text-sm text-gray-500 font-medium min-w-[60px] text-right">
-                  {total} total
-                </span>
-
-                {/* Progress bar */}
-                <div className="w-20">
-                  <div className="w-full bg-gray-100 rounded-full h-1">
-                    <div 
-                      className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300`}
-                      style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </CollapsibleContent>
           </div>
-        </CollapsibleTrigger>
 
-        <CollapsibleContent className="px-4 pb-4">
-          <div className="mt-2 space-y-2 border-t pt-4">
-            {categoryEmails.length > 0 ? (
-              categoryEmails.slice(0, 5).map((email) => {
-                const statusIndicators = getEmailStatusIndicators(email);
-                return (
-                  <div
-                    key={email.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                    onClick={(e) => handleEmailClick(email.id, e)}
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {email.subject}
-                        </p>
-                        {/* Status indicators for each email */}
-                        {statusIndicators.map((indicator, index) => (
-                          <span 
-                            key={index}
-                            className={`w-2 h-2 ${indicator.color} rounded-full flex-shrink-0`}
-                          ></span>
-                        ))}
-                      </div>
-                      {/* Show From/To information */}
-                      <p className="text-xs text-gray-600 truncate">
-                        From: {email.sender.name} ({email.sender.organization})
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        To: {email.recipient}
-                      </p>
-                    </div>
-                    <div className="text-xs text-gray-500 ml-4 flex-shrink-0">
-                      {formatEmailDate(email.date)}
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-sm text-gray-500 text-center py-4">
-                No emails in this category
-              </p>
-            )}
-            {categoryEmails.length > 5 && (
-              <div className="text-center pt-2">
-                <button
-                  onClick={handleClick}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  View all {categoryEmails.length} emails →
-                </button>
-              </div>
-            )}
-          </div>
-        </CollapsibleContent>
+          {/* Email Preview Tooltip - Aligned with category row */}
+          {hoveredStatus && previewEmails.length > 0 && createPortal(
+            <div data-tooltip="email-preview">
+              <EmailPreviewTooltip
+                emails={previewEmails}
+                status={hoveredStatus}
+                category={id}
+                position={{
+                  x: tooltipPosition.x,
+                  y: tooltipPosition.y + 20 // Align better with the category row
+                }}
+                onClose={handleTooltipClose}
+                onMouseEnter={handleTooltipMouseEnter}
+                onMouseLeave={handleTooltipMouseLeave}
+                categoryColor={color}
+              />
+            </div>,
+            document.body
+          )}
+        </Collapsible>
       </div>
-
-      {/* Email Preview Tooltip - Same as grid view */}
-      {hoveredStatus && previewEmails.length > 0 && createPortal(
-        <div data-tooltip="email-preview">
-          <EmailPreviewTooltip
-            emails={previewEmails}
-            status={hoveredStatus}
-            category={id}
-            position={tooltipPosition}
-            onClose={handleTooltipClose}
-            onMouseEnter={handleTooltipMouseEnter}
-            onMouseLeave={handleTooltipMouseLeave}
-            categoryColor={color}
-          />
-        </div>,
-        document.body
-      )}
-    </Collapsible>
+    </div>
   );
 };
 
