@@ -1,4 +1,5 @@
 
+
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -92,7 +93,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
   };
 
-  // FIXED: Handle email row hover - position relative to the actual email row
+  // FIXED: Handle email row hover - ensure tooltip never goes off-screen
   const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
     const emailRowElement = e.currentTarget as HTMLElement;
     const emailRect = emailRowElement.getBoundingClientRect();
@@ -113,14 +114,22 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       height: window.innerHeight
     });
     
-    // Position tooltip to the right of the email row
+    // Start with positioning to the right of the email row
     let x = emailRect.right + 10;
     let y = emailRect.top;
     
-    // If tooltip would go off-screen on the right, position it on the left
+    // If tooltip would go off-screen on the right, try positioning on the left
     if (x + tooltipWidth > window.innerWidth - 20) {
-      x = emailRect.left - tooltipWidth - 10;
-      console.log('Positioning on left side due to space constraints');
+      const leftPosition = emailRect.left - tooltipWidth - 10;
+      if (leftPosition >= 20) {
+        // Only position on left if it won't go off-screen
+        x = leftPosition;
+        console.log('Positioning on left side');
+      } else {
+        // If both sides don't work, position at viewport edge with margin
+        x = Math.max(20, Math.min(window.innerWidth - tooltipWidth - 20, emailRect.left));
+        console.log('Positioning at viewport edge to avoid off-screen');
+      }
     }
     
     // Ensure tooltip stays within viewport vertically
@@ -372,3 +381,4 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 };
 
 export default EmailCategoryListItem;
+
