@@ -43,7 +43,7 @@ const EmailListToolbar: React.FC<EmailListToolbarProps> = ({
                 Pending
               </TabsTrigger>
               <TabsTrigger 
-                value="unresponded" 
+                value="no-response" 
                 className="data-[state=active]:bg-rose-100 data-[state=active]:text-rose-800 rounded-lg transition-all"
               >
                 Not Responded
