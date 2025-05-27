@@ -50,7 +50,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     return getFilteredEmailData().filter(email => email.category === id);
   }, [id, getFilteredEmailData]);
 
-  // Tooltip behavior hook
+  // Tooltip behavior hook for status circles
   const {
     hoveredStatus,
     tooltipPosition,
@@ -62,11 +62,21 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     handleTooltipMouseLeave
   } = useTabletTooltipBehavior();
 
+  // Separate state for email row hover
+  const [hoveredEmailId, setHoveredEmailId] = React.useState<string | null>(null);
+  const [emailTooltipPosition, setEmailTooltipPosition] = React.useState({ x: 0, y: 0 });
+
   // Get preview emails for the currently hovered status
   const { previewEmails } = useEmailPreview({ 
     category: id, 
     status: hoveredStatus || 'unread' 
   });
+
+  // Get single email for preview when hovering over email row
+  const hoveredEmail = useMemo(() => {
+    if (!hoveredEmailId) return null;
+    return categoryEmails.find(email => email.id === hoveredEmailId);
+  }, [hoveredEmailId, categoryEmails]);
   
   const handleClick = () => {
     navigate(`/emails/${id}/all`);
@@ -80,6 +90,49 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   const handleEmailClick = (emailId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
+  };
+
+  // Handle email row hover
+  const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+    const tooltipWidth = 480; // Approximate tooltip width
+    
+    // Determine positioning based on screen space
+    let x = rect.right + 10; // Default to right side
+    
+    // If not enough space on the right, position on the left
+    if (rect.right + tooltipWidth > screenWidth - 20) {
+      x = rect.left - tooltipWidth - 10;
+    }
+    
+    setEmailTooltipPosition({
+      x,
+      y: rect.top
+    });
+    setHoveredEmailId(emailId);
+  };
+
+  const handleEmailLeave = () => {
+    setHoveredEmailId(null);
+  };
+
+  // Update tooltip positioning for status circles to use left/right
+  const getSmartTooltipPosition = (basePosition: { x: number; y: number }) => {
+    const screenWidth = window.innerWidth;
+    const tooltipWidth = 480;
+    
+    let x = basePosition.x + 10; // Default to right
+    
+    // If not enough space on the right, position on the left
+    if (basePosition.x + tooltipWidth > screenWidth - 20) {
+      x = basePosition.x - tooltipWidth - 10;
+    }
+    
+    return {
+      x,
+      y: basePosition.y - 40 // Align with category row
+    };
   };
 
   const formatEmailDate = (dateString: string) => {
@@ -199,6 +252,8 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                         key={email.id}
                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                         onClick={(e) => handleEmailClick(email.id, e)}
+                        onMouseEnter={(e) => handleEmailHover(email.id, e)}
+                        onMouseLeave={handleEmailLeave}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
@@ -247,20 +302,34 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
           </div>
         </Collapsible>
 
-        {/* Email Preview Tooltip - Fixed positioning to align with category row */}
+        {/* Email Preview Tooltip for Status Circles - Left/Right positioning */}
         {hoveredStatus && previewEmails.length > 0 && createPortal(
           <div data-tooltip="email-preview">
             <EmailPreviewTooltip
               emails={previewEmails}
               status={hoveredStatus}
               category={id}
-              position={{
-                x: tooltipPosition.x,
-                y: tooltipPosition.y - 40 // Better alignment with the category row
-              }}
+              position={getSmartTooltipPosition(tooltipPosition)}
               onClose={handleTooltipClose}
               onMouseEnter={handleTooltipMouseEnter}
               onMouseLeave={handleTooltipMouseLeave}
+              categoryColor={color}
+            />
+          </div>,
+          document.body
+        )}
+
+        {/* Email Preview Tooltip for Individual Email Rows */}
+        {hoveredEmailId && hoveredEmail && createPortal(
+          <div data-tooltip="email-preview">
+            <EmailPreviewTooltip
+              emails={[hoveredEmail]}
+              status="unread" // We'll show the email regardless of status
+              category={id}
+              position={emailTooltipPosition}
+              onClose={() => setHoveredEmailId(null)}
+              onMouseEnter={() => {}} // Keep tooltip open when hovering over it
+              onMouseLeave={() => setHoveredEmailId(null)}
               categoryColor={color}
             />
           </div>,
