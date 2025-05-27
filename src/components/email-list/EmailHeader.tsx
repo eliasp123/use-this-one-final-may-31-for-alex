@@ -33,7 +33,8 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
     <div className="flex justify-between items-center mb-6">
       <div>
         <h1 className="text-3xl font-light text-gray-800 mb-2">
-          {currentCategory ? currentCategory.title : 'All Categories'} Emails
+          <span className="font-semibold text-gray-700">Conversation:</span>{' '}
+          {currentCategory ? currentCategory.title : 'All Categories'}
         </h1>
         <p className="text-gray-600">
           {emailCount} {getStatusText().toLowerCase()} email{emailCount !== 1 ? 's' : ''}

@@ -15,17 +15,11 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   const allCategories = getAllCategories();
   const categoryInfo = allCategories[email.category];
   
-  // Debug logging
-  console.log('Email category:', email.category);
-  console.log('Category info:', categoryInfo);
-  console.log('Category title:', categoryInfo?.title);
-  
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
         <h1 className="text-3xl font-light text-gray-800 mb-2">
-          <span className="font-semibold text-gray-700">Conversation:</span>{' '}
-          {categoryInfo ? categoryInfo.title : 'Unknown Category'}
+          {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
         </h1>
         <p className="text-gray-600">
           Email thread with {email.sender.name}
