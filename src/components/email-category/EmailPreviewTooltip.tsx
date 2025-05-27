@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -264,6 +265,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview || cleanContent.substring(0, maxLength) + (cleanContent.length > maxLength ? '...' : '');
   };
 
+  // Helper function to determine if email is sent or received
+  const isEmailSent = (email: EmailData) => {
+    return email.id.startsWith('sent_');
+  };
+
   if (emails.length === 0) {
     return null;
   };
@@ -324,8 +330,17 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                 </span>
               </div>
               
+              {/* From/To line with email addresses */}
               <div className="text-xs text-gray-600 mb-2">
-                {truncateText(email.sender.organization, 40)}
+                {isEmailSent(email) ? (
+                  <span><strong>To:</strong> {email.recipient}</span>
+                ) : (
+                  <span><strong>From:</strong> {email.sender.email}</span>
+                )}
+              </div>
+              
+              <div className="text-xs text-gray-600 mb-2">
+                {email.sender.organization}
               </div>
               
               <div className="text-sm font-medium text-gray-800 mb-2">
