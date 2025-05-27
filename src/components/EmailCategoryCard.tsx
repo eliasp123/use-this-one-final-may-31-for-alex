@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -127,8 +128,8 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           </div>
         </div>
 
-        {/* Stats - Now with colored circles in the rows - adjusted to be 15% larger than the reduced size */}
-        <div className="space-y-4 sm:space-y-5">
+        {/* Stats - Now with colored circles in the rows - reduced spacing from space-y-4 sm:space-y-5 to space-y-2 sm:space-y-2.5 */}
+        <div className="space-y-2 sm:space-y-2.5">
           <div 
             className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
             onClick={(e) => handleStatusClick('unread', e)}

@@ -49,8 +49,8 @@ const CompactCategoryContent: React.FC<CompactCategoryContentProps> = ({
           className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px]"
           onClick={onCardContentClick}
         >
-          {/* Stats with tooltip behavior */}
-          <div className="space-y-4 sm:space-y-5">
+          {/* Stats with tooltip behavior - reduced spacing from space-y-4 sm:space-y-5 to space-y-2 sm:space-y-2.5 */}
+          <div className="space-y-2 sm:space-y-2.5">
             <div 
               className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-2 rounded transition-colors"
               onClick={(e) => onStatusClick('unread', e)}
