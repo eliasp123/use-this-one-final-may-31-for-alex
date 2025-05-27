@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -101,44 +100,37 @@ const Index = () => {
               </Popover>
             </p>
             
-            {/* Consolidated Action Bar */}
-            <div className="w-full max-w-7xl mx-auto mt-6 sm:mt-8">
-              <div className="flex items-stretch h-12">
-                <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch w-full">
-                  {/* Compose New Email - Green background */}
-                  <button
-                    onClick={() => setShowNewEmailForm(true)}
-                    className="bg-green-500 hover:bg-green-600 text-white flex-[3] rounded-l-2xl flex items-center justify-center h-full transition-all duration-200"
-                  >
-                    <div className="flex items-center">
-                      <Pencil className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-sm">Compose New Email</span>
-                    </div>
-                  </button>
-
-                  {/* View Documents */}
-                  <button
-                    onClick={() => navigate('/documents')}
-                    className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
-                  >
-                    <div className="flex items-center">
-                      <FileText className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-sm">View Documents</span>
-                    </div>
-                  </button>
-
-                  {/* Calendar */}
-                  <button
-                    onClick={handleCalendarClick}
-                    className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700 rounded-r-2xl"
-                  >
-                    <div className="flex items-center">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      <span className="font-medium text-sm">Calendar</span>
-                    </div>
-                  </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-6 mt-6 sm:mt-8 w-full max-w-2xl">
+              <button
+                onClick={() => setShowNewEmailForm(true)}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 hover:shadow-xl"
+              >
+                <div className="flex items-center">
+                  <Pencil className="mr-2 h-4 w-4" />
+                  <span className="font-medium">Compose New Email</span>
                 </div>
-              </div>
+              </button>
+              
+              <button
+                onClick={() => navigate('/documents')}
+                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
+              >
+                <div className="flex items-center">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span className="font-medium">View Documents</span>
+                </div>
+              </button>
+              
+              <button
+                onClick={handleCalendarClick}
+                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
+              >
+                <div className="flex items-center">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <span className="font-medium">Calendar</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
