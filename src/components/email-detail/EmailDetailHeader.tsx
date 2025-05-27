@@ -15,6 +15,11 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   const allCategories = getAllCategories();
   const categoryInfo = allCategories[email.category];
   
+  // Debug logging
+  console.log('Email category:', email.category);
+  console.log('Category info:', categoryInfo);
+  console.log('Category title:', categoryInfo?.title);
+  
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
