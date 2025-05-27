@@ -1,10 +1,11 @@
+
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { useFilteredEmailData } from '../../hooks/useFilteredEmailData';
 import { useEmailPreview } from '../../hooks/useEmailPreview';
-import { useTabletTooltipBehavior } from '../../hooks/useTabletTooltipBehavior';
+import { useTooltipBehavior } from '../../hooks/useTooltipBehavior';
 import EmailPreviewTooltip from '../email-category/EmailPreviewTooltip';
 import { 
   Collapsible, 
@@ -53,17 +54,23 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   const {
     hoveredStatus,
     tooltipPosition,
-    isTablet,
     handleStatusHover,
     handleStatusLeave,
     handleTooltipClose,
     handleTooltipMouseEnter,
     handleTooltipMouseLeave
-  } = useTabletTooltipBehavior();
+  } = useTooltipBehavior();
 
-  // Separate state for email row hover
-  const [hoveredEmailId, setHoveredEmailId] = React.useState<string | null>(null);
-  const [emailTooltipPosition, setEmailTooltipPosition] = React.useState({ x: 0, y: 0 });
+  // Separate tooltip behavior for email row hover with same timing
+  const {
+    hoveredStatus: hoveredEmailId,
+    tooltipPosition: emailTooltipPosition,
+    handleStatusHover: handleEmailHover,
+    handleStatusLeave: handleEmailLeave,
+    handleTooltipClose: handleEmailTooltipClose,
+    handleTooltipMouseEnter: handleEmailTooltipMouseEnter,
+    handleTooltipMouseLeave: handleEmailTooltipMouseLeave
+  } = useTooltipBehavior();
 
   // Get preview emails for the currently hovered status
   const { previewEmails } = useEmailPreview({ 
@@ -92,7 +99,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   };
 
   // Updated positioning to prefer left side
-  const handleEmailHover = (emailId: string, e: React.MouseEvent) => {
+  const handleEmailRowHover = (emailId: string, e: React.MouseEvent) => {
     const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     const tooltipWidth = 480; // Approximate tooltip width
@@ -109,20 +116,10 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     const emailRowHeight = emailRect.height;
     const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2); // Center the tooltip
 
-    console.log('Email Row Position:', { 
-      emailRectTop: emailRect.top, 
-      emailRectHeight: emailRect.height, 
-      calculatedX: x, 
-      calculatedY: y,
-      preferredSide: emailRect.left - tooltipWidth < 20 ? 'right' : 'left'
-    });
-
-    setEmailTooltipPosition({ x, y });
-    setHoveredEmailId(emailId);
-  };
-
-  const handleEmailLeave = () => {
-    setHoveredEmailId(null);
+    const position = { x, y };
+    
+    // Use the tooltip behavior hook which has the proper timing delays
+    handleEmailHover(emailId as any, e, id, 1);
   };
 
   // Update tooltip positioning for status circles to use left/right
@@ -264,7 +261,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                         key={email.id}
                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                         onClick={(e) => handleEmailClick(email.id, e)}
-                        onMouseEnter={(e) => handleEmailHover(email.id, e)}
+                        onMouseEnter={(e) => handleEmailRowHover(email.id, e)}
                         onMouseLeave={handleEmailLeave}
                       >
                         <div className="flex-1 min-w-0">
@@ -340,9 +337,9 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               status="unread" // We'll show the email regardless of status
               category={id}
               position={emailTooltipPosition}
-              onClose={() => setHoveredEmailId(null)}
-              onMouseEnter={() => {}} // Keep tooltip open when hovering over it
-              onMouseLeave={() => setHoveredEmailId(null)}
+              onClose={handleEmailTooltipClose}
+              onMouseEnter={handleEmailTooltipMouseEnter}
+              onMouseLeave={handleEmailTooltipMouseLeave}
               categoryColor={color}
               isEmailRowTooltip={true}
             />
