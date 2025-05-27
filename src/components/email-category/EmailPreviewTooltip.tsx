@@ -211,7 +211,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   };
 
   const handleEmailClick = (emailId: string) => {
-    navigate(`/emails/${category}/all`);
+    navigate(`/email/${emailId}`);
     onClose();
     // Scroll to top after navigation
     setTimeout(() => {

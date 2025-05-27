@@ -88,7 +88,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 
   const handleEmailClick = (emailId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/emails/${id}/all`, { state: { selectedEmailId: emailId } });
+    navigate(`/email/${emailId}`);
   };
 
   // Updated positioning to prefer left side

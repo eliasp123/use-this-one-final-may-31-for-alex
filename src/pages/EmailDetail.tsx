@@ -24,8 +24,8 @@ const EmailDetail = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Scroll to top when component mounts
-    window.scrollTo(0, 0);
+    // Always scroll to top when component mounts or email ID changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (id) {
       const foundEmail = getEmailByIdWithAttachments(id);
