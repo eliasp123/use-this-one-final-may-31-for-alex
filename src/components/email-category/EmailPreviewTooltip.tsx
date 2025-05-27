@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { EmailData } from '@/types/email';
 import { formatDistanceToNow } from 'date-fns';
@@ -337,10 +336,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                 ) : (
                   <span><strong>From:</strong> {email.sender.email}</span>
                 )}
-              </div>
-              
-              <div className="text-xs text-gray-600 mb-2">
-                {email.sender.organization}
               </div>
               
               <div className="text-sm font-medium text-gray-800 mb-2">
