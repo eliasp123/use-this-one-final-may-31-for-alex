@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -100,33 +101,44 @@ const Index = () => {
               </Popover>
             </p>
             
-            {/* Action buttons - Task 3: Removed "Create Category" button */}
-            <div className="mt-6 sm:mt-8 flex gap-3 justify-center">
-              <Button
-                onClick={() => setShowNewEmailForm(true)}
-                className="w-64 bg-green-500 hover:bg-green-600 text-white px-6 py-3 h-12 rounded-lg font-medium flex items-center justify-center"
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                Compose New Email
-              </Button>
-              
-              <Button
-                onClick={() => navigate('/documents')}
-                variant="outline"
-                className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
-              >
-                <FileText className="mr-2 h-4 w-4" />
-                View Documents
-              </Button>
+            {/* Consolidated Action Bar */}
+            <div className="w-full max-w-7xl mx-auto mt-6 sm:mt-8">
+              <div className="flex items-stretch h-16">
+                <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg flex items-stretch w-full">
+                  {/* Compose New Email - Green background */}
+                  <button
+                    onClick={() => setShowNewEmailForm(true)}
+                    className="bg-green-500 hover:bg-green-600 text-white flex-[3] rounded-l-2xl flex items-center justify-center h-full transition-all duration-200"
+                  >
+                    <div className="flex items-center">
+                      <Pencil className="mr-2 h-4 w-4" />
+                      <span className="font-medium text-base">Compose New Email</span>
+                    </div>
+                  </button>
 
-              <Button
-                onClick={handleCalendarClick}
-                variant="outline"
-                className="w-64 px-6 py-3 h-12 rounded-lg font-medium border-gray-300 hover:bg-gray-50 flex items-center justify-center"
-              >
-                <Calendar className="mr-2 h-4 w-4" />
-                Calendar
-              </Button>
+                  {/* View Documents */}
+                  <button
+                    onClick={() => navigate('/documents')}
+                    className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
+                  >
+                    <div className="flex items-center">
+                      <FileText className="mr-2 h-4 w-4" />
+                      <span className="font-medium text-base">View Documents</span>
+                    </div>
+                  </button>
+
+                  {/* Calendar */}
+                  <button
+                    onClick={handleCalendarClick}
+                    className="flex items-center justify-center flex-[3] transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700 rounded-r-2xl"
+                  >
+                    <div className="flex items-center">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      <span className="font-medium text-base">Calendar</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
