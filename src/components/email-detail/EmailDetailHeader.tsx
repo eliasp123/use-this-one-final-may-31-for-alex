@@ -16,17 +16,8 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   const categoryInfo = allCategories[email.category];
   
   return (
-    <div className="flex justify-between items-center mb-6">
-      <div>
-        <h1 className="text-3xl font-light text-gray-800 mb-2">
-          {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
-        </h1>
-        <p className="text-gray-600">
-          Email thread with {email.sender.name}
-        </p>
-      </div>
-      
-      <div className="flex gap-3">
+    <div className="mb-6">
+      <div className="flex gap-3 mb-4">
         <Button
           onClick={() => navigate(-1)}
           variant="outline"
@@ -43,6 +34,15 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           <FileText className="mr-2 h-4 w-4" />
           Communication Hub
         </Button>
+      </div>
+      
+      <div>
+        <h1 className="text-3xl font-light text-gray-800 mb-2">
+          {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
+        </h1>
+        <p className="text-gray-600">
+          Email thread with {email.sender.name}
+        </p>
       </div>
     </div>
   );

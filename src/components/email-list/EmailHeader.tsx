@@ -30,7 +30,17 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="mb-6">
+      <div className="flex gap-3 mb-4">
+        <Button
+          onClick={() => navigate('/')}
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+        >
+          <FileText className="mr-2 h-4 w-4" />
+          Back to Communication Hub
+        </Button>
+      </div>
+      
       <div>
         <h1 className="text-3xl font-light text-gray-800 mb-2">
           <span className="font-semibold text-gray-700">Conversation:</span>{' '}
@@ -39,16 +49,6 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <p className="text-gray-600">
           {emailCount} {getStatusText().toLowerCase()} email{emailCount !== 1 ? 's' : ''}
         </p>
-      </div>
-      
-      <div className="flex gap-3">
-        <Button
-          onClick={() => navigate('/')}
-          className="bg-orange-500 hover:bg-orange-600 text-white"
-        >
-          <FileText className="mr-2 h-4 w-4" />
-          Back to Communication Hub
-        </Button>
       </div>
     </div>
   );
