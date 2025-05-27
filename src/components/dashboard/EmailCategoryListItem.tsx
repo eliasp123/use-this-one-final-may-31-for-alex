@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -98,8 +97,11 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     const screenWidth = window.innerWidth;
     const tooltipWidth = 480; // Approximate tooltip width
     
-    // Find the category card to align with its top
-    const categoryCard = e.currentTarget.closest('.bg-white.rounded-lg.shadow-sm');
+    // Find the specific category card container that wraps this entire component
+    // Look for the closest element with our specific category card classes
+    const categoryCard = e.currentTarget.closest('[data-category-card]') || 
+                        e.currentTarget.closest('.bg-white.rounded-lg.shadow-sm.border.border-gray-200');
+    
     const cardRect = categoryCard?.getBoundingClientRect();
     
     // Determine positioning based on screen space
@@ -167,7 +169,10 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     <div className="flex justify-center">
       <div className="w-1/2">
         <Collapsible open={isExpanded} onOpenChange={onToggle}>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group hover:translate-y-[-2px]">
+          <div 
+            className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group hover:translate-y-[-2px]"
+            data-category-card={id}
+          >
             <CollapsibleTrigger asChild>
               <div className="p-4 cursor-pointer">
                 <div className="flex items-center justify-between">
