@@ -28,7 +28,7 @@ interface Category {
 
 const categories: Category[] = [
   { id: 'elder-law-attorneys', name: 'Elder Law Attorneys', color: '#F59E0B', icon: <Scale className="h-5 w-5" />, count: 2 },
-  { id: 'professionals', name: 'Professionals', color: '#6B7280', icon: <Briefcase className="h-5 w-5" />, count: 2 },
+  { id: 'professionals', name: 'Other Professionals', color: '#6B7280', icon: <Briefcase className="h-5 w-5" />, count: 2 },
   { id: 'paying-for-care', name: 'Paying for Care', color: '#F59E0B', icon: <CreditCard className="h-5 w-5" />, count: 1 },
   { id: 'home-care', name: 'Home Care', color: '#10B981', icon: <Home className="h-5 w-5" />, count: 2 },
   { id: 'physical-therapy', name: 'Physical Therapy', color: '#10B981', icon: <Activity className="h-5 w-5" />, count: 2 },
@@ -146,18 +146,18 @@ const CaregiverMap = () => {
         </div>
       </div>
 
-      {/* Category Filters - Chip Based */}
-      <div className="bg-white px-6 py-6 border-b border-gray-200">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap gap-2 justify-center">
+      {/* Category Filters - Simple List */}
+      <div className="bg-white px-6 py-4 border-b border-gray-200">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-3 gap-3">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => handleCategoryToggle(category.id)}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left ${
                   selectedCategories.includes(category.id)
                     ? 'text-white shadow-md'
-                    : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                 }`}
                 style={{
                   backgroundColor: selectedCategories.includes(category.id) ? category.color : undefined
@@ -173,14 +173,7 @@ const CaregiverMap = () => {
                     className: `h-2.5 w-2.5 text-white`
                   })}
                 </div>
-                <span>{category.name}</span>
-                <span 
-                  className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold ${
-                    selectedCategories.includes(category.id) ? 'bg-white bg-opacity-30 text-white' : 'bg-white text-amber-800'
-                  }`}
-                >
-                  {category.count}
-                </span>
+                <span className="flex-1">{category.name}</span>
               </button>
             ))}
           </div>
@@ -189,7 +182,7 @@ const CaregiverMap = () => {
             <div className="mt-4 text-center">
               <button
                 onClick={() => setSelectedCategories([])}
-                className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium hover:bg-amber-200 transition-colors"
+                className="text-teal-600 hover:text-teal-700 text-sm font-medium"
               >
                 Clear all filters
               </button>
