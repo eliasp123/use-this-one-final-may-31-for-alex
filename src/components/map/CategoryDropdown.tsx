@@ -58,12 +58,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           clearInterval(typeInterval);
           // After typing, wait and then clear
           setTimeout(() => {
-            const clearInterval = setInterval(() => {
+            const clearIntervalId = setInterval(() => {
               setPlaceholderText(prev => {
                 if (prev.length > 0) {
                   return prev.slice(0, -1);
                 } else {
-                  clearInterval(clearInterval);
+                  clearInterval(clearIntervalId);
                   return '';
                 }
               });
