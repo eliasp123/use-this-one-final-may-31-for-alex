@@ -61,6 +61,23 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Auto-check categories based on search query
+  useEffect(() => {
+    if (searchQuery.trim() && searchQuery.length > 2) {
+      const matchingCategories = categories.filter(category =>
+        category.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+      );
+      
+      // Auto-check the first matching category if it's not already selected
+      if (matchingCategories.length > 0) {
+        const firstMatch = matchingCategories[0];
+        if (!selectedCategories.includes(firstMatch.id)) {
+          onCategoryToggle(firstMatch.id);
+        }
+      }
+    }
+  }, [searchQuery, categories, selectedCategories, onCategoryToggle]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
