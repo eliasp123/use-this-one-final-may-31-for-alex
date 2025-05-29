@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
@@ -149,8 +150,9 @@ const CaregiverMap = () => {
           <h1 className="text-xl font-normal">Search Places or Care Categories Below</h1>
         </div>
         
-        <div className="text-center">
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
           <span className="text-white font-medium">Back to Communication Hub</span>
+          <ArrowRight className="h-4 w-4" />
         </div>
       </div>
 
