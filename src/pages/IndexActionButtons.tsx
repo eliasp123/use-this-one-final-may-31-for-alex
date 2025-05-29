@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { Pencil, FileText, Calendar } from 'lucide-react';
+import { Pencil, FileText, Calendar, Mail, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface IndexActionButtonsProps {
   onNewEmail: () => void;
@@ -8,41 +8,41 @@ interface IndexActionButtonsProps {
   onCalendarClick: () => void;
 }
 
-const IndexActionButtons: React.FC<IndexActionButtonsProps> = ({
-  onNewEmail,
-  onViewDocuments,
-  onCalendarClick
-}) => {
+const IndexActionButtons = ({ onNewEmail, onViewDocuments, onCalendarClick }: IndexActionButtonsProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-6 mt-6 sm:mt-8 w-full max-w-2xl">
+    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
       <button
         onClick={onNewEmail}
-        className="flex-1 bg-green-500 hover:bg-green-600 text-white h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 hover:shadow-xl"
+        className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2.5 rounded-full shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-200 text-sm font-medium"
       >
-        <div className="flex items-center">
-          <Pencil className="mr-2 h-4 w-4" />
-          <span className="font-medium">Compose New Email</span>
-        </div>
+        <Mail className="h-4 w-4" />
+        Compose
       </button>
       
       <button
         onClick={onViewDocuments}
-        className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
+        className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2.5 rounded-full shadow-md hover:from-green-600 hover:to-green-700 transition-all duration-200 text-sm font-medium"
       >
-        <div className="flex items-center">
-          <FileText className="mr-2 h-4 w-4" />
-          <span className="font-medium">View Documents</span>
-        </div>
+        <FileText className="h-4 w-4" />
+        Documents
+      </button>
+
+      <button
+        onClick={() => navigate('/map')}
+        className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 rounded-full shadow-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium"
+      >
+        <MapPin className="h-4 w-4" />
+        Find Care
       </button>
       
       <button
         onClick={onCalendarClick}
-        className="flex-1 bg-white hover:bg-gray-50 text-gray-700 h-12 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl"
+        className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-2.5 rounded-full shadow-md hover:from-amber-600 hover:to-amber-700 transition-all duration-200 text-sm font-medium"
       >
-        <div className="flex items-center">
-          <Calendar className="mr-2 h-4 w-4" />
-          <span className="font-medium">Calendar</span>
-        </div>
+        <Calendar className="h-4 w-4" />
+        Calendar
       </button>
     </div>
   );

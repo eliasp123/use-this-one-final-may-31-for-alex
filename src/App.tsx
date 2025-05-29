@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import EmailList from "./pages/EmailList";
 import EmailDetail from "./pages/EmailDetail";
 import Documents from "./pages/Documents";
+import CaregiverMap from "./pages/CaregiverMap";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +25,7 @@ const App = () => (
             <Route path="/emails/:category/:status" element={<EmailList />} />
             <Route path="/email/:id" element={<EmailDetail />} />
             <Route path="/documents" element={<Documents />} />
+            <Route path="/map" element={<CaregiverMap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
