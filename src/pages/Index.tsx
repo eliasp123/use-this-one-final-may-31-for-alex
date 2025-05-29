@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -56,9 +57,9 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-4 sm:py-8 pt-16">
         <div className="text-center mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Communication Hub</h1>
-          <div className="flex flex-col items-center justify-center gap-2">
-            <p className="text-sm sm:text-base text-gray-600 font-light flex items-center gap-2">
+          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-6 sm:mb-8">Communication Hub</h1>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <p className="text-sm sm:text-base text-gray-600 font-light flex items-center gap-2 mb-8 sm:mb-12">
               Stay on top of your important conversations
               <Popover>
                 <PopoverTrigger asChild>

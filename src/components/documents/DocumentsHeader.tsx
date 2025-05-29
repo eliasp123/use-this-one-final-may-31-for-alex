@@ -28,8 +28,8 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         </Button>
         
         <div className="text-center flex-1">
-          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
-          <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
+          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-6 sm:mb-8">Document Hub</h1>
+          <p className="text-sm sm:text-base text-gray-600 font-light mb-12">Manage and organize your email attachments</p>
         </div>
         
         <div className="w-20"></div> {/* Spacer to balance the layout */}

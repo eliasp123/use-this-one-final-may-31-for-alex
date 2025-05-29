@@ -142,11 +142,11 @@ const CaregiverMap = () => {
       {/* Header */}
       <div className="bg-teal-700 text-white px-6 py-4">
         <div className="flex items-center justify-between min-h-[2rem]">
-          <div className="text-base font-normal">
+          <div className="text-base font-normal mb-12">
             Search Places or Care Categories Below
           </div>
           
-          <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200 [&_div]:mt-0">
+          <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200 [&_div]:mt-0 mb-12">
             <IndexActionButtons
               onNewEmail={() => {
                 navigate('/');

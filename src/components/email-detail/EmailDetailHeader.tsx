@@ -29,10 +29,10 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
         </Button>
         
         <div className="text-center flex-1">
-          <h1 className="text-3xl font-light text-gray-800 mb-2">
+          <h1 className="text-3xl font-light text-gray-800 mb-6">
             {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-12">
             Email thread with {email.sender.name}
           </p>
         </div>
