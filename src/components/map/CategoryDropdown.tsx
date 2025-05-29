@@ -48,11 +48,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return iconMap[categoryId] || { icon: <Home className="h-4 w-4" />, bgColor: '#6B7280' };
   };
 
-  // Organized category order for 3x3 grid
-  const categoryOrder = [
-    'elder-law-attorneys', 'professionals', 'paying-for-care',
-    'home-care', 'physical-therapy', 'senior-living', 
-    'government-va', 'hospitals', 'pharmacies'
+  // Organized category groups for vertical layout
+  const categoryGroups = [
+    ['elder-law-attorneys', 'professionals', 'paying-for-care'],
+    ['home-care', 'physical-therapy', 'senior-living'],
+    ['government-va', 'hospitals', 'pharmacies']
   ];
 
   // Close dropdown when clicking outside
@@ -149,10 +149,8 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     setIsDropdownOpen(false);
   };
 
-  // Get ordered categories for display
-  const orderedCategories = categoryOrder
-    .map(id => categories.find(cat => cat.id === id))
-    .filter(cat => cat !== undefined) as Category[];
+  // Get category by ID
+  const getCategoryById = (id: string) => categories.find(cat => cat.id === id);
 
   return (
     <div ref={dropdownRef} className="relative w-full">
@@ -186,37 +184,44 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-4">
-            {/* Category Grid - 3 columns */}
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {orderedCategories.map((category) => {
-                const categoryIcon = getCategoryIcon(category.id);
-                return (
-                  <div
-                    key={category.id}
-                    className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-                    onClick={() => handleCategoryClick(category.id)}
-                  >
-                    <Checkbox
-                      checked={selectedCategories.includes(category.id)}
-                      onCheckedChange={() => onCategoryToggle(category.id)}
-                      className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-white data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <div 
-                      className="flex-shrink-0 p-1 rounded text-white"
-                      style={{ backgroundColor: categoryIcon.bgColor }}
-                    >
-                      {categoryIcon.icon}
-                    </div>
-                    <span className="text-sm text-gray-700 flex-1">{category.name}</span>
-                  </div>
-                );
-              })}
+            {/* Category Groups - Vertical Layout */}
+            <div className="space-y-4 mb-4">
+              {categoryGroups.map((group, groupIndex) => (
+                <div key={groupIndex} className="space-y-2">
+                  {group.map((categoryId) => {
+                    const category = getCategoryById(categoryId);
+                    if (!category) return null;
+                    
+                    const categoryIcon = getCategoryIcon(category.id);
+                    return (
+                      <div
+                        key={category.id}
+                        className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
+                        onClick={() => handleCategoryClick(category.id)}
+                      >
+                        <Checkbox
+                          checked={selectedCategories.includes(category.id)}
+                          onCheckedChange={() => onCategoryToggle(category.id)}
+                          className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-white data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <div 
+                          className="flex-shrink-0 p-1 rounded text-white"
+                          style={{ backgroundColor: categoryIcon.bgColor }}
+                        >
+                          {categoryIcon.icon}
+                        </div>
+                        <span className="text-sm text-gray-700 flex-1">{category.name}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
 
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
-              <div className="w-full flex items-center p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
+              <div className="w-full flex items-center justify-between p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
                   onClick={handleSelectAllClick}
@@ -229,13 +234,15 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   />
                   <span className="text-sm font-medium">Or select all categories</span>
                 </div>
-                <span className="mx-4 text-white">|</span>
-                <button
-                  onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline"
-                >
-                  Go →
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="text-white">|</span>
+                  <button
+                    onClick={handleGoClick}
+                    className="text-white text-sm font-medium hover:underline"
+                  >
+                    Go →
+                  </button>
+                </div>
               </div>
             </div>
           </div>
