@@ -11,6 +11,44 @@ const generateDate = (daysAgo: number) => {
 };
 
 export const mockEmails: EmailData[] = [
+  // Hospitals Category
+  {
+    id: "h1k8p2v9xs",
+    subject: "Lab Results Available - Patient Portal",
+    sender: {
+      name: "Dr. Sarah Kim",
+      email: "skim@cedarssinai.org",
+      organization: "Cedars-Sinai Medical Center"
+    },
+    recipient: "you@example.com",
+    content: "Your father's recent blood work results are now available in the patient portal. The results show improvement in his cholesterol levels since starting the new medication. Please schedule a follow-up appointment within the next two weeks to discuss the results and adjust his treatment plan if needed.",
+    date: generateDate(1),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "hospitals"
+  },
+  
+  // Pharmacies Category
+  {
+    id: "p7m3n4q8wr",
+    subject: "Prescription Ready for Pickup",
+    sender: {
+      name: "CVS Pharmacy",
+      email: "notifications@cvs.com",
+      organization: "CVS Pharmacy"
+    },
+    recipient: "you@example.com",
+    content: "Your mother's prescription for Metformin 500mg is ready for pickup at our Beverly Hills location. Please bring a valid ID when collecting the medication. The prescription will be held for 14 days. If you have any questions about the medication or need delivery options, please call us at (555) 123-4567.",
+    date: generateDate(2),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "pharmacies"
+  },
+  
   // Senior Living Category
   {
     id: "ryoncku57t", // This ID matches sample attachments
