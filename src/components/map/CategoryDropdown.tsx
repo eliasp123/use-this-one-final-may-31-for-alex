@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -50,7 +49,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
   // Organized category groups for vertical layout (3 categories per column)
   const categoryGroups = [
-    ['elder-law-attorneys', 'other-professionals', 'paying-for-care'],
+    ['elder-law-attorneys', 'professionals', 'paying-for-care'],
     ['home-care', 'physical-therapy', 'senior-living'],
     ['government-va', 'hospitals', 'pharmacies']
   ];
