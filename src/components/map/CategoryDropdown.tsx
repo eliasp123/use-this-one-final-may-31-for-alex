@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -140,7 +141,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const handleSelectAllClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Select all clicked');
+    console.log('Select all clicked, current state:', { selectedCategories, allCategoriesSelected });
     onSelectAll();
   };
 
@@ -223,16 +224,15 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
-              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
+              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer">
                 <div
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 flex-1"
                   onClick={handleSelectAllClick}
                 >
                   <Checkbox
                     checked={allCategoriesSelected}
                     onCheckedChange={onSelectAll}
                     className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
-                    onClick={(e) => e.stopPropagation()}
                   />
                   <span className="text-sm font-medium">
                     {allCategoriesSelected ? 'Deselect all categories' : 'Or select all categories'}

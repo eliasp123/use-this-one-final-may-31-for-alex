@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -109,7 +108,18 @@ const CaregiverMap = () => {
   };
 
   const handleSelectAllCategories = () => {
-    setSelectedCategories(categories.map(cat => cat.id));
+    console.log('handleSelectAllCategories called');
+    setSelectedCategories(prev => {
+      const allCategoryIds = categories.map(cat => cat.id);
+      // If all categories are selected, deselect all. Otherwise, select all.
+      if (prev.length === allCategoryIds.length) {
+        console.log('Deselecting all categories');
+        return [];
+      } else {
+        console.log('Selecting all categories');
+        return allCategoryIds;
+      }
+    });
   };
 
   const handleLocationSelect = (locationId: string) => {
