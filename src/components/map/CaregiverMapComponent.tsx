@@ -1,5 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface Location {
   id: string;
@@ -31,48 +33,92 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
   zoom
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   useEffect(() => {
-    // This would be where you'd initialize your map library (Google Maps, Mapbox, etc.)
-    // For now, we'll just log the props to show the component is working
-    console.log('Map component mounted with:', {
-      locations: locations.length,
-      selectedLocation,
-      center,
-      zoom
+    if (!mapRef.current) return;
+
+    // Set Mapbox access token
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZWxpYXNwMTIzIiwiYSI6ImNtOHFjdXl5eDBqaTkybXEyMGVvaWFsdzIifQ.dg0YQHjrTHMrobBHP35KJQ';
+
+    // Initialize map
+    map.current = new mapboxgl.Map({
+      container: mapRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [center.lng, center.lat],
+      zoom: zoom
     });
-  }, [locations, selectedLocation, center, zoom]);
+
+    // Add navigation controls
+    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    return () => {
+      map.current?.remove();
+    };
+  }, []);
+
+  // Update map center and zoom when props change
+  useEffect(() => {
+    if (map.current) {
+      map.current.easeTo({
+        center: [center.lng, center.lat],
+        zoom: zoom,
+        duration: 1000
+      });
+    }
+  }, [center, zoom]);
+
+  // Update markers when locations change
+  useEffect(() => {
+    if (!map.current) return;
+
+    // Clear existing markers
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+
+    // Add new markers
+    locations.forEach(location => {
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.backgroundColor = selectedLocation === location.id ? '#3B82F6' : '#EF4444';
+      el.style.width = '20px';
+      el.style.height = '20px';
+      el.style.borderRadius = '50%';
+      el.style.cursor = 'pointer';
+      el.style.border = '2px solid white';
+      el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([location.lng, location.lat])
+        .addTo(map.current!);
+
+      // Add click handler
+      el.addEventListener('click', () => {
+        onLocationSelect(location.id);
+      });
+
+      // Add popup
+      const popup = new mapboxgl.Popup({ offset: 25 })
+        .setHTML(`
+          <div style="padding: 8px;">
+            <h3 style="margin: 0 0 4px 0; font-weight: bold; font-size: 14px;">${location.name}</h3>
+            <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${location.address}</p>
+            <p style="margin: 0; font-size: 12px; color: #666;">${location.phone}</p>
+          </div>
+        `);
+
+      marker.setPopup(popup);
+      markersRef.current.push(marker);
+    });
+  }, [locations, selectedLocation, onLocationSelect]);
 
   return (
     <div className="w-full h-full bg-gray-100 rounded-lg border border-gray-200 relative">
       <div 
         ref={mapRef}
-        className="w-full h-full rounded-lg bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center"
-      >
-        <div className="text-center p-8">
-          <div className="text-4xl mb-4">🗺️</div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">Interactive Map</h3>
-          <p className="text-gray-500 text-sm">
-            Map integration ready - connect your preferred map service
-          </p>
-          <div className="mt-4 text-xs text-gray-400">
-            Center: {center.lat.toFixed(4)}, {center.lng.toFixed(4)} | Zoom: {zoom}
-          </div>
-          <div className="mt-2 text-xs text-gray-400">
-            Showing {locations.length} locations
-          </div>
-        </div>
-      </div>
-      
-      {/* Map controls would go here */}
-      <div className="absolute top-4 right-4 space-y-2">
-        <button className="bg-white p-2 rounded-lg shadow-md border border-gray-200 hover:bg-gray-50">
-          <span className="text-lg">🔍</span>
-        </button>
-        <button className="bg-white p-2 rounded-lg shadow-md border border-gray-200 hover:bg-gray-50">
-          <span className="text-lg">📍</span>
-        </button>
-      </div>
+        className="w-full h-full rounded-lg"
+      />
     </div>
   );
 };
