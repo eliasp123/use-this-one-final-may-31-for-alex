@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, MapPin, Phone, Globe } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import { useToast } from '../hooks/use-toast';
@@ -23,18 +23,20 @@ interface Category {
   id: string;
   name: string;
   color: string;
+  icon: React.ReactNode;
+  count: number;
 }
 
 const categories: Category[] = [
-  { id: 'elder-law-attorneys', name: 'Elder Law Attorneys', color: '#F59E0B' },
-  { id: 'home-care', name: 'Home Care', color: '#10B981' },
-  { id: 'government-va', name: 'Government & VA', color: '#3B82F6' },
-  { id: 'professionals', name: 'Other Professionals', color: '#6B7280' },
-  { id: 'physical-therapy', name: 'Physical Therapy', color: '#10B981' },
-  { id: 'hospitals', name: 'Hospitals', color: '#EF4444' },
-  { id: 'paying-for-care', name: 'Paying for Care', color: '#F59E0B' },
-  { id: 'senior-living', name: 'Senior Living', color: '#8B5CF6' },
-  { id: 'pharmacies', name: 'Pharmacies', color: '#EC4899' }
+  { id: 'elder-law-attorneys', name: 'Elder Law Attorneys', color: '#F59E0B', icon: <Scale className="h-5 w-5" />, count: 2 },
+  { id: 'professionals', name: 'Professionals', color: '#6B7280', icon: <Briefcase className="h-5 w-5" />, count: 2 },
+  { id: 'paying-for-care', name: 'Paying for Care', color: '#F59E0B', icon: <CreditCard className="h-5 w-5" />, count: 1 },
+  { id: 'home-care', name: 'Home Care', color: '#10B981', icon: <Home className="h-5 w-5" />, count: 2 },
+  { id: 'physical-therapy', name: 'Physical Therapy', color: '#10B981', icon: <Activity className="h-5 w-5" />, count: 2 },
+  { id: 'senior-living', name: 'Senior Living', color: '#8B5CF6', icon: <Building2 className="h-5 w-5" />, count: 2 },
+  { id: 'government-va', name: 'Government & VA', color: '#3B82F6', icon: <Building className="h-5 w-5" />, count: 2 },
+  { id: 'hospitals', name: 'Hospitals', color: '#EF4444', icon: <Cross className="h-5 w-5" />, count: 1 },
+  { id: 'pharmacies', name: 'Pharmacies', color: '#EC4899', icon: <Pill className="h-5 w-5" />, count: 3 }
 ];
 
 // Sample data matching the reference
@@ -147,32 +149,52 @@ const CaregiverMap = () => {
 
       {/* Category Filters */}
       <div className="bg-white px-6 py-4 border-b border-gray-200">
-        <div className="bg-teal-700 rounded-lg p-4">
-          <div className="flex flex-wrap gap-3">
+        <div className="bg-teal-700 rounded-lg p-6">
+          <div className="grid grid-cols-3 gap-4">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => handleCategoryToggle(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                   selectedCategories.includes(category.id)
-                    ? 'bg-white text-teal-700'
-                    : 'text-white hover:bg-teal-600'
+                    ? 'bg-white text-teal-700 shadow-md'
+                    : 'text-white hover:bg-teal-600 hover:bg-opacity-50'
                 }`}
               >
+                <div className="flex items-center gap-2 flex-1">
+                  <div 
+                    className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0" 
+                    style={{ 
+                      backgroundColor: selectedCategories.includes(category.id) ? category.color : 'rgba(255,255,255,0.2)',
+                      filter: 'brightness(1.2) saturate(1.3)'
+                    }}
+                  >
+                    {React.cloneElement(category.icon as React.ReactElement, {
+                      className: `h-4 w-4 ${selectedCategories.includes(category.id) ? 'text-white' : 'text-white'}`
+                    })}
+                  </div>
+                  <span className="text-left leading-tight">{category.name}</span>
+                </div>
                 <div 
-                  className="w-3 h-3 rounded-full" 
-                  style={{ backgroundColor: category.color }}
-                />
-                {category.name}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    selectedCategories.includes(category.id) ? 'text-white' : 'text-teal-700'
+                  }`}
+                  style={{ 
+                    backgroundColor: selectedCategories.includes(category.id) ? category.color : 'white',
+                    filter: 'brightness(1.1) saturate(1.2)'
+                  }}
+                >
+                  {category.count}
+                </div>
               </button>
             ))}
           </div>
           
           {selectedCategories.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-4 pt-4 border-t border-teal-600">
               <button
                 onClick={() => setSelectedCategories([])}
-                className="bg-white text-teal-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+                className="bg-white text-teal-700 px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
               >
                 Or select all categories
               </button>
