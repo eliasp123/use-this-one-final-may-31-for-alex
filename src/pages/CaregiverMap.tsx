@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
+import CategoryDropdown from '../components/map/CategoryDropdown';
 import { useToast } from '../hooks/use-toast';
 
 interface Location {
@@ -106,6 +107,10 @@ const CaregiverMap = () => {
     });
   };
 
+  const handleSelectAllCategories = () => {
+    setSelectedCategories(categories.map(cat => cat.id));
+  };
+
   const handleLocationSelect = (locationId: string) => {
     setSelectedLocation(locationId);
     const location = locations.find(loc => loc.id === locationId);
@@ -132,63 +137,16 @@ const CaregiverMap = () => {
         <h1 className="text-xl font-medium">Care Resources Map</h1>
       </div>
 
-      {/* Search Bar */}
+      {/* Search Bar with Dropdown */}
       <div className="bg-white px-6 py-4 border-b border-gray-200">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={selectedCategories.length > 0 ? `${selectedCategories.length} categories selected - search or select more` : "Show me Gov"}
-            className="w-full h-12 pl-12 pr-4 text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-          />
-        </div>
-      </div>
-
-      {/* Category Filters - Simple List */}
-      <div className="bg-white px-6 py-4 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 gap-3">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryToggle(category.id)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left ${
-                  selectedCategories.includes(category.id)
-                    ? 'text-white shadow-md'
-                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                }`}
-                style={{
-                  backgroundColor: selectedCategories.includes(category.id) ? category.color : undefined
-                }}
-              >
-                <div 
-                  className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" 
-                  style={{ 
-                    backgroundColor: selectedCategories.includes(category.id) ? 'rgba(255,255,255,0.3)' : category.color
-                  }}
-                >
-                  {React.cloneElement(category.icon as React.ReactElement, {
-                    className: `h-2.5 w-2.5 text-white`
-                  })}
-                </div>
-                <span className="flex-1">{category.name}</span>
-              </button>
-            ))}
-          </div>
-          
-          {selectedCategories.length > 0 && (
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setSelectedCategories([])}
-                className="text-teal-600 hover:text-teal-700 text-sm font-medium"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
-        </div>
+        <CategoryDropdown
+          categories={categories}
+          selectedCategories={selectedCategories}
+          onCategoryToggle={handleCategoryToggle}
+          onSelectAll={handleSelectAllCategories}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
       </div>
 
       {/* Main Content */}
