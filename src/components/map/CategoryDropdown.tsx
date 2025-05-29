@@ -96,12 +96,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                 let deleteIndex = fullText.length;
                 
                 // Deleting phase
-                const deleteInterval = setInterval(() => {
+                const deleteOutInterval = setInterval(() => {
                   if (deleteIndex > 0) {
                     setPlaceholderText(fullText.slice(0, deleteIndex - 1));
                     deleteIndex--;
                   } else {
-                    clearInterval(deleteInterval);
+                    clearInterval(deleteOutInterval);
                     
                     // Move to next category and start again
                     setTimeout(() => {
@@ -134,11 +134,22 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     // Don't close dropdown immediately to allow category clicks
   };
 
-  const handleCategorySelect = (categoryId: string) => {
+  const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Category clicked:', categoryId);
     onCategoryToggle(categoryId);
   };
 
-  const handleSelectAllToggle = () => {
+  const handleCheckboxChange = (categoryId: string) => {
+    console.log('Checkbox changed:', categoryId);
+    onCategoryToggle(categoryId);
+  };
+
+  const handleSelectAllClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Select all clicked');
     onSelectAll();
   };
 
@@ -179,13 +190,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
               {categories.map((category) => (
                 <div
                   key={category.id}
-                  onClick={() => handleCategorySelect(category.id)}
                   className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
+                  onClick={(e) => handleCategoryClick(category.id, e)}
                 >
                   <Checkbox
                     checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={() => handleCategorySelect(category.id)}
+                    onCheckedChange={() => handleCheckboxChange(category.id)}
                     className="flex-shrink-0"
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <div 
                     className="flex-shrink-0 p-1 rounded"
@@ -201,13 +213,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             {/* Select All Button */}
             <div className="border-t border-gray-200 pt-3">
               <div
-                onClick={handleSelectAllToggle}
                 className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer"
+                onClick={handleSelectAllClick}
               >
                 <Checkbox
                   checked={selectedCategories.length === categories.length}
-                  onCheckedChange={handleSelectAllToggle}
+                  onCheckedChange={onSelectAll}
                   className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
+                  onClick={(e) => e.stopPropagation()}
                 />
                 <span className="text-sm font-medium">Or select all categories</span>
               </div>
