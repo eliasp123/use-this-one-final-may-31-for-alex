@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -142,12 +140,12 @@ const CaregiverMap = () => {
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
       <div className="bg-teal-700 text-white px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="text-base font-normal flex items-center">
+        <div className="flex items-center justify-between h-8">
+          <div className="text-base font-normal flex items-center h-full">
             Search Places or Care Categories Below
           </div>
           
-          <div className="flex items-center [&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200">
+          <div className="flex items-center h-full [&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200">
             <IndexActionButtons
               onNewEmail={() => {
                 navigate('/');
@@ -261,4 +259,3 @@ const CaregiverMap = () => {
 };
 
 export default CaregiverMap;
-
