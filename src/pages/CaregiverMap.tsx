@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
+import IndexActionButtons from './IndexActionButtons';
 import { useToast } from '../hooks/use-toast';
 
 interface Location {
@@ -138,19 +140,24 @@ const CaregiverMap = () => {
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-teal-700 text-white px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/')}
-            className="p-1 hover:bg-teal-600 rounded transition-colors"
-          >
-            <span className="text-base font-normal">Search Places or Care Categories Below</span>
-          </button>
-        </div>
-        
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-          <span className="text-base font-normal">Back to Communication Hub</span>
-          <ArrowRight className="h-4 w-4" />
+      <div className="bg-teal-700 text-white px-6 py-4 flex items-center justify-center">
+        <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200">
+          <IndexActionButtons
+            onNewEmail={() => {
+              navigate('/');
+              // This will trigger the compose functionality on the main page
+            }}
+            onViewDocuments={() => navigate('/documents')}
+            onCalendarClick={() => {
+              navigate('/');
+              setTimeout(() => {
+                const calendarSection = document.getElementById('calendar-section');
+                if (calendarSection) {
+                  calendarSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }, 100);
+            }}
+          />
         </div>
       </div>
 
