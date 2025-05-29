@@ -32,21 +32,28 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Category icon mapping
+  // Category icon mapping with background colors
   const getCategoryIcon = (categoryId: string) => {
-    const iconMap: Record<string, React.ReactNode> = {
-      'elder-law-attorneys': <Scale className="h-4 w-4" />,
-      'professionals': <Briefcase className="h-4 w-4" />,
-      'paying-for-care': <CreditCard className="h-4 w-4" />,
-      'home-care': <Home className="h-4 w-4" />,
-      'physical-therapy': <Activity className="h-4 w-4" />,
-      'senior-living': <Building2 className="h-4 w-4" />,
-      'government-va': <Building className="h-4 w-4" />,
-      'hospitals': <Cross className="h-4 w-4" />,
-      'pharmacies': <Pill className="h-4 w-4" />
+    const iconMap: Record<string, { icon: React.ReactNode; bgColor: string }> = {
+      'elder-law-attorneys': { icon: <Scale className="h-4 w-4" />, bgColor: '#F59E0B' },
+      'professionals': { icon: <Briefcase className="h-4 w-4" />, bgColor: '#6B7280' },
+      'paying-for-care': { icon: <CreditCard className="h-4 w-4" />, bgColor: '#F59E0B' },
+      'home-care': { icon: <Home className="h-4 w-4" />, bgColor: '#10B981' },
+      'physical-therapy': { icon: <Activity className="h-4 w-4" />, bgColor: '#10B981' },
+      'senior-living': { icon: <Building2 className="h-4 w-4" />, bgColor: '#8B5CF6' },
+      'government-va': { icon: <Building className="h-4 w-4" />, bgColor: '#3B82F6' },
+      'hospitals': { icon: <Cross className="h-4 w-4" />, bgColor: '#EF4444' },
+      'pharmacies': { icon: <Pill className="h-4 w-4" />, bgColor: '#EC4899' }
     };
-    return iconMap[categoryId] || <Home className="h-4 w-4" />;
+    return iconMap[categoryId] || { icon: <Home className="h-4 w-4" />, bgColor: '#6B7280' };
   };
+
+  // Organized category order for 3x3 grid
+  const categoryOrder = [
+    'elder-law-attorneys', 'professionals', 'paying-for-care',
+    'home-care', 'physical-therapy', 'senior-living', 
+    'government-va', 'hospitals', 'pharmacies'
+  ];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -60,7 +67,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Enhanced typewriter effect for cycling through category names
+  // Simplified typewriter effect without backspacing
   const [placeholderText, setPlaceholderText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
@@ -92,24 +99,13 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
               if (fadeOpacity <= 0) {
                 clearInterval(fadeInterval);
                 setOpacity(1);
+                setPlaceholderText('');
                 
-                let deleteIndex = fullText.length;
-                
-                // Deleting phase
-                const deleteOutInterval = setInterval(() => {
-                  if (deleteIndex > 0) {
-                    setPlaceholderText(fullText.slice(0, deleteIndex - 1));
-                    deleteIndex--;
-                  } else {
-                    clearInterval(deleteOutInterval);
-                    
-                    // Move to next category and start again
-                    setTimeout(() => {
-                      setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
-                      setIsTyping(false);
-                    }, 300);
-                  }
-                }, 50);
+                // Move to next category and start again
+                setTimeout(() => {
+                  setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
+                  setIsTyping(false);
+                }, 300);
               }
             }, 100);
           }, 2000); // Wait 2 seconds before fading
@@ -153,6 +149,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     setIsDropdownOpen(false);
   };
 
+  // Get ordered categories for display
+  const orderedCategories = categoryOrder
+    .map(id => categories.find(cat => cat.id === id))
+    .filter(cat => cat !== undefined) as Category[];
+
   return (
     <div ref={dropdownRef} className="relative w-full">
       {/* Search Input */}
@@ -185,26 +186,32 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-4">
-            {/* Category Grid */}
+            {/* Category Grid - 3 columns */}
             <div className="grid grid-cols-3 gap-2 mb-4">
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-                  onClick={() => handleCategoryClick(category.id)}
-                >
-                  <Checkbox
-                    checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={() => onCategoryToggle(category.id)}
-                    className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-white data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <div className="flex-shrink-0 p-1 rounded">
-                    {getCategoryIcon(category.id)}
+              {orderedCategories.map((category) => {
+                const categoryIcon = getCategoryIcon(category.id);
+                return (
+                  <div
+                    key={category.id}
+                    className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    <Checkbox
+                      checked={selectedCategories.includes(category.id)}
+                      onCheckedChange={() => onCategoryToggle(category.id)}
+                      className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-white data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <div 
+                      className="flex-shrink-0 p-1 rounded text-white"
+                      style={{ backgroundColor: categoryIcon.bgColor }}
+                    >
+                      {categoryIcon.icon}
+                    </div>
+                    <span className="text-sm text-gray-700 flex-1">{category.name}</span>
                   </div>
-                  <span className="text-sm text-gray-700 flex-1">{category.name}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Select All Button with Go Button */}
