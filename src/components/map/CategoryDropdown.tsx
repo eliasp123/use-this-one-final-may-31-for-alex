@@ -48,9 +48,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return iconMap[categoryId] || { icon: <Home className="h-4 w-4" />, bgColor: '#6B7280' };
   };
 
-  // Organized category groups for vertical layout
+  // Organized category groups for vertical layout (3 categories per column)
   const categoryGroups = [
-    ['elder-law-attorneys', 'professionals', 'paying-for-care'],
+    ['elder-law-attorneys', 'other-professionals', 'paying-for-care'],
     ['home-care', 'physical-therapy', 'senior-living'],
     ['government-va', 'hospitals', 'pharmacies']
   ];
@@ -184,8 +184,8 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       {isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-4">
-            {/* Category Groups - Vertical Layout */}
-            <div className="space-y-4 mb-4">
+            {/* Category Groups - 3 vertical columns */}
+            <div className="grid grid-cols-3 gap-4 mb-4">
               {categoryGroups.map((group, groupIndex) => (
                 <div key={groupIndex} className="space-y-2">
                   {group.map((categoryId) => {
