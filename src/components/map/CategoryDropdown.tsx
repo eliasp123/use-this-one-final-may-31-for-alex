@@ -195,7 +195,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   <Checkbox
                     checked={selectedCategories.includes(category.id)}
                     onCheckedChange={() => onCategoryToggle(category.id)}
-                    className="flex-shrink-0"
+                    className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-transparent data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <div className="flex-shrink-0 p-1 rounded">
@@ -209,6 +209,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
               <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
+                <button
+                  onClick={handleGoClick}
+                  className="text-white text-sm font-medium hover:underline"
+                >
+                  Go →
+                </button>
                 <div
                   className="flex items-center gap-2 flex-1 cursor-pointer"
                   onClick={handleSelectAllClick}
@@ -221,12 +227,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   />
                   <span className="text-sm font-medium">Or select all categories</span>
                 </div>
-                <button
-                  onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline"
-                >
-                  Go →
-                </button>
               </div>
             </div>
           </div>
