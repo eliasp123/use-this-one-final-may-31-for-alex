@@ -40,16 +40,18 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
         <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <IndexActionButtons
-        onNewEmail={() => {/* This will be handled by existing form */}}
-        onViewDocuments={() => navigate('/documents')}
-        onCalendarClick={() => {
-          const calendarSection = document.getElementById('calendar-section');
-          if (calendarSection) {
-            calendarSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
-      />
+      <div className="mb-24">
+        <IndexActionButtons
+          onNewEmail={() => {/* This will be handled by existing form */}}
+          onViewDocuments={() => navigate('/documents')}
+          onCalendarClick={() => {
+            const calendarSection = document.getElementById('calendar-section');
+            if (calendarSection) {
+              calendarSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -35,11 +35,13 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <IndexActionButtons
-        onNewEmail={onNewEmailClick}
-        onViewDocuments={() => {/* Already on documents page */}}
-        onCalendarClick={() => setShowCalendar(true)}
-      />
+      <div className="mb-24">
+        <IndexActionButtons
+          onNewEmail={onNewEmailClick}
+          onViewDocuments={() => {/* Already on documents page */}}
+          onCalendarClick={() => setShowCalendar(true)}
+        />
+      </div>
 
       {/* Calendar Popup */}
       <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
