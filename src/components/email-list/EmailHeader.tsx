@@ -20,19 +20,9 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const getStatusText = () => {
-    switch (activeTab) {
-      case 'unread': return 'Unread';
-      case 'pending': return 'Pending Reply';
-      case 'no-response': return 'No Response Yet';
-      case 'completed': return 'Completed';
-      default: return 'All';
-    }
-  };
-
   return (
     <div className="mb-6">
-      <div className="flex items-center justify-between mb-12">
+      <div className="flex items-center justify-between mb-8">
         <Button
           onClick={() => navigate('/')}
           variant="outline"
@@ -43,13 +33,10 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         </Button>
         
         <div className="text-center flex-1">
-          <h1 className="text-3xl font-light text-gray-800 mb-2">
+          <h1 className="text-3xl font-light text-gray-800">
             <span className="font-semibold text-gray-700">Conversation:</span>{' '}
             {currentCategory ? currentCategory.title : 'All Categories'}
           </h1>
-          <p className="text-gray-600">
-            {emailCount} {getStatusText().toLowerCase()} email{emailCount !== 1 ? 's' : ''}
-          </p>
         </div>
         
         <div className="w-20"></div> {/* Spacer to balance the layout */}
