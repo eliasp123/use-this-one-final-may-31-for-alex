@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Category {
   id: string;
@@ -43,38 +44,55 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Typewriter effect for placeholder
+  // Enhanced typewriter effect for cycling through category names
   const [placeholderText, setPlaceholderText] = useState('');
-  const fullPlaceholder = 'Show me Gov';
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 
   useEffect(() => {
-    if (!isFocused && !searchQuery) {
-      let i = 0;
+    if (!isFocused && !searchQuery && categories.length > 0) {
+      setIsTyping(true);
+      const currentCategory = categories[currentCategoryIndex];
+      const fullText = `Show me ${currentCategory.name}`;
+      let charIndex = 0;
+
+      // Typing phase
       const typeInterval = setInterval(() => {
-        if (i < fullPlaceholder.length) {
-          setPlaceholderText(fullPlaceholder.slice(0, i + 1));
-          i++;
+        if (charIndex < fullText.length) {
+          setPlaceholderText(fullText.slice(0, charIndex + 1));
+          charIndex++;
         } else {
           clearInterval(typeInterval);
-          // After typing, wait and then clear
+          
+          // Wait before starting to delete
           setTimeout(() => {
-            const clearIntervalId = setInterval(() => {
-              setPlaceholderText(prev => {
-                if (prev.length > 0) {
-                  return prev.slice(0, -1);
-                } else {
-                  clearInterval(clearIntervalId);
-                  return '';
-                }
-              });
+            let deleteIndex = fullText.length;
+            
+            // Deleting phase
+            const deleteInterval = setInterval(() => {
+              if (deleteIndex > 0) {
+                setPlaceholderText(fullText.slice(0, deleteIndex - 1));
+                deleteIndex--;
+              } else {
+                clearInterval(deleteInterval);
+                
+                // Move to next category and start again
+                setTimeout(() => {
+                  setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
+                  setIsTyping(false);
+                }, 300);
+              }
             }, 50);
-          }, 2000);
+          }, 2000); // Wait 2 seconds before deleting
         }
       }, 100);
 
       return () => clearInterval(typeInterval);
+    } else if (isFocused || searchQuery) {
+      setPlaceholderText('');
+      setIsTyping(false);
     }
-  }, [isFocused, searchQuery]);
+  }, [isFocused, searchQuery, categories, currentCategoryIndex, isTyping]);
 
   const handleInputFocus = () => {
     setIsFocused(true);
@@ -84,6 +102,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const handleInputBlur = () => {
     setIsFocused(false);
     // Don't close dropdown immediately to allow category clicks
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    onCategoryToggle(categoryId);
+  };
+
+  const handleSelectAllToggle = () => {
+    onSelectAll();
   };
 
   return (
@@ -106,7 +132,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         {!isFocused && !searchQuery && (
           <div className="absolute left-12 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
             {placeholderText}
-            <span className="animate-pulse">|</span>
+            <span className={`${isTyping ? 'animate-pulse' : 'opacity-0'} transition-opacity duration-300`}>|</span>
           </div>
         )}
       </div>
@@ -118,29 +144,38 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             {/* Category Grid */}
             <div className="grid grid-cols-3 gap-2 mb-4">
               {categories.map((category) => (
-                <button
+                <div
                   key={category.id}
-                  onClick={() => onCategoryToggle(category.id)}
-                  className="flex items-center gap-2 p-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                  onClick={() => handleCategorySelect(category.id)}
+                  className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
                 >
+                  <Checkbox
+                    checked={selectedCategories.includes(category.id)}
+                    onCheckedChange={() => handleCategorySelect(category.id)}
+                    className="flex-shrink-0"
+                  />
                   <div 
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: category.color }}
                   />
                   <span className="text-sm text-gray-700 flex-1">{category.name}</span>
-                </button>
+                </div>
               ))}
             </div>
 
             {/* Select All Button */}
             <div className="border-t border-gray-200 pt-3">
-              <button
-                onClick={onSelectAll}
-                className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors"
+              <div
+                onClick={handleSelectAllToggle}
+                className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer"
               >
-                <div className="w-3 h-3 bg-white rounded-sm flex-shrink-0" />
+                <Checkbox
+                  checked={selectedCategories.length === categories.length}
+                  onCheckedChange={handleSelectAllToggle}
+                  className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
+                />
                 <span className="text-sm font-medium">Or select all categories</span>
-              </button>
+              </div>
             </div>
           </div>
         </div>
