@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface Category {
@@ -32,6 +32,22 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Category icon mapping
+  const getCategoryIcon = (categoryId: string) => {
+    const iconMap: Record<string, React.ReactNode> = {
+      'elder-law-attorneys': <Scale className="h-4 w-4" />,
+      'professionals': <Briefcase className="h-4 w-4" />,
+      'paying-for-care': <CreditCard className="h-4 w-4" />,
+      'home-care': <Home className="h-4 w-4" />,
+      'physical-therapy': <Activity className="h-4 w-4" />,
+      'senior-living': <Building2 className="h-4 w-4" />,
+      'government-va': <Building className="h-4 w-4" />,
+      'hospitals': <Cross className="h-4 w-4" />,
+      'pharmacies': <Pill className="h-4 w-4" />
+    };
+    return iconMap[categoryId] || <Home className="h-4 w-4" />;
+  };
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,6 +64,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const [placeholderText, setPlaceholderText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     if (!isFocused && !searchQuery && categories.length > 0) {
@@ -64,26 +81,38 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         } else {
           clearInterval(typeInterval);
           
-          // Wait before starting to delete
+          // Wait before starting to fade out
           setTimeout(() => {
-            let deleteIndex = fullText.length;
-            
-            // Deleting phase
-            const deleteInterval = setInterval(() => {
-              if (deleteIndex > 0) {
-                setPlaceholderText(fullText.slice(0, deleteIndex - 1));
-                deleteIndex--;
-              } else {
-                clearInterval(deleteInterval);
+            // Fade out phase
+            let fadeOpacity = 1;
+            const fadeInterval = setInterval(() => {
+              fadeOpacity -= 0.1;
+              setOpacity(fadeOpacity);
+              
+              if (fadeOpacity <= 0) {
+                clearInterval(fadeInterval);
+                setOpacity(1);
                 
-                // Move to next category and start again
-                setTimeout(() => {
-                  setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
-                  setIsTyping(false);
-                }, 300);
+                let deleteIndex = fullText.length;
+                
+                // Deleting phase
+                const deleteInterval = setInterval(() => {
+                  if (deleteIndex > 0) {
+                    setPlaceholderText(fullText.slice(0, deleteIndex - 1));
+                    deleteIndex--;
+                  } else {
+                    clearInterval(deleteInterval);
+                    
+                    // Move to next category and start again
+                    setTimeout(() => {
+                      setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
+                      setIsTyping(false);
+                    }, 300);
+                  }
+                }, 50);
               }
-            }, 50);
-          }, 2000); // Wait 2 seconds before deleting
+            }, 100);
+          }, 2000); // Wait 2 seconds before fading
         }
       }, 100);
 
@@ -91,6 +120,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     } else if (isFocused || searchQuery) {
       setPlaceholderText('');
       setIsTyping(false);
+      setOpacity(1);
     }
   }, [isFocused, searchQuery, categories, currentCategoryIndex, isTyping]);
 
@@ -130,7 +160,10 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         
         {/* Typewriter placeholder */}
         {!isFocused && !searchQuery && (
-          <div className="absolute left-12 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+          <div 
+            className="absolute left-12 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none transition-opacity duration-300"
+            style={{ opacity }}
+          >
             {placeholderText}
             <span className={`${isTyping ? 'animate-pulse' : 'opacity-0'} transition-opacity duration-300`}>|</span>
           </div>
@@ -155,9 +188,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                     className="flex-shrink-0"
                   />
                   <div 
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: category.color }}
-                  />
+                    className="flex-shrink-0 p-1 rounded"
+                    style={{ backgroundColor: category.color, color: 'white' }}
+                  >
+                    {getCategoryIcon(category.id)}
+                  </div>
                   <span className="text-sm text-gray-700 flex-1">{category.name}</span>
                 </div>
               ))}
