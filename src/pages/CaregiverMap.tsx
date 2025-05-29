@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MapPin, Phone, Globe } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
