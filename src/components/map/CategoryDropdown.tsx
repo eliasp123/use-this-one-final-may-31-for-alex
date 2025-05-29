@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -28,6 +29,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -54,11 +56,17 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     ['government-va', 'hospitals', 'pharmacies']
   ];
 
+  // Filter categories based on search query for autocomplete
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
+        setShowAutocomplete(false);
       }
     };
 
@@ -66,62 +74,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Simplified typewriter effect without backspacing
-  const [placeholderText, setPlaceholderText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
-  const [opacity, setOpacity] = useState(1);
-
-  useEffect(() => {
-    if (!isFocused && !searchQuery && categories.length > 0) {
-      setIsTyping(true);
-      const currentCategory = categories[currentCategoryIndex];
-      const fullText = `Show me ${currentCategory.name}`;
-      let charIndex = 0;
-
-      // Typing phase
-      const typeInterval = setInterval(() => {
-        if (charIndex < fullText.length) {
-          setPlaceholderText(fullText.slice(0, charIndex + 1));
-          charIndex++;
-        } else {
-          clearInterval(typeInterval);
-          
-          // Wait before starting to fade out
-          setTimeout(() => {
-            // Fade out phase
-            let fadeOpacity = 1;
-            const fadeInterval = setInterval(() => {
-              fadeOpacity -= 0.1;
-              setOpacity(fadeOpacity);
-              
-              if (fadeOpacity <= 0) {
-                clearInterval(fadeInterval);
-                setOpacity(1);
-                setPlaceholderText('');
-                
-                // Move to next category and start again
-                setTimeout(() => {
-                  setCurrentCategoryIndex((prev) => (prev + 1) % categories.length);
-                  setIsTyping(false);
-                }, 300);
-              }
-            }, 100);
-          }, 2000); // Wait 2 seconds before fading
-        }
-      }, 100);
-
-      return () => clearInterval(typeInterval);
-    } else if (isFocused || searchQuery) {
-      setPlaceholderText('');
-      setIsTyping(false);
-      setOpacity(1);
-    }
-  }, [isFocused, searchQuery, categories, currentCategoryIndex, isTyping]);
-
   const handleInputFocus = () => {
     setIsFocused(true);
     setIsDropdownOpen(true);
+    if (searchQuery) {
+      setShowAutocomplete(true);
+    }
   };
 
   const handleInputBlur = () => {
@@ -129,9 +87,26 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     // Don't close dropdown immediately to allow category clicks
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    onSearchChange(value);
+    setShowAutocomplete(value.length > 0);
+    if (value.length > 0) {
+      setIsDropdownOpen(false);
+    } else {
+      setIsDropdownOpen(true);
+    }
+  };
+
   const handleCategoryClick = (categoryId: string) => {
     console.log('Category clicked:', categoryId);
     onCategoryToggle(categoryId);
+  };
+
+  const handleAutocompleteSelect = (categoryName: string) => {
+    onSearchChange(categoryName);
+    setShowAutocomplete(false);
+    setIsDropdownOpen(true);
   };
 
   // Check if all categories are selected
@@ -149,6 +124,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     event.stopPropagation();
     console.log('Go button clicked');
     setIsDropdownOpen(false);
+    setShowAutocomplete(false);
   };
 
   // Get category by ID
@@ -163,27 +139,40 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           ref={inputRef}
           type="text"
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          placeholder={isFocused || searchQuery ? '' : ''}
+          placeholder="Search categories or places..."
           className="w-full h-12 pl-12 pr-4 text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
         />
-        
-        {/* Typewriter placeholder */}
-        {!isFocused && !searchQuery && (
-          <div 
-            className="absolute left-12 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none transition-opacity duration-300"
-            style={{ opacity }}
-          >
-            {placeholderText}
-            <span className={`${isTyping ? 'animate-pulse' : 'opacity-0'} transition-opacity duration-300`}>|</span>
-          </div>
-        )}
       </div>
 
+      {/* Autocomplete Dropdown */}
+      {showAutocomplete && filteredCategories.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-40 overflow-y-auto">
+          {filteredCategories.map((category) => {
+            const categoryIcon = getCategoryIcon(category.id);
+            return (
+              <div
+                key={category.id}
+                className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                onClick={() => handleAutocompleteSelect(category.name)}
+              >
+                <div 
+                  className="flex-shrink-0 p-1 rounded text-white"
+                  style={{ backgroundColor: categoryIcon.bgColor }}
+                >
+                  {categoryIcon.icon}
+                </div>
+                <span className="text-sm text-gray-700">{category.name}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Category Dropdown */}
-      {isDropdownOpen && (
+      {isDropdownOpen && !showAutocomplete && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-4">
             {/* Category Groups - 3 vertical columns */}

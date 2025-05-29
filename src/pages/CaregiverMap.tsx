@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
@@ -145,13 +144,12 @@ const CaregiverMap = () => {
             onClick={() => navigate('/')}
             className="p-1 hover:bg-teal-600 rounded transition-colors"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <span className="text-base font-normal">Search Places or Care Categories Below</span>
           </button>
-          <h1 className="text-xl font-normal">Search Places or Care Categories Below</h1>
         </div>
         
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-          <span className="text-white font-medium">Back to Communication Hub</span>
+          <span className="text-base font-normal">Back to Communication Hub</span>
           <ArrowRight className="h-4 w-4" />
         </div>
       </div>
