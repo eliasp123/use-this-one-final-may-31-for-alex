@@ -209,12 +209,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
               <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
-                <button
-                  onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline"
-                >
-                  Go →
-                </button>
                 <div
                   className="flex items-center gap-2 flex-1 cursor-pointer"
                   onClick={handleSelectAllClick}
@@ -227,6 +221,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   />
                   <span className="text-sm font-medium">Or select all categories</span>
                 </div>
+                <button
+                  onClick={handleGoClick}
+                  className="text-white text-sm font-medium hover:underline"
+                >
+                  Go →
+                </button>
               </div>
             </div>
           </div>
