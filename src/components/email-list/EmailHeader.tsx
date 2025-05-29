@@ -42,16 +42,18 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <IndexActionButtons
-        onNewEmail={onComposeClick}
-        onViewDocuments={() => navigate('/documents')}
-        onCalendarClick={() => {
-          const calendarSection = document.getElementById('calendar-section');
-          if (calendarSection) {
-            calendarSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
-      />
+      <div className="mb-12">
+        <IndexActionButtons
+          onNewEmail={onComposeClick}
+          onViewDocuments={() => navigate('/documents')}
+          onCalendarClick={() => {
+            const calendarSection = document.getElementById('calendar-section');
+            if (calendarSection) {
+              calendarSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };
