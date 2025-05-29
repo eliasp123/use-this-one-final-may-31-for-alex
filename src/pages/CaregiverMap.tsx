@@ -1,11 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, Phone, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
-import MapSearchBar from '../components/map/MapSearchBar';
-import MapCategoryToggle from '../components/map/MapCategoryToggle';
-import LocationsList from '../components/map/LocationsList';
 import { useToast } from '../hooks/use-toast';
 
 interface Location {
@@ -22,15 +19,33 @@ interface Location {
   lng: number;
 }
 
-// Sample data
+interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
+
+const categories: Category[] = [
+  { id: 'elder-law-attorneys', name: 'Elder Law Attorneys', color: '#F59E0B' },
+  { id: 'home-care', name: 'Home Care', color: '#10B981' },
+  { id: 'government-va', name: 'Government & VA', color: '#3B82F6' },
+  { id: 'professionals', name: 'Other Professionals', color: '#6B7280' },
+  { id: 'physical-therapy', name: 'Physical Therapy', color: '#10B981' },
+  { id: 'hospitals', name: 'Hospitals', color: '#EF4444' },
+  { id: 'paying-for-care', name: 'Paying for Care', color: '#F59E0B' },
+  { id: 'senior-living', name: 'Senior Living', color: '#8B5CF6' },
+  { id: 'pharmacies', name: 'Pharmacies', color: '#EC4899' }
+];
+
+// Sample data matching the reference
 const sampleLocations: Location[] = [
   {
     id: '1',
-    name: 'City Elder Law Associates',
-    category: 'elder-law-attorneys',
-    address: '123 Main St, Downtown, CA 90210',
-    phone: '(555) 123-4567',
-    website: 'https://example.com',
+    name: 'Sunrise Senior Living Beverly Hills',
+    category: 'senior-living',
+    address: '9131 Pico Blvd, Los Angeles, CA 90035',
+    phone: '(310) 888-3751',
+    website: 'sunriseseniorliving.com',
     rating: 4.8,
     hours: 'Open until 6 PM',
     distance: '0.5 mi',
@@ -39,99 +54,55 @@ const sampleLocations: Location[] = [
   },
   {
     id: '2',
-    name: 'ComfortCare Home Services',
+    name: 'Visiting Angels Home Care',
     category: 'home-care',
-    address: '456 Oak Ave, Westside, CA 90211',
-    phone: '(555) 234-5678',
+    address: '1234 Wilshire Blvd, Los Angeles, CA 90017',
+    phone: '(323) 555-0123',
+    website: 'visitingangels.com',
     rating: 4.6,
     hours: '24/7',
     distance: '1.2 mi',
     lat: 34.0622,
     lng: -118.2537
-  },
-  {
-    id: '3',
-    name: 'Sunny Gardens Senior Living',
-    category: 'senior-living',
-    address: '789 Pine St, Eastside, CA 90212',
-    phone: '(555) 345-6789',
-    website: 'https://example.com',
-    rating: 4.9,
-    hours: 'Open until 8 PM',
-    distance: '2.1 mi',
-    lat: 34.0422,
-    lng: -118.2337
   }
 ];
 
 const CaregiverMap = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [locations, setLocations] = useState<Location[]>(sampleLocations);
-  const [isLoading, setIsLoading] = useState(false);
   const [mapCenter, setMapCenter] = useState({ lat: 34.0522, lng: -118.2437 });
   const [mapZoom, setMapZoom] = useState(12);
 
   useEffect(() => {
-    // Filter locations based on category and search
     let filtered = sampleLocations;
     
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(location => location.category === selectedCategory);
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(location => selectedCategories.includes(location.category));
     }
     
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(location =>
         location.name.toLowerCase().includes(query) ||
-        location.address.toLowerCase().includes(query) ||
-        location.category.toLowerCase().includes(query)
+        location.address.toLowerCase().includes(query)
       );
     }
     
     setLocations(filtered);
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategories, searchQuery]);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  const handleLocationRequest = () => {
-    setIsLoading(true);
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setMapCenter({ lat: latitude, lng: longitude });
-          setMapZoom(14);
-          setIsLoading(false);
-          
-          toast({
-            title: "Location Found",
-            description: "Map centered on your current location",
-          });
-        },
-        () => {
-          setIsLoading(false);
-          toast({
-            title: "Location Access Denied",
-            description: "Please enable location services or search manually",
-            variant: "destructive",
-          });
-        }
-      );
-    } else {
-      setIsLoading(false);
-      toast({
-        title: "Location Not Supported",
-        description: "Your browser doesn't support location services",
-        variant: "destructive",
-      });
-    }
+  const handleCategoryToggle = (categoryId: string) => {
+    setSelectedCategories(prev => {
+      if (prev.includes(categoryId)) {
+        return prev.filter(id => id !== categoryId);
+      } else {
+        return [...prev, categoryId];
+      }
+    });
   };
 
   const handleLocationSelect = (locationId: string) => {
@@ -143,62 +114,143 @@ const CaregiverMap = () => {
     }
   };
 
+  const getCategoryColor = (categoryId: string) => {
+    return categories.find(cat => cat.id === categoryId)?.color || '#6B7280';
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/')}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <h1 className="text-xl font-semibold text-gray-900">Find Care Providers</h1>
-          </div>
+      <div className="bg-teal-700 text-white px-6 py-4 flex items-center gap-4">
+        <button
+          onClick={() => navigate('/')}
+          className="p-1 hover:bg-teal-600 rounded transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <h1 className="text-xl font-medium">Care Resources Map</h1>
+      </div>
+
+      {/* Search Bar */}
+      <div className="bg-white px-6 py-4 border-b border-gray-200">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={selectedCategories.length > 0 ? `${selectedCategories.length} categories selected - search or select more` : "Show me Gov"}
+            className="w-full h-12 pl-12 pr-4 text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+          />
         </div>
       </div>
 
+      {/* Category Filters */}
+      <div className="bg-white px-6 py-4 border-b border-gray-200">
+        <div className="flex flex-wrap gap-3">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryToggle(category.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedCategories.includes(category.id)
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: category.color }}
+              />
+              {category.name}
+            </button>
+          ))}
+        </div>
+        
+        {selectedCategories.length > 0 && (
+          <div className="mt-3">
+            <button
+              onClick={() => setSelectedCategories([])}
+              className="bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium hover:bg-teal-800 transition-colors"
+            >
+              Or select all categories
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
-        {/* Search and Filters */}
-        <div className="mb-6 space-y-4">
-          <MapSearchBar
-            onSearch={handleSearch}
-            onLocationRequest={handleLocationRequest}
-          />
+      <div className="flex-1 flex">
+        {/* Results Sidebar */}
+        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {locations.length} location{locations.length !== 1 ? 's' : ''}
+            </h3>
+          </div>
           
-          <div className="flex justify-center">
-            <MapCategoryToggle
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-            />
+          <div className="flex-1 overflow-y-auto">
+            {locations.map((location) => (
+              <div
+                key={location.id}
+                onClick={() => handleLocationSelect(location.id)}
+                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
+                  selectedLocation === location.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div 
+                    className="w-6 h-6 rounded-sm mt-1 flex-shrink-0" 
+                    style={{ backgroundColor: getCategoryColor(location.category) }}
+                  />
+                  
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 mb-1">{location.name}</h4>
+                    <p className="text-sm text-gray-600 capitalize mb-2">{location.category.replace('-', ' ')}</p>
+                    
+                    <div className="space-y-1 text-sm text-gray-600">
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                        <span>{location.address}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 flex-shrink-0" />
+                        <span>{location.phone}</span>
+                      </div>
+                      
+                      {location.website && (
+                        <div className="flex items-center gap-2">
+                          <Globe className="h-4 w-4 flex-shrink-0" />
+                          <span className="text-blue-600">{location.website}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mt-3 flex gap-4">
+                      <button className="bg-teal-600 text-white px-4 py-1 rounded text-sm hover:bg-teal-700 transition-colors">
+                        Directions
+                      </button>
+                      <button className="bg-teal-600 text-white px-4 py-1 rounded text-sm hover:bg-teal-700 transition-colors">
+                        Call
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Map and Results */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Results List */}
-          <div className="lg:col-span-1">
-            <LocationsList
-              locations={locations}
-              selectedLocation={selectedLocation}
-              onLocationSelect={handleLocationSelect}
-              isLoading={isLoading}
-            />
-          </div>
-
-          {/* Map */}
-          <div className="lg:col-span-2 h-96 lg:h-[600px]">
-            <CaregiverMapComponent
-              locations={locations}
-              selectedLocation={selectedLocation}
-              onLocationSelect={handleLocationSelect}
-              center={mapCenter}
-              zoom={mapZoom}
-            />
-          </div>
+        {/* Map */}
+        <div className="flex-1">
+          <CaregiverMapComponent
+            locations={locations}
+            selectedLocation={selectedLocation}
+            onLocationSelect={handleLocationSelect}
+            center={mapCenter}
+            zoom={mapZoom}
+          />
         </div>
       </div>
     </div>
