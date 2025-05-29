@@ -42,7 +42,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <div className="mb-12">
+      <div className="mb-24">
         <IndexActionButtons
           onNewEmail={onComposeClick}
           onViewDocuments={() => navigate('/documents')}
