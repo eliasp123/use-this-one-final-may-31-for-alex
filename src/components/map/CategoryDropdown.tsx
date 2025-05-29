@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -231,7 +230,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                 >
                   <Checkbox
                     checked={allCategoriesSelected}
-                    onCheckedChange={onSelectAll}
                     className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
                   />
                   <span className="text-sm font-medium">
