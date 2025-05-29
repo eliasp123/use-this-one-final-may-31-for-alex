@@ -17,7 +17,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
 
   return (
     <div className="text-center mb-8 sm:mb-16">
-      <div className="flex justify-start mb-8">
+      <div className="flex items-center justify-between mb-12">
         <Button
           onClick={() => navigate('/')}
           variant="outline"
@@ -26,10 +26,14 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
+        
+        <div className="text-center flex-1">
+          <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
+          <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
+        </div>
+        
+        <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
-      
-      <h1 className="text-3xl sm:text-4xl font-light text-gray-800 mb-2 sm:mb-4">Document Hub</h1>
-      <p className="text-sm sm:text-base text-gray-600 font-light">Manage and organize your email attachments</p>
       
       <IndexActionButtons
         onNewEmail={onNewEmailClick}

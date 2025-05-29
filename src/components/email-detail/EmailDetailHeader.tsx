@@ -18,7 +18,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
   
   return (
     <div className="mb-6">
-      <div className="flex justify-start mb-8">
+      <div className="flex items-center justify-between mb-12">
         <Button
           onClick={() => navigate(-1)}
           variant="outline"
@@ -27,27 +27,29 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
+        
+        <div className="text-center flex-1">
+          <h1 className="text-3xl font-light text-gray-800 mb-2">
+            {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
+          </h1>
+          <p className="text-gray-600">
+            Email thread with {email.sender.name}
+          </p>
+        </div>
+        
+        <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-light text-gray-800 mb-2">
-          {categoryInfo ? categoryInfo.title : 'Unknown Category'} Emails
-        </h1>
-        <p className="text-gray-600">
-          Email thread with {email.sender.name}
-        </p>
-        
-        <IndexActionButtons
-          onNewEmail={() => {/* This will be handled by existing form */}}
-          onViewDocuments={() => navigate('/documents')}
-          onCalendarClick={() => {
-            const calendarSection = document.getElementById('calendar-section');
-            if (calendarSection) {
-              calendarSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-        />
-      </div>
+      <IndexActionButtons
+        onNewEmail={() => {/* This will be handled by existing form */}}
+        onViewDocuments={() => navigate('/documents')}
+        onCalendarClick={() => {
+          const calendarSection = document.getElementById('calendar-section');
+          if (calendarSection) {
+            calendarSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      />
     </div>
   );
 };

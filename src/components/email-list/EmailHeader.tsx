@@ -32,7 +32,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
 
   return (
     <div className="mb-6">
-      <div className="flex justify-start mb-8">
+      <div className="flex items-center justify-between mb-12">
         <Button
           onClick={() => navigate('/')}
           variant="outline"
@@ -41,28 +41,30 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
+        
+        <div className="text-center flex-1">
+          <h1 className="text-3xl font-light text-gray-800 mb-2">
+            <span className="font-semibold text-gray-700">Conversation:</span>{' '}
+            {currentCategory ? currentCategory.title : 'All Categories'}
+          </h1>
+          <p className="text-gray-600">
+            {emailCount} {getStatusText().toLowerCase()} email{emailCount !== 1 ? 's' : ''}
+          </p>
+        </div>
+        
+        <div className="w-20"></div> {/* Spacer to balance the layout */}
       </div>
       
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-light text-gray-800 mb-2">
-          <span className="font-semibold text-gray-700">Conversation:</span>{' '}
-          {currentCategory ? currentCategory.title : 'All Categories'}
-        </h1>
-        <p className="text-gray-600">
-          {emailCount} {getStatusText().toLowerCase()} email{emailCount !== 1 ? 's' : ''}
-        </p>
-        
-        <IndexActionButtons
-          onNewEmail={onComposeClick}
-          onViewDocuments={() => navigate('/documents')}
-          onCalendarClick={() => {
-            const calendarSection = document.getElementById('calendar-section');
-            if (calendarSection) {
-              calendarSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-        />
-      </div>
+      <IndexActionButtons
+        onNewEmail={onComposeClick}
+        onViewDocuments={() => navigate('/documents')}
+        onCalendarClick={() => {
+          const calendarSection = document.getElementById('calendar-section');
+          if (calendarSection) {
+            calendarSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      />
     </div>
   );
 };
