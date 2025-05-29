@@ -135,7 +135,7 @@ const CaregiverMap = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-xl font-medium">Care Resources Map</h1>
+        <h1 className="text-xl font-medium">Search Places or Care Categories Below</h1>
       </div>
 
       {/* Search Bar with Dropdown */}
