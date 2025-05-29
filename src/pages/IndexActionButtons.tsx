@@ -13,7 +13,7 @@ const IndexActionButtons = ({ onNewEmail, onViewDocuments, onCalendarClick }: In
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center gap-8 mt-8">
+    <div className="flex items-center justify-center gap-8">
       <button
         onClick={onNewEmail}
         className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-base font-medium underline decoration-gray-300 hover:decoration-blue-600 underline-offset-4"
