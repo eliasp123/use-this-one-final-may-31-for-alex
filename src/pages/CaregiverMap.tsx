@@ -150,56 +150,58 @@ const CaregiverMap = () => {
       {/* Category Filters */}
       <div className="bg-white px-6 py-4 border-b border-gray-200">
         <div className="bg-teal-700 rounded-lg p-6">
-          <div className="grid grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryToggle(category.id)}
-                className={`flex items-center gap-3 p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  selectedCategories.includes(category.id)
-                    ? 'bg-white text-teal-700 shadow-md'
-                    : 'text-white hover:bg-teal-600 hover:bg-opacity-50'
-                }`}
-              >
-                <div className="flex items-center gap-2 flex-1">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-3 gap-x-8 gap-y-2">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryToggle(category.id)}
+                  className={`flex items-center justify-between p-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedCategories.includes(category.id)
+                      ? 'bg-white text-teal-700 shadow-md'
+                      : 'text-white hover:bg-teal-600 hover:bg-opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" 
+                      style={{ 
+                        backgroundColor: selectedCategories.includes(category.id) ? category.color : 'rgba(255,255,255,0.3)',
+                        filter: 'brightness(1.3) saturate(1.4)'
+                      }}
+                    >
+                      {React.cloneElement(category.icon as React.ReactElement, {
+                        className: `h-3 w-3 text-white`
+                      })}
+                    </div>
+                    <span className="text-left leading-tight text-white font-semibold">{category.name}</span>
+                  </div>
                   <div 
-                    className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0" 
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ml-2 ${
+                      selectedCategories.includes(category.id) ? 'text-white' : 'text-teal-700'
+                    }`}
                     style={{ 
-                      backgroundColor: selectedCategories.includes(category.id) ? category.color : 'rgba(255,255,255,0.2)',
+                      backgroundColor: selectedCategories.includes(category.id) ? category.color : 'white',
                       filter: 'brightness(1.2) saturate(1.3)'
                     }}
                   >
-                    {React.cloneElement(category.icon as React.ReactElement, {
-                      className: `h-4 w-4 ${selectedCategories.includes(category.id) ? 'text-white' : 'text-white'}`
-                    })}
+                    {category.count}
                   </div>
-                  <span className="text-left leading-tight">{category.name}</span>
-                </div>
-                <div 
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                    selectedCategories.includes(category.id) ? 'text-white' : 'text-teal-700'
-                  }`}
-                  style={{ 
-                    backgroundColor: selectedCategories.includes(category.id) ? category.color : 'white',
-                    filter: 'brightness(1.1) saturate(1.2)'
-                  }}
-                >
-                  {category.count}
-                </div>
-              </button>
-            ))}
-          </div>
-          
-          {selectedCategories.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-teal-600">
-              <button
-                onClick={() => setSelectedCategories([])}
-                className="bg-white text-teal-700 px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
-              >
-                Or select all categories
-              </button>
+                </button>
+              ))}
             </div>
-          )}
+            
+            {selectedCategories.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-teal-600 text-center">
+                <button
+                  onClick={() => setSelectedCategories([])}
+                  className="bg-white text-teal-700 px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+                >
+                  Or select all categories
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
