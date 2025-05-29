@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -134,15 +133,8 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     // Don't close dropdown immediately to allow category clicks
   };
 
-  const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleCategoryClick = (categoryId: string) => {
     console.log('Category clicked:', categoryId);
-    onCategoryToggle(categoryId);
-  };
-
-  const handleCheckboxChange = (categoryId: string) => {
-    console.log('Checkbox changed:', categoryId);
     onCategoryToggle(categoryId);
   };
 
@@ -198,18 +190,15 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                 <div
                   key={category.id}
                   className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-                  onClick={(e) => handleCategoryClick(category.id, e)}
+                  onClick={() => handleCategoryClick(category.id)}
                 >
                   <Checkbox
                     checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={() => handleCheckboxChange(category.id)}
+                    onCheckedChange={() => onCategoryToggle(category.id)}
                     className="flex-shrink-0"
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <div 
-                    className="flex-shrink-0 p-1 rounded"
-                    style={{ backgroundColor: category.color, color: 'white' }}
-                  >
+                  <div className="flex-shrink-0 p-1 rounded">
                     {getCategoryIcon(category.id)}
                   </div>
                   <span className="text-sm text-gray-700 flex-1">{category.name}</span>
@@ -219,9 +208,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
-              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer">
+              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
                 <div
-                  className="flex items-center gap-2 flex-1"
+                  className="flex items-center gap-2 flex-1 cursor-pointer"
                   onClick={handleSelectAllClick}
                 >
                   <Checkbox
