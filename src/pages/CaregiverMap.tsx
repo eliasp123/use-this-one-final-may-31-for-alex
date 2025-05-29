@@ -147,36 +147,38 @@ const CaregiverMap = () => {
 
       {/* Category Filters */}
       <div className="bg-white px-6 py-4 border-b border-gray-200">
-        <div className="flex flex-wrap gap-3">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryToggle(category.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                selectedCategories.includes(category.id)
-                  ? 'bg-gray-800 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <div 
-                className="w-3 h-3 rounded-full" 
-                style={{ backgroundColor: category.color }}
-              />
-              {category.name}
-            </button>
-          ))}
-        </div>
-        
-        {selectedCategories.length > 0 && (
-          <div className="mt-3">
-            <button
-              onClick={() => setSelectedCategories([])}
-              className="bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium hover:bg-teal-800 transition-colors"
-            >
-              Or select all categories
-            </button>
+        <div className="bg-teal-700 rounded-lg p-4">
+          <div className="flex flex-wrap gap-3">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryToggle(category.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  selectedCategories.includes(category.id)
+                    ? 'bg-white text-teal-700'
+                    : 'text-white hover:bg-teal-600'
+                }`}
+              >
+                <div 
+                  className="w-3 h-3 rounded-full" 
+                  style={{ backgroundColor: category.color }}
+                />
+                {category.name}
+              </button>
+            ))}
           </div>
-        )}
+          
+          {selectedCategories.length > 0 && (
+            <div className="mt-3">
+              <button
+                onClick={() => setSelectedCategories([])}
+                className="bg-white text-teal-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                Or select all categories
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Main Content */}
