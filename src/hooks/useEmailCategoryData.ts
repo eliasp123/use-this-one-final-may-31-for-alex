@@ -9,6 +9,8 @@ import {
   Shield, 
   Activity, 
   CreditCard,
+  Hospital,
+  Pill,
   LucideIcon
 } from 'lucide-react';
 import { useFilteredEmailData } from './useFilteredEmailData';
@@ -34,25 +36,33 @@ export const useEmailCategoryData = () => {
     getFilteredEmailsByCategory 
   } = useFilteredEmailData();
 
-  // Memoize the email categories calculation
+  // Memoize the email categories calculation with new order
   const emailCategories = useMemo(() => {
-    // Base predefined categories - Government moved to first position
+    // Predefined categories in the new order from your image
     const predefinedCategories = [
       {
-        id: 'government',
-        title: 'Government',
-        icon: Building,
-        color: 'from-blue-400 to-blue-600',
-        bgColor: 'bg-blue-100',
-        textColor: 'text-blue-600'
+        id: 'attorneys',
+        title: 'Elder Law Attorneys',
+        icon: Scale,
+        color: 'from-amber-400 to-orange-500',
+        bgColor: 'bg-amber-100',
+        textColor: 'text-amber-600'
       },
       {
-        id: 'senior-living',
-        title: 'Senior Living',
-        icon: Building2,
-        color: 'from-purple-400 to-purple-500',
-        bgColor: 'bg-purple-100',
-        textColor: 'text-purple-600'
+        id: 'other-professionals',
+        title: 'Professionals',
+        icon: Briefcase,
+        color: 'from-gray-400 to-gray-600',
+        bgColor: 'bg-gray-100',
+        textColor: 'text-gray-600'
+      },
+      {
+        id: 'paying-for-care',
+        title: 'Paying for Care',
+        icon: CreditCard,
+        color: 'from-orange-400 to-orange-600',
+        bgColor: 'bg-orange-100',
+        textColor: 'text-orange-600'
       },
       {
         id: 'home-care',
@@ -63,30 +73,6 @@ export const useEmailCategoryData = () => {
         textColor: 'text-teal-600'
       },
       {
-        id: 'attorneys',
-        title: 'Attorneys',
-        icon: Scale,
-        color: 'from-red-400 to-red-600',
-        bgColor: 'bg-red-100',
-        textColor: 'text-red-600'
-      },
-      {
-        id: 'other-professionals',
-        title: 'Other Professionals',
-        icon: Briefcase,
-        color: 'from-gray-400 to-gray-600',
-        bgColor: 'bg-gray-100',
-        textColor: 'text-gray-600'
-      },
-      {
-        id: 'va',
-        title: 'VA',
-        icon: Shield,
-        color: 'from-indigo-400 to-indigo-600',
-        bgColor: 'bg-indigo-100',
-        textColor: 'text-indigo-600'
-      },
-      {
         id: 'physical-therapy',
         title: 'Physical Therapy',
         icon: Activity,
@@ -95,12 +81,36 @@ export const useEmailCategoryData = () => {
         textColor: 'text-teal-600'
       },
       {
-        id: 'paying-for-care',
-        title: 'Paying for Care',
-        icon: CreditCard,
-        color: 'from-orange-400 to-orange-600',
-        bgColor: 'bg-orange-100',
-        textColor: 'text-orange-600'
+        id: 'senior-living',
+        title: 'Senior Living',
+        icon: Building2,
+        color: 'from-purple-400 to-purple-500',
+        bgColor: 'bg-purple-100',
+        textColor: 'text-purple-600'
+      },
+      {
+        id: 'government-va',
+        title: 'Government & VA',
+        icon: Building,
+        color: 'from-blue-400 to-blue-600',
+        bgColor: 'bg-blue-100',
+        textColor: 'text-blue-600'
+      },
+      {
+        id: 'hospitals',
+        title: 'Hospitals',
+        icon: Hospital,
+        color: 'from-red-400 to-red-600',
+        bgColor: 'bg-red-100',
+        textColor: 'text-red-600'
+      },
+      {
+        id: 'pharmacies',
+        title: 'Pharmacies',
+        icon: Pill,
+        color: 'from-pink-400 to-pink-600',
+        bgColor: 'bg-pink-100',
+        textColor: 'text-pink-600'
       }
     ];
 
