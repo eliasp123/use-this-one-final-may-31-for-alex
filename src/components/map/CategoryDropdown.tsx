@@ -209,9 +209,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
             {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
-              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
+              <div className="w-full flex items-center p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors">
                 <div
-                  className="flex items-center gap-2 flex-1 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer"
                   onClick={handleSelectAllClick}
                 >
                   <Checkbox
@@ -222,9 +222,10 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   />
                   <span className="text-sm font-medium">Or select all categories</span>
                 </div>
+                <span className="mx-4 text-white">|</span>
                 <button
                   onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline mr-2"
+                  className="text-white text-sm font-medium hover:underline"
                 >
                   Go →
                 </button>
