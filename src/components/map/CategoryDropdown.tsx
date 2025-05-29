@@ -134,6 +134,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     onCategoryToggle(categoryId);
   };
 
+  // Check if all categories are selected
+  const allCategoriesSelected = selectedCategories.length === categories.length;
+
   const handleSelectAllClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -226,12 +229,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   onClick={handleSelectAllClick}
                 >
                   <Checkbox
-                    checked={selectedCategories.length === categories.length}
+                    checked={allCategoriesSelected}
                     onCheckedChange={onSelectAll}
                     className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <span className="text-sm font-medium">Or select all categories</span>
+                  <span className="text-sm font-medium">
+                    {allCategoriesSelected ? 'Deselect all categories' : 'Or select all categories'}
+                  </span>
                 </div>
                 <span className="text-white">|</span>
                 <button
