@@ -128,14 +128,20 @@ const CaregiverMap = () => {
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-teal-700 text-white px-6 py-4 flex items-center gap-4">
-        <button
-          onClick={() => navigate('/')}
-          className="p-1 hover:bg-teal-600 rounded transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <h1 className="text-xl font-normal">Search Places or Care Categories Below</h1>
+      <div className="bg-teal-700 text-white px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/')}
+            className="p-1 hover:bg-teal-600 rounded transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <h1 className="text-xl font-normal">Search Places or Care Categories Below</h1>
+        </div>
+        
+        <div className="text-center">
+          <span className="text-white font-medium">Back to Communication Hub</span>
+        </div>
       </div>
 
       {/* Search Bar with Dropdown */}
