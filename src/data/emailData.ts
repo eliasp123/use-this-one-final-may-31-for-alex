@@ -138,7 +138,7 @@ export const mockEmails: EmailData[] = [
     category: "home-care"
   },
   
-  // Government Category (formerly Federal Benefits)
+  // Government & VA Category (formerly separate categories)
   {
     id: "byff0azjme", // This ID matches sample attachments
     subject: "Medicare Application Status Update",
@@ -154,7 +154,7 @@ export const mockEmails: EmailData[] = [
     replied: false,
     responseReceived: true,
     private: false,
-    category: "government"
+    category: "government-va"
   },
   {
     id: "l8ob8e8p1k", // This ID matches sample attachments
@@ -171,7 +171,7 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: false,
     private: false,
-    category: "government"
+    category: "government-va"
   },
   {
     id: "av13yvz2vf", // This ID matches sample attachments
@@ -188,10 +188,8 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: true,
     private: false,
-    category: "government"
+    category: "government-va"
   },
-  
-  // Government Category (formerly Local Government)
   {
     id: "h8wj2ya19p",
     subject: "Property Tax Exemption Approval",
@@ -207,7 +205,7 @@ export const mockEmails: EmailData[] = [
     replied: false,
     responseReceived: true,
     private: false,
-    category: "government"
+    category: "government-va"
   },
   {
     id: "s88pqu6xed",
@@ -224,7 +222,58 @@ export const mockEmails: EmailData[] = [
     replied: true,
     responseReceived: false,
     private: false,
-    category: "government"
+    category: "government-va"
+  },
+  {
+    id: "48cbug196x",
+    subject: "VA Benefits Eligibility Review",
+    sender: {
+      name: "Thomas Reynolds",
+      email: "treynolds@va.gov",
+      organization: "Department of Veterans Affairs"
+    },
+    recipient: "you@example.com",
+    content: "Based on our recent assessment, your father may qualify for additional VA healthcare benefits. We'd like to schedule a comprehensive review of his service record and medical needs. Would next Tuesday at 10 AM work for a virtual appointment?",
+    date: generateDate(3),
+    read: false,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "government-va"
+  },
+  {
+    id: "30rzrypb3t",
+    subject: "Aid & Attendance Benefit Documentation",
+    sender: {
+      name: "Maria Sanchez",
+      email: "msanchez@va.gov",
+      organization: "VA Benefits Administration"
+    },
+    recipient: "you@example.com",
+    content: "Thank you for submitting your application for the VA Aid & Attendance benefit. We require additional documentation regarding your mother's daily care needs. I've attached the necessary forms that need to be completed by her primary caregiver.",
+    date: generateDate(7),
+    read: true,
+    replied: true,
+    responseReceived: false,
+    private: false,
+    category: "government-va"
+  },
+  {
+    id: "wvebdtgqk5",
+    subject: "VA Caregiver Support Program",
+    sender: {
+      name: "James Wilson",
+      email: "jwilson@va.gov",
+      organization: "VA Caregiver Support"
+    },
+    recipient: "you@example.com",
+    content: "Following our conversation about respite care options, I wanted to share information about our Caregiver Support Program. This program offers training, resources, and a monthly stipend for eligible veterans and their caregivers. Let me know if you'd like to discuss how to apply.",
+    date: generateDate(14),
+    read: true,
+    replied: false,
+    responseReceived: true,
+    private: false,
+    category: "government-va"
   },
   
   // Attorneys Category
@@ -331,59 +380,6 @@ export const mockEmails: EmailData[] = [
     responseReceived: true,
     private: false,
     category: "other-professionals"
-  },
-  
-  // VA (Veterans Affairs) Category
-  {
-    id: "48cbug196x",
-    subject: "VA Benefits Eligibility Review",
-    sender: {
-      name: "Thomas Reynolds",
-      email: "treynolds@va.gov",
-      organization: "Department of Veterans Affairs"
-    },
-    recipient: "you@example.com",
-    content: "Based on our recent assessment, your father may qualify for additional VA healthcare benefits. We'd like to schedule a comprehensive review of his service record and medical needs. Would next Tuesday at 10 AM work for a virtual appointment?",
-    date: generateDate(3),
-    read: false,
-    replied: false,
-    responseReceived: true,
-    private: false,
-    category: "va"
-  },
-  {
-    id: "30rzrypb3t",
-    subject: "Aid & Attendance Benefit Documentation",
-    sender: {
-      name: "Maria Sanchez",
-      email: "msanchez@va.gov",
-      organization: "VA Benefits Administration"
-    },
-    recipient: "you@example.com",
-    content: "Thank you for submitting your application for the VA Aid & Attendance benefit. We require additional documentation regarding your mother's daily care needs. I've attached the necessary forms that need to be completed by her primary caregiver.",
-    date: generateDate(7),
-    read: true,
-    replied: true,
-    responseReceived: false,
-    private: false,
-    category: "va"
-  },
-  {
-    id: "wvebdtgqk5",
-    subject: "VA Caregiver Support Program",
-    sender: {
-      name: "James Wilson",
-      email: "jwilson@va.gov",
-      organization: "VA Caregiver Support"
-    },
-    recipient: "you@example.com",
-    content: "Following our conversation about respite care options, I wanted to share information about our Caregiver Support Program. This program offers training, resources, and a monthly stipend for eligible veterans and their caregivers. Let me know if you'd like to discuss how to apply.",
-    date: generateDate(14),
-    read: true,
-    replied: false,
-    responseReceived: true,
-    private: false,
-    category: "va"
   },
   
   // Physical Therapy Category

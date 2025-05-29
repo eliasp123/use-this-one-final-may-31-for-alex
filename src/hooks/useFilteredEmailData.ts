@@ -1,4 +1,5 @@
 
+
 import { useMemo } from 'react';
 import { useUserRole } from './useUserRole';
 import { EmailData } from '../types/email';
@@ -34,52 +35,24 @@ export const useFilteredEmailData = () => {
     ] as const;
 
     return categories.reduce((acc, category) => {
-      // For government-va, combine government and va emails
-      if (category === 'government-va') {
-        const governmentEmails = getEmailsByCategory('government');
-        const vaEmails = getEmailsByCategory('va');
-        acc[category] = filterPrivateEmails([...governmentEmails, ...vaEmails]);
-      } else {
-        acc[category] = filterPrivateEmails(getEmailsByCategory(category));
-      }
+      acc[category] = filterPrivateEmails(getEmailsByCategory(category));
       return acc;
     }, {} as Record<string, EmailData[]>);
   }, [userRole]);
 
   const getFilteredEmailsByCategory = (category: string) => {
-    // Handle the combined government-va category
-    if (category === 'government-va') {
-      const governmentEmails = getEmailsByCategory('government');
-      const vaEmails = getEmailsByCategory('va');
-      return filterPrivateEmails([...governmentEmails, ...vaEmails]);
-    }
     return filterPrivateEmails(getEmailsByCategory(category));
   };
 
   const getFilteredUnreadEmails = (category?: string) => {
-    if (category === 'government-va') {
-      const governmentUnread = getUnreadEmails('government');
-      const vaUnread = getUnreadEmails('va');
-      return filterPrivateEmails([...governmentUnread, ...vaUnread]);
-    }
     return filterPrivateEmails(getUnreadEmails(category));
   };
 
   const getFilteredPendingEmails = (category?: string) => {
-    if (category === 'government-va') {
-      const governmentPending = getPendingEmails('government');
-      const vaPending = getPendingEmails('va');
-      return filterPrivateEmails([...governmentPending, ...vaPending]);
-    }
     return filterPrivateEmails(getPendingEmails(category));
   };
 
   const getFilteredUnrespondedEmails = (category?: string) => {
-    if (category === 'government-va') {
-      const governmentUnresponded = getUnrespondedEmails('government');
-      const vaUnresponded = getUnrespondedEmails('va');
-      return filterPrivateEmails([...governmentUnresponded, ...vaUnresponded]);
-    }
     return filterPrivateEmails(getUnrespondedEmails(category));
   };
 
@@ -101,3 +74,4 @@ export const useFilteredEmailData = () => {
     getFilteredEmailData
   };
 };
+
