@@ -153,6 +153,13 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     onSelectAll();
   };
 
+  const handleGoClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Go button clicked');
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div ref={dropdownRef} className="relative w-full">
       {/* Search Input */}
@@ -210,19 +217,27 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
               ))}
             </div>
 
-            {/* Select All Button */}
+            {/* Select All Button with Go Button */}
             <div className="border-t border-gray-200 pt-3">
-              <div
-                className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer"
-                onClick={handleSelectAllClick}
-              >
-                <Checkbox
-                  checked={selectedCategories.length === categories.length}
-                  onCheckedChange={onSelectAll}
-                  className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <span className="text-sm font-medium">Or select all categories</span>
+              <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer">
+                <div
+                  className="flex items-center gap-2 flex-1"
+                  onClick={handleSelectAllClick}
+                >
+                  <Checkbox
+                    checked={selectedCategories.length === categories.length}
+                    onCheckedChange={onSelectAll}
+                    className="flex-shrink-0 border-white data-[state=checked]:bg-white data-[state=checked]:text-teal-700"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <span className="text-sm font-medium">Or select all categories</span>
+                </div>
+                <button
+                  onClick={handleGoClick}
+                  className="text-white text-sm font-medium hover:underline"
+                >
+                  Go →
+                </button>
               </div>
             </div>
           </div>
