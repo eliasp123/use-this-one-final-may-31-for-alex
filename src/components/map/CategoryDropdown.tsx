@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -195,7 +196,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                   <Checkbox
                     checked={selectedCategories.includes(category.id)}
                     onCheckedChange={() => onCategoryToggle(category.id)}
-                    className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-transparent data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
+                    className="flex-shrink-0 border-gray-300 data-[state=checked]:bg-white data-[state=checked]:border-gray-400 data-[state=checked]:text-gray-700"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <div className="flex-shrink-0 p-1 rounded">
@@ -223,7 +224,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                 </div>
                 <button
                   onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline"
+                  className="text-white text-sm font-medium hover:underline mr-2"
                 >
                   Go →
                 </button>
