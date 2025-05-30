@@ -106,11 +106,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       onMouseLeave={onMouseLeave}
     >
       {isAppointmentCategory && hoveredDate ? (
-        // Appointment-specific design with reduced white space
+        // Appointment-specific design with minimal white space
         <>
-          {/* Header with date and count - reduced padding */}
-          <div className="p-3 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-1">
+          {/* Header with date and count - minimal padding */}
+          <div className="p-2 border-b border-gray-200">
+            <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h3 className="text-sm font-bold text-gray-800">
                   {formatDateHeader(hoveredDate)}
@@ -128,8 +128,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Add Appointment Button - reduced padding */}
-          <div className="p-2 bg-orange-50 border-b border-orange-100">
+          {/* Add Appointment Button - minimal padding */}
+          <div className="p-1.5 bg-orange-50 border-b border-orange-100">
             <Button
               onClick={handleAddAppointmentClick}
               className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium"
@@ -140,28 +140,28 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </Button>
           </div>
 
-          {/* Appointments List with ScrollArea - increased height to use space better */}
-          <div className="h-[280px]">
+          {/* Appointments List with ScrollArea - maximized height */}
+          <div className="h-[300px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-0">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
-                      className={`p-3 cursor-pointer hover:bg-gray-50 transition-colors ${
+                      className={`p-2 cursor-pointer hover:bg-gray-50 transition-colors ${
                         index < emails.length - 1 ? 'border-b border-gray-100' : ''
                       }`}
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Appointment Title - reduced margins */}
+                      {/* Appointment Title - no margins */}
                       <div className="mb-1">
-                        <h4 className="text-sm text-amber-700 mb-1">
+                        <h4 className="text-sm text-amber-700">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Time and Location - reduced spacing */}
-                      <div className="space-y-1 mb-2">
+                      {/* Time and Location - minimal spacing */}
+                      <div className="space-y-0.5 mb-1">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Clock className="w-3 h-3" />
                           <span>{formatTime(email.date)}</span>
@@ -172,8 +172,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                         </div>
                       </div>
 
-                      {/* Summary - reduced padding */}
-                      <div className="bg-amber-50 p-2 rounded text-xs text-amber-800">
+                      {/* Summary - minimal padding */}
+                      <div className="bg-amber-50 p-1.5 rounded text-xs text-amber-800">
                         {email.content.length > 80 ? 
                           `${email.content.substring(0, 80)}...` : 
                           email.content
@@ -194,10 +194,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Enhanced email design with better visual separation and reduced white space
+        // Enhanced email design with minimal white space
         <>
-          {/* Header with Close button - reduced padding */}
-          <div className="p-3 border-b border-gray-200">
+          {/* Header with Close button - minimal padding */}
+          <div className="p-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-gray-500" />
@@ -221,28 +221,28 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List with ScrollArea - increased height */}
-          <div className="h-[300px]">
+          {/* Content List with ScrollArea - maximized height */}
+          <div className="h-[320px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-0">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
-                      className={`p-3 cursor-pointer hover:bg-gray-50 transition-colors ${
+                      className={`p-2 cursor-pointer hover:bg-gray-50 transition-colors ${
                         index < emails.length - 1 ? 'border-b border-gray-100' : ''
                       }`}
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Email Subject - reduced margins */}
+                      {/* Email Subject - no margins */}
                       <div className="mb-1">
-                        <h4 className="text-sm text-amber-700 mb-1">
+                        <h4 className="text-sm text-amber-700">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Sender and Organization - reduced spacing */}
-                      <div className="space-y-1 mb-2">
+                      {/* Sender and Organization - minimal spacing */}
+                      <div className="space-y-0.5 mb-1">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <User className="w-3 h-3" />
                           <span>{email.sender.name}</span>
@@ -258,8 +258,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                         </div>
                       </div>
 
-                      {/* Email Preview - 4 sentences with reduced padding */}
-                      <div className="bg-amber-50 p-2 rounded text-xs text-gray-600 mt-2">
+                      {/* Email Preview - 4 sentences with minimal padding */}
+                      <div className="bg-amber-50 p-1.5 rounded text-xs text-gray-600">
                         {getEmailPreview(email.content)}
                       </div>
                     </div>
