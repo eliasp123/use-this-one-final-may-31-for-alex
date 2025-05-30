@@ -25,9 +25,11 @@ interface AttachmentWithContext {
 
 interface DocumentCardGridProps {
   attachment: AttachmentWithContext;
+  onMouseEnter?: (event: React.MouseEvent) => void;
+  onMouseLeave?: () => void;
 }
 
-const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
+const DocumentCardGrid = ({ attachment, onMouseEnter, onMouseLeave }: DocumentCardGridProps) => {
   const navigate = useNavigate();
   const fileInfo = getFileTypeInfo(attachment.type);
   const isTablet = useIsTablet();
@@ -46,6 +48,8 @@ const DocumentCardGrid = ({ attachment }: DocumentCardGridProps) => {
         isTablet ? 'active:scale-95' : 'hover:-translate-y-1'
       } ${isPressed ? 'scale-95' : ''}`}
       onTouchStart={handleCardPress}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with icon and file name */}

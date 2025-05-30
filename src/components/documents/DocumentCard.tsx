@@ -29,21 +29,23 @@ const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => 
   const isTablet = useIsTablet();
   const { hoverState, handleMouseEnter, handleMouseLeave } = useEmailPreviewHover();
 
-  const cardProps = {
-    onMouseEnter: !isTablet ? handleMouseEnter : undefined,
-    onMouseLeave: !isTablet ? handleMouseLeave : undefined,
-  };
+  const hoverProps = !isTablet ? {
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+  } : {};
 
   return (
     <div className="relative">
       {isGridView ? (
-        <div {...cardProps}>
-          <DocumentCardGrid attachment={attachment} />
-        </div>
+        <DocumentCardGrid 
+          attachment={attachment} 
+          {...hoverProps}
+        />
       ) : (
-        <div {...cardProps}>
-          <DocumentCardList attachment={attachment} />
-        </div>
+        <DocumentCardList 
+          attachment={attachment} 
+          {...hoverProps}
+        />
       )}
 
       {/* Email Preview Card */}

@@ -23,16 +23,22 @@ interface AttachmentWithContext {
 
 interface DocumentCardListProps {
   attachment: AttachmentWithContext;
+  onMouseEnter?: (event: React.MouseEvent) => void;
+  onMouseLeave?: () => void;
 }
 
-const DocumentCardList = ({ attachment }: DocumentCardListProps) => {
+const DocumentCardList = ({ attachment, onMouseEnter, onMouseLeave }: DocumentCardListProps) => {
   const navigate = useNavigate();
   const fileInfo = getFileTypeInfo(attachment.type);
   const FileIcon = fileInfo.icon;
   const statusBadgeColor = getStatusBadgeColor(attachment.direction, fileInfo.statusBadgeColor);
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card 
+      className="hover:shadow-md transition-shadow"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
