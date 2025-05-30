@@ -38,6 +38,20 @@ const EmailSidebar = ({
     handleDragEnd
   } = useCategoryDragDrop(emailCategories);
 
+  const handleCalendarHover = () => {
+    console.log('Calendar button hovered');
+    if (onCalendarHover) {
+      onCalendarHover();
+    }
+  };
+
+  const handleCalendarClick = () => {
+    console.log('Calendar button clicked');
+    if (onCalendarClick) {
+      onCalendarClick();
+    }
+  };
+
   return (
     <Sidebar side="left" className="border-r border-gray-200">
       <SidebarHeader className="p-4 border-b border-gray-200">
@@ -47,8 +61,8 @@ const EmailSidebar = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={onCalendarClick}
-              onMouseEnter={onCalendarHover}
+              onClick={handleCalendarClick}
+              onMouseEnter={handleCalendarHover}
               className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
               <Calendar className="h-4 w-4" />

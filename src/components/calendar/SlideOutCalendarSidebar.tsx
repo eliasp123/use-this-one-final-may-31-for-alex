@@ -25,6 +25,14 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     setShowAppointmentForm(true);
   };
 
+  const handleMouseEnter = () => {
+    console.log('Calendar sidebar mouse enter');
+  };
+
+  const handleMouseLeave = () => {
+    console.log('Calendar sidebar mouse leave');
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -36,9 +44,13 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
       />
       
       {/* Slide-out Calendar Sidebar */}
-      <div className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      <div 
+        className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         {/* Calendar Sidebar Header */}
         <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
           <div className="flex items-center justify-between">
