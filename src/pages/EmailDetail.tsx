@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -171,7 +172,7 @@ const EmailDetail = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full relative">
         {/* Left Sidebar */}
         <EmailSidebar 
           emailCategories={emailCategories} 
@@ -180,9 +181,9 @@ const EmailDetail = () => {
           onCategoryAdded={refreshCategories}
         />
         
-        {/* Main Content */}
-        <div className={`flex-1 pl-24 transition-all duration-300 ${isCalendarOpen ? 'pr-8' : 'pr-32'}`}>
-          <div className="container mx-auto px-4 py-8">
+        {/* Main Content - Fixed positioning to prevent interference */}
+        <div className={`flex-1 pl-24 transition-all duration-300 ${isCalendarOpen ? 'pr-8' : 'pr-8'} relative`}>
+          <div className="container mx-auto px-4 py-8 max-w-none">
             <EmailDetailHeader 
               email={email} 
               onCalendarClick={openCalendar}
@@ -234,15 +235,15 @@ const EmailDetail = () => {
           </div>
         </div>
 
-        {/* Slide-out Calendar Sidebar */}
+        {/* Slide-out Calendar Sidebar - positioned absolutely to avoid layout interference */}
         <SlideOutCalendarSidebar
           isOpen={isCalendarOpen}
           onClose={closeCalendar}
         />
 
-        {/* Toggle Calendar Sidebar Button (when hidden) */}
+        {/* Toggle Calendar Sidebar Button (when hidden) - positioned to not interfere */}
         {!isCalendarOpen && (
-          <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30">
+          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-30">
             <Button
               variant="outline"
               size="sm"
