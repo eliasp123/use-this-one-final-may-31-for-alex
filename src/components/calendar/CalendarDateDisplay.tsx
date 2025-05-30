@@ -36,8 +36,17 @@ const CalendarDateDisplay = ({
     handleCalendarMouseLeave,
     handleTooltipMouseEnter,
     handleTooltipMouseLeave,
-    handleCalendarMonthChange
+    handleCalendarMonthChange,
+    handleAddAppointmentFromTooltip
   } = useCalendarHover();
+
+  const handleCloseTooltip = () => {
+    // This will close the tooltip when the close button is clicked
+    if (hoveredDate) {
+      // Setting hoveredDate to null in the useCalendarHover hook
+      handleTooltipMouseLeave();
+    }
+  };
 
   const handleAddAppointmentClick = () => {
     setShowAppointmentForm(true);
@@ -53,10 +62,14 @@ const CalendarDateDisplay = ({
     setShowAppointmentForm(false);
   };
 
-  const handleAddAppointmentFromTooltip = (targetDate: Date) => {
+  const handleAddAppointmentFromTooltipLocal = (targetDate: Date) => {
     onDateSelect(targetDate);
     handleAddAppointmentClick();
   };
+
+  // Check if tooltip should be shown in top row (where we want auto-fade)
+  const isTooltipInTopRow = hoveredDate && 
+    tooltipPosition.y < 150; // Approximate threshold for top row
 
   return (
     <>
@@ -160,12 +173,13 @@ const CalendarDateDisplay = ({
                   status="unread"
                   category="appointments"
                   position={tooltipPosition}
-                  onClose={() => {}}
+                  onClose={handleCloseTooltip}
                   onMouseEnter={handleTooltipMouseEnter}
                   onMouseLeave={handleTooltipMouseLeave}
                   categoryColor="#f59e0b"
-                  onAddAppointment={handleAddAppointmentFromTooltip}
+                  onAddAppointment={handleAddAppointmentFromTooltipLocal}
                   hoveredDate={hoveredDate}
+                  autoFade={isTooltipInTopRow}
                 />
               )}
             </div>

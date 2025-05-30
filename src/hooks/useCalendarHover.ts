@@ -1,5 +1,5 @@
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { APPOINTMENTS } from '../data/appointmentData';
 
 export const useCalendarHover = () => {

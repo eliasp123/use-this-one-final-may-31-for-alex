@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Mail, Calendar, User, Building2, Plus, Clock, MapPin } from 'lucide-react';
+import { Mail, Calendar, User, Building2, Plus, Clock, MapPin, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface EmailPreviewTooltipProps {
@@ -20,6 +20,7 @@ interface EmailPreviewTooltipProps {
   isEmailRowTooltip?: boolean;
   onAddAppointment?: (date: Date) => void;
   hoveredDate?: Date;
+  autoFade?: boolean;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -33,9 +34,26 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   categoryColor,
   isEmailRowTooltip = false,
   onAddAppointment,
-  hoveredDate
+  hoveredDate,
+  autoFade = false
 }) => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    // Auto-fade functionality
+    let fadeTimer: NodeJS.Timeout | null = null;
+    
+    if (autoFade) {
+      fadeTimer = setTimeout(() => {
+        onClose();
+      }, 1000); // Auto-fade after 1 second for top row tooltips
+    }
+    
+    return () => {
+      if (fadeTimer) clearTimeout(fadeTimer);
+    };
+  }, [autoFade, onClose]);
 
   const handleEmailClick = (emailId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -178,7 +196,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       ) : (
         // Enhanced email design with better visual separation
         <>
-          {/* Header */}
+          {/* Header with Close button */}
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
