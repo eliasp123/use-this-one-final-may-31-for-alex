@@ -279,7 +279,7 @@ const EmailDetail = () => {
             </div>
 
             {/* Calendar Sidebar Content */}
-            <div className="flex-1">
+            <div className="flex-1 p-4">
               <AppointmentFormSidebarContent
                 selectedDate={date}
                 selectedDateAppointments={selectedDateAppointments}

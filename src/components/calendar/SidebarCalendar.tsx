@@ -38,7 +38,7 @@ const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) =
     <div className="relative">
       {/* Calendar */}
       <div 
-        className="px-2"
+        className="px-4"
         onMouseMove={handleCalendarMouseMove}
         onMouseLeave={handleCalendarMouseLeave}
       >
@@ -54,6 +54,7 @@ const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) =
           modifiersStyles={{
             hasAppointment: {
               backgroundColor: '#fef3c7',
+              borderRadius: '50%',
               color: '#92400e',
               fontWeight: '600'
             }
@@ -74,16 +75,16 @@ const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) =
             head_cell: "text-gray-500 rounded-md w-8 font-normal text-xs flex items-center justify-center",
             row: "flex w-full mt-2",
             cell: cn(
-              "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-amber-100 [&:has([aria-selected].day-outside)]:bg-amber-50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
+              "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
               "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             ),
             day: cn(
-              "h-8 w-8 p-0 font-normal text-xs hover:bg-gray-100 rounded-md flex items-center justify-center transition-colors"
+              "h-8 w-8 p-0 font-normal text-xs hover:bg-gray-100 rounded-full flex items-center justify-center transition-colors"
             ),
             day_range_start: "day-range-start",
             day_range_end: "day-range-end",
-            day_selected: "bg-amber-200 text-amber-800 hover:bg-amber-200 hover:text-amber-800 focus:bg-amber-200 focus:text-amber-800",
-            day_today: "bg-gray-100 text-gray-900 font-semibold",
+            day_selected: "bg-amber-200 text-amber-800 hover:bg-amber-200 hover:text-amber-800 focus:bg-amber-200 focus:text-amber-800 rounded-full",
+            day_today: "bg-gray-100 text-gray-900 font-semibold rounded-full",
             day_outside: "text-gray-400 opacity-50 hover:bg-gray-50 hover:text-gray-400",
             day_disabled: "text-gray-400 opacity-50",
             day_range_middle: "aria-selected:bg-amber-100 aria-selected:text-amber-800",
