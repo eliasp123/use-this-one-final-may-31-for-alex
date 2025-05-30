@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mail, Calendar, User, Building2, Plus, Clock, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -124,11 +124,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </Button>
           </div>
 
-          {/* Appointments List */}
-          <div className="bg-white">
+          {/* Appointments List with ScrollArea */}
+          <ScrollArea className="bg-white max-h-[260px]">
             {emails.length > 0 ? (
               <div className="space-y-0">
-                {emails.slice(0, 3).map((email, index) => (
+                {emails.map((email, index) => (
                   <div
                     key={email.id}
                     className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
@@ -164,14 +164,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                     </div>
                   </div>
                 ))}
-                
-                {emails.length > 3 && (
-                  <div className="p-3 text-center border-t border-gray-200 bg-gray-50">
-                    <span className="text-xs text-gray-500">
-                      +{emails.length - 3} more appointments
-                    </span>
-                  </div>
-                )}
               </div>
             ) : (
               <div className="p-4 text-center">
@@ -181,7 +173,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </ScrollArea>
         </>
       ) : (
         // Enhanced email design with better visual separation
@@ -211,11 +203,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List */}
-          <div className="bg-white">
+          {/* Content List with ScrollArea */}
+          <ScrollArea className="bg-white max-h-[280px]">
             {emails.length > 0 ? (
               <div className="space-y-0">
-                {emails.slice(0, 3).map((email, index) => (
+                {emails.map((email, index) => (
                   <div
                     key={email.id}
                     className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
@@ -256,14 +248,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                     </div>
                   </div>
                 ))}
-                
-                {emails.length > 3 && (
-                  <div className="p-3 text-center border-t border-gray-200 bg-gray-50">
-                    <span className="text-xs text-gray-500">
-                      +{emails.length - 3} more emails
-                    </span>
-                  </div>
-                )}
               </div>
             ) : (
               <div className="p-4 text-center">
@@ -273,7 +257,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </ScrollArea>
         </>
       )}
     </div>
