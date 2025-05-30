@@ -10,6 +10,7 @@ import { useCalendarHover } from '../hooks/useCalendarHover';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import AppointmentForm from './calendar/AppointmentForm';
+import EmailPreviewTooltip from './email-category/EmailPreviewTooltip';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -168,88 +169,30 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>
       </div>
 
-      {/* Hover Tooltip - Updated styling */}
+      {/* Use shared EmailPreviewTooltip component */}
       {hoveredDate && createPortal(
-        <div 
-          id="calendar-popup-tooltip"
-          className="fixed bg-white border border-gray-200 rounded-lg shadow-xl min-w-[280px] max-w-[320px] pointer-events-auto"
-          style={{
-            left: `${tooltipPosition.x}px`,
-            top: `${tooltipPosition.y}px`,
-            transform: 'translate(-50%, -100%)',
-            zIndex: 999999
-          }}
+        <EmailPreviewTooltip
+          emails={getAppointmentsForDate(hoveredDate).map(appointment => ({
+            id: appointment.id,
+            subject: appointment.title,
+            sender: {
+              name: appointment.to || 'Appointment',
+              organization: appointment.organization
+            },
+            content: appointment.notes || 'No additional notes',
+            date: appointment.date.toISOString(),
+            read: true,
+            replied: true,
+            responseReceived: true
+          }))}
+          status="unread"
+          category="appointments"
+          position={tooltipPosition}
+          onClose={() => {}}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
-        >
-          {/* Header */}
-          <div className="p-3 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-gray-900 text-sm">
-                  {format(hoveredDate, 'EEEE, MMMM d')}
-                </h4>
-                {getAppointmentsForDate(hoveredDate).length > 0 && (
-                  <span className="text-sm text-gray-500">
-                    {getAppointmentsForDate(hoveredDate).length} appointment{getAppointmentsForDate(hoveredDate).length > 1 ? 's' : ''}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Add Appointment Button */}
-          <div className="p-3 border-b border-gray-200 bg-amber-50/30">
-            <Button
-              onClick={() => handleAddFromTooltip(hoveredDate)}
-              size="sm"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Appointment
-            </Button>
-          </div>
-          
-          {/* Appointments List */}
-          <div className="bg-amber-50/50 border-t border-amber-100">
-            {getAppointmentsForDate(hoveredDate).length > 0 ? (
-              <div className="p-3 space-y-3">
-                {getAppointmentsForDate(hoveredDate).map(appointment => (
-                  <div key={appointment.id} className="cursor-pointer hover:bg-amber-100/50 rounded-lg p-2 transition-colors">
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 text-sm mb-1">{appointment.title}</div>
-                        <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
-                          <span>{appointment.time}</span>
-                          <span>{appointment.organization}</span>
-                        </div>
-                        {appointment.to && (
-                          <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-1">
-                            <span className="text-gray-400">with</span>
-                            <span>{appointment.to}</span>
-                          </div>
-                        )}
-                        {appointment.notes && (
-                          <p className="text-xs text-gray-600 line-clamp-2">
-                            {appointment.notes.length > 40 
-                              ? `${appointment.notes.substring(0, 40)}...` 
-                              : appointment.notes
-                            }
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="p-3">
-                <p className="text-sm text-gray-500 text-center">No appointments scheduled</p>
-              </div>
-            )}
-          </div>
-        </div>,
+          categoryColor="#f59e0b"
+        />,
         document.body
       )}
 
