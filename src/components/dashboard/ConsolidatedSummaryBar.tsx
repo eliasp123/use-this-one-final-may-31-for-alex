@@ -37,12 +37,12 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
               className="flex items-center justify-center flex-1 transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
             >
               <div className="flex items-center">
-                <span className="mr-2 text-base font-medium">{totalUnread} Unread Messages</span>
                 <div className={`flex items-center justify-center w-6 h-6 ${
                   totalUnread > 0 ? 'bg-purple-500' : 'bg-gray-300'
-                } rounded-full text-white text-sm font-bold`}>
+                } rounded-full text-white text-sm font-bold mr-2`}>
                   {totalUnread}
                 </div>
+                <span className="text-base font-medium">Unread Messages</span>
               </div>
             </button>
 
@@ -52,12 +52,12 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
               className="flex items-center justify-center flex-1 transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700"
             >
               <div className="flex items-center">
-                <span className="mr-2 text-base font-medium">{totalPending} Pending Replies</span>
                 <div className={`flex items-center justify-center w-6 h-6 ${
                   totalPending > 0 ? 'bg-amber-500' : 'bg-gray-300'
-                } rounded-full text-white text-sm font-bold`}>
+                } rounded-full text-white text-sm font-bold mr-2`}>
                   {totalPending}
                 </div>
+                <span className="text-base font-medium">Pending Replies</span>
               </div>
             </button>
 
@@ -67,12 +67,12 @@ const ConsolidatedSummaryBar: React.FC<ConsolidatedSummaryBarProps> = ({
               className="flex items-center justify-center flex-1 transition-all duration-200 h-full bg-white hover:bg-gray-50 text-gray-700 rounded-r-2xl"
             >
               <div className="flex items-center">
-                <span className="mr-2 text-base font-medium">{totalUnresponded} Has Not Responded Yet</span>
                 <div className={`flex items-center justify-center w-6 h-6 ${
                   totalUnresponded > 0 ? 'bg-red-500' : 'bg-gray-300'
-                } rounded-full text-white text-sm font-bold`}>
+                } rounded-full text-white text-sm font-bold mr-2`}>
                   {totalUnresponded}
                 </div>
+                <span className="text-base font-medium">Has Not Responded Yet</span>
               </div>
             </button>
           </div>
