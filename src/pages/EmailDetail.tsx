@@ -14,7 +14,7 @@ import EmailReplyForm from '../components/EmailReplyForm';
 import NewEmailForm from '../components/NewEmailForm';
 import SlideOutCalendarSidebar from '../components/calendar/SlideOutCalendarSidebar';
 import { useToast } from '../hooks/use-toast';
-import { Mail, ArrowLeft, Home, Calendar } from 'lucide-react';
+import { Mail, ArrowLeft, Home } from 'lucide-react';
 
 const EmailDetail = () => {
   const { id } = useParams();
@@ -236,21 +236,6 @@ const EmailDetail = () => {
           isOpen={isCalendarOpen}
           onClose={closeCalendar}
         />
-
-        {/* Toggle Calendar Sidebar Button (when hidden) */}
-        {!isCalendarOpen && (
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-30">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={openCalendar}
-              className="bg-white shadow-lg border-gray-300 hover:bg-gray-50"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Calendar
-            </Button>
-          </div>
-        )}
       </div>
     </SidebarProvider>
   );
