@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
@@ -62,10 +61,10 @@ const CalendarDateDisplay = ({
       </div>
       
       <CardContent className="p-0 flex flex-col flex-1 min-h-0">
-        {/* Top section - Calendar grid - reduced to match sidebar proportions */}
+        {/* Top section - Large centered 30-day calendar */}
         <div className="h-[231px] p-4 flex flex-col justify-center overflow-hidden">
           <div 
-            className="relative"
+            className="relative flex justify-center items-center h-full"
             onMouseMove={handleCalendarMouseMove}
             onMouseLeave={handleCalendarMouseLeave}
           >
@@ -157,7 +156,7 @@ const CalendarDateDisplay = ({
         {/* Separator line */}
         <div className="bg-gray-300 h-px flex-shrink-0"></div>
 
-        {/* Bottom section - increased to match sidebar proportions */}
+        {/* Bottom section - Additional calendar features */}
         <div className="h-[429px] p-4 flex flex-col">
           <div className="text-center text-gray-500 text-sm mt-8">
             Additional calendar features and views can be added here
