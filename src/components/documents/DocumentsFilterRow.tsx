@@ -41,11 +41,13 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
+            <div className={`flex items-center justify-center w-6 h-6 ${
+              getFilterCount('person') > 0 ? 'bg-purple-500' : 'bg-gray-300'
+            } rounded-full text-white text-sm font-bold mr-2`}>
+              {getFilterCount('person')}
+            </div>
             <Users className="h-4 w-4 mr-2" />
             Person
-            <span className="ml-2 text-sm font-bold text-purple-600">
-              {getFilterCount('person')}
-            </span>
           </button>
 
           {/* Organization Filter */}
@@ -57,11 +59,13 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
+            <div className={`flex items-center justify-center w-6 h-6 ${
+              getFilterCount('organization') > 0 ? 'bg-purple-500' : 'bg-gray-300'
+            } rounded-full text-white text-sm font-bold mr-2`}>
+              {getFilterCount('organization')}
+            </div>
             <Building className="h-4 w-4 mr-2" />
             Organization
-            <span className="ml-2 text-sm font-bold text-purple-600">
-              {getFilterCount('organization')}
-            </span>
           </button>
 
           {/* Month Filter */}
@@ -73,11 +77,13 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
+            <div className={`flex items-center justify-center w-6 h-6 ${
+              getFilterCount('date') > 0 ? 'bg-purple-500' : 'bg-gray-300'
+            } rounded-full text-white text-sm font-bold mr-2`}>
+              {getFilterCount('date')}
+            </div>
             <Calendar className="h-4 w-4 mr-2" />
             Month
-            <span className="ml-2 text-sm font-bold text-purple-600">
-              {getFilterCount('date')}
-            </span>
           </button>
 
           {/* Grid Toggle */}
