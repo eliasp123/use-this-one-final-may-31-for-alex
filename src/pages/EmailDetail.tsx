@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -16,6 +15,7 @@ import AppointmentFormSidebarContent from '../components/calendar/AppointmentFor
 import { useToast } from '../hooks/use-toast';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
 import { Mail, ArrowLeft, Home, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
+import SidebarCalendar from '../components/calendar/SidebarCalendar';
 
 const EmailDetail = () => {
   const { id } = useParams();
@@ -268,6 +268,14 @@ const EmailDetail = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+
+            {/* 30-Day Calendar */}
+            <div className="p-4 border-b border-gray-200 bg-white">
+              <SidebarCalendar
+                selectedDate={date}
+                onDateSelect={handleSelect}
+              />
             </div>
 
             {/* Calendar Sidebar Content */}
