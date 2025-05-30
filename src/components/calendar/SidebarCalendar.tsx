@@ -38,7 +38,7 @@ const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) =
     <div className="relative">
       {/* Calendar */}
       <div 
-        className="px-4"
+        className="p-4"
         onMouseMove={handleCalendarMouseMove}
         onMouseLeave={handleCalendarMouseLeave}
       >

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -272,7 +271,7 @@ const EmailDetail = () => {
             </div>
 
             {/* 30-Day Calendar */}
-            <div className="p-4 border-b border-gray-200 bg-white">
+            <div className="border-b border-gray-200 bg-white">
               <SidebarCalendar
                 selectedDate={date}
                 onDateSelect={handleSelect}
