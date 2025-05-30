@@ -20,6 +20,14 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  // Determine the display title based on the category
+  const getDisplayTitle = () => {
+    if (currentCategory?.id === 'all') {
+      return 'All Categories';
+    }
+    return currentCategory ? currentCategory.title : 'All Categories';
+  };
+
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-8">
@@ -35,7 +43,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <div className="text-center flex-1">
           <h1 className="text-3xl font-light text-gray-800">
             <span className="font-semibold text-gray-700">Conversation:</span>{' '}
-            {currentCategory ? currentCategory.title : 'All Categories'}
+            {getDisplayTitle()}
           </h1>
         </div>
         

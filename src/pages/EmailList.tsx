@@ -64,7 +64,17 @@ const EmailList = () => {
 
   // Get info for current category
   const allCategories = getAllCategories();
-  const currentCategory = category ? allCategories[category] : null;
+  let currentCategory = null;
+  
+  if (category === 'all') {
+    // Create a special category object for "all"
+    currentCategory = {
+      id: 'all',
+      title: 'All Categories'
+    };
+  } else if (category) {
+    currentCategory = allCategories[category];
+  }
 
   return (
     <SidebarProvider defaultOpen={true}>

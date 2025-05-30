@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Sidebar, 
@@ -9,11 +8,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Mail } from 'lucide-react';
 import { EmailCategory } from '@/hooks/useEmailCategoryData';
 import EmailCategoryItem from './EmailCategoryItem';
 import { addCustomCategory, getCustomCategories, saveCustomCategories } from '@/utils/categoryUtils';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface EmailSidebarProps {
   emailCategories: EmailCategory[];
@@ -28,6 +28,7 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
   activeTab,
   onCategoryAdded 
 }) => {
+  const navigate = useNavigate();
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [orderedCategories, setOrderedCategories] = useState(emailCategories);
@@ -187,8 +188,8 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16 pl-4">  
         <SidebarGroup className="pt-8">
-          {/* Add Category Button with increased bottom margin */}
-          <div className="px-3 mb-8">
+          {/* Add Category Button */}
+          <div className="px-3 mb-4">
             <Dialog open={showNewCategoryDialog} onOpenChange={setShowNewCategoryDialog}>
               <DialogTrigger asChild>
                 <Button
@@ -227,6 +228,21 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
               </DialogContent>
             </Dialog>
+          </div>
+
+          {/* Show All Emails Button */}
+          <div className="px-3 mb-8">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`w-full justify-start bg-purple-600 hover:bg-purple-700 text-white border-purple-600 ${
+                category === 'all' ? 'ring-2 ring-purple-300' : ''
+              }`}
+              onClick={() => navigate(`/emails/all/${activeTab}`)}
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Show All Emails
+            </Button>
           </div>
 
           <SidebarMenu className="space-y-1">
