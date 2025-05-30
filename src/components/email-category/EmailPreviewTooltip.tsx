@@ -144,7 +144,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           <div className="h-[180px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
-                <div className="space-y-4 p-3 pb-6">
+                <div className="space-y-3 p-3 pb-8">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
@@ -152,26 +152,26 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
                       {/* Appointment Title */}
-                      <div className="mb-3">
-                        <h4 className="text-sm font-medium text-amber-700 leading-relaxed">
+                      <div className="mb-2">
+                        <h4 className="text-sm font-medium text-amber-700 leading-snug">
                           {email.subject}
                         </h4>
                       </div>
 
                       {/* Time and Location */}
-                      <div className="space-y-2 mb-3">
+                      <div className="space-y-1.5 mb-2">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Clock className="w-3 h-3" />
-                          <span className="leading-relaxed">{formatTime(email.date)}</span>
+                          <span className="leading-snug">{formatTime(email.date)}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <MapPin className="w-3 h-3" />
-                          <span className="leading-relaxed">{email.sender.organization}</span>
+                          <span className="leading-snug">{email.sender.organization}</span>
                         </div>
                       </div>
 
                       {/* Summary */}
-                      <div className="bg-amber-50 px-3 py-2 rounded text-xs text-amber-800 leading-relaxed">
+                      <div className="bg-amber-50 px-3 py-2 rounded text-xs text-amber-800 leading-snug">
                         {email.content.length > 80 ? 
                           `${email.content.substring(0, 80)}...` : 
                           email.content
@@ -223,7 +223,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           <div className="h-[200px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
-                <div className="space-y-4 p-3 pb-6">
+                <div className="space-y-3 p-3 pb-8">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
@@ -231,30 +231,30 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
                       {/* Email Subject */}
-                      <div className="mb-3">
-                        <h4 className="text-sm font-medium text-amber-700 leading-relaxed">
+                      <div className="mb-2">
+                        <h4 className="text-sm font-medium text-amber-700 leading-snug">
                           {email.subject}
                         </h4>
                       </div>
 
                       {/* Sender, Organization and Date */}
-                      <div className="space-y-2 mb-3">
+                      <div className="space-y-1.5 mb-2">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <User className="w-3 h-3" />
-                          <span className="leading-relaxed">{email.sender.name}</span>
+                          <span className="leading-snug">{email.sender.name}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Building2 className="w-3 h-3" />
-                          <span className="leading-relaxed">{email.sender.organization}</span>
+                          <span className="leading-snug">{email.sender.organization}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Calendar className="w-3 h-3" />
-                          <span className="leading-relaxed">{format(new Date(email.date), 'MMM d')}</span>
+                          <span className="leading-snug">{format(new Date(email.date), 'MMM d')}</span>
                         </div>
                       </div>
 
                       {/* Email Preview */}
-                      <div className="bg-amber-50 px-3 py-2 rounded text-xs text-gray-600 leading-relaxed">
+                      <div className="bg-amber-50 px-3 py-2 rounded text-xs text-gray-600 leading-snug">
                         {getEmailPreview(email.content)}
                       </div>
                     </div>
