@@ -1,3 +1,4 @@
+
 import React, { useMemo, useRef, useEffect } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -122,19 +123,17 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     handleEmailHover(emailId as any, e, id, 1);
   };
 
-  // Update tooltip positioning for status circles to use actual card dimensions
-  const getSmartTooltipPosition = (basePosition: { x: number; y: number }) => {
+  // Helper function to get the card rect and pass it properly to tooltip
+  const getTooltipPositionWithCardData = () => {
     const cardElement = categoryCardRef.current;
-    if (!cardElement) return basePosition;
+    if (!cardElement) return { ...tooltipPosition, cardWidth: 400 };
     
     const cardRect = cardElement.getBoundingClientRect();
     
-    // Keep the original Y position from the hover event (where the user actually hovered)
-    // But use the card's left/right edges for X positioning
     return {
-      x: cardRect.left, // Use card's left edge for sliding calculation
-      y: basePosition.y, // Keep the actual hover Y position
-      cardWidth: cardRect.width // Pass card width for sliding logic
+      x: cardRect.left, // Card's left edge
+      y: tooltipPosition.y, // Actual hover Y position
+      cardWidth: cardRect.width
     };
   };
 
@@ -317,7 +316,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               emails={previewEmails}
               status={hoveredStatus}
               category={id}
-              position={getSmartTooltipPosition(tooltipPosition)}
+              position={getTooltipPositionWithCardData()}
               onClose={handleTooltipClose}
               onMouseEnter={handleTooltipMouseEnter}
               onMouseLeave={handleTooltipMouseLeave}
