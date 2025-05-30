@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -78,6 +77,16 @@ const EmailList = () => {
     currentCategory = allCategories[category];
   }
 
+  const handleCalendarHover = () => {
+    console.log('EmailList handleCalendarHover called');
+    openCalendar();
+  };
+
+  const handleCalendarClick = () => {
+    console.log('EmailList handleCalendarClick called');
+    openCalendar();
+  };
+
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
@@ -87,8 +96,8 @@ const EmailList = () => {
           category={category} 
           activeTab={activeTab}
           onCategoryAdded={handleCategoryAdded}
-          onCalendarClick={openCalendar}
-          onCalendarHover={openCalendar}
+          onCalendarClick={handleCalendarClick}
+          onCalendarHover={handleCalendarHover}
         />
         
         {/* Main Content */}

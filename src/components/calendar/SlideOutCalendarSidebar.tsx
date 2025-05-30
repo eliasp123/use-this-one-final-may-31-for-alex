@@ -21,6 +21,8 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     handleSelect
   } = useCalendarLogic();
 
+  console.log('SlideOutCalendarSidebar render - isOpen:', isOpen);
+
   const handleAddAppointment = () => {
     setShowAppointmentForm(true);
   };
@@ -33,7 +35,10 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     console.log('Calendar sidebar mouse leave');
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    console.log('SlideOutCalendarSidebar: not open, returning null');
+    return null;
+  }
 
   return (
     <>

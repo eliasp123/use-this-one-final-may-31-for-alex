@@ -39,15 +39,17 @@ const EmailSidebar = ({
   } = useCategoryDragDrop(emailCategories);
 
   const handleCalendarHover = () => {
-    console.log('Calendar button hovered');
+    console.log('EmailSidebar: Calendar button hovered');
     if (onCalendarHover) {
+      console.log('EmailSidebar: Calling onCalendarHover');
       onCalendarHover();
     }
   };
 
   const handleCalendarClick = () => {
-    console.log('Calendar button clicked');
+    console.log('EmailSidebar: Calendar button clicked');
     if (onCalendarClick) {
+      console.log('EmailSidebar: Calling onCalendarClick');
       onCalendarClick();
     }
   };
