@@ -61,14 +61,17 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
               <Calendar className="h-5 w-5 text-amber-700" />
               <h3 className="text-lg font-medium text-amber-800">Calendar</h3>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50 flex-shrink-0 relative z-20"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-amber-700 font-medium">Click to close</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50 flex-shrink-0 relative z-20"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
