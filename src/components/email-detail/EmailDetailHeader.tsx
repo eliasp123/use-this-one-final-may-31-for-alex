@@ -25,7 +25,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
           className="text-gray-600 hover:text-gray-800"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
+          ← Back
         </Button>
         
         <div className="text-center flex-1">
