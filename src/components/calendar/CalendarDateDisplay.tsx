@@ -151,9 +151,9 @@ const CalendarDateDisplay = ({
           </div>
         </div>
 
-        {/* Bottom section - minimal space for balance */}
-        <div className="h-[85px] bg-gray-50 flex items-center justify-center">
-          <div className="text-center text-gray-400 text-sm">
+        {/* Bottom section - changed from gray to light amber */}
+        <div className="h-[85px] bg-amber-50 flex items-center justify-center">
+          <div className="text-center text-amber-700 text-sm">
             Select a date to view or add appointments
           </div>
         </div>

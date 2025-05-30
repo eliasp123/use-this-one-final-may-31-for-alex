@@ -135,8 +135,8 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                   </div>
                 </div>
 
-                <div className="h-[85px] bg-gray-50 flex items-center justify-center">
-                  <div className="text-center text-gray-400 text-sm">
+                <div className="h-[85px] bg-amber-50 flex items-center justify-center">
+                  <div className="text-center text-amber-700 text-sm">
                     Select a date to view or add appointments
                   </div>
                 </div>
