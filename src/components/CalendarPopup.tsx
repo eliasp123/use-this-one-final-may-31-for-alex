@@ -2,16 +2,13 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './ui/calendar';
-import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
-import { Plus, Clock, Building } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import CalendarDateDisplay from './calendar/CalendarDateDisplay';
 import AppointmentList from './calendar/AppointmentList';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
 import { useCalendarHover } from '../hooks/useCalendarHover';
-import { Appointment } from '../types/appointment';
-import { useIsTablet } from '@/hooks/use-tablet';
+import { cn } from '@/lib/utils';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -19,8 +16,6 @@ interface CalendarPopupProps {
 }
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
-  const isTablet = useIsTablet();
-
   // Use shared calendar logic
   const {
     date,
@@ -56,35 +51,41 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
 
   return (
     <>
-      <div className="w-full max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2">
-            <Card className="overflow-hidden shadow-sm border border-gray-100">
-              <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row">
-                  <div className="bg-gradient-to-br from-amber-400 to-orange-500 w-full md:w-1/3 flex flex-col">
-                    <div className="p-4">
-                      <Button
-                        type="button"
-                        onClick={handleAddAppointment}
-                        className={`bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-lg border transition-all duration-200 w-full ${
-                          isTablet ? 'text-sm' : ''
-                        }`}
-                      >
-                        <Plus className={`mr-2 ${isTablet ? 'h-4 w-4' : 'h-5 w-5'}`} />
-                        {isTablet ? 'Add' : 'Add Appointment'}
-                      </Button>
-                    </div>
-                    
-                    <div className="p-8 pt-4 flex-1 flex flex-col justify-center">
-                      <p className="text-white text-xl font-light uppercase mb-1">{date ? format(date, 'EEEE') : ''}</p>
-                      <p className="text-white text-4xl font-light uppercase mb-10">{date ? format(date, 'MMMM do') : ''}</p>
-                      <p className="text-white/70 text-sm font-light">{date ? format(date, 'yyyy') : ''}</p>
-                    </div>
-                  </div>
-                  
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Main Calendar Section - 3 columns */}
+          <div className="lg:col-span-3">
+            <div className="h-[745px] shadow-sm border border-gray-100 overflow-hidden flex bg-white rounded-lg">
+              {/* Left Orange Sidebar */}
+              <div className="w-80 bg-gradient-to-br from-amber-400 to-orange-500 flex flex-col">
+                <div className="p-6">
+                  <Button
+                    onClick={handleAddAppointment}
+                    className="w-full bg-white hover:bg-gray-50 text-gray-600 font-medium py-3 px-6 rounded-lg border transition-all duration-200"
+                  >
+                    <Plus className="mr-2 h-5 w-5" />
+                    Add Appointment
+                  </Button>
+                </div>
+                
+                <div className="px-6 pb-8 flex-1 flex flex-col justify-center">
+                  <p className="text-white text-xl font-light uppercase mb-1">
+                    {date ? format(date, 'EEEE') : 'FRIDAY'}
+                  </p>
+                  <p className="text-white text-5xl font-light uppercase mb-6">
+                    {date ? format(date, 'MMMM do').replace(/(\d+)(st|nd|rd|th)/, '$1TH') : 'MAY 30TH'}
+                  </p>
+                  <p className="text-white/70 text-lg font-light">
+                    {date ? format(date, 'yyyy') : '2025'}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Center Calendar Section */}
+              <div className="flex-1 flex flex-col">
+                <div className="h-[660px] p-8 flex items-center justify-center bg-white">
                   <div 
-                    className="w-full md:w-2/3 p-4 bg-white relative min-w-[350px]" 
+                    className="relative w-full max-w-2xl"
                     onMouseMove={handleCalendarMouseMove}
                     onMouseLeave={handleCalendarMouseLeave}
                   >
@@ -93,24 +94,58 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                       selected={date}
                       onSelect={handleSelect}
                       onMonthChange={handleCalendarMonthChange}
-                      className="w-full pointer-events-auto min-w-[300px]"
+                      className={cn("p-0 pointer-events-auto w-full")}
                       modifiers={{
-                        hasAppointment: (day) => isDayWithAppointment(day)
+                        hasAppointment: isDayWithAppointment
                       }}
                       modifiersStyles={{
                         hasAppointment: {
-                          backgroundColor: '#fed7aa',
-                          color: '#374151'
+                          backgroundColor: '#fef3c7',
+                          borderRadius: '50%',
+                          color: '#92400e',
+                          fontWeight: '600'
                         }
+                      }}
+                      classNames={{
+                        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full justify-center",
+                        month: "space-y-8 w-full",
+                        caption: "flex justify-center pt-1 relative items-center mb-8 w-full",
+                        caption_label: "text-3xl font-light text-gray-400",
+                        nav: "space-x-1 flex items-center",
+                        nav_button: cn(
+                          "h-10 w-10 bg-transparent p-0 opacity-50 hover:opacity-100 border-0 text-gray-400 hover:text-gray-600"
+                        ),
+                        nav_button_previous: "absolute left-1",
+                        nav_button_next: "absolute right-1",
+                        table: "w-full border-collapse space-y-4",
+                        head_row: "flex w-full justify-between mb-6",
+                        head_cell: "text-gray-400 rounded-md font-light text-lg h-12 flex items-center justify-center uppercase flex-1 min-w-[60px]",
+                        row: "flex w-full justify-between mb-4",
+                        cell: "h-16 text-center text-lg p-0 relative flex items-center justify-center flex-1 min-w-[60px] [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                        day: "pointer-events-auto h-14 w-14 p-0 font-normal text-lg rounded-full hover:bg-gray-100 text-gray-600 mx-auto aria-selected:opacity-100 transition-colors",
+                        day_range_end: "day-range-end",
+                        day_selected: "bg-green-500 hover:bg-green-600 text-white focus:bg-green-600 focus:text-white rounded-full",
+                        day_today: "bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold",
+                        day_outside: "text-gray-300 opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+                        day_disabled: "text-gray-300 opacity-50",
+                        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                        day_hidden: "invisible",
                       }}
                     />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="h-[85px] bg-gray-50 flex items-center justify-center">
+                  <div className="text-center text-gray-400 text-sm">
+                    Select a date to view or add appointments
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
-          <div className="md:col-span-1">
+          {/* Right Sidebar - 1 column */}
+          <div className="lg:col-span-1">
             <AppointmentList 
               date={date}
               selectedAppointments={selectedDateAppointments}
@@ -166,11 +201,9 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
                     </div>
                     <div className="space-y-1 text-xs text-gray-600">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="h-3 w-3" />
                         <span>{appointment.time}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Building className="h-3 w-3" />
                         <span>{appointment.organization}</span>
                       </div>
                       {appointment.to && (
