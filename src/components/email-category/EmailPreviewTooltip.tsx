@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { EmailData } from '@/types/email';
-import { formatDistanceToNow } from 'date-fns';
-import { Mail, ArrowRight } from 'lucide-react';
+
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { EmailData } from '@/types/email';
+import { Badge } from '@/components/ui/badge';
+import { Mail, Calendar, User, Building2 } from 'lucide-react';
 
 interface EmailPreviewTooltipProps {
   emails: EmailData[];
@@ -10,10 +11,10 @@ interface EmailPreviewTooltipProps {
   category: string;
   position: { x: number; y: number };
   onClose: () => void;
-  onMouseEnter?: () => void;
+  onMouseEnter: () => void;
   onMouseLeave?: () => void;
   categoryColor: string;
-  isEmailRowTooltip?: boolean; // New prop to distinguish tooltip types
+  isEmailRowTooltip?: boolean;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -25,339 +26,146 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   onMouseEnter,
   onMouseLeave,
   categoryColor,
-  isEmailRowTooltip = false // Default to false for backward compatibility
+  isEmailRowTooltip = false
 }) => {
   const navigate = useNavigate();
-  const [smartPosition, setSmartPosition] = useState({ x: position.x, y: position.y, placement: 'right' });
-  const [tooltipRef, setTooltipRef] = useState<HTMLDivElement | null>(null);
-  const [currentPosition, setCurrentPosition] = useState({ x: position.x, y: position.y });
 
-  // Calculate smart positioning for seamless card unfolding
-  useEffect(() => {
-    // If this is an email row tooltip, use the exact position passed and skip smart positioning
+  const handleEmailClick = (emailId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose();
+    
+    // If this is from an email row tooltip (in the expanded category view), 
+    // navigate directly to the email detail
     if (isEmailRowTooltip) {
-      setSmartPosition({
-        x: position.x,
-        y: position.y,
-        placement: 'right'
-      });
-      setCurrentPosition({ x: position.x, y: position.y });
-      return;
-    }
-
-    // Smart positioning logic for status circle tooltips (existing logic)
-    const tooltipHeight = 400; // Approximate height of tooltip
-    const tooltipWidth = 480; // Max width from the component
-    const margin = 20; // Safety margin from screen edges
-
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
-
-    // Find the card header element to align with its top edge
-    const findCardTop = () => {
-      // Look for elements with the card classes to find the actual card top
-      const cards = document.querySelectorAll('.bg-white.rounded-2xl');
-      let closestCard = null;
-      let minDistance = Infinity;
-      
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const distance = Math.abs(rect.left - position.x) + Math.abs(rect.top - position.y);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestCard = card;
-        }
-      });
-      
-      if (closestCard) {
-        const cardRect = closestCard.getBoundingClientRect();
-        return {
-          cardTop: cardRect.top,
-          cardLeft: cardRect.left,
-          cardRight: cardRect.right,
-          cardWidth: cardRect.width
-        };
-      }
-      
-      // Fallback if we can't find the card
-      return {
-        cardTop: position.y - 150, // Estimate card header position
-        cardLeft: position.x - 200,
-        cardRight: position.x + 200,
-        cardWidth: 400
-      };
-    };
-
-    const cardInfo = findCardTop();
-    
-    let placement = 'right';
-    let xPos = position.x;
-    let yPos = cardInfo.cardTop; // Always align with the top of the card
-
-    // Determine horizontal placement first (preferred for unfolding effect)
-    const spaceRight = viewportWidth - cardInfo.cardRight - margin;
-    const spaceLeft = cardInfo.cardLeft - margin;
-    
-    // Check if we can fit horizontally (preferred for card unfolding)
-    if (spaceRight >= tooltipWidth) {
-      // Unfold to the right - position at the right edge of the card
-      placement = 'right';
-      xPos = cardInfo.cardRight; // Start exactly at the card's right edge
-    } else if (spaceLeft >= tooltipWidth) {
-      // Unfold to the left - position at the left edge of the card
-      placement = 'left';
-      xPos = cardInfo.cardLeft - tooltipWidth; // End exactly at the card's left edge
+      navigate(`/email/${emailId}`);
     } else {
-      // Fall back to vertical placement if horizontal doesn't fit
-      const spaceAbove = cardInfo.cardTop - margin;
-      const spaceBelow = viewportHeight - cardInfo.cardTop - margin;
-      const shouldPlaceBelow = spaceAbove < tooltipHeight && spaceBelow > spaceAbove;
-      
-      placement = shouldPlaceBelow ? 'bottom' : 'top';
-      xPos = cardInfo.cardLeft + (cardInfo.cardWidth / 2); // Center on card
-      
-      // Keep tooltip within horizontal bounds for vertical placement
-      const halfWidth = tooltipWidth / 2;
-      if (xPos - halfWidth < margin) {
-        xPos = halfWidth + margin;
-      } else if (xPos + halfWidth > viewportWidth - margin) {
-        xPos = viewportWidth - halfWidth - margin;
-      }
+      // If this is from a category card tooltip (main dashboard),
+      // navigate to the top of the conversations page for that category and status
+      navigate(`/emails/${category}/${status}`);
     }
+  };
 
-    // For horizontal placement, ensure tooltip stays within vertical bounds
-    if (placement === 'left' || placement === 'right') {
-      // Ensure tooltip doesn't go below viewport
-      if (yPos + tooltipHeight > viewportHeight - margin) {
-        yPos = viewportHeight - tooltipHeight - margin;
-      }
-      
-      // Ensure tooltip doesn't go above viewport
-      if (yPos < margin) {
-        yPos = margin;
-      }
-    }
-
-    setSmartPosition({
-      x: xPos,
-      y: yPos,
-      placement: placement as 'top' | 'bottom' | 'left' | 'right'
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
     });
-    
-    setCurrentPosition({ x: xPos, y: yPos });
-  }, [position, isEmailRowTooltip]);
+  };
 
-  // Update tooltip position when scrolling (only for status circle tooltips)
-  useEffect(() => {
-    if (isEmailRowTooltip) return; // Skip scroll handling for email row tooltips
-
-    const handleScroll = () => {
-      // Find the target card again to get its current position
-      const cards = document.querySelectorAll('.bg-white.rounded-2xl');
-      let targetCard = null;
-      let minDistance = Infinity;
-      
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const distance = Math.abs(rect.left - position.x) + Math.abs(rect.top - position.y);
-        if (distance < minDistance) {
-          minDistance = distance;
-          targetCard = card;
-        }
-      });
-
-      if (targetCard) {
-        const cardRect = targetCard.getBoundingClientRect();
-        
-        // Update position based on current card position
-        let newX = currentPosition.x;
-        let newY = cardRect.top; // Always align with the top of the card
-        
-        // Adjust for placement
-        if (smartPosition.placement === 'right') {
-          newX = cardRect.right;
-        } else if (smartPosition.placement === 'left') {
-          newX = cardRect.left - 480; // tooltip width
-        }
-        
-        setCurrentPosition({ x: newX, y: newY });
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [position.x, position.y, smartPosition.placement, currentPosition.x, isEmailRowTooltip]);
-
-  const getStatusLabel = () => {
-    switch (status) {
-      case 'unread':
-        return 'Unread Messages';
-      case 'pending':
-        return 'Pending Replies';
-      case 'unresponded':
-        return 'Has Not Responded Yet';
+  const getStatusBadge = (email: EmailData) => {
+    if (!email.read) {
+      return <Badge className="bg-purple-500 hover:bg-purple-600 text-xs">Unread</Badge>;
+    } else if (!email.replied) {
+      return <Badge className="bg-amber-500 hover:bg-amber-600 text-xs">Pending</Badge>;
+    } else if (!email.responseReceived) {
+      return <Badge className="bg-red-500 hover:bg-red-600 text-xs">No Response</Badge>;
+    } else {
+      return <Badge className="bg-green-500 hover:bg-green-600 text-xs">Complete</Badge>;
     }
   };
 
-  const getStatusRoute = () => {
-    switch (status) {
-      case 'unread':
-        return 'unread';
-      case 'pending':
-        return 'pending';
-      case 'unresponded':
-        return 'no-response';
-    }
-  };
-
-  const handleEmailClick = (emailId: string) => {
-    navigate(`/email/${emailId}`);
-    onClose();
-    // Scroll to top after navigation
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-  };
-
-  const handleViewAll = () => {
-    navigate(`/emails/${category}/${getStatusRoute()}`);
-    onClose();
-    // Scroll to top after navigation
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-  };
-
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-  };
-
-  const extractContentPreview = (content: string) => {
-    // Remove HTML tags and get content
-    const cleanContent = content.replace(/<[^>]*>/g, '').trim();
-    
-    // Split into sentences and words to better control line breaks
-    const sentences = cleanContent.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    
-    if (sentences.length === 0) return '';
-    
-    // Build preview text that will fit approximately 3 lines
-    let preview = '';
-    let totalLength = 0;
-    const maxLength = 240; // Increased to accommodate 3 lines
-    
-    for (const sentence of sentences) {
-      const trimmedSentence = sentence.trim();
-      if (totalLength + trimmedSentence.length + 2 <= maxLength) {
-        preview += (preview ? '. ' : '') + trimmedSentence;
-        totalLength = preview.length;
-      } else {
-        // If adding this sentence would exceed limit, truncate it
-        const remainingSpace = maxLength - totalLength - 2;
-        if (remainingSpace > 20) { // Only add partial sentence if there's meaningful space
-          preview += (preview ? '. ' : '') + trimmedSentence.substring(0, remainingSpace) + '...';
-        }
-        break;
-      }
-    }
-    
-    return preview || cleanContent.substring(0, maxLength) + (cleanContent.length > maxLength ? '...' : '');
-  };
-
-  // Helper function to determine if email is sent or received
-  const isEmailSent = (email: EmailData) => {
-    return email.id.startsWith('sent_');
-  };
-
-  if (emails.length === 0) {
-    return null;
-  };
-
-  // No transform needed for seamless unfolding - position directly
-  const getTransform = () => {
-    if (isEmailRowTooltip) {
-      return 'translate(0, 0)'; // No transform for email row tooltips
-    }
-
-    switch (smartPosition.placement) {
-      case 'left':
-      case 'right':
-        return 'translate(0, 0)'; // Perfect alignment, no transform needed
-      case 'bottom':
-        return 'translate(-50%, 8px)';
-      case 'top':
-      default:
-        return 'translate(-50%, calc(-100% - 8px))';
-    }
+  // Position the tooltip with smart positioning
+  const tooltipStyle: React.CSSProperties = {
+    position: 'fixed',
+    left: Math.max(10, Math.min(position.x, window.innerWidth - 490)),
+    top: Math.max(10, Math.min(position.y, window.innerHeight - 400)),
+    zIndex: 9999,
   };
 
   return (
     <div 
-      ref={setTooltipRef}
-      className="fixed bg-gray-50 border border-gray-200 rounded-lg shadow-xl p-4 max-w-[480px] pointer-events-auto"
-      style={{
-        left: `${currentPosition.x}px`,
-        top: `${currentPosition.y}px`,
-        transform: getTransform(),
-        position: 'fixed',
-        zIndex: 20 // Task 1: High z-index for tooltip visibility
-      }}
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-[480px] max-h-[380px] overflow-hidden"
+      style={tooltipStyle}
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave || onClose}
-      data-tooltip="email-preview" // Task 1: Data attribute for auto-scroll targeting
+      onMouseLeave={onMouseLeave}
     >
-      <div className="space-y-3">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-          <h4 className="text-sm font-semibold text-gray-800">{getStatusLabel()}</h4>
-          <span className="text-xs text-gray-500">{emails.length} item{emails.length > 1 ? 's' : ''}</span>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <Mail className="w-4 h-4 text-gray-500" />
+          <span className="text-sm font-medium text-gray-700">
+            {status === 'unread' && 'Unread Messages'}
+            {status === 'pending' && 'Pending Replies'}
+            {status === 'unresponded' && 'No Response Yet'}
+          </span>
+          <span className={`w-5 h-5 text-xs font-medium text-white rounded-full flex items-center justify-center bg-gradient-to-r ${categoryColor}`}>
+            {emails.length}
+          </span>
         </div>
-        
-        <div className="space-y-3">
-          {emails.map(email => (
-            <div 
-              key={email.id}
-              className="p-3 bg-white/70 rounded-lg border border-gray-100 hover:bg-white cursor-pointer transition-colors"
-              onClick={() => handleEmailClick(email.id)}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Mail className="h-3 w-3 text-gray-400 flex-shrink-0" />
-                <span className="font-medium text-gray-700 text-sm">
-                  {truncateText(email.sender.name, 25)}
-                </span>
-                <span className="text-xs text-gray-500 ml-auto">
-                  {formatDistanceToNow(new Date(email.date), { addSuffix: true })}
-                </span>
-              </div>
-              
-              {/* From/To line with email addresses */}
-              <div className="text-xs text-gray-600 mb-2">
-                {isEmailSent(email) ? (
-                  <span><strong>To:</strong> {email.recipient}</span>
-                ) : (
-                  <span><strong>From:</strong> {email.sender.email}</span>
-                )}
-              </div>
-              
-              <div className="text-sm font-medium text-gray-800 mb-2">
-                {truncateText(email.subject, 60)}
-              </div>
-              
-              {extractContentPreview(email.content) && (
-                <div className="text-xs text-gray-700 leading-relaxed p-2 bg-amber-50 border border-amber-100 rounded min-h-[3.5rem]">
-                  {extractContentPreview(email.content)}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        
-        <button
-          onClick={handleViewAll}
-          className="w-full flex items-center justify-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors mt-3 pt-2 border-t border-gray-100"
+        <button 
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 text-lg font-medium"
         >
-          View All {getStatusLabel()}
-          <ArrowRight className="h-3 w-3" />
+          ×
         </button>
+      </div>
+
+      {/* Email List */}
+      <div className="space-y-2 max-h-[300px] overflow-y-auto">
+        {emails.slice(0, 5).map((email) => (
+          <div
+            key={email.id}
+            className="p-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer"
+            onClick={(e) => handleEmailClick(email.id, e)}
+          >
+            {/* Email Header */}
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate mb-1">
+                  {email.subject}
+                </p>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <User className="w-3 h-3" />
+                    <span className="truncate max-w-[120px]">{email.sender.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Building2 className="w-3 h-3" />
+                    <span className="truncate max-w-[100px]">{email.sender.organization}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
+                {getStatusBadge(email)}
+                <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <Calendar className="w-3 h-3" />
+                  <span>{formatDate(email.date)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Preview */}
+            <p className="text-xs text-gray-600 line-clamp-2">
+              {email.content.substring(0, 120)}...
+            </p>
+
+            {/* Attachments indicator */}
+            {email.attachments && email.attachments.length > 0 && (
+              <div className="mt-2 pt-2 border-t border-gray-50">
+                <span className="text-xs text-gray-500">
+                  📎 {email.attachments.length} attachment{email.attachments.length > 1 ? 's' : ''}
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
+        
+        {emails.length > 5 && (
+          <div className="text-center pt-2 border-t border-gray-100">
+            <span className="text-xs text-gray-500">
+              +{emails.length - 5} more emails
+            </span>
+          </div>
+        )}
+        
+        {emails.length === 0 && (
+          <div className="text-center py-4 text-gray-500">
+            <Mail className="w-8 h-8 mx-auto mb-2 opacity-30" />
+            <p className="text-sm">No emails found</p>
+          </div>
+        )}
       </div>
     </div>
   );
