@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
-import { useCalendarHover } from '@/hooks/useCalendarHover';
 import { APPOINTMENTS } from '@/data/appointmentData';
 import { Button } from '../ui/button';
 import { Plus } from 'lucide-react';
@@ -14,17 +13,18 @@ interface SidebarCalendarProps {
 }
 
 const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: SidebarCalendarProps) => {
-  const {
-    hoveredDate,
-    tooltipPosition,
-    getAppointmentsForDate,
-    handleCalendarMouseMove,
-    handleCalendarMouseLeave,
-    handleTooltipMouseEnter,
-    handleTooltipMouseLeave,
-    handleAddAppointmentFromTooltip,
-    handleCalendarMonthChange
-  } = useCalendarHover();
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get appointments for a specific date
+  const getAppointmentsForDate = (targetDate: Date) => {
+    return APPOINTMENTS.filter(app => 
+      app.date.getDate() === targetDate.getDate() && 
+      app.date.getMonth() === targetDate.getMonth() && 
+      app.date.getFullYear() === targetDate.getFullYear()
+    );
+  };
 
   // Function to check if a day has appointments
   const isDayWithAppointment = (day: Date) => {
@@ -35,18 +35,59 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
     );
   };
 
+  const clearHideTimeout = () => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  const setHideTimeout = () => {
+    clearHideTimeout();
+    hideTimeoutRef.current = setTimeout(() => {
+      setHoveredDate(null);
+    }, 200);
+  };
+
+  const handleDayHover = (date: Date, event: React.MouseEvent) => {
+    clearHideTimeout();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = {
+      x: rect.left + rect.width / 2,
+      y: rect.top - 10
+    };
+    setTooltipPosition(position);
+    setHoveredDate(date);
+  };
+
+  const handleDayLeave = () => {
+    setHideTimeout();
+  };
+
+  const handleTooltipMouseEnter = () => {
+    clearHideTimeout();
+  };
+
+  const handleTooltipMouseLeave = () => {
+    setHideTimeout();
+  };
+
+  const handleAddAppointmentFromTooltip = (targetDate: Date) => {
+    clearHideTimeout();
+    setHoveredDate(null);
+    onDateSelect(targetDate);
+    if (onAddAppointment) {
+      onAddAppointment();
+    }
+  };
+
   return (
     <div className="p-1 overflow-visible max-w-full relative">
-      <div
-        onMouseMove={handleCalendarMouseMove}
-        onMouseLeave={handleCalendarMouseLeave}
-        className="relative"
-      >
+      <div className="relative">
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={onDateSelect}
-          onMonthChange={handleCalendarMonthChange}
           className={cn("w-full max-w-full overflow-visible")}
           classNames={{
             months: "flex flex-col w-full max-w-full",
@@ -101,7 +142,8 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
                     }
                   )}
                   onClick={() => onDateSelect(date)}
-                  onMouseMove={handleCalendarMouseMove}
+                  onMouseEnter={(e) => handleDayHover(date, e)}
+                  onMouseLeave={handleDayLeave}
                   data-date={date.toISOString()}
                 >
                   {date.getDate()}
@@ -138,7 +180,7 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
                   size="sm"
                   variant="ghost"
                   className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
-                  onClick={() => handleAddAppointmentFromTooltip(hoveredDate, onDateSelect, onAddAppointment)}
+                  onClick={() => handleAddAppointmentFromTooltip(hoveredDate)}
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
