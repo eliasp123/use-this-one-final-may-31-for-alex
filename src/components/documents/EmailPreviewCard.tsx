@@ -27,6 +27,8 @@ const EmailPreviewCard: React.FC<EmailPreviewCardProps> = ({
   slideDirection,
   position
 }) => {
+  console.log('EmailPreviewCard render:', { isVisible, slideDirection, position });
+
   if (!isVisible) return null;
 
   const slideClass = slideDirection === 'left' 
@@ -36,6 +38,8 @@ const EmailPreviewCard: React.FC<EmailPreviewCardProps> = ({
   const positionStyles = slideDirection === 'left'
     ? { top: position.top, left: position.left }
     : { top: position.top, right: position.right };
+
+  console.log('Rendering preview with styles:', positionStyles);
 
   return (
     <div

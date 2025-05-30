@@ -18,6 +18,8 @@ export const useEmailPreviewHover = () => {
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
 
   const handleMouseEnter = useCallback((event: React.MouseEvent) => {
+    console.log('Mouse enter triggered');
+    
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -30,6 +32,8 @@ export const useEmailPreviewHover = () => {
       const screenWidth = window.innerWidth;
       const cardCenterX = rect.left + rect.width / 2;
       
+      console.log('Showing preview - Card position:', { left: rect.left, width: rect.width, screenWidth, cardCenterX });
+      
       // Determine slide direction based on card position
       const slideDirection = cardCenterX > screenWidth / 2 ? 'right' : 'left';
       
@@ -39,22 +43,27 @@ export const useEmailPreviewHover = () => {
         ? { top, left: rect.right + 20 } // Show to the right of the card
         : { top, right: screenWidth - rect.left + 20 }; // Show to the left of the card
 
+      console.log('Setting hover state:', { slideDirection, position });
+
       setHoverState({
         isVisible: true,
         slideDirection,
         position
       });
-    }, 300); // 300ms delay
+    }, 150); // Reduced delay for testing
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    console.log('Mouse leave triggered');
+    
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     
     hideTimeoutRef.current = setTimeout(() => {
+      console.log('Hiding preview');
       setHoverState(prev => ({ ...prev, isVisible: false }));
-    }, 100); // Small delay to prevent flickering
+    }, 100);
   }, []);
 
   const cleanup = useCallback(() => {
