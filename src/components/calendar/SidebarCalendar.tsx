@@ -101,16 +101,7 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
                     }
                   )}
                   onClick={() => onDateSelect(date)}
-                  onMouseEnter={(e) => {
-                    // Create a synthetic mouse move event for hover detection
-                    const syntheticEvent = {
-                      target: e.currentTarget,
-                      currentTarget: e.currentTarget,
-                      clientX: e.clientX,
-                      clientY: e.clientY,
-                    } as React.MouseEvent;
-                    handleCalendarMouseMove(syntheticEvent);
-                  }}
+                  onMouseMove={handleCalendarMouseMove}
                   data-date={date.toISOString()}
                 >
                   {date.getDate()}
