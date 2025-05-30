@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -227,7 +226,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       </div>
 
                       {/* Sender and Organization */}
-                      <div className="space-y-1 mb-3">
+                      <div className="space-y-1 mb-2">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <User className="w-4 h-4" />
                           <span>{email.sender.name}</span>
@@ -236,19 +235,16 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                           <Building2 className="w-4 h-4" />
                           <span>{email.sender.organization}</span>
                         </div>
+                        {/* Date moved here after organization */}
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          <span>{format(new Date(email.date), 'MMM d')}</span>
+                        </div>
                       </div>
 
                       {/* Email Preview - 4 sentences */}
-                      <div className="bg-amber-50 p-2 rounded text-xs text-gray-600">
+                      <div className="bg-amber-50 p-2 rounded text-xs text-gray-600 mt-3">
                         {getEmailPreview(email.content)}
-                      </div>
-
-                      {/* Date */}
-                      <div className="flex justify-end mt-2">
-                        <div className="flex items-center gap-1 text-xs text-gray-400">
-                          <Calendar className="w-3 h-3" />
-                          <span>{format(new Date(email.date), 'MMM d')}</span>
-                        </div>
                       </div>
                     </div>
                   ))}
