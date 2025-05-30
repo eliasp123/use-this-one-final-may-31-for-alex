@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './ui/calendar';
 import { Button } from './ui/button';
@@ -9,6 +8,8 @@ import AppointmentList from './calendar/AppointmentList';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
 import { useCalendarHover } from '../hooks/useCalendarHover';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import AppointmentForm from './calendar/AppointmentForm';
 
 interface CalendarPopupProps {
   trigger?: React.ReactNode;
@@ -16,6 +17,8 @@ interface CalendarPopupProps {
 }
 
 const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+  
   // Use shared calendar logic
   const {
     date,
@@ -42,7 +45,16 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   const upcomingAppointments = getUpcomingAppointments();
 
   const handleAddAppointment = () => {
-    console.log('Add appointment clicked');
+    setShowAppointmentForm(true);
+  };
+
+  const handleSaveAppointment = (appointmentData: any) => {
+    console.log('Saving appointment:', appointmentData);
+    setShowAppointmentForm(false);
+  };
+
+  const handleCancelAppointment = () => {
+    setShowAppointmentForm(false);
   };
 
   const handleAddFromTooltip = (targetDate: Date) => {
@@ -229,6 +241,21 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
         </div>,
         document.body
       )}
+
+      {/* Appointment Form Dialog */}
+      <Dialog open={showAppointmentForm} onOpenChange={setShowAppointmentForm}>
+        <DialogContent className="max-w-4xl h-[80vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Add New Appointment</DialogTitle>
+          </DialogHeader>
+          <AppointmentForm
+            initialDate={date || new Date()}
+            onSave={handleSaveAppointment}
+            onCancel={handleCancelAppointment}
+            existingAppointments={[]}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
