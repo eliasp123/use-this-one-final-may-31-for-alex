@@ -106,16 +106,16 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       onMouseLeave={onMouseLeave}
     >
       {isAppointmentCategory && hoveredDate ? (
-        // Appointment-specific design with proper spacing
+        // Appointment-specific design
         <>
           {/* Header with date and count */}
-          <div className="px-4 py-3 border-b border-gray-200">
+          <div className="px-3 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="text-sm font-bold text-gray-800 mb-1">
+                <h3 className="text-sm font-bold text-gray-800 mb-1 leading-tight">
                   {formatDateHeader(hoveredDate)}
                 </h3>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 leading-tight">
                   {emails.length === 1 ? '1 Appointment' : `${emails.length} Appointments`}
                 </p>
               </div>
@@ -129,48 +129,48 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Add Appointment Button */}
-          <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
+          <div className="px-3 py-2 bg-orange-50 border-b border-orange-100">
             <Button
               onClick={handleAddAppointmentClick}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-1.5"
               size="sm"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-3 w-3 mr-1.5" />
               + Make An Appointment
             </Button>
           </div>
 
-          {/* Appointments List with proper spacing */}
+          {/* Appointments List */}
           <div className="h-[180px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
-                <div className="space-y-3 p-4">
+                <div className="space-y-4 p-3 pb-6">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
                       className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded border-b border-gray-100 last:border-b-0"
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Appointment Title with proper spacing */}
-                      <div className="mb-2">
+                      {/* Appointment Title */}
+                      <div className="mb-3">
                         <h4 className="text-sm font-medium text-amber-700 leading-relaxed">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Time and Location with proper spacing */}
-                      <div className="space-y-1 mb-3">
+                      {/* Time and Location */}
+                      <div className="space-y-2 mb-3">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Clock className="w-3 h-3" />
-                          <span>{formatTime(email.date)}</span>
+                          <span className="leading-relaxed">{formatTime(email.date)}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <MapPin className="w-3 h-3" />
-                          <span>{email.sender.organization}</span>
+                          <span className="leading-relaxed">{email.sender.organization}</span>
                         </div>
                       </div>
 
-                      {/* Summary with proper spacing */}
+                      {/* Summary */}
                       <div className="bg-amber-50 px-3 py-2 rounded text-xs text-amber-800 leading-relaxed">
                         {email.content.length > 80 ? 
                           `${email.content.substring(0, 80)}...` : 
@@ -192,20 +192,20 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Enhanced email design with proper spacing
+        // Enhanced email design
         <>
           {/* Header with Close button */}
-          <div className="px-4 py-3 border-b border-gray-200">
+          <div className="px-3 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-500" />
+                <Mail className="w-3 h-3 text-gray-500" />
                 <div>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-gray-900 leading-tight">
                     {status === 'unread' ? 'Unread Messages' :
                      status === 'pending' ? 'Pending Replies' :
                      'No Response Yet'}
                   </span>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-1 leading-tight">
                     {emails.length === 1 ? '1 email' : `${emails.length} emails`}
                   </p>
                 </div>
@@ -219,41 +219,41 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List with proper spacing */}
+          {/* Content List */}
           <div className="h-[200px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
-                <div className="space-y-3 p-4">
+                <div className="space-y-4 p-3 pb-6">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
                       className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded border-b border-gray-100 last:border-b-0"
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Email Subject with proper spacing */}
-                      <div className="mb-2">
+                      {/* Email Subject */}
+                      <div className="mb-3">
                         <h4 className="text-sm font-medium text-amber-700 leading-relaxed">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Sender, Organization and Date with proper spacing */}
-                      <div className="space-y-1 mb-3">
+                      {/* Sender, Organization and Date */}
+                      <div className="space-y-2 mb-3">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <User className="w-3 h-3" />
-                          <span>{email.sender.name}</span>
+                          <span className="leading-relaxed">{email.sender.name}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Building2 className="w-3 h-3" />
-                          <span>{email.sender.organization}</span>
+                          <span className="leading-relaxed">{email.sender.organization}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Calendar className="w-3 h-3" />
-                          <span>{format(new Date(email.date), 'MMM d')}</span>
+                          <span className="leading-relaxed">{format(new Date(email.date), 'MMM d')}</span>
                         </div>
                       </div>
 
-                      {/* Email Preview with proper spacing and line height */}
+                      {/* Email Preview */}
                       <div className="bg-amber-50 px-3 py-2 rounded text-xs text-gray-600 leading-relaxed">
                         {getEmailPreview(email.content)}
                       </div>
