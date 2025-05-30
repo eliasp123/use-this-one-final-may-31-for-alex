@@ -25,16 +25,8 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     setShowAppointmentForm(true);
   };
 
-  const handleClose = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleClose = () => {
     onClose();
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    // Only close if clicking the backdrop itself, not child elements
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
   };
 
   return (
@@ -42,8 +34,8 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
       {/* Backdrop - only show when open */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 z-40 transition-opacity"
-          onClick={handleBackdropClick}
+          className="fixed inset-0 bg-black/20 z-40"
+          onClick={onClose}
         />
       )}
       
@@ -52,7 +44,6 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
         className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Calendar Sidebar Header */}
         <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
