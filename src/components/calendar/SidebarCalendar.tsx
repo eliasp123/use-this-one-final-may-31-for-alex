@@ -35,32 +35,12 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
     );
   };
 
-  // Custom day renderer to add appointment highlighting
-  const renderDay = (day: Date) => {
-    const hasAppointments = isDayWithAppointment(day);
-    const isSelected = selectedDate && 
-      day.getDate() === selectedDate.getDate() && 
-      day.getMonth() === selectedDate.getMonth() && 
-      day.getFullYear() === selectedDate.getFullYear();
-    const isToday = day.getDate() === new Date().getDate() && 
-      day.getMonth() === new Date().getMonth() && 
-      day.getFullYear() === new Date().getFullYear();
-
-    return (
-      <div className="relative w-full h-full flex items-center justify-center">
-        {hasAppointments && !isSelected && !isToday && (
-          <div className="absolute inset-0 bg-amber-100 rounded-full opacity-60" />
-        )}
-        <span className="relative z-10">{day.getDate()}</span>
-      </div>
-    );
-  };
-
   return (
     <div className="p-1 overflow-visible max-w-full relative">
       <div
         onMouseMove={handleCalendarMouseMove}
         onMouseLeave={handleCalendarMouseLeave}
+        className="relative"
       >
         <Calendar
           mode="single"
@@ -117,10 +97,21 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
                       "bg-green-500 hover:bg-green-600 text-white focus:bg-green-600 focus:text-white": isSelected,
                       "bg-green-500 hover:bg-green-600 text-white font-semibold": isToday && !isSelected,
                       "text-gray-300 opacity-50": isOutside,
-                      "bg-amber-100": hasAppointments && !isSelected && !isToday && !isOutside
+                      "bg-amber-100 hover:bg-amber-200": hasAppointments && !isSelected && !isToday && !isOutside
                     }
                   )}
                   onClick={() => onDateSelect(date)}
+                  onMouseEnter={(e) => {
+                    // Create a synthetic mouse move event for hover detection
+                    const syntheticEvent = {
+                      target: e.currentTarget,
+                      currentTarget: e.currentTarget,
+                      clientX: e.clientX,
+                      clientY: e.clientY,
+                    } as React.MouseEvent;
+                    handleCalendarMouseMove(syntheticEvent);
+                  }}
+                  data-date={date.toISOString()}
                 >
                   {date.getDate()}
                 </button>
