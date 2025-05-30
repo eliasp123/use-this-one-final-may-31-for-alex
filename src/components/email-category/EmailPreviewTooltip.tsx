@@ -88,11 +88,28 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Position the tooltip above the date with smart positioning
+  // Enhanced positioning with left/right detection
+  const cardWidth = 425;
+  const cardHeight = 504; // Increased by 20% from 420px
+  const isNearRightEdge = position.x + cardWidth / 2 > window.innerWidth - 50;
+  const isNearLeftEdge = position.x - cardWidth / 2 < 50;
+
+  let finalLeft: number;
+  if (isNearRightEdge) {
+    // Show to the left of the cursor
+    finalLeft = Math.max(10, position.x - cardWidth - 20);
+  } else if (isNearLeftEdge) {
+    // Show to the right of the cursor
+    finalLeft = Math.min(position.x + 20, window.innerWidth - cardWidth - 10);
+  } else {
+    // Center on cursor
+    finalLeft = Math.max(10, Math.min(position.x - cardWidth / 2, window.innerWidth - cardWidth - 10));
+  }
+
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
-    left: Math.max(10, Math.min(position.x - 200, window.innerWidth - 425)), // Adjusted for new width
-    top: Math.max(10, position.y - 420), // Adjusted for new height
+    left: finalLeft,
+    top: Math.max(10, position.y - cardHeight),
     zIndex: 9999,
   };
 
@@ -100,7 +117,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[400px] max-w-[425px] max-h-[420px] overflow-hidden"
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[400px] max-w-[425px] max-h-[504px] overflow-hidden"
       style={tooltipStyle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -141,10 +158,26 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Appointments List */}
-          <div className="h-[270px]">
-            <ScrollArea className="h-full">
+          <div className="h-[350px]">
+            <ScrollArea className="h-full [&>div>div[style]]:!pr-6">
+              <style jsx>{`
+                .scroll-area-viewport::-webkit-scrollbar {
+                  width: 8px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-track {
+                  background: #f1f1f1;
+                  border-radius: 4px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-thumb {
+                  background: #c1c1c1;
+                  border-radius: 4px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-thumb:hover {
+                  background: #a8a8a8;
+                }
+              `}</style>
               {emails.length > 0 ? (
-                <div className="space-y-3 p-3 pb-8">
+                <div className="space-y-3 p-3 pb-12">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
@@ -220,10 +253,26 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Content List */}
-          <div className="h-[300px]">
-            <ScrollArea className="h-full">
+          <div className="h-[380px]">
+            <ScrollArea className="h-full [&>div>div[style]]:!pr-6">
+              <style jsx>{`
+                .scroll-area-viewport::-webkit-scrollbar {
+                  width: 8px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-track {
+                  background: #f1f1f1;
+                  border-radius: 4px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-thumb {
+                  background: #c1c1c1;
+                  border-radius: 4px;
+                }
+                .scroll-area-viewport::-webkit-scrollbar-thumb:hover {
+                  background: #a8a8a8;
+                }
+              `}</style>
               {emails.length > 0 ? (
-                <div className="space-y-3 p-3 pb-8">
+                <div className="space-y-3 p-3 pb-12">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
