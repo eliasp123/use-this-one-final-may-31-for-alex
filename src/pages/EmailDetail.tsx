@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -241,7 +242,7 @@ const EmailDetail = () => {
 
         {/* Calendar Sidebar */}
         {showCalendarSidebar && (
-          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col">
+          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col mr-4">
             {/* Calendar Sidebar Header */}
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
               <div className="flex items-center justify-between">
@@ -290,7 +291,7 @@ const EmailDetail = () => {
 
         {/* Toggle Calendar Sidebar Button (when hidden) */}
         {!showCalendarSidebar && (
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
+          <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
             <Button
               variant="outline"
               size="sm"
