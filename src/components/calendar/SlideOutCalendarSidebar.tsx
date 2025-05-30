@@ -35,22 +35,19 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     console.log('Calendar sidebar mouse leave');
   };
 
-  if (!isOpen) {
-    console.log('SlideOutCalendarSidebar: not open, returning null');
-    return null;
-  }
-
   return (
     <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/20 z-40 transition-opacity"
-        onClick={onClose}
-      />
+      {/* Backdrop - only show when open */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 z-40 transition-opacity"
+          onClick={onClose}
+        />
+      )}
       
-      {/* Slide-out Calendar Sidebar */}
+      {/* Slide-out Calendar Sidebar - always rendered but transformed */}
       <div 
-        className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ${
+        className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         onMouseEnter={handleMouseEnter}
