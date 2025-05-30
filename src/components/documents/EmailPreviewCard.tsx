@@ -43,10 +43,10 @@ const EmailPreviewCard: React.FC<EmailPreviewCardProps> = ({
 
   return (
     <div
-      className={`fixed z-50 w-80 ${slideClass}`}
+      className={`fixed z-[9999] w-80 ${slideClass} pointer-events-none`}
       style={positionStyles}
     >
-      <Card className="shadow-xl border border-gray-200 bg-white">
+      <Card className="shadow-2xl border-2 border-gray-300 bg-white">
         <CardContent className="p-4">
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">

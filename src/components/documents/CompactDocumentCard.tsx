@@ -80,7 +80,7 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
   };
 
   return (
-    <>
+    <div className="relative">
       <Card 
         className={`rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow h-full ${
           isTablet ? 'active:scale-98' : ''
@@ -152,19 +152,21 @@ const CompactDocumentCard = ({ attachment, layout = 'grid' }: CompactDocumentCar
         </CardContent>
       </Card>
 
-      {/* Email Preview Card */}
-      <EmailPreviewCard
-        emailId={attachment.emailId}
-        emailSubject={attachment.emailSubject}
-        senderName={attachment.senderName}
-        senderOrganization={attachment.senderOrganization}
-        emailDate={attachment.emailDate}
-        direction={attachment.direction}
-        isVisible={hoverState.isVisible}
-        slideDirection={hoverState.slideDirection}
-        position={hoverState.position}
-      />
-    </>
+      {/* Email Preview Card - now positioned as a sibling */}
+      {hoverState.isVisible && (
+        <EmailPreviewCard
+          emailId={attachment.emailId}
+          emailSubject={attachment.emailSubject}
+          senderName={attachment.senderName}
+          senderOrganization={attachment.senderOrganization}
+          emailDate={attachment.emailDate}
+          direction={attachment.direction}
+          isVisible={hoverState.isVisible}
+          slideDirection={hoverState.slideDirection}
+          position={hoverState.position}
+        />
+      )}
+    </div>
   );
 };
 
