@@ -65,6 +65,13 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return format(date, 'h:mm a');
   };
 
+  // Function to get first 4 sentences from content
+  const getEmailPreview = (content: string) => {
+    const sentences = content.match(/[^\.!?]+[\.!?]+/g) || [];
+    const preview = sentences.slice(0, 4).join(' ');
+    return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
+  };
+
   // Position the tooltip with smart positioning
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
@@ -177,10 +184,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Original email design for non-appointment categories
+        // Enhanced email design with better visual separation
         <>
           {/* Header */}
-          <div className="p-3 border-b border-gray-200">
+          <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-gray-500" />
@@ -205,50 +212,53 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Content List */}
-          <div className="bg-gray-50/50 border-t border-gray-100">
+          <div className="bg-white">
             {emails.length > 0 ? (
-              <div className="p-3 space-y-3">
-                {emails.slice(0, 3).map((email) => (
+              <div className="space-y-0">
+                {emails.slice(0, 3).map((email, index) => (
                   <div
                     key={email.id}
-                    className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-gray-100/50"
+                    className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                      index < emails.length - 1 ? 'border-b border-gray-100' : ''
+                    }`}
                     onClick={(e) => handleEmailClick(email.id, e)}
                   >
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0 bg-blue-500"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 text-sm mb-1 line-clamp-1">
-                          {email.subject}
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
-                          <div className="flex items-center gap-1">
-                            <User className="w-3 h-3" />
-                            <span className="truncate max-w-[100px]">{email.sender.name}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Building2 className="w-3 h-3" />
-                            <span className="truncate max-w-[80px]">{email.sender.organization}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs text-gray-600 line-clamp-2">
-                            {email.content.length > 45 ? 
-                              `${email.content.substring(0, 45)}...` : 
-                              email.content
-                            }
-                          </p>
-                          <div className="flex items-center gap-1 text-xs text-gray-400 ml-2">
-                            <Calendar className="w-3 h-3" />
-                            <span>{format(new Date(email.date), 'MMM d')}</span>
-                          </div>
-                        </div>
+                    {/* Email Subject */}
+                    <div className="mb-2">
+                      <h4 className="text-base text-blue-700 mb-1">
+                        {email.subject}
+                      </h4>
+                    </div>
+
+                    {/* Sender and Organization */}
+                    <div className="space-y-1 mb-3">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <User className="w-4 h-4" />
+                        <span>{email.sender.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Building2 className="w-4 h-4" />
+                        <span>{email.sender.organization}</span>
+                      </div>
+                    </div>
+
+                    {/* Email Preview - 4 sentences */}
+                    <div className="bg-blue-50 p-2 rounded text-xs text-blue-800">
+                      {getEmailPreview(email.content)}
+                    </div>
+
+                    {/* Date */}
+                    <div className="flex justify-end mt-2">
+                      <div className="flex items-center gap-1 text-xs text-gray-400">
+                        <Calendar className="w-3 h-3" />
+                        <span>{format(new Date(email.date), 'MMM d')}</span>
                       </div>
                     </div>
                   </div>
                 ))}
                 
                 {emails.length > 3 && (
-                  <div className="text-center pt-2 border-t border-gray-200">
+                  <div className="p-3 text-center border-t border-gray-200 bg-gray-50">
                     <span className="text-xs text-gray-500">
                       +{emails.length - 3} more emails
                     </span>
@@ -256,7 +266,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                 )}
               </div>
             ) : (
-              <div className="p-3 text-center">
+              <div className="p-4 text-center">
                 <Mail className="w-8 h-8 mx-auto mb-2 opacity-30 text-gray-400" />
                 <p className="text-sm text-gray-500">
                   No emails found
