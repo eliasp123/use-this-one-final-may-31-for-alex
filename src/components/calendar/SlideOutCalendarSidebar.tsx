@@ -5,6 +5,9 @@ import { useCalendarLogic } from '../../hooks/useCalendarLogic';
 import { Calendar, ChevronLeft, Plus } from 'lucide-react';
 import SidebarCalendar from './SidebarCalendar';
 import AppointmentFormSidebarContent from './AppointmentFormSidebarContent';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import AppointmentForm from './AppointmentForm';
+import { APPOINTMENTS } from '../../data/appointmentData';
 
 interface SlideOutCalendarSidebarProps {
   isOpen: boolean;
@@ -23,6 +26,16 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
 
   const handleAddAppointment = () => {
     setShowAppointmentForm(true);
+  };
+
+  const handleSaveAppointment = (appointmentData: any) => {
+    console.log('Saving appointment:', appointmentData);
+    setShowAppointmentForm(false);
+    // In a real app, this would save to the backend
+  };
+
+  const handleCancelAppointment = () => {
+    setShowAppointmentForm(false);
   };
 
   return (
@@ -88,6 +101,21 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
           />
         </div>
       </div>
+
+      {/* Appointment Form Dialog */}
+      <Dialog open={showAppointmentForm} onOpenChange={setShowAppointmentForm}>
+        <DialogContent className="max-w-4xl h-[80vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Add New Appointment</DialogTitle>
+          </DialogHeader>
+          <AppointmentForm
+            initialDate={date || new Date()}
+            onSave={handleSaveAppointment}
+            onCancel={handleCancelAppointment}
+            existingAppointments={APPOINTMENTS}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
