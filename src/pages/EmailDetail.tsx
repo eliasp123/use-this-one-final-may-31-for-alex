@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -24,8 +25,10 @@ const EmailDetail = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Always scroll to top when component mounts or email ID changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Force scroll to top immediately and override any other scroll behavior
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     
     if (id) {
       const foundEmail = getEmailByIdWithAttachments(id);
@@ -39,6 +42,13 @@ const EmailDetail = () => {
         }
       }
     }
+    
+    // Additional scroll to top after a brief delay to ensure it takes effect
+    const timeoutId = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, [id]);
   
   if (!email) {
