@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
@@ -233,11 +232,11 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
                               <span>{appointment.organization}</span>
                             </div>
                           </div>
-                          {appointment.description && (
+                          {appointment.notes && (
                             <p className="text-xs text-gray-600 line-clamp-2">
-                              {appointment.description.length > 45 ? 
-                                `${appointment.description.substring(0, 45)}...` : 
-                                appointment.description
+                              {appointment.notes.length > 45 ? 
+                                `${appointment.notes.substring(0, 45)}...` : 
+                                appointment.notes
                               }
                             </p>
                           )}
