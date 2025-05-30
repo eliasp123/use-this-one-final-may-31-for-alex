@@ -4,7 +4,7 @@ import { Calendar } from '../ui/calendar';
 import { cn } from '@/lib/utils';
 import { APPOINTMENTS } from '@/data/appointmentData';
 import { Button } from '../ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Clock, Building } from 'lucide-react';
 
 interface SidebarCalendarProps {
   selectedDate?: Date;
@@ -166,51 +166,93 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
         >
-          <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px] max-w-[300px]">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-gray-900">
-                {hoveredDate.toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </h4>
-              {onAddAppointment && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
-                  onClick={() => handleAddAppointmentFromTooltip(hoveredDate)}
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
-              )}
+          <div className="bg-white border border-gray-200 rounded-lg shadow-lg min-w-[280px] max-w-[320px]">
+            {/* Header */}
+            <div className="p-3 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-semibold text-gray-900 text-sm">
+                    {hoveredDate.toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    {(() => {
+                      const appointments = getAppointmentsForDate(hoveredDate);
+                      const count = appointments.length;
+                      return count === 0 ? 'No appointments' : 
+                        count === 1 ? '1 appointment' : `${count} appointments`;
+                    })()}
+                  </p>
+                </div>
+              </div>
             </div>
             
-            {(() => {
-              const appointments = getAppointmentsForDate(hoveredDate);
-              if (appointments.length === 0) {
+            {/* Add Appointment Button */}
+            <div className="p-3 border-b border-gray-200">
+              <Button
+                onClick={() => handleAddAppointmentFromTooltip(hoveredDate)}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Appointment
+              </Button>
+            </div>
+
+            {/* Appointments List */}
+            <div className="bg-amber-50 border-t border-amber-100">
+              {(() => {
+                const appointments = getAppointmentsForDate(hoveredDate);
+                if (appointments.length === 0) {
+                  return (
+                    <div className="p-3">
+                      <p className="text-sm text-gray-500 text-center">No appointments scheduled</p>
+                    </div>
+                  );
+                }
+                
                 return (
-                  <p className="text-sm text-gray-500">No appointments scheduled</p>
+                  <div className="p-3 space-y-3">
+                    {appointments.slice(0, 3).map((appointment) => (
+                      <div key={appointment.id} className="flex items-start gap-2">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 text-sm mb-1">
+                            {appointment.title}
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              <span>{appointment.time}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Building className="h-3 w-3" />
+                              <span>{appointment.organization}</span>
+                            </div>
+                          </div>
+                          {appointment.description && (
+                            <p className="text-xs text-gray-600 line-clamp-2">
+                              {appointment.description.length > 45 ? 
+                                `${appointment.description.substring(0, 45)}...` : 
+                                appointment.description
+                              }
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {appointments.length > 3 && (
+                      <div className="text-xs text-gray-500 font-medium pt-1 border-t border-amber-200">
+                        +{appointments.length - 3} more appointment{appointments.length - 3 !== 1 ? 's' : ''}
+                      </div>
+                    )}
+                  </div>
                 );
-              }
-              
-              return (
-                <div className="space-y-2">
-                  {appointments.slice(0, 3).map((appointment) => (
-                    <div key={appointment.id} className="text-sm">
-                      <div className="font-medium text-gray-900">{appointment.title}</div>
-                      <div className="text-gray-600 text-xs">{appointment.time} • {appointment.organization}</div>
-                    </div>
-                  ))}
-                  {appointments.length > 3 && (
-                    <div className="text-xs text-gray-500 font-medium">
-                      +{appointments.length - 3} more appointment{appointments.length - 3 !== 1 ? 's' : ''}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+              })()}
+            </div>
           </div>
         </div>
       )}

@@ -3,7 +3,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Calendar, User, Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Mail, Calendar, User, Building2, Plus, Clock } from 'lucide-react';
 
 interface EmailPreviewTooltipProps {
   emails: EmailData[];
@@ -45,6 +46,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     }
   };
 
+  const handleAddAppointment = () => {
+    onClose();
+    // In a real implementation, this would open the appointment form
+    console.log('Add appointment clicked from email preview');
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -69,101 +76,110 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   // Position the tooltip with smart positioning
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
-    left: Math.max(10, Math.min(position.x, window.innerWidth - 490)),
+    left: Math.max(10, Math.min(position.x, window.innerWidth - 320)),
     top: Math.max(10, Math.min(position.y, window.innerHeight - 400)),
     zIndex: 9999,
   };
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-[480px] max-h-[380px] overflow-hidden"
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[300px] max-w-[320px] max-h-[400px] overflow-hidden"
       style={tooltipStyle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <Mail className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">
-            {status === 'unread' && 'Unread Messages'}
-            {status === 'pending' && 'Pending Replies'}
-            {status === 'unresponded' && 'No Response Yet'}
-          </span>
-          <span className={`w-5 h-5 text-xs font-medium text-white rounded-full flex items-center justify-center bg-gradient-to-r ${categoryColor}`}>
-            {emails.length}
-          </span>
+      <div className="p-3 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Mail className="w-4 h-4 text-gray-500" />
+            <div>
+              <span className="text-sm font-semibold text-gray-900">
+                {status === 'unread' && 'Unread Messages'}
+                {status === 'pending' && 'Pending Replies'}
+                {status === 'unresponded' && 'No Response Yet'}
+              </span>
+              <p className="text-xs text-gray-500">
+                {emails.length === 1 ? '1 email' : `${emails.length} emails`}
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-lg font-medium"
+          >
+            ×
+          </button>
         </div>
-        <button 
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 text-lg font-medium"
+      </div>
+
+      {/* Add Appointment Button */}
+      <div className="p-3 border-b border-gray-200">
+        <Button
+          onClick={handleAddAppointment}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
+          size="sm"
         >
-          ×
-        </button>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Appointment
+        </Button>
       </div>
 
       {/* Email List */}
-      <div className="space-y-2 max-h-[300px] overflow-y-auto">
-        {emails.slice(0, 5).map((email) => (
-          <div
-            key={email.id}
-            className="p-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer"
-            onClick={(e) => handleEmailClick(email.id, e)}
-          >
-            {/* Email Header */}
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate mb-1">
-                  {email.subject}
-                </p>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <User className="w-3 h-3" />
-                    <span className="truncate max-w-[120px]">{email.sender.name}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Building2 className="w-3 h-3" />
-                    <span className="truncate max-w-[100px]">{email.sender.organization}</span>
+      <div className="bg-amber-50 border-t border-amber-100 max-h-[280px] overflow-y-auto">
+        {emails.length > 0 ? (
+          <div className="p-3 space-y-3">
+            {emails.slice(0, 3).map((email) => (
+              <div
+                key={email.id}
+                className="cursor-pointer hover:bg-amber-100/50 rounded-lg p-2 transition-colors"
+                onClick={(e) => handleEmailClick(email.id, e)}
+              >
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-900 text-sm mb-1 line-clamp-1">
+                      {email.subject}
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
+                      <div className="flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        <span className="truncate max-w-[100px]">{email.sender.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Building2 className="w-3 h-3" />
+                        <span className="truncate max-w-[80px]">{email.sender.organization}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-gray-600 line-clamp-2">
+                        {email.content.length > 45 ? 
+                          `${email.content.substring(0, 45)}...` : 
+                          email.content
+                        }
+                      </p>
+                      <div className="flex items-center gap-1 text-xs text-gray-400 ml-2">
+                        <Calendar className="w-3 h-3" />
+                        <span>{formatDate(email.date)}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
-                {getStatusBadge(email)}
-                <div className="flex items-center gap-1 text-xs text-gray-400">
-                  <Calendar className="w-3 h-3" />
-                  <span>{formatDate(email.date)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Email Preview */}
-            <p className="text-xs text-gray-600 line-clamp-2">
-              {email.content.substring(0, 120)}...
-            </p>
-
-            {/* Attachments indicator */}
-            {email.attachments && email.attachments.length > 0 && (
-              <div className="mt-2 pt-2 border-t border-gray-50">
+            ))}
+            
+            {emails.length > 3 && (
+              <div className="text-center pt-2 border-t border-amber-200">
                 <span className="text-xs text-gray-500">
-                  📎 {email.attachments.length} attachment{email.attachments.length > 1 ? 's' : ''}
+                  +{emails.length - 3} more emails
                 </span>
               </div>
             )}
           </div>
-        ))}
-        
-        {emails.length > 5 && (
-          <div className="text-center pt-2 border-t border-gray-100">
-            <span className="text-xs text-gray-500">
-              +{emails.length - 5} more emails
-            </span>
-          </div>
-        )}
-        
-        {emails.length === 0 && (
-          <div className="text-center py-4 text-gray-500">
-            <Mail className="w-8 h-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">No emails found</p>
+        ) : (
+          <div className="p-3 text-center">
+            <Mail className="w-8 h-8 mx-auto mb-2 opacity-30 text-gray-400" />
+            <p className="text-sm text-gray-500">No emails found</p>
           </div>
         )}
       </div>
