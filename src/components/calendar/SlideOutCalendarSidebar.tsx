@@ -21,18 +21,20 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     handleSelect
   } = useCalendarLogic();
 
-  console.log('SlideOutCalendarSidebar render - isOpen:', isOpen);
-
   const handleAddAppointment = () => {
     setShowAppointmentForm(true);
   };
 
-  const handleMouseEnter = () => {
-    console.log('Calendar sidebar mouse enter');
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose();
   };
 
-  const handleMouseLeave = () => {
-    console.log('Calendar sidebar mouse leave');
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    // Only close if clicking the backdrop itself, not child elements
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
   return (
@@ -41,7 +43,7 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/20 z-40 transition-opacity"
-          onClick={onClose}
+          onClick={handleBackdropClick}
         />
       )}
       
@@ -50,8 +52,7 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
         className={`fixed right-0 top-0 h-full w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Calendar Sidebar Header */}
         <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
@@ -63,8 +64,8 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
             <Button
               variant="ghost"
               size="sm"
-              onClick={onClose}
-              className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50"
+              onClick={handleClose}
+              className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50 flex-shrink-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
