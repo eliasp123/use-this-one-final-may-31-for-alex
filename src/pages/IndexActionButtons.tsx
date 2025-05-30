@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Pencil, FileText, Calendar, Mail, MapPin } from 'lucide-react';
+import { Pencil, FileText, Calendar, Mail, MapPin, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface IndexActionButtonsProps {
@@ -15,11 +15,11 @@ const IndexActionButtons = ({ onNewEmail, onViewDocuments, onCalendarClick }: In
   return (
     <div className="flex items-center justify-center gap-8">
       <button
-        onClick={onNewEmail}
+        onClick={() => navigate('/')}
         className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-base font-normal underline decoration-gray-300 hover:decoration-blue-600 underline-offset-4"
       >
-        <Mail className="h-4 w-4" />
-        Compose
+        <Home className="h-4 w-4" />
+        Communication Hub
       </button>
       
       <button
@@ -27,7 +27,7 @@ const IndexActionButtons = ({ onNewEmail, onViewDocuments, onCalendarClick }: In
         className="flex items-center gap-2 text-gray-600 hover:text-green-600 transition-colors duration-200 text-base font-normal underline decoration-gray-300 hover:decoration-green-600 underline-offset-4"
       >
         <FileText className="h-4 w-4" />
-        Documents
+        Document Hub
       </button>
 
       <button
