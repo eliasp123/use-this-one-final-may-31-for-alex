@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -14,7 +15,7 @@ import NewEmailForm from '../components/NewEmailForm';
 import AppointmentFormSidebarContent from '../components/calendar/AppointmentFormSidebarContent';
 import { useToast } from '../hooks/use-toast';
 import { useCalendarLogic } from '../hooks/useCalendarLogic';
-import { Mail, ArrowLeft, Home, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Mail, ArrowLeft, Home, Calendar, ChevronRight, ChevronLeft, Plus } from 'lucide-react';
 import SidebarCalendar from '../components/calendar/SidebarCalendar';
 
 const EmailDetail = () => {
@@ -24,6 +25,7 @@ const EmailDetail = () => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
   const [showCalendarSidebar, setShowCalendarSidebar] = useState(true);
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
   const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { toast } = useToast();
   
@@ -176,6 +178,14 @@ const EmailDetail = () => {
     // Navigate to full calendar view or expand functionality
     navigate('/#calendar-section');
   };
+
+  const handleAddAppointment = () => {
+    setShowAppointmentForm(true);
+  };
+
+  const handleAppointmentFormClose = () => {
+    setShowAppointmentForm(false);
+  };
   
   return (
     <SidebarProvider defaultOpen={true}>
@@ -279,11 +289,23 @@ const EmailDetail = () => {
             </div>
 
             {/* Calendar Sidebar Content */}
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-4 flex flex-col">
               <AppointmentFormSidebarContent
                 selectedDate={date}
                 selectedDateAppointments={selectedDateAppointments}
               />
+              
+              {/* Add Appointment Button */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <Button
+                  onClick={handleAddAppointment}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white"
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Appointment
+                </Button>
+              </div>
             </div>
           </div>
         )}
