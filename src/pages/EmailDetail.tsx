@@ -288,24 +288,24 @@ const EmailDetail = () => {
               />
             </div>
 
+            {/* Add Appointment Button - moved here */}
+            <div className="p-4 border-b border-gray-200">
+              <Button
+                onClick={handleAddAppointment}
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Appointment
+              </Button>
+            </div>
+
             {/* Calendar Sidebar Content */}
             <div className="flex-1 p-4 flex flex-col">
               <AppointmentFormSidebarContent
                 selectedDate={date}
                 selectedDateAppointments={selectedDateAppointments}
               />
-              
-              {/* Add Appointment Button */}
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <Button
-                  onClick={handleAddAppointment}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                  size="sm"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Appointment
-                </Button>
-              </div>
             </div>
           </div>
         )}
