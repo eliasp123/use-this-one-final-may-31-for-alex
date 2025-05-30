@@ -41,11 +41,7 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
-            <div className={`flex items-center justify-center w-6 h-6 ${
-              getFilterCount('person') > 0 ? 'bg-purple-500' : 'bg-gray-300'
-            } rounded-full text-white text-sm font-bold mr-2`}>
-              {getFilterCount('person')}
-            </div>
+            <span className="text-purple-600 font-bold mr-2">{getFilterCount('person')}</span>
             <Users className="h-4 w-4 mr-2" />
             Person
           </button>
@@ -59,11 +55,7 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
-            <div className={`flex items-center justify-center w-6 h-6 ${
-              getFilterCount('organization') > 0 ? 'bg-purple-500' : 'bg-gray-300'
-            } rounded-full text-white text-sm font-bold mr-2`}>
-              {getFilterCount('organization')}
-            </div>
+            <span className="text-purple-600 font-bold mr-2">{getFilterCount('organization')}</span>
             <Building className="h-4 w-4 mr-2" />
             Organization
           </button>
@@ -77,11 +69,7 @@ const DocumentsFilterRow = ({
                 : "text-gray-700 hover:bg-purple-100"
             }`}
           >
-            <div className={`flex items-center justify-center w-6 h-6 ${
-              getFilterCount('date') > 0 ? 'bg-purple-500' : 'bg-gray-300'
-            } rounded-full text-white text-sm font-bold mr-2`}>
-              {getFilterCount('date')}
-            </div>
+            <span className="text-purple-600 font-bold mr-2">{getFilterCount('date')}</span>
             <Calendar className="h-4 w-4 mr-2" />
             Month
           </button>
