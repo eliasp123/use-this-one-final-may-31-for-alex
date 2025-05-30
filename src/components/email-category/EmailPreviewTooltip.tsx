@@ -40,11 +40,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     e.stopPropagation();
     onClose();
     
-    if (isEmailRowTooltip) {
-      navigate(`/email/${emailId}`);
-    } else {
-      navigate(`/emails/${category}/${status}`);
-    }
+    // Always navigate to the email list page (top of email summary)
+    navigate(`/emails/${category}/${status}`);
   };
 
   const handleAddAppointmentClick = () => {
