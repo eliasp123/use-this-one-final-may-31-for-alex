@@ -36,11 +36,8 @@ const CalendarDateDisplay = ({
     handleCalendarMouseLeave,
     handleTooltipMouseEnter,
     handleTooltipMouseLeave,
-    handleCalendarMonthChange,
-    handleAddAppointmentFromTooltip
+    handleCalendarMonthChange
   } = useCalendarHover();
-
-  const hoveredAppointments = hoveredDate ? getAppointmentsForDate(hoveredDate) : [];
 
   const handleAddAppointmentClick = () => {
     setShowAppointmentForm(true);
@@ -56,7 +53,7 @@ const CalendarDateDisplay = ({
     setShowAppointmentForm(false);
   };
 
-  const handleAddAppointmentFromTooltipWrapper = (targetDate: Date) => {
+  const handleAddAppointmentFromTooltip = (targetDate: Date) => {
     onDateSelect(targetDate);
     handleAddAppointmentClick();
   };
@@ -167,7 +164,7 @@ const CalendarDateDisplay = ({
                   onMouseEnter={handleTooltipMouseEnter}
                   onMouseLeave={handleTooltipMouseLeave}
                   categoryColor="#f59e0b"
-                  onAddAppointment={handleAddAppointmentFromTooltipWrapper}
+                  onAddAppointment={handleAddAppointmentFromTooltip}
                   hoveredDate={hoveredDate}
                 />
               )}
