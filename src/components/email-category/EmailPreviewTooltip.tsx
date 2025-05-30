@@ -88,28 +88,28 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Enhanced positioning for horizontal sliding (left/right detection)
+  // Enhanced positioning for horizontal sliding from card edges
   const cardWidth = 531; // Increased by 25% from 425px
   const cardHeight = 756; // Increased by 20% from 630px (which was 50% increase from original 420px)
   const screenWidth = window.innerWidth;
-  const slideMargin = 20; // Space between category card and preview
+  const slideMargin = 0; // No margin - slide directly from edge
   
   // Determine if we should slide left or right based on available space
-  const shouldSlideLeft = position.x + cardWidth + slideMargin > screenWidth - 50;
+  const shouldSlideLeft = position.x + cardWidth > screenWidth - 50;
   
   let finalLeft: number;
   let finalTop: number;
   
   if (shouldSlideLeft) {
-    // Slide out to the left of the category card
-    finalLeft = Math.max(10, position.x - cardWidth - slideMargin);
+    // Slide out to the left from the left edge of the category card
+    finalLeft = Math.max(10, position.x - cardWidth);
   } else {
-    // Slide out to the right of the category card
-    finalLeft = Math.min(position.x + slideMargin, screenWidth - cardWidth - 10);
+    // Slide out to the right from the right edge of the category card
+    finalLeft = Math.min(position.x, screenWidth - cardWidth - 10);
   }
   
-  // Vertically align with the category card (center the tooltip with the hovered element)
-  finalTop = Math.max(10, Math.min(position.y - cardHeight / 2, window.innerHeight - cardHeight - 10));
+  // Align the top of the preview card with the top of the category card
+  finalTop = Math.max(10, Math.min(position.y, window.innerHeight - cardHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
