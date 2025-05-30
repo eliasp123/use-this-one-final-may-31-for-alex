@@ -38,12 +38,12 @@ const AppointmentFormSidebarContent = ({
   const upcomingAppointments = getUpcomingAppointments();
 
   return (
-    <div className="w-72 border-l border-gray-200 bg-gray-50 flex flex-col">
+    <div className="w-72 border-l border-gray-200 bg-gray-50 flex flex-col h-[745px]">
       <div className="flex-1 p-3 overflow-hidden">
         {selectedDate ? (
           <div className="space-y-4 h-full flex flex-col">
-            {/* Top section - Selected date appointments - Equal height */}
-            <div className="flex-1 min-h-0">
+            {/* Top section - Selected date appointments - increased height to match main calendar */}
+            <div className="h-[330px] min-h-0">
               <ScrollArea className="h-full">
                 <div className="space-y-3 pr-4">
                   {selectedDateAppointments.length === 0 ? (
@@ -105,8 +105,8 @@ const AppointmentFormSidebarContent = ({
             {/* Separator line */}
             <Separator className="bg-gray-600" />
 
-            {/* Bottom section - Upcoming appointments - Equal height to top section */}
-            <div className="bg-gray-50 flex-1 min-h-0 flex flex-col">
+            {/* Bottom section - Upcoming appointments - increased height to match main calendar */}
+            <div className="bg-gray-50 h-[330px] min-h-0 flex flex-col">
               <h4 className="text-sm font-medium text-gray-700 mb-3">Upcoming Appointments (Next 4 Weeks)</h4>
               <div className="flex-1 min-h-0">
                 <ScrollArea className="h-full">
