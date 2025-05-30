@@ -113,7 +113,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       </div>
 
       {/* Add Appointment Button */}
-      <div className="p-3 border-b border-gray-200 bg-amber-25">
+      <div className="p-3 border-b border-gray-200 bg-amber-50/30">
         <Button
           onClick={handleAddAppointment}
           className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
