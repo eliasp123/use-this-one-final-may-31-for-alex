@@ -5,13 +5,14 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { useEmailCategoryData } from '@/hooks/useEmailCategoryData';
 import { useEmailFiltering } from '@/hooks/useEmailFiltering';
 import { useEmailFormatter } from '@/hooks/useEmailFormatter';
+import { useSlideOutCalendar } from '@/hooks/useSlideOutCalendar';
 import { getAllCategories } from '@/utils/categoryUtils';
 import EmailSidebar from '@/components/email-list/EmailSidebar';
 import EmailHeader from '@/components/email-list/EmailHeader';
 import EmailListToolbar from '@/components/email-list/EmailListToolbar';
 import EmailTable from '@/components/email-list/EmailTable';
-import CalendarSection from '@/components/CalendarSection';
 import NewEmailForm from '@/components/NewEmailForm';
+import SlideOutCalendarSidebar from '@/components/calendar/SlideOutCalendarSidebar';
 import { useToast } from '@/hooks/use-toast';
 
 const EmailList = () => {
@@ -36,6 +37,7 @@ const EmailList = () => {
     activeTab, 
     searchQuery 
   });
+  const { isCalendarOpen, openCalendar, closeCalendar } = useSlideOutCalendar();
   const { toast } = useToast();
   
   const handleTabChange = (value: string) => {
@@ -85,6 +87,7 @@ const EmailList = () => {
           category={category} 
           activeTab={activeTab}
           onCategoryAdded={handleCategoryAdded}
+          onCalendarClick={openCalendar}
         />
         
         {/* Main Content */}
@@ -111,11 +114,6 @@ const EmailList = () => {
                 formatDate={formatDate}
               />
             </div>
-            
-            {/* Calendar Section - Added to the bottom */}
-            <div className="mt-16 mb-24">
-              <CalendarSection />
-            </div>
           </div>
         </div>
 
@@ -124,6 +122,12 @@ const EmailList = () => {
           isOpen={showNewEmailForm}
           onClose={() => setShowNewEmailForm(false)}
           onSend={handleNewEmail}
+        />
+
+        {/* Slide-out Calendar Sidebar */}
+        <SlideOutCalendarSidebar
+          isOpen={isCalendarOpen}
+          onClose={closeCalendar}
         />
       </div>
     </SidebarProvider>

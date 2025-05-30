@@ -1,64 +1,57 @@
 
 import React from 'react';
-import { 
-  Sidebar, 
-  SidebarContent, 
-  SidebarGroup
-} from '@/components/ui/sidebar';
-import { EmailCategory } from '@/hooks/useEmailCategoryData';
-import { useCategoryDragDrop } from './sidebar/useCategoryDragDrop';
-import AddCategoryDialog from './sidebar/AddCategoryDialog';
+import { Sidebar, SidebarContent, SidebarHeader, SidebarGroup, SidebarMenu } from '../ui/sidebar';
+import { EmailCategoryData } from '../../types/email';
 import ShowAllEmailsButton from './sidebar/ShowAllEmailsButton';
 import DraggableCategoryList from './sidebar/DraggableCategoryList';
+import AddCategoryDialog from './sidebar/AddCategoryDialog';
+import { Calendar } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface EmailSidebarProps {
-  emailCategories: EmailCategory[];
-  category: string | undefined;
+  emailCategories: EmailCategoryData[];
+  category?: string;
   activeTab: string;
-  onCategoryAdded?: () => void;
+  onCategoryAdded: () => void;
+  onCalendarClick?: () => void;
 }
 
-const EmailSidebar: React.FC<EmailSidebarProps> = ({ 
+const EmailSidebar = ({ 
   emailCategories, 
   category, 
-  activeTab,
-  onCategoryAdded 
-}) => {
-  const {
-    draggedItem,
-    dragOverIndex,
-    orderedCategories,
-    handleDragStart,
-    handleDragOver,
-    handleDragEnter,
-    handleDragLeave,
-    handleDrop,
-    handleDragEnd
-  } = useCategoryDragDrop(emailCategories);
-
+  activeTab, 
+  onCategoryAdded,
+  onCalendarClick 
+}: EmailSidebarProps) => {
   return (
-    <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
-      <SidebarContent className="pt-16 pl-4">  
-        <SidebarGroup className="pt-8">
-          <ShowAllEmailsButton category={category} activeTab={activeTab} />
-          <AddCategoryDialog onCategoryAdded={onCategoryAdded} />
-          
-          <div className="pt-8">
-            <DraggableCategoryList
-              orderedCategories={orderedCategories}
-              category={category}
+    <Sidebar side="left" className="border-r border-gray-200">
+      <SidebarHeader className="p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-800">Categories</h2>
+          {onCalendarClick && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onCalendarClick}
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+            >
+              <Calendar className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </SidebarHeader>
+      
+      <SidebarContent className="p-4">
+        <SidebarGroup>
+          <SidebarMenu className="space-y-2">
+            <ShowAllEmailsButton category={category} activeTab={activeTab} />
+            <DraggableCategoryList 
+              emailCategories={emailCategories} 
+              category={category} 
               activeTab={activeTab}
-              draggedItem={draggedItem}
-              dragOverIndex={dragOverIndex}
-              onCategoryAdded={onCategoryAdded}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onDragEnd={handleDragEnd}
             />
-          </div>
+            <AddCategoryDialog onCategoryAdded={onCategoryAdded} />
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
