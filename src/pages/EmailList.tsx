@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -39,9 +40,6 @@ const EmailList = () => {
   const { isCalendarOpen, openCalendar, closeCalendar } = useSlideOutCalendar();
   const { toast } = useToast();
   
-  console.log('EmailList render - isCalendarOpen:', isCalendarOpen);
-  console.log('EmailList render - openCalendar function exists:', !!openCalendar);
-  
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     // Update URL to reflect the new status without changing the category
@@ -80,31 +78,6 @@ const EmailList = () => {
     currentCategory = allCategories[category];
   }
 
-  const handleCalendarHover = () => {
-    console.log('EmailList handleCalendarHover called - ABOUT TO CALL openCalendar');
-    console.log('EmailList handleCalendarHover - openCalendar function:', openCalendar);
-    console.log('EmailList handleCalendarHover - current isCalendarOpen before:', isCalendarOpen);
-    openCalendar();
-    console.log('EmailList handleCalendarHover - openCalendar called');
-    
-    // Add a small delay to check if state changed
-    setTimeout(() => {
-      console.log('EmailList handleCalendarHover - isCalendarOpen after 100ms:', isCalendarOpen);
-    }, 100);
-  };
-
-  const handleCalendarClick = () => {
-    console.log('EmailList handleCalendarClick called - ABOUT TO CALL openCalendar');
-    console.log('EmailList handleCalendarClick - openCalendar function:', openCalendar);
-    console.log('EmailList handleCalendarClick - current isCalendarOpen before:', isCalendarOpen);
-    openCalendar();
-    console.log('EmailList handleCalendarClick - openCalendar called');
-  };
-
-  console.log('EmailList - About to render, passing these functions to EmailSidebar:');
-  console.log('- onCalendarClick:', !!handleCalendarClick);
-  console.log('- onCalendarHover:', !!handleCalendarHover);
-
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
@@ -114,8 +87,6 @@ const EmailList = () => {
           category={category} 
           activeTab={activeTab}
           onCategoryAdded={handleCategoryAdded}
-          onCalendarClick={handleCalendarClick}
-          onCalendarHover={handleCalendarHover}
         />
         
         {/* Main Content */}
@@ -126,6 +97,7 @@ const EmailList = () => {
               emailCount={filteredEmails.length}
               activeTab={activeTab}
               onComposeClick={() => setShowNewEmailForm(true)}
+              onCalendarClick={openCalendar}
             />
             
             <EmailListToolbar 

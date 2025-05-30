@@ -10,13 +10,15 @@ interface EmailHeaderProps {
   emailCount: number;
   activeTab: string;
   onComposeClick: () => void;
+  onCalendarClick?: () => void;
 }
 
 const EmailHeader: React.FC<EmailHeaderProps> = ({
   currentCategory,
   emailCount,
   activeTab,
-  onComposeClick
+  onComposeClick,
+  onCalendarClick
 }) => {
   const navigate = useNavigate();
 
@@ -54,12 +56,7 @@ const EmailHeader: React.FC<EmailHeaderProps> = ({
         <IndexActionButtons
           onNewEmail={onComposeClick}
           onViewDocuments={() => navigate('/documents')}
-          onCalendarClick={() => {
-            const calendarSection = document.getElementById('calendar-section');
-            if (calendarSection) {
-              calendarSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onCalendarClick={onCalendarClick || (() => {})}
         />
       </div>
     </div>
