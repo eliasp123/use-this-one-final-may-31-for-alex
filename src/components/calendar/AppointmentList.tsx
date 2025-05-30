@@ -123,7 +123,7 @@ const AppointmentList = ({ date, selectedAppointments, upcomingAppointments, onA
                       <p className="text-xs text-gray-600 truncate mb-1">
                         {appointment.organization}
                       </p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-orange-500 font-medium">
                         {format(new Date(appointment.date), 'MMM d')}
                       </p>
                     </div>
