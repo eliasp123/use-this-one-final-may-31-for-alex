@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './ui/calendar';
@@ -173,17 +174,21 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
       {hoveredDate && createPortal(
         <EmailPreviewTooltip
           emails={getAppointmentsForDate(hoveredDate).map(appointment => ({
-            id: appointment.id,
+            id: appointment.id.toString(),
             subject: appointment.title,
             sender: {
               name: appointment.to || 'Appointment',
+              email: 'appointment@example.com',
               organization: appointment.organization
             },
+            recipient: 'you@example.com',
             content: appointment.notes || 'No additional notes',
             date: appointment.date.toISOString(),
             read: true,
             replied: true,
-            responseReceived: true
+            responseReceived: true,
+            private: false,
+            category: "appointments"
           }))}
           status="unread"
           category="appointments"

@@ -158,17 +158,21 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
       {hoveredDate && (
         <EmailPreviewTooltip
           emails={getAppointmentsForDate(hoveredDate).map(appointment => ({
-            id: appointment.id,
+            id: appointment.id.toString(),
             subject: appointment.title,
             sender: {
               name: appointment.to || 'Appointment',
+              email: 'appointment@example.com',
               organization: appointment.organization
             },
+            recipient: 'you@example.com',
             content: appointment.notes || 'No additional notes',
             date: appointment.date.toISOString(),
             read: true,
             replied: true,
-            responseReceived: true
+            responseReceived: true,
+            private: false,
+            category: "appointments"
           }))}
           status="unread"
           category="appointments"
