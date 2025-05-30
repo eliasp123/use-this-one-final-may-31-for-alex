@@ -70,10 +70,10 @@ const Index = () => {
                 <PopoverContent className="w-72 sm:w-80 p-4">
                   <div className="space-y-4">
                     <h4 className="text-lg font-medium text-gray-800">What are Conversations?</h4>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 text-sm text-justify">
                       Conversations are meaningful exchanges with organizations helping your loved ones.
                     </p>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 text-sm text-justify">
                       Rather than sorting through isolated emails, you can track complete interactions with senior living 
                       facilities, healthcare providers, and benefit programs—all in one place.
                     </p>
