@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import DocumentSidebar from '../components/documents/DocumentSidebar';
@@ -9,7 +8,9 @@ import DocumentsContent from '../components/documents/DocumentsContent';
 import { getAllAttachments, filterAttachments, getAttachmentStats, AttachmentWithContext } from '../utils/attachmentUtils';
 import { getDocumentsInFolder, createFolder } from '../utils/folderUtils';
 import NewEmailForm from '../components/NewEmailForm';
+import SlideOutCalendarSidebar from '../components/calendar/SlideOutCalendarSidebar';
 import { useToast } from '../hooks/use-toast';
+import { useSlideOutCalendar } from '../hooks/useSlideOutCalendar';
 
 type FilterType = 'all' | 'person' | 'organization' | 'date';
 
@@ -21,6 +22,7 @@ const Documents = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [directionFilter, setDirectionFilter] = useState<'all' | 'received' | 'sent'>('all');
   const { toast } = useToast();
+  const { isCalendarOpen, openCalendar, closeCalendar } = useSlideOutCalendar();
 
   const allAttachments = getAllAttachments();
   
@@ -141,7 +143,10 @@ const Documents = () => {
           {/* Main content area - centered and wider */}
           <div className="flex-1 min-w-0 flex justify-center">
             <div className="w-full max-w-[1920px] mx-auto px-6 py-4 sm:py-8 pt-16">
-              <DocumentsHeader onNewEmailClick={() => setShowNewEmailForm(true)} />
+              <DocumentsHeader 
+                onNewEmailClick={() => setShowNewEmailForm(true)}
+                onCalendarClick={openCalendar}
+              />
               
               <DocumentsSearchBar 
                 searchQuery={searchQuery}
@@ -175,6 +180,12 @@ const Documents = () => {
           isOpen={showNewEmailForm}
           onClose={() => setShowNewEmailForm(false)}
           onSend={handleNewEmail}
+        />
+
+        {/* Slide-out Calendar Sidebar */}
+        <SlideOutCalendarSidebar
+          isOpen={isCalendarOpen}
+          onClose={closeCalendar}
         />
       </SidebarProvider>
     </div>

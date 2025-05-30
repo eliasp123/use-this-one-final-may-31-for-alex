@@ -9,9 +9,10 @@ import IndexActionButtons from '../../pages/IndexActionButtons';
 
 interface DocumentsHeaderProps {
   onNewEmailClick: () => void;
+  onCalendarClick: () => void;
 }
 
-const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
+const DocumentsHeader = ({ onNewEmailClick, onCalendarClick }: DocumentsHeaderProps) => {
   const navigate = useNavigate();
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -39,7 +40,7 @@ const DocumentsHeader = ({ onNewEmailClick }: DocumentsHeaderProps) => {
         <IndexActionButtons
           onNewEmail={onNewEmailClick}
           onViewDocuments={() => {/* Already on documents page */}}
-          onCalendarClick={() => setShowCalendar(true)}
+          onCalendarClick={onCalendarClick}
         />
       </div>
 
