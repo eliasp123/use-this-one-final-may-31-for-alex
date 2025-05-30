@@ -88,28 +88,33 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Enhanced positioning with left/right detection
-  const cardWidth = 425;
-  const cardHeight = 504; // Increased by 20% from 420px
-  const isNearRightEdge = position.x + cardWidth / 2 > window.innerWidth - 50;
-  const isNearLeftEdge = position.x - cardWidth / 2 < 50;
-
+  // Enhanced positioning for horizontal sliding (left/right detection)
+  const cardWidth = 531; // Increased by 25% from 425px
+  const cardHeight = 756; // Increased by 20% from 630px (which was 50% increase from original 420px)
+  const screenWidth = window.innerWidth;
+  const slideMargin = 20; // Space between category card and preview
+  
+  // Determine if we should slide left or right based on available space
+  const shouldSlideLeft = position.x + cardWidth + slideMargin > screenWidth - 50;
+  
   let finalLeft: number;
-  if (isNearRightEdge) {
-    // Show to the left of the cursor
-    finalLeft = Math.max(10, position.x - cardWidth - 20);
-  } else if (isNearLeftEdge) {
-    // Show to the right of the cursor
-    finalLeft = Math.min(position.x + 20, window.innerWidth - cardWidth - 10);
+  let finalTop: number;
+  
+  if (shouldSlideLeft) {
+    // Slide out to the left of the category card
+    finalLeft = Math.max(10, position.x - cardWidth - slideMargin);
   } else {
-    // Center on cursor
-    finalLeft = Math.max(10, Math.min(position.x - cardWidth / 2, window.innerWidth - cardWidth - 10));
+    // Slide out to the right of the category card
+    finalLeft = Math.min(position.x + slideMargin, screenWidth - cardWidth - 10);
   }
+  
+  // Vertically align with the category card (center the tooltip with the hovered element)
+  finalTop = Math.max(10, Math.min(position.y - cardHeight / 2, window.innerHeight - cardHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
     left: finalLeft,
-    top: Math.max(10, position.y - cardHeight),
+    top: finalTop,
     zIndex: 9999,
   };
 
@@ -117,7 +122,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[400px] max-w-[425px] max-h-[504px] overflow-hidden"
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[500px] max-w-[531px] max-h-[756px] overflow-hidden"
       style={tooltipStyle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -176,7 +181,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Appointments List */}
-          <div className="h-[350px]">
+          <div className="h-[420px]">
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
@@ -255,7 +260,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Content List */}
-          <div className="h-[380px]">
+          <div className="h-[456px]">
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
