@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -15,6 +16,8 @@ interface EmailPreviewTooltipProps {
   onMouseLeave?: () => void;
   categoryColor: string;
   isEmailRowTooltip?: boolean;
+  onAddAppointment?: (date: Date) => void;
+  hoveredDate?: Date;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -26,7 +29,9 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   onMouseEnter,
   onMouseLeave,
   categoryColor,
-  isEmailRowTooltip = false
+  isEmailRowTooltip = false,
+  onAddAppointment,
+  hoveredDate
 }) => {
   const navigate = useNavigate();
 
@@ -45,10 +50,13 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     }
   };
 
-  const handleAddAppointment = () => {
+  const handleAddAppointmentClick = () => {
     onClose();
-    // In a real implementation, this would open the appointment form
-    console.log('Add appointment clicked from email preview');
+    if (onAddAppointment && hoveredDate) {
+      onAddAppointment(hoveredDate);
+    } else {
+      console.log('Add appointment clicked from email preview');
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -80,6 +88,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     zIndex: 9999,
   };
 
+  const isAppointmentCategory = category === "appointments";
+
   return (
     <div 
       className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[300px] max-w-[320px] max-h-[400px] overflow-hidden"
@@ -91,15 +101,20 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       <div className="p-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-gray-500" />
+            {isAppointmentCategory ? <Calendar className="w-4 h-4 text-orange-500" /> : <Mail className="w-4 h-4 text-gray-500" />}
             <div>
               <span className="text-sm font-semibold text-gray-900">
-                {status === 'unread' && 'Unread Messages'}
-                {status === 'pending' && 'Pending Replies'}
-                {status === 'unresponded' && 'No Response Yet'}
+                {isAppointmentCategory ? 'Appointments' : (
+                  status === 'unread' ? 'Unread Messages' :
+                  status === 'pending' ? 'Pending Replies' :
+                  'No Response Yet'
+                )}
               </span>
               <p className="text-xs text-gray-500">
-                {emails.length === 1 ? '1 email' : `${emails.length} emails`}
+                {emails.length === 1 ? 
+                  (isAppointmentCategory ? '1 appointment' : '1 email') : 
+                  `${emails.length} ${isAppointmentCategory ? 'appointments' : 'emails'}`
+                }
               </p>
             </div>
           </div>
@@ -112,30 +127,36 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
         </div>
       </div>
 
-      {/* Add Appointment Button */}
-      <div className="p-3 border-b border-gray-200 bg-amber-50/30">
-        <Button
-          onClick={handleAddAppointment}
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
-          size="sm"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Appointment
-        </Button>
-      </div>
+      {/* Add Appointment Button - only show for appointment category */}
+      {isAppointmentCategory && (
+        <div className="p-3 border-b border-gray-200 bg-amber-50/30">
+          <Button
+            onClick={handleAddAppointmentClick}
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
+            size="sm"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Appointment
+          </Button>
+        </div>
+      )}
 
-      {/* Email List */}
-      <div className="bg-amber-50/50 border-t border-amber-100">
+      {/* Content List */}
+      <div className={isAppointmentCategory ? "bg-amber-50/50 border-t border-amber-100" : "bg-gray-50/50 border-t border-gray-100"}>
         {emails.length > 0 ? (
           <div className="p-3 space-y-3">
             {emails.slice(0, 3).map((email) => (
               <div
                 key={email.id}
-                className="cursor-pointer hover:bg-amber-100/50 rounded-lg p-2 transition-colors"
+                className={`cursor-pointer rounded-lg p-2 transition-colors ${
+                  isAppointmentCategory ? 'hover:bg-amber-100/50' : 'hover:bg-gray-100/50'
+                }`}
                 onClick={(e) => handleEmailClick(email.id, e)}
               >
                 <div className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                    isAppointmentCategory ? 'bg-orange-500' : 'bg-blue-500'
+                  }`}></div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-gray-900 text-sm mb-1 line-clamp-1">
                       {email.subject}
@@ -168,17 +189,25 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             ))}
             
             {emails.length > 3 && (
-              <div className="text-center pt-2 border-t border-amber-200">
+              <div className={`text-center pt-2 ${
+                isAppointmentCategory ? 'border-t border-amber-200' : 'border-t border-gray-200'
+              }`}>
                 <span className="text-xs text-gray-500">
-                  +{emails.length - 3} more emails
+                  +{emails.length - 3} more {isAppointmentCategory ? 'appointments' : 'emails'}
                 </span>
               </div>
             )}
           </div>
         ) : (
           <div className="p-3 text-center">
-            <Mail className="w-8 h-8 mx-auto mb-2 opacity-30 text-gray-400" />
-            <p className="text-sm text-gray-500">No emails found</p>
+            {isAppointmentCategory ? (
+              <Calendar className="w-8 h-8 mx-auto mb-2 opacity-30 text-orange-400" />
+            ) : (
+              <Mail className="w-8 h-8 mx-auto mb-2 opacity-30 text-gray-400" />
+            )}
+            <p className="text-sm text-gray-500">
+              No {isAppointmentCategory ? 'appointments' : 'emails'} found
+            </p>
           </div>
         )}
       </div>

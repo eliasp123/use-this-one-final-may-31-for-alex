@@ -56,6 +56,11 @@ const CalendarDateDisplay = ({
     setShowAppointmentForm(false);
   };
 
+  const handleAddAppointmentFromTooltipWrapper = (targetDate: Date) => {
+    onDateSelect(targetDate);
+    handleAddAppointmentClick();
+  };
+
   return (
     <>
       <div className="h-[745px] shadow-sm border border-gray-100 overflow-hidden flex bg-white rounded-lg">
@@ -162,6 +167,8 @@ const CalendarDateDisplay = ({
                   onMouseEnter={handleTooltipMouseEnter}
                   onMouseLeave={handleTooltipMouseLeave}
                   categoryColor="#f59e0b"
+                  onAddAppointment={handleAddAppointmentFromTooltipWrapper}
+                  hoveredDate={hoveredDate}
                 />
               )}
             </div>

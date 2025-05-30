@@ -60,7 +60,8 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
   };
 
   const handleAddFromTooltip = (targetDate: Date) => {
-    handleAddAppointmentFromTooltip(targetDate, handleSelect, handleAddAppointment);
+    handleSelect(targetDate);
+    handleAddAppointment();
   };
 
   return (
@@ -197,6 +198,8 @@ const CalendarPopup = ({ trigger, showTrigger = true }: CalendarPopupProps) => {
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
           categoryColor="#f59e0b"
+          onAddAppointment={handleAddFromTooltip}
+          hoveredDate={hoveredDate}
         />,
         document.body
       )}

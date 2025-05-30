@@ -181,6 +181,8 @@ const SidebarCalendar = ({ selectedDate, onDateSelect, onAddAppointment }: Sideb
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
           categoryColor="#f59e0b"
+          onAddAppointment={handleAddAppointmentFromTooltip}
+          hoveredDate={hoveredDate}
         />
       )}
     </div>
