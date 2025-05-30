@@ -122,6 +122,24 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
+      <style>
+        {`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+          }
+        `}
+      </style>
       {isAppointmentCategory && hoveredDate ? (
         // Appointment-specific design
         <>
@@ -159,23 +177,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
           {/* Appointments List */}
           <div className="h-[350px]">
-            <ScrollArea className="h-full [&>div>div[style]]:!pr-6">
-              <style jsx>{`
-                .scroll-area-viewport::-webkit-scrollbar {
-                  width: 8px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-track {
-                  background: #f1f1f1;
-                  border-radius: 4px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-thumb {
-                  background: #c1c1c1;
-                  border-radius: 4px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-thumb:hover {
-                  background: #a8a8a8;
-                }
-              `}</style>
+            <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
                   {emails.map((email, index) => (
@@ -254,23 +256,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
           {/* Content List */}
           <div className="h-[380px]">
-            <ScrollArea className="h-full [&>div>div[style]]:!pr-6">
-              <style jsx>{`
-                .scroll-area-viewport::-webkit-scrollbar {
-                  width: 8px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-track {
-                  background: #f1f1f1;
-                  border-radius: 4px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-thumb {
-                  background: #c1c1c1;
-                  border-radius: 4px;
-                }
-                .scroll-area-viewport::-webkit-scrollbar-thumb:hover {
-                  background: #a8a8a8;
-                }
-              `}</style>
+            <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
                   {emails.map((email, index) => (
