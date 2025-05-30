@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { EmailCategory } from '@/hooks/useEmailCategoryData';
 
 export const useCategoryDragDrop = (emailCategories: EmailCategory[]) => {
