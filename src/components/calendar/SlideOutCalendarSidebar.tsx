@@ -25,10 +25,6 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
     setShowAppointmentForm(true);
   };
 
-  const handleClose = () => {
-    onClose();
-  };
-
   return (
     <>
       {/* Backdrop - only show when open */}
@@ -46,7 +42,7 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
         }`}
       >
         {/* Calendar Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
+        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-amber-700" />
@@ -55,8 +51,8 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleClose}
-              className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50 flex-shrink-0"
+              onClick={onClose}
+              className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50 flex-shrink-0 relative z-20"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
