@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -126,13 +125,13 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       </div>
 
       {/* Email List */}
-      <div className="bg-gray-50 border-t border-gray-100 max-h-[280px] overflow-y-auto">
+      <div className="bg-amber-50/50 border-t border-amber-100">
         {emails.length > 0 ? (
           <div className="p-3 space-y-3">
             {emails.slice(0, 3).map((email) => (
               <div
                 key={email.id}
-                className="cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition-colors"
+                className="cursor-pointer hover:bg-amber-100/50 rounded-lg p-2 transition-colors"
                 onClick={(e) => handleEmailClick(email.id, e)}
               >
                 <div className="flex items-start gap-2">
@@ -169,7 +168,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             ))}
             
             {emails.length > 3 && (
-              <div className="text-center pt-2 border-t border-gray-200">
+              <div className="text-center pt-2 border-t border-amber-200">
                 <span className="text-xs text-gray-500">
                   +{emails.length - 3} more emails
                 </span>
