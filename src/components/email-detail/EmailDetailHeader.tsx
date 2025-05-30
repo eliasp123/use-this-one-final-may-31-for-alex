@@ -9,9 +9,10 @@ import IndexActionButtons from '../../pages/IndexActionButtons';
 
 interface EmailDetailHeaderProps {
   email: EmailData;
+  onCalendarClick?: () => void;
 }
 
-const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
+const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email, onCalendarClick }) => {
   const navigate = useNavigate();
   const allCategories = getAllCategories();
   const categoryInfo = allCategories[email.category];
@@ -44,12 +45,7 @@ const EmailDetailHeader: React.FC<EmailDetailHeaderProps> = ({ email }) => {
         <IndexActionButtons
           onNewEmail={() => {/* This will be handled by existing form */}}
           onViewDocuments={() => navigate('/documents')}
-          onCalendarClick={() => {
-            const calendarSection = document.getElementById('calendar-section');
-            if (calendarSection) {
-              calendarSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onCalendarClick={onCalendarClick || (() => {})}
         />
       </div>
     </div>
