@@ -88,7 +88,7 @@ const EmailDetail = () => {
               className="w-full"
             >
               <Home className="mr-2 h-4 w-4" />
-              Return to Dashboard
+              Return to Communication Hub
             </Button>
           </div>
           
@@ -126,6 +126,12 @@ const EmailDetail = () => {
   };
 
   const handleReplyClick = () => {
+    setShowReplyForm(true);
+  };
+
+  const handleReplyAllClick = () => {
+    // For now, same functionality as regular reply
+    // Can be enhanced later to include all recipients
     setShowReplyForm(true);
   };
 
@@ -172,16 +178,32 @@ const EmailDetail = () => {
           <div className="container mx-auto px-4 py-8">
             <EmailDetailHeader email={email} />
             
-            <EmailDetailCard email={email} />
-            
+            {/* Actions Above Email Card */}
             <EmailDetailActions
               email={email}
               onReplyClick={handleReplyClick}
+              onReplyAllClick={handleReplyAllClick}
               onMarkAsReplied={handleMarkAsReplied}
               onMarkAsResponseReceived={handleMarkAsResponseReceived}
               onMarkAsPrivate={handleMarkAsPrivate}
               onComposeClick={() => setShowNewEmailForm(true)}
               showReplyForm={showReplyForm}
+              position="above"
+            />
+            
+            <EmailDetailCard email={email} />
+            
+            {/* Actions Below Email Card */}
+            <EmailDetailActions
+              email={email}
+              onReplyClick={handleReplyClick}
+              onReplyAllClick={handleReplyAllClick}
+              onMarkAsReplied={handleMarkAsReplied}
+              onMarkAsResponseReceived={handleMarkAsResponseReceived}
+              onMarkAsPrivate={handleMarkAsPrivate}
+              onComposeClick={() => setShowNewEmailForm(true)}
+              showReplyForm={showReplyForm}
+              position="below"
             />
             
             {/* Reply Form */}

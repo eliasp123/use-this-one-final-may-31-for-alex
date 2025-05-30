@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AutocompleteSearch from '@/components/AutocompleteSearch';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, Mail } from 'lucide-react';
 
 interface EmailListToolbarProps {
   activeTab: string;
@@ -19,49 +21,57 @@ const EmailListToolbar: React.FC<EmailListToolbarProps> = ({
   onComposeClick
 }) => {
   return (
-    <div className="mb-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-6">
-          <Tabs defaultValue={activeTab} onValueChange={onTabChange}>
-            <TabsList className="bg-slate-100/70 p-1 rounded-xl shadow-sm">
-              <TabsTrigger 
-                value="all" 
-                className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 rounded-lg transition-all"
-              >
-                All
-              </TabsTrigger>
-              <TabsTrigger 
-                value="unread" 
-                className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-800 rounded-lg transition-all"
-              >
-                Unread
-              </TabsTrigger>
-              <TabsTrigger 
-                value="pending" 
-                className="data-[state=active]:bg-amber-100 data-[state=active]:text-amber-800 rounded-lg transition-all"
-              >
-                Pending
-              </TabsTrigger>
-              <TabsTrigger 
-                value="no-response" 
-                className="data-[state=active]:bg-rose-100 data-[state=active]:text-rose-800 rounded-lg transition-all"
-              >
-                Not Responded
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          
-          <button 
-            onClick={onComposeClick}
-            className="text-purple-600 hover:text-purple-700 transition-colors cursor-pointer text-sm"
-          >
-            + Compose Email
-          </button>
-        </div>
+    <div className="space-y-6">
+      {/* Green Compose Button */}
+      <div className="flex justify-start">
+        <Button
+          onClick={onComposeClick}
+          className="bg-green-500 hover:bg-green-600 text-white"
+        >
+          <Mail className="mr-2 h-4 w-4" />
+          Compose New Email
+        </Button>
+      </div>
+
+      {/* Tab Navigation and Search */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <Tabs value={activeTab} onValueChange={onTabChange} className="w-full sm:w-auto">
+          <TabsList className="grid w-full grid-cols-4 sm:w-auto bg-gray-100">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger 
+              value="unread" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              Unread
+            </TabsTrigger>
+            <TabsTrigger 
+              value="pending" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              Pending
+            </TabsTrigger>
+            <TabsTrigger 
+              value="no-response" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              No Response
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
         
-        {/* Search */}
-        <div className="w-64">
-          <AutocompleteSearch onSearch={onSearch} initialValue={searchQuery} />
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search emails..."
+            value={searchQuery}
+            onChange={(e) => onSearch(e.target.value)}
+            className="pl-10 bg-white border-gray-200 focus:border-blue-500"
+          />
         </div>
       </div>
     </div>
