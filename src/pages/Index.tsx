@@ -63,15 +63,17 @@ const Index = () => {
               Stay on top of your important conversations
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="inline-flex items-center justify-center rounded-full w-5 h-5 bg-gradient-to-br from-green-400 to-green-500 text-white hover:from-green-500 hover:to-green-600 transition-colors">
-                    <Info className="h-3 w-3" />
+                  <button className="inline-flex items-center justify-center rounded-full w-6 h-6 bg-gradient-to-br from-green-400 to-green-500 text-white hover:from-green-500 hover:to-green-600 transition-colors shadow-lg hover:shadow-green-200 hover:shadow-md">
+                    <Info className="h-3.5 w-3.5" />
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 sm:w-80 p-4">
                   <div className="space-y-4">
                     <h4 className="text-lg font-medium text-gray-800">What are Conversations?</h4>
                     <p className="text-gray-600 text-sm">
-                      Conversations are meaningful exchanges with organizations helping your loved ones. 
+                      Conversations are meaningful exchanges with organizations helping your loved ones.
+                    </p>
+                    <p className="text-gray-600 text-sm">
                       Rather than sorting through isolated emails, you can track complete interactions with senior living 
                       facilities, healthcare providers, and benefit programs—all in one place.
                     </p>
@@ -83,6 +85,10 @@ const Index = () => {
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 rounded-full bg-amber-500"></div>
                         <span>Pending replies are waiting for responses</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                        <span>Has not responded yet indicates no reply received</span>
                       </div>
                     </div>
                   </div>
