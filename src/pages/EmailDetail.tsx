@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -27,10 +26,7 @@ const EmailDetail = () => {
   const { toast } = useToast();
   const { isCalendarOpen, openCalendar, closeCalendar } = useSlideOutCalendar();
   
-  // Open calendar by default
-  useEffect(() => {
-    openCalendar();
-  }, [openCalendar]);
+  // Don't open calendar by default - let user control it
   
   useEffect(() => {
     // Force scroll to top immediately and override any other scroll behavior
@@ -172,7 +168,7 @@ const EmailDetail = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
         {/* Left Sidebar */}
         <EmailSidebar 
           emailCategories={emailCategories} 
@@ -181,9 +177,9 @@ const EmailDetail = () => {
           onCategoryAdded={refreshCategories}
         />
         
-        {/* Main Content - Fixed positioning to prevent interference */}
-        <div className={`flex-1 pl-24 transition-all duration-300 ${isCalendarOpen ? 'pr-8' : 'pr-8'} relative`}>
-          <div className="container mx-auto px-4 py-8 max-w-none">
+        {/* Main Content */}
+        <div className="flex-1 pl-24 pr-8">
+          <div className="container mx-auto px-4 py-8">
             <EmailDetailHeader 
               email={email} 
               onCalendarClick={openCalendar}
@@ -235,13 +231,13 @@ const EmailDetail = () => {
           </div>
         </div>
 
-        {/* Slide-out Calendar Sidebar - positioned absolutely to avoid layout interference */}
+        {/* Slide-out Calendar Sidebar */}
         <SlideOutCalendarSidebar
           isOpen={isCalendarOpen}
           onClose={closeCalendar}
         />
 
-        {/* Toggle Calendar Sidebar Button (when hidden) - positioned to not interfere */}
+        {/* Toggle Calendar Sidebar Button (when hidden) */}
         {!isCalendarOpen && (
           <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-30">
             <Button
