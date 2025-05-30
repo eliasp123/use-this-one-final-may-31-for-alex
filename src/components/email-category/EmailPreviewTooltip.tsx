@@ -91,8 +91,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   // Position the tooltip above the date with smart positioning
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
-    left: Math.max(10, Math.min(position.x - 160, window.innerWidth - 340)), // Center horizontally on the date
-    top: Math.max(10, position.y - 320), // Reduced height positioning
+    left: Math.max(10, Math.min(position.x - 200, window.innerWidth - 425)), // Adjusted for new width
+    top: Math.max(10, position.y - 420), // Adjusted for new height
     zIndex: 9999,
   };
 
@@ -100,7 +100,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[320px] max-w-[340px] max-h-[280px] overflow-hidden"
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[400px] max-w-[425px] max-h-[420px] overflow-hidden"
       style={tooltipStyle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -141,7 +141,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Appointments List */}
-          <div className="h-[180px]">
+          <div className="h-[270px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-8">
@@ -220,7 +220,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Content List */}
-          <div className="h-[200px]">
+          <div className="h-[300px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-8">
