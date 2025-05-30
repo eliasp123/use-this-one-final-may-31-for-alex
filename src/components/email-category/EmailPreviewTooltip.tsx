@@ -21,6 +21,7 @@ interface EmailPreviewTooltipProps {
   onAddAppointment?: (date: Date) => void;
   hoveredDate?: Date;
   autoFade?: boolean;
+  categoryCardWidth?: number; // Add this to know the actual card width
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -35,7 +36,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   isEmailRowTooltip = false,
   onAddAppointment,
   hoveredDate,
-  autoFade = false
+  autoFade = false,
+  categoryCardWidth = 400 // Default fallback width
 }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
@@ -89,27 +91,26 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   };
 
   // Enhanced positioning for horizontal sliding from card edges
-  const cardWidth = 531; // Increased by 25% from 425px
-  const cardHeight = 756; // Increased by 20% from 630px (which was 50% increase from original 420px)
+  const tooltipWidth = 531; // Increased by 25% from 425px
+  const tooltipHeight = 756; // Increased by 20% from 630px (which was 50% increase from original 420px)
   const screenWidth = window.innerWidth;
-  const slideMargin = 0; // No margin - slide directly from edge
   
   // Determine if we should slide left or right based on available space
-  const shouldSlideLeft = position.x + cardWidth > screenWidth - 50;
+  const shouldSlideLeft = position.x + categoryCardWidth + tooltipWidth > screenWidth - 50;
   
   let finalLeft: number;
   let finalTop: number;
   
   if (shouldSlideLeft) {
     // Slide out to the left from the left edge of the category card
-    finalLeft = Math.max(10, position.x - cardWidth);
+    finalLeft = Math.max(10, position.x - tooltipWidth);
   } else {
     // Slide out to the right from the right edge of the category card
-    finalLeft = Math.min(position.x, screenWidth - cardWidth - 10);
+    finalLeft = Math.min(position.x + categoryCardWidth, screenWidth - tooltipWidth - 10);
   }
   
   // Align the top of the preview card with the top of the category card
-  finalTop = Math.max(10, Math.min(position.y, window.innerHeight - cardHeight - 10));
+  finalTop = Math.max(10, Math.min(position.y, window.innerHeight - tooltipHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',

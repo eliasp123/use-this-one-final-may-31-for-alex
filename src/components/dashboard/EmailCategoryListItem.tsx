@@ -1,5 +1,4 @@
-
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -38,6 +37,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
 }) => {
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
+  const categoryCardRef = useRef<HTMLDivElement>(null);
   
   // Get the actual count of unresponded emails for this category
   const { getFilteredEmailData, getFilteredUnrespondedEmails } = useFilteredEmailData();
@@ -122,21 +122,16 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     handleEmailHover(emailId as any, e, id, 1);
   };
 
-  // Update tooltip positioning for status circles to use left/right
+  // Update tooltip positioning for status circles to use actual card dimensions
   const getSmartTooltipPosition = (basePosition: { x: number; y: number }) => {
-    const screenWidth = window.innerWidth;
-    const tooltipWidth = 480;
+    const cardElement = categoryCardRef.current;
+    if (!cardElement) return basePosition;
     
-    let x = basePosition.x + 10; // Default to right
-    
-    // If not enough space on the right, position on the left
-    if (basePosition.x + tooltipWidth > screenWidth - 20) {
-      x = basePosition.x - tooltipWidth - 10;
-    }
+    const cardRect = cardElement.getBoundingClientRect();
     
     return {
-      x,
-      y: basePosition.y - 40 // Align with category row
+      x: cardRect.left,
+      y: cardRect.top
     };
   };
 
@@ -170,6 +165,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
       <div className="w-1/2">
         <Collapsible open={isExpanded} onOpenChange={onToggle}>
           <div 
+            ref={categoryCardRef}
             className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 group hover:translate-y-[-2px]"
             data-category-card={id}
           >
@@ -324,6 +320,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               onMouseLeave={handleTooltipMouseLeave}
               categoryColor={color}
               isEmailRowTooltip={false}
+              categoryCardWidth={categoryCardRef.current?.getBoundingClientRect().width || 400}
             />
           </div>,
           document.body
@@ -334,7 +331,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
           <div data-tooltip="email-preview">
             <EmailPreviewTooltip
               emails={[hoveredEmail]}
-              status="unread" // We'll show the email regardless of status
+              status="unread"
               category={id}
               position={emailTooltipPosition}
               onClose={handleEmailTooltipClose}
@@ -342,6 +339,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
               onMouseLeave={handleEmailTooltipMouseLeave}
               categoryColor={color}
               isEmailRowTooltip={true}
+              categoryCardWidth={categoryCardRef.current?.getBoundingClientRect().width || 400}
             />
           </div>,
           document.body
