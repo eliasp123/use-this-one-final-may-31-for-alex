@@ -101,10 +101,10 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                   </TableCell>
                 </TableRow>
                 
-                {/* Attachments row - always show if there are attachments */}
+                {/* Attachments row - now with light amber background */}
                 {email.attachments && email.attachments.length > 0 && (
-                  <TableRow className="border-t-0 hover:bg-gray-50" onClick={() => handleRowClick(email.id)}>
-                    <TableCell colSpan={4} className="py-3 pl-8 pr-4 bg-gray-50/50">
+                  <TableRow className="border-t-0 hover:bg-amber-50/70 bg-amber-50/40 cursor-pointer" onClick={() => handleRowClick(email.id)}>
+                    <TableCell colSpan={4} className="py-3 pl-8 pr-4">
                       <div className="flex items-center gap-2 mb-1">
                         <Paperclip className="w-4 h-4 text-gray-500" />
                         <span className="text-sm font-medium text-gray-700">Attachments ({email.attachments.length})</span>
