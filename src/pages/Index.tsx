@@ -72,7 +72,7 @@ const Index = () => {
                     <p className="text-gray-600 text-sm">
                       Conversations are meaningful exchanges with organizations helping your loved ones.
                     </p>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 text-sm mb-6">
                       Rather than sorting through isolated emails, you can track complete interactions with senior living 
                       facilities, healthcare providers, and benefit programs—all in one place.
                     </p>
