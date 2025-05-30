@@ -13,7 +13,7 @@ const ShowAllEmailsButton: React.FC<ShowAllEmailsButtonProps> = ({ category, act
   const navigate = useNavigate();
 
   return (
-    <div className="px-3 mb-8">
+    <div className="px-3 mb-2">
       <Button
         variant="outline"
         size="sm"

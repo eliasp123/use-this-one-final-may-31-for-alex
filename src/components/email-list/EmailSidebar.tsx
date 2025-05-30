@@ -43,20 +43,22 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
           <ShowAllEmailsButton category={category} activeTab={activeTab} />
           <AddCategoryDialog onCategoryAdded={onCategoryAdded} />
           
-          <DraggableCategoryList
-            orderedCategories={orderedCategories}
-            category={category}
-            activeTab={activeTab}
-            draggedItem={draggedItem}
-            dragOverIndex={dragOverIndex}
-            onCategoryAdded={onCategoryAdded}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onDragEnd={handleDragEnd}
-          />
+          <div className="pt-8">
+            <DraggableCategoryList
+              orderedCategories={orderedCategories}
+              category={category}
+              activeTab={activeTab}
+              draggedItem={draggedItem}
+              dragOverIndex={dragOverIndex}
+              onCategoryAdded={onCategoryAdded}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onDragEnd={handleDragEnd}
+            />
+          </div>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

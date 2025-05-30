@@ -42,7 +42,7 @@ const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({ onCategoryAdded }
   };
 
   return (
-    <div className="px-3 mb-4">
+    <div className="px-3 mb-2">
       <Dialog open={showNewCategoryDialog} onOpenChange={setShowNewCategoryDialog}>
         <DialogTrigger asChild>
           <Button
