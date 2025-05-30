@@ -225,7 +225,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                   >
                     {/* Email Subject */}
                     <div className="mb-2">
-                      <h4 className="text-base text-blue-700 mb-1">
+                      <h4 className="text-base text-amber-700 mb-1">
                         {email.subject}
                       </h4>
                     </div>
@@ -243,7 +243,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                     </div>
 
                     {/* Email Preview - 4 sentences */}
-                    <div className="bg-blue-50 p-2 rounded text-xs text-blue-800">
+                    <div className="bg-amber-50 p-2 rounded text-xs text-gray-600">
                       {getEmailPreview(email.content)}
                     </div>
 
