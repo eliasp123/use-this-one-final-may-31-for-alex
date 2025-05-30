@@ -7,6 +7,7 @@ export const useCalendarHover = () => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [currentCalendarMonth, setCurrentCalendarMonth] = useState<Date>(new Date());
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isTooltipHovered, setIsTooltipHovered] = useState(false);
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (targetDate: Date) => {
@@ -29,8 +30,10 @@ export const useCalendarHover = () => {
   const setHideTimeout = () => {
     clearHideTimeout();
     hideTimeoutRef.current = setTimeout(() => {
-      setHoveredDate(null);
-    }, 200);
+      if (!isTooltipHovered) {
+        setHoveredDate(null);
+      }
+    }, 300); // Increased delay to allow mouse movement to tooltip
   };
 
   // Enhanced hover detection that works across all months
@@ -129,15 +132,18 @@ export const useCalendarHover = () => {
 
   const handleTooltipMouseEnter = () => {
     clearHideTimeout();
+    setIsTooltipHovered(true);
   };
 
   const handleTooltipMouseLeave = () => {
+    setIsTooltipHovered(false);
     setHideTimeout();
   };
 
   const handleAddAppointmentFromTooltip = (targetDate: Date, onDateSelect: (date: Date) => void, onAddAppointment: () => void) => {
     clearHideTimeout();
     setHoveredDate(null);
+    setIsTooltipHovered(false);
     onDateSelect(targetDate);
     onAddAppointment();
   };
@@ -146,6 +152,7 @@ export const useCalendarHover = () => {
   const handleCalendarMonthChange = (newMonth: Date) => {
     setCurrentCalendarMonth(newMonth);
     setHoveredDate(null); // Clear hover when month changes
+    setIsTooltipHovered(false);
   };
 
   return {
