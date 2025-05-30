@@ -10,7 +10,7 @@ interface SidebarCalendarProps {
 
 const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) => {
   return (
-    <div className="p-4">
+    <div className="p-3">
       <Calendar
         mode="single"
         selected={selectedDate}
@@ -29,10 +29,10 @@ const SidebarCalendar = ({ selectedDate, onDateSelect }: SidebarCalendarProps) =
           nav_button_next: "absolute right-1",
           table: "w-full border-collapse space-y-1",
           head_row: "flex w-full",
-          head_cell: "text-gray-500 rounded-md font-normal text-xs h-8 flex items-center justify-center uppercase flex-1 min-w-0 max-w-[calc(100%/7)]",
+          head_cell: "text-gray-500 rounded-md font-normal text-xs h-8 flex items-center justify-center uppercase w-[calc(100%/7)] min-w-0",
           row: "flex w-full mt-1",
-          cell: "h-8 text-center text-sm p-0 relative flex items-center justify-center flex-1 min-w-0 max-w-[calc(100%/7)] [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-          day: "pointer-events-auto h-7 w-7 p-0 font-normal text-sm rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100 transition-colors",
+          cell: "h-8 text-center text-sm p-0 relative flex items-center justify-center w-[calc(100%/7)] min-w-0 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+          day: "pointer-events-auto h-6 w-6 p-0 font-normal text-sm rounded-full hover:bg-amber-100 text-gray-600 mx-auto aria-selected:opacity-100 transition-colors",
           day_range_end: "day-range-end",
           day_selected: "bg-amber-400 hover:bg-amber-500 text-white focus:bg-amber-500 focus:text-white rounded-full",
           day_today: "bg-amber-400 hover:bg-amber-500 text-white rounded-full font-semibold",
