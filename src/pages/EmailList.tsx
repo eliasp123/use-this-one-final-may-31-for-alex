@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -41,6 +40,7 @@ const EmailList = () => {
   const { toast } = useToast();
   
   console.log('EmailList render - isCalendarOpen:', isCalendarOpen);
+  console.log('EmailList render - openCalendar function exists:', !!openCalendar);
   
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -81,14 +81,29 @@ const EmailList = () => {
   }
 
   const handleCalendarHover = () => {
-    console.log('EmailList handleCalendarHover called - will call openCalendar');
+    console.log('EmailList handleCalendarHover called - ABOUT TO CALL openCalendar');
+    console.log('EmailList handleCalendarHover - openCalendar function:', openCalendar);
+    console.log('EmailList handleCalendarHover - current isCalendarOpen before:', isCalendarOpen);
     openCalendar();
+    console.log('EmailList handleCalendarHover - openCalendar called');
+    
+    // Add a small delay to check if state changed
+    setTimeout(() => {
+      console.log('EmailList handleCalendarHover - isCalendarOpen after 100ms:', isCalendarOpen);
+    }, 100);
   };
 
   const handleCalendarClick = () => {
-    console.log('EmailList handleCalendarClick called - will call openCalendar');
+    console.log('EmailList handleCalendarClick called - ABOUT TO CALL openCalendar');
+    console.log('EmailList handleCalendarClick - openCalendar function:', openCalendar);
+    console.log('EmailList handleCalendarClick - current isCalendarOpen before:', isCalendarOpen);
     openCalendar();
+    console.log('EmailList handleCalendarClick - openCalendar called');
   };
+
+  console.log('EmailList - About to render, passing these functions to EmailSidebar:');
+  console.log('- onCalendarClick:', !!handleCalendarClick);
+  console.log('- onCalendarHover:', !!handleCalendarHover);
 
   return (
     <SidebarProvider defaultOpen={true}>

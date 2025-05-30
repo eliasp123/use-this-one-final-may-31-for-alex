@@ -40,20 +40,32 @@ const EmailSidebar = ({
 
   const handleCalendarMouseEnter = (e: React.MouseEvent) => {
     console.log('EmailSidebar: Calendar button mouse enter event triggered');
+    console.log('EmailSidebar: onCalendarHover exists?', !!onCalendarHover);
     e.preventDefault();
+    e.stopPropagation();
     if (onCalendarHover) {
       console.log('EmailSidebar: Calling onCalendarHover from mouse enter');
       onCalendarHover();
+    } else {
+      console.log('EmailSidebar: onCalendarHover is not defined');
     }
   };
 
   const handleCalendarClick = (e: React.MouseEvent) => {
     console.log('EmailSidebar: Calendar button clicked');
     e.preventDefault();
+    e.stopPropagation();
     if (onCalendarClick) {
       console.log('EmailSidebar: Calling onCalendarClick');
       onCalendarClick();
+    } else {
+      console.log('EmailSidebar: onCalendarClick is not defined');
     }
+  };
+
+  // Also test mouse leave to ensure events are working
+  const handleCalendarMouseLeave = (e: React.MouseEvent) => {
+    console.log('EmailSidebar: Calendar button mouse leave event triggered');
   };
 
   return (
@@ -67,9 +79,16 @@ const EmailSidebar = ({
               size="sm"
               onClick={handleCalendarClick}
               onMouseEnter={handleCalendarMouseEnter}
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 cursor-pointer"
+              onMouseLeave={handleCalendarMouseLeave}
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 cursor-pointer bg-red-100 border border-red-300"
+              style={{ 
+                backgroundColor: '#fee2e2',
+                border: '2px solid #ef4444',
+                padding: '8px'
+              }}
             >
               <Calendar className="h-4 w-4" />
+              <span className="ml-1 text-xs">CAL</span>
             </Button>
           )}
         </div>
