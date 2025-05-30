@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -69,11 +70,11 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Position the tooltip with smart positioning
+  // Position the tooltip above the date with smart positioning
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
-    left: Math.max(10, Math.min(position.x, window.innerWidth - 340)),
-    top: Math.max(10, Math.min(position.y, window.innerHeight - 400)),
+    left: Math.max(10, Math.min(position.x - 160, window.innerWidth - 340)), // Center horizontally on the date
+    top: Math.max(10, position.y - 420), // Position above the date with some spacing
     zIndex: 9999,
   };
 
