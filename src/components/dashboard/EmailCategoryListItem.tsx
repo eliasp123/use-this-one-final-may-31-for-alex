@@ -129,9 +129,12 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
     
     const cardRect = cardElement.getBoundingClientRect();
     
+    // Keep the original Y position from the hover event (where the user actually hovered)
+    // But use the card's left/right edges for X positioning
     return {
-      x: cardRect.left,
-      y: cardRect.top
+      x: cardRect.left, // Use card's left edge for sliding calculation
+      y: basePosition.y, // Keep the actual hover Y position
+      cardWidth: cardRect.width // Pass card width for sliding logic
     };
   };
 

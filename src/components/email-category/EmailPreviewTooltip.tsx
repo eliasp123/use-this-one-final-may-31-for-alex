@@ -109,7 +109,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     finalLeft = Math.min(position.x + categoryCardWidth, screenWidth - tooltipWidth - 10);
   }
   
-  // Align the top of the preview card with the top of the category card
+  // Use the Y position from where the user actually hovered (the status circles)
   finalTop = Math.max(10, Math.min(position.y, window.innerHeight - tooltipHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
