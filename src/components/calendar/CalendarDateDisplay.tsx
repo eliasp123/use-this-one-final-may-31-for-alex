@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
@@ -134,7 +133,7 @@ const CalendarDateDisplay = ({
                 }}
               />
 
-              {/* Hover Tooltip */}
+              {/* Hover Tooltip - Updated styling */}
               {hoveredDate && (
                 <div
                   className="fixed z-50 pointer-events-auto"
@@ -171,7 +170,7 @@ const CalendarDateDisplay = ({
                     </div>
                     
                     {/* Add Appointment Button */}
-                    <div className="p-3 border-b border-gray-200">
+                    <div className="p-3 border-b border-gray-200 bg-amber-50/30">
                       <Button
                         onClick={() => handleAddAppointmentFromTooltip(hoveredDate, onDateSelect, handleAddAppointmentClick)}
                         className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
@@ -183,7 +182,7 @@ const CalendarDateDisplay = ({
                     </div>
 
                     {/* Appointments List */}
-                    <div className="bg-amber-50 border-t border-amber-100">
+                    <div className="bg-amber-50/50 border-t border-amber-100">
                       {(() => {
                         const appointments = getAppointmentsForDate(hoveredDate);
                         if (appointments.length === 0) {
@@ -197,36 +196,40 @@ const CalendarDateDisplay = ({
                         return (
                           <div className="p-3 space-y-3">
                             {appointments.slice(0, 3).map((appointment) => (
-                              <div key={appointment.id} className="flex items-start gap-2">
-                                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-medium text-gray-900 text-sm mb-1">
-                                    {appointment.title}
-                                  </div>
-                                  <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
-                                    <div className="flex items-center gap-1">
-                                      <Clock className="h-3 w-3" />
-                                      <span>{appointment.time}</span>
+                              <div key={appointment.id} className="cursor-pointer hover:bg-amber-100/50 rounded-lg p-2 transition-colors">
+                                <div className="flex items-start gap-2">
+                                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-medium text-gray-900 text-sm mb-1">
+                                      {appointment.title}
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                      <Building className="h-3 w-3" />
-                                      <span>{appointment.organization}</span>
+                                    <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <Clock className="h-3 w-3" />
+                                        <span>{appointment.time}</span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <Building className="h-3 w-3" />
+                                        <span>{appointment.organization}</span>
+                                      </div>
                                     </div>
+                                    {appointment.notes && (
+                                      <p className="text-xs text-gray-600 line-clamp-2">
+                                        {appointment.notes.length > 45 ? 
+                                          `${appointment.notes.substring(0, 45)}...` : 
+                                          appointment.notes
+                                        }
+                                      </p>
+                                    )}
                                   </div>
-                                  {appointment.notes && (
-                                    <p className="text-xs text-gray-600 line-clamp-2">
-                                      {appointment.notes.length > 45 ? 
-                                        `${appointment.notes.substring(0, 45)}...` : 
-                                        appointment.notes
-                                      }
-                                    </p>
-                                  )}
                                 </div>
                               </div>
                             ))}
                             {appointments.length > 3 && (
-                              <div className="text-xs text-gray-500 font-medium pt-1 border-t border-amber-200">
-                                +{appointments.length - 3} more appointment{appointments.length - 3 !== 1 ? 's' : ''}
+                              <div className="text-center pt-2 border-t border-amber-200">
+                                <span className="text-xs text-gray-500">
+                                  +{appointments.length - 3} more appointment{appointments.length - 3 !== 1 ? 's' : ''}
+                                </span>
                               </div>
                             )}
                           </div>
