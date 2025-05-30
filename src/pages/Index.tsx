@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import RoleAwareEmailDashboard from '../components/RoleAwareEmailDashboard';
 import CalendarSection from '../components/CalendarSection';
@@ -67,13 +66,13 @@ const Index = () => {
                     <Info className="h-3.5 w-3.5" />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-72 sm:w-80 p-4">
+                <PopoverContent className="w-80 sm:w-96 p-4">
                   <div className="space-y-4">
                     <h4 className="text-lg font-medium text-gray-800">What are Conversations?</h4>
-                    <p className="text-gray-600 text-sm text-justify">
+                    <p className="text-gray-600 text-sm">
                       Conversations are meaningful exchanges with organizations helping your loved ones.
                     </p>
-                    <p className="text-gray-600 text-sm text-justify">
+                    <p className="text-gray-600 text-sm">
                       Rather than sorting through isolated emails, you can track complete interactions with senior living 
                       facilities, healthcare providers, and benefit programs—all in one place.
                     </p>
