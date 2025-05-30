@@ -40,8 +40,8 @@ const EmailSidebar: React.FC<EmailSidebarProps> = ({
     <Sidebar variant="sidebar" className="min-w-[240px] max-w-[280px]" collapsible="icon">
       <SidebarContent className="pt-16 pl-4">  
         <SidebarGroup className="pt-8">
-          <AddCategoryDialog onCategoryAdded={onCategoryAdded} />
           <ShowAllEmailsButton category={category} activeTab={activeTab} />
+          <AddCategoryDialog onCategoryAdded={onCategoryAdded} />
           
           <DraggableCategoryList
             orderedCategories={orderedCategories}
