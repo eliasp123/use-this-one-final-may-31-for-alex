@@ -62,7 +62,12 @@ const SlideOutCalendarSidebar = ({ isOpen, onClose }: SlideOutCalendarSidebarPro
               <h3 className="text-lg font-medium text-amber-800">Calendar</h3>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-amber-700 font-medium">Click to close</span>
+              <span 
+                className="text-sm text-amber-700 font-medium cursor-pointer hover:text-amber-800 transition-colors"
+                onClick={onClose}
+              >
+                Click to close
+              </span>
               <Button
                 variant="ghost"
                 size="sm"
