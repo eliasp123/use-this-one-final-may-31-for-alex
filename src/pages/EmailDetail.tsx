@@ -12,8 +12,10 @@ import EmailDetailActions from '../components/email-detail/EmailDetailActions';
 import EmailSidebar from '../components/email-list/EmailSidebar';
 import EmailReplyForm from '../components/EmailReplyForm';
 import NewEmailForm from '../components/NewEmailForm';
+import AppointmentFormSidebarContent from '../components/calendar/AppointmentFormSidebarContent';
 import { useToast } from '../hooks/use-toast';
-import { Mail, ArrowLeft, Home } from 'lucide-react';
+import { useCalendarLogic } from '../hooks/useCalendarLogic';
+import { Mail, ArrowLeft, Home, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const EmailDetail = () => {
   const { id } = useParams();
@@ -21,8 +23,16 @@ const EmailDetail = () => {
   const [email, setEmail] = useState<EmailData | null>(null);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showNewEmailForm, setShowNewEmailForm] = useState(false);
+  const [showCalendarSidebar, setShowCalendarSidebar] = useState(true);
   const { emailCategories, refreshCategories } = useEmailCategoryData();
   const { toast } = useToast();
+  
+  // Use calendar logic for sidebar
+  const {
+    date,
+    selectedDateAppointments,
+    handleSelect
+  } = useCalendarLogic();
   
   useEffect(() => {
     // Force scroll to top immediately and override any other scroll behavior
@@ -161,11 +171,16 @@ const EmailDetail = () => {
       description: `Email sent to ${emailData.toName} at ${emailData.toOrganization}`,
     });
   };
+
+  const handleCalendarExpand = () => {
+    // Navigate to full calendar view or expand functionality
+    navigate('/#calendar-section');
+  };
   
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex w-full">
-        {/* Sidebar */}
+        {/* Left Sidebar */}
         <EmailSidebar 
           emailCategories={emailCategories} 
           category={email.category} 
@@ -174,7 +189,7 @@ const EmailDetail = () => {
         />
         
         {/* Main Content */}
-        <div className="flex-1 pl-24 pr-32">
+        <div className={`flex-1 pl-24 transition-all duration-300 ${showCalendarSidebar ? 'pr-8' : 'pr-32'}`}>
           <div className="container mx-auto px-4 py-8">
             <EmailDetailHeader email={email} />
             
@@ -223,6 +238,62 @@ const EmailDetail = () => {
             />
           </div>
         </div>
+
+        {/* Calendar Sidebar */}
+        {showCalendarSidebar && (
+          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col">
+            {/* Calendar Sidebar Header */}
+            <div className="p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-gray-600" />
+                  <h3 className="text-lg font-medium text-gray-800">Calendar</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCalendarExpand}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCalendarSidebar(false)}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Calendar Sidebar Content */}
+            <div className="flex-1">
+              <AppointmentFormSidebarContent
+                selectedDate={date}
+                selectedDateAppointments={selectedDateAppointments}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Toggle Calendar Sidebar Button (when hidden) */}
+        {!showCalendarSidebar && (
+          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowCalendarSidebar(true)}
+              className="bg-white shadow-lg border-gray-300 hover:bg-gray-50"
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              Calendar
+            </Button>
+          </div>
+        )}
       </div>
     </SidebarProvider>
   );
