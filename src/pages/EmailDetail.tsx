@@ -243,18 +243,18 @@ const EmailDetail = () => {
         {showCalendarSidebar && (
           <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col">
             {/* Calendar Sidebar Header */}
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-gray-600" />
-                  <h3 className="text-lg font-medium text-gray-800">Calendar</h3>
+                  <Calendar className="h-5 w-5 text-amber-700" />
+                  <h3 className="text-lg font-medium text-amber-800">Calendar</h3>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleCalendarExpand}
-                    className="text-gray-600 hover:text-gray-800"
+                    className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
@@ -262,7 +262,7 @@ const EmailDetail = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowCalendarSidebar(false)}
-                    className="text-gray-600 hover:text-gray-800"
+                    className="text-amber-700 hover:text-amber-800 hover:bg-amber-200/50"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
