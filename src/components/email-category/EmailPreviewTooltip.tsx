@@ -106,16 +106,16 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       onMouseLeave={onMouseLeave}
     >
       {isAppointmentCategory && hoveredDate ? (
-        // Appointment-specific design matching the image
+        // Appointment-specific design with reduced white space
         <>
-          {/* Header with date and count */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-2">
+          {/* Header with date and count - reduced padding */}
+          <div className="p-3 border-b border-gray-200">
+            <div className="flex items-center justify-between mb-1">
               <div className="flex-1">
-                <h3 className="text-base font-bold text-gray-800">
+                <h3 className="text-sm font-bold text-gray-800">
                   {formatDateHeader(hoveredDate)}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs text-gray-500">
                   {emails.length === 1 ? '1 Appointment' : `${emails.length} Appointments`}
                 </p>
               </div>
@@ -128,8 +128,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Add Appointment Button */}
-          <div className="p-3 bg-orange-50 border-b border-orange-100">
+          {/* Add Appointment Button - reduced padding */}
+          <div className="p-2 bg-orange-50 border-b border-orange-100">
             <Button
               onClick={handleAddAppointmentClick}
               className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium"
@@ -140,39 +140,39 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </Button>
           </div>
 
-          {/* Appointments List with ScrollArea */}
-          <div className="h-[260px]">
+          {/* Appointments List with ScrollArea - increased height to use space better */}
+          <div className="h-[280px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-0">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
-                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                      className={`p-3 cursor-pointer hover:bg-gray-50 transition-colors ${
                         index < emails.length - 1 ? 'border-b border-gray-100' : ''
                       }`}
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Appointment Title */}
-                      <div className="mb-2">
-                        <h4 className="text-base text-amber-700 mb-1">
+                      {/* Appointment Title - reduced margins */}
+                      <div className="mb-1">
+                        <h4 className="text-sm text-amber-700 mb-1">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Time and Location */}
-                      <div className="space-y-1 mb-3">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Clock className="w-4 h-4" />
+                      {/* Time and Location - reduced spacing */}
+                      <div className="space-y-1 mb-2">
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                          <Clock className="w-3 h-3" />
                           <span>{formatTime(email.date)}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <MapPin className="w-4 h-4" />
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                          <MapPin className="w-3 h-3" />
                           <span>{email.sender.organization}</span>
                         </div>
                       </div>
 
-                      {/* Summary */}
+                      {/* Summary - reduced padding */}
                       <div className="bg-amber-50 p-2 rounded text-xs text-amber-800">
                         {email.content.length > 80 ? 
                           `${email.content.substring(0, 80)}...` : 
@@ -194,10 +194,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Enhanced email design with better visual separation
+        // Enhanced email design with better visual separation and reduced white space
         <>
-          {/* Header with Close button */}
-          <div className="p-4 border-b border-gray-200">
+          {/* Header with Close button - reduced padding */}
+          <div className="p-3 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-gray-500" />
@@ -221,45 +221,45 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List with ScrollArea */}
-          <div className="h-[280px]">
+          {/* Content List with ScrollArea - increased height */}
+          <div className="h-[300px]">
             <ScrollArea className="h-full">
               {emails.length > 0 ? (
                 <div className="space-y-0">
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
-                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                      className={`p-3 cursor-pointer hover:bg-gray-50 transition-colors ${
                         index < emails.length - 1 ? 'border-b border-gray-100' : ''
                       }`}
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Email Subject */}
-                      <div className="mb-2">
-                        <h4 className="text-base text-amber-700 mb-1">
+                      {/* Email Subject - reduced margins */}
+                      <div className="mb-1">
+                        <h4 className="text-sm text-amber-700 mb-1">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Sender and Organization */}
+                      {/* Sender and Organization - reduced spacing */}
                       <div className="space-y-1 mb-2">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <User className="w-4 h-4" />
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                          <User className="w-3 h-3" />
                           <span>{email.sender.name}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Building2 className="w-4 h-4" />
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                          <Building2 className="w-3 h-3" />
                           <span>{email.sender.organization}</span>
                         </div>
                         {/* Date moved here after organization */}
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Calendar className="w-4 h-4" />
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                          <Calendar className="w-3 h-3" />
                           <span>{format(new Date(email.date), 'MMM d')}</span>
                         </div>
                       </div>
 
-                      {/* Email Preview - 4 sentences */}
-                      <div className="bg-amber-50 p-2 rounded text-xs text-gray-600 mt-3">
+                      {/* Email Preview - 4 sentences with reduced padding */}
+                      <div className="bg-amber-50 p-2 rounded text-xs text-gray-600 mt-2">
                         {getEmailPreview(email.content)}
                       </div>
                     </div>

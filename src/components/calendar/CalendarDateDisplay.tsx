@@ -139,7 +139,7 @@ const CalendarDateDisplay = ({
                   head_cell: "text-gray-400 rounded-md font-light text-lg h-12 flex items-center justify-center uppercase flex-1 min-w-[60px]",
                   row: "flex w-full justify-between mb-4",
                   cell: "h-16 text-center text-lg p-0 relative flex items-center justify-center flex-1 min-w-[60px] [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                  day: "pointer-events-auto h-14 w-14 p-0 font-normal text-lg rounded-full hover:bg-gray-100 text-gray-600 mx-auto aria-selected:opacity-100 transition-colors",
+                  day: "pointer-events-auto h-14 w-14 p-0 font-normal text-lg rounded-full hover:bg-green-50 text-gray-600 mx-auto aria-selected:opacity-100 transition-colors",
                   day_range_end: "day-range-end",
                   day_selected: "bg-green-500 hover:bg-green-600 text-white focus:bg-green-600 focus:text-white rounded-full",
                   day_today: "bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold",
