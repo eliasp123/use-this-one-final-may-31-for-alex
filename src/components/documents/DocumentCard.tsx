@@ -2,6 +2,9 @@
 import React from 'react';
 import DocumentCardGrid from './DocumentCardGrid';
 import DocumentCardList from './DocumentCardList';
+import EmailPreviewCard from './EmailPreviewCard';
+import { useIsTablet } from '@/hooks/use-tablet';
+import { useEmailPreviewHover } from '@/hooks/useEmailPreviewHover';
 
 interface AttachmentWithContext {
   id: string;
@@ -23,11 +26,42 @@ interface DocumentCardProps {
 }
 
 const DocumentCard = ({ attachment, isGridView = false }: DocumentCardProps) => {
-  if (isGridView) {
-    return <DocumentCardGrid attachment={attachment} />;
-  }
+  const isTablet = useIsTablet();
+  const { hoverState, handleMouseEnter, handleMouseLeave } = useEmailPreviewHover();
 
-  return <DocumentCardList attachment={attachment} />;
+  const cardProps = {
+    onMouseEnter: !isTablet ? handleMouseEnter : undefined,
+    onMouseLeave: !isTablet ? handleMouseLeave : undefined,
+  };
+
+  return (
+    <div className="relative">
+      {isGridView ? (
+        <div {...cardProps}>
+          <DocumentCardGrid attachment={attachment} />
+        </div>
+      ) : (
+        <div {...cardProps}>
+          <DocumentCardList attachment={attachment} />
+        </div>
+      )}
+
+      {/* Email Preview Card */}
+      {hoverState.isVisible && (
+        <EmailPreviewCard
+          emailId={attachment.emailId}
+          emailSubject={attachment.emailSubject}
+          senderName={attachment.senderName}
+          senderOrganization={attachment.senderOrganization}
+          emailDate={attachment.emailDate}
+          direction={attachment.direction}
+          isVisible={hoverState.isVisible}
+          slideDirection={hoverState.slideDirection}
+          position={hoverState.position}
+        />
+      )}
+    </div>
+  );
 };
 
 export default DocumentCard;
