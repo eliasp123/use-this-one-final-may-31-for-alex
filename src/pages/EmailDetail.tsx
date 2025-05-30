@@ -239,9 +239,9 @@ const EmailDetail = () => {
           </div>
         </div>
 
-        {/* Calendar Sidebar */}
+        {/* Calendar Sidebar - Increased width by ~10% */}
         {showCalendarSidebar && (
-          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col mr-4">
+          <div className="w-[352px] bg-white border-l border-gray-200 shadow-lg flex flex-col mr-4">
             {/* Calendar Sidebar Header */}
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-amber-100">
               <div className="flex items-center justify-between">
