@@ -15,6 +15,7 @@ interface EmailSidebarProps {
   activeTab: string;
   onCategoryAdded: () => void;
   onCalendarClick?: () => void;
+  onCalendarHover?: () => void;
 }
 
 const EmailSidebar = ({ 
@@ -22,7 +23,8 @@ const EmailSidebar = ({
   category, 
   activeTab, 
   onCategoryAdded,
-  onCalendarClick 
+  onCalendarClick,
+  onCalendarHover 
 }: EmailSidebarProps) => {
   const {
     orderedCategories,
@@ -41,11 +43,12 @@ const EmailSidebar = ({
       <SidebarHeader className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">Categories</h2>
-          {onCalendarClick && (
+          {(onCalendarClick || onCalendarHover) && (
             <Button
               variant="ghost"
               size="sm"
               onClick={onCalendarClick}
+              onMouseEnter={onCalendarHover}
               className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
               <Calendar className="h-4 w-4" />

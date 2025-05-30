@@ -88,6 +88,7 @@ const EmailList = () => {
           activeTab={activeTab}
           onCategoryAdded={handleCategoryAdded}
           onCalendarClick={openCalendar}
+          onCalendarHover={openCalendar}
         />
         
         {/* Main Content */}
