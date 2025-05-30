@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -39,6 +40,8 @@ const EmailList = () => {
   const { isCalendarOpen, openCalendar, closeCalendar } = useSlideOutCalendar();
   const { toast } = useToast();
   
+  console.log('EmailList render - isCalendarOpen:', isCalendarOpen);
+  
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     // Update URL to reflect the new status without changing the category
@@ -78,12 +81,12 @@ const EmailList = () => {
   }
 
   const handleCalendarHover = () => {
-    console.log('EmailList handleCalendarHover called');
+    console.log('EmailList handleCalendarHover called - will call openCalendar');
     openCalendar();
   };
 
   const handleCalendarClick = () => {
-    console.log('EmailList handleCalendarClick called');
+    console.log('EmailList handleCalendarClick called - will call openCalendar');
     openCalendar();
   };
 

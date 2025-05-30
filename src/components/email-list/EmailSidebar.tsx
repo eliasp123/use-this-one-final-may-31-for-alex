@@ -38,16 +38,18 @@ const EmailSidebar = ({
     handleDragEnd
   } = useCategoryDragDrop(emailCategories);
 
-  const handleCalendarHover = () => {
-    console.log('EmailSidebar: Calendar button hovered');
+  const handleCalendarMouseEnter = (e: React.MouseEvent) => {
+    console.log('EmailSidebar: Calendar button mouse enter event triggered');
+    e.preventDefault();
     if (onCalendarHover) {
-      console.log('EmailSidebar: Calling onCalendarHover');
+      console.log('EmailSidebar: Calling onCalendarHover from mouse enter');
       onCalendarHover();
     }
   };
 
-  const handleCalendarClick = () => {
+  const handleCalendarClick = (e: React.MouseEvent) => {
     console.log('EmailSidebar: Calendar button clicked');
+    e.preventDefault();
     if (onCalendarClick) {
       console.log('EmailSidebar: Calling onCalendarClick');
       onCalendarClick();
@@ -64,8 +66,8 @@ const EmailSidebar = ({
               variant="ghost"
               size="sm"
               onClick={handleCalendarClick}
-              onMouseEnter={handleCalendarHover}
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              onMouseEnter={handleCalendarMouseEnter}
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 cursor-pointer"
             >
               <Calendar className="h-4 w-4" />
             </Button>
