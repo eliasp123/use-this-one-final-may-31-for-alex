@@ -131,7 +131,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                   >
                     {/* Appointment Title */}
                     <div className="mb-2">
-                      <h4 className="text-base font-bold text-orange-600 mb-1">
+                      <h4 className="text-base text-orange-500 mb-1">
                         {email.subject}
                       </h4>
                     </div>
