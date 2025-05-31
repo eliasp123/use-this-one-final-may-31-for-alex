@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -72,6 +73,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleInputClick = () => {
+    console.log('🔍 Input clicked, hasSelectedLocation:', hasSelectedLocation);
+    if (hasSelectedLocation) {
+      // Toggle dropdown when location is already selected
+      setIsDropdownOpen(!isDropdownOpen);
+    }
+  };
+
   const handleInputFocus = () => {
     console.log('🔍 Input focused, hasSelectedLocation:', hasSelectedLocation);
     setIsFocused(true);
@@ -127,7 +136,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   // Determine placeholder text
   const getPlaceholderText = () => {
     if (hasSelectedLocation) {
-      return "Location set - select categories below";
+      return "Location set - click to select categories";
     }
     return "Type the city and state you need to search";
   };
@@ -145,10 +154,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           type="text"
           value={searchQuery}
           onChange={handleInputChange}
+          onClick={handleInputClick}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           placeholder={getPlaceholderText()}
-          className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+          className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent cursor-pointer ${
             hasSelectedLocation 
               ? 'bg-green-50 border-green-300 text-green-800' 
               : 'bg-white border-gray-300'
