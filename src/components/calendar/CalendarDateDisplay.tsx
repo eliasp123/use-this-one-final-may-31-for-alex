@@ -30,7 +30,7 @@ const CalendarDateDisplay = ({
   
   const {
     hoveredDate,
-    tooltipPosition,
+    hoveredDayRef,
     getAppointmentsForDate,
     handleCalendarMouseMove,
     handleCalendarMouseLeave,
@@ -68,8 +68,8 @@ const CalendarDateDisplay = ({
   };
 
   // Check if tooltip should be shown in top row (where we want auto-fade)
-  const isTooltipInTopRow = hoveredDate && 
-    tooltipPosition.y < 150; // Approximate threshold for top row
+  const isTooltipInTopRow = hoveredDate && hoveredDayRef && 
+    hoveredDayRef.getBoundingClientRect().y < 150; // Approximate threshold for top row
 
   // Get appointments for the hovered date
   const hoveredDateAppointments = hoveredDate ? getAppointmentsForDate(hoveredDate) : [];
@@ -154,7 +154,7 @@ const CalendarDateDisplay = ({
               />
 
               {/* Only show EmailPreviewTooltip when there are appointments for the hovered date */}
-              {hoveredDate && hoveredDateAppointments.length > 0 && (
+              {hoveredDate && hoveredDateAppointments.length > 0 && hoveredDayRef && (
                 <EmailPreviewTooltip
                   emails={hoveredDateAppointments.map(appointment => ({
                     id: appointment.id.toString(),
@@ -175,7 +175,6 @@ const CalendarDateDisplay = ({
                   }))}
                   status="unread"
                   category="appointments"
-                  position={tooltipPosition}
                   onClose={handleCloseTooltip}
                   onMouseEnter={handleTooltipMouseEnter}
                   onMouseLeave={handleTooltipMouseLeave}
@@ -183,6 +182,7 @@ const CalendarDateDisplay = ({
                   onAddAppointment={handleAddAppointmentFromTooltipLocal}
                   hoveredDate={hoveredDate}
                   autoFade={isTooltipInTopRow}
+                  categoryCardRef={{ current: hoveredDayRef }}
                 />
               )}
             </div>
