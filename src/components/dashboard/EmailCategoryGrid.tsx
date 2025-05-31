@@ -1,8 +1,7 @@
-
 import React, { useState, useRef } from 'react';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
-import EmailCategoryGridContent from './EmailCategoryGridContent';
+import EmailCategoryGridContent, { EmailCategoryGridContentRef } from './EmailCategoryGridContent';
 import EmailCategoryListContent, { EmailCategoryListContentRef } from './EmailCategoryListContent';
 import EmailCategoryGridPagination from './EmailCategoryGridPagination';
 import SearchResultsDisplay from './SearchResultsDisplay';
@@ -28,7 +27,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const listContentRef = useRef<EmailCategoryListContentRef>(null);
-  const gridContentRef = useRef<{ toggleAll: () => void; allExpanded: boolean }>(null);
+  const gridContentRef = useRef<EmailCategoryGridContentRef>(null);
 
   // Search logic
   const allEmails = getAllEmailsWithAttachments();
