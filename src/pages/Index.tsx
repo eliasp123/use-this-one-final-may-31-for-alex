@@ -118,10 +118,11 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Unified Search Results */}
-        <UnifiedSearchResults searchQuery={searchQuery} />
-        
+        {/* Email Dashboard - shows filtered categories when searching */}
         <RoleAwareEmailDashboard searchQuery={searchQuery} currentPage={currentPage} />
+
+        {/* Unified Search Results - now appears BELOW the email categories */}
+        <UnifiedSearchResults searchQuery={searchQuery} />
 
         <IndexPagination
           currentPage={currentPage}
