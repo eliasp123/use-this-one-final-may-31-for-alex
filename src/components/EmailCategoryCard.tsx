@@ -219,6 +219,27 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
             <div className="flex items-center">
               <h3 className={`${isExpanded ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} font-medium text-gray-800 group-hover:text-gray-900 transition-colors`}>{title}</h3>
             </div>
+
+            {/* Status indicators - only show when collapsed and there are active statuses */}
+            <div className={`transition-all duration-500 ease-in-out ${
+              !isExpanded && activeStatuses.length > 0 ? 'max-h-8 opacity-100 mt-2' : 'max-h-0 opacity-0'
+            } overflow-hidden`}>
+              <div className="flex items-center justify-center gap-2">
+                {activeStatuses.map((status) => (
+                  <div 
+                    key={status.status}
+                    className={`flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusClick(status.navStatus, e);
+                    }}
+                    title={`${status.count} ${status.label.toLowerCase()}`}
+                  >
+                    {status.count}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
