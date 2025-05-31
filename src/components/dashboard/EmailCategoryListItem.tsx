@@ -126,16 +126,18 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   // Helper function to get the card rect and pass it properly to tooltip
   const getTooltipPositionWithCardData = () => {
     const cardElement = categoryCardRef.current;
-    if (!cardElement) return { ...tooltipPosition, cardWidth: 400, cardTop: tooltipPosition.y };
+    if (!cardElement) return { x: 0, y: 0, cardWidth: 400, cardTop: 0, cardRight: 400 };
     
     const cardRect = cardElement.getBoundingClientRect();
     
+    // Return the exact card positioning data
     return {
-      x: cardRect.left, // Card's left edge
-      y: cardRect.top, // Card's TOP edge (not hover Y position)
+      x: cardRect.left,
+      y: cardRect.top,
       cardWidth: cardRect.width,
       cardTop: cardRect.top,
-      cardRight: cardRect.right
+      cardRight: cardRect.right,
+      cardHeight: cardRect.height
     };
   };
 
@@ -311,7 +313,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
           </div>
         </Collapsible>
 
-        {/* Email Preview Tooltip for Status Circles - Left/Right positioning */}
+        {/* Email Preview Tooltip for Status Circles - Perfect edge alignment */}
         {hoveredStatus && previewEmails.length > 0 && createPortal(
           <div data-tooltip="email-preview">
             <EmailPreviewTooltip

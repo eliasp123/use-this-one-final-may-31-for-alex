@@ -11,7 +11,14 @@ interface EmailPreviewTooltipProps {
   emails: EmailData[];
   status: 'unread' | 'pending' | 'unresponded';
   category: string;
-  position: { x: number; y: number; cardWidth?: number; cardTop?: number; cardRight?: number };
+  position: { 
+    x: number; 
+    y: number; 
+    cardWidth?: number; 
+    cardTop?: number; 
+    cardRight?: number;
+    cardHeight?: number;
+  };
   onClose: () => void;
   onMouseEnter: () => void;
   onMouseLeave?: () => void;
@@ -89,43 +96,54 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Dynamic sizing based on number of emails
+  // Perfect dynamic sizing based on email count
   const getTooltipDimensions = () => {
-    const baseWidth = 450;
-    const baseHeaderHeight = 60;
-    const emailItemHeight = 140; // Height per email item
-    const padding = 40;
+    const baseWidth = 420;
+    const headerHeight = 60;
+    const emailItemHeight = emails.length === 1 ? 120 : 140;
+    const padding = 20;
     
     const emailCount = emails.length;
-    const dynamicHeight = baseHeaderHeight + (emailItemHeight * Math.min(emailCount, 4)) + padding;
+    const contentHeight = emailItemHeight * Math.min(emailCount, 3); // Show max 3 emails before scrolling
+    const totalHeight = headerHeight + contentHeight + padding;
     
     return {
       width: baseWidth,
-      height: Math.min(dynamicHeight, 600) // Max height cap
+      height: Math.min(totalHeight, 500) // Reasonable max height
     };
   };
 
   const { width: tooltipWidth, height: tooltipHeight } = getTooltipDimensions();
   const screenWidth = window.innerWidth;
   
-  // Determine if we should slide left or right based on available space
+  // Perfect edge alignment - slide from category card edge
   const cardLeft = position.x;
   const cardRight = position.cardRight || (position.x + categoryCardWidth);
-  const shouldSlideLeft = cardRight + tooltipWidth > screenWidth - 20;
+  const cardTop = position.cardTop || position.y;
+  const cardHeight = position.cardHeight || 200;
+  
+  // Determine slide direction based on available space
+  const spaceOnRight = screenWidth - cardRight;
+  const spaceOnLeft = cardLeft;
+  const shouldSlideLeft = spaceOnRight < tooltipWidth + 20 && spaceOnLeft > tooltipWidth + 20;
   
   let finalLeft: number;
   let finalTop: number;
   
   if (shouldSlideLeft) {
-    // Slide out to the left from the left edge of the category card
-    finalLeft = Math.max(10, cardLeft - tooltipWidth);
+    // Slide out to the left - align tooltip's RIGHT edge with card's LEFT edge
+    finalLeft = cardLeft - tooltipWidth;
   } else {
-    // Slide out to the right from the right edge of the category card
-    finalLeft = Math.min(cardRight, screenWidth - tooltipWidth - 10);
+    // Slide out to the right - align tooltip's LEFT edge with card's RIGHT edge
+    finalLeft = cardRight;
   }
   
-  // Use the card's top position for alignment
-  finalTop = Math.max(10, Math.min(position.cardTop || position.y, window.innerHeight - tooltipHeight - 10));
+  // Perfect height alignment - tooltip top aligns with card top
+  finalTop = cardTop;
+  
+  // Ensure tooltip stays within screen bounds
+  finalLeft = Math.max(10, Math.min(finalLeft, screenWidth - tooltipWidth - 10));
+  finalTop = Math.max(10, Math.min(finalTop, window.innerHeight - tooltipHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
@@ -134,6 +152,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     width: tooltipWidth,
     height: tooltipHeight,
     zIndex: 9999,
+    transform: shouldSlideLeft ? 'translateX(-10px)' : 'translateX(10px)',
+    animation: 'slideIn 0.2s ease-out forwards'
   };
 
   const isAppointmentCategory = category === "appointments";
@@ -147,22 +167,33 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     >
       <style>
         {`
+          @keyframes slideIn {
+            from {
+              opacity: 0;
+              transform: ${shouldSlideLeft ? 'translateX(10px)' : 'translateX(-10px)'};
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
           .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
           }
           .custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 4px;
+            border-radius: 3px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #c1c1c1;
-            border-radius: 4px;
+            border-radius: 3px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
           }
         `}
       </style>
+      
       {isAppointmentCategory && hoveredDate ? (
         // Appointment-specific design
         <>
