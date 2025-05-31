@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import CategoryGrid from './CategoryGrid';
 import AutocompleteList from './AutocompleteList';
+import { useMapboxPlaceSuggestions } from '../../hooks/useMapboxPlaceSuggestions';
 
 interface Category {
   id: string;
@@ -19,6 +20,8 @@ interface CategoryDropdownProps {
   onSelectAll: () => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  mapCenter: { lat: number; lng: number };
+  onPlaceSelect: (place: any) => void;
 }
 
 const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
@@ -27,7 +30,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   onCategoryToggle,
   onSelectAll,
   searchQuery,
-  onSearchChange
+  onSearchChange,
+  mapCenter,
+  onPlaceSelect
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -35,10 +40,17 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { suggestions, getSuggestions, clearSuggestions } = useMapboxPlaceSuggestions();
+
   // Filter categories based on search query for autocomplete
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Determine if we should show suggestions
+  const shouldShowSuggestions = searchQuery.trim().length > 1;
+  const hasCategoryMatches = filteredCategories.length > 0;
+  const hasPlaceMatches = suggestions.length > 0;
 
   // Auto-check categories based on search query
   useEffect(() => {
@@ -56,6 +68,15 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       }
     }
   }, [searchQuery, categories, selectedCategories, onCategoryToggle]);
+
+  // Get place suggestions when typing
+  useEffect(() => {
+    if (shouldShowSuggestions && !hasCategoryMatches) {
+      getSuggestions(searchQuery, mapCenter);
+    } else {
+      clearSuggestions();
+    }
+  }, [searchQuery, shouldShowSuggestions, hasCategoryMatches, getSuggestions, clearSuggestions, mapCenter]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -90,13 +111,21 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       setIsDropdownOpen(false);
     } else {
       setIsDropdownOpen(true);
+      clearSuggestions();
     }
   };
 
-  const handleAutocompleteSelect = (categoryName: string) => {
+  const handleCategorySelect = (categoryName: string) => {
     onSearchChange(categoryName);
     setShowAutocomplete(false);
     setIsDropdownOpen(true);
+  };
+
+  const handlePlaceSelect = (place: any) => {
+    onPlaceSelect(place);
+    onSearchChange(place.place_name);
+    setShowAutocomplete(false);
+    setIsDropdownOpen(false);
   };
 
   // Check if all categories are selected
@@ -135,10 +164,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       </div>
 
       {/* Autocomplete Dropdown */}
-      {showAutocomplete && (
+      {showAutocomplete && (hasCategoryMatches || hasPlaceMatches) && (
         <AutocompleteList
           categories={filteredCategories}
-          onSelect={handleAutocompleteSelect}
+          mapboxPlaces={suggestions}
+          onCategorySelect={handleCategorySelect}
+          onPlaceSelect={handlePlaceSelect}
         />
       )}
 

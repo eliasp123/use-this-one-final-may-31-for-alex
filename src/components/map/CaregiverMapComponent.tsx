@@ -57,13 +57,15 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
     };
   }, []);
 
-  // Update map center and zoom when props change
+  // Update map center and zoom when props change - fixed animation
   useEffect(() => {
     if (map.current) {
-      map.current.easeTo({
+      map.current.flyTo({
         center: [center.lng, center.lat],
         zoom: zoom,
-        duration: 1000
+        speed: 1.5,
+        curve: 1,
+        essential: true
       });
     }
   }, [center, zoom]);

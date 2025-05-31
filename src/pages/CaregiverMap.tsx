@@ -41,7 +41,7 @@ const CaregiverMap = () => {
   useEffect(() => {
     if (searchCenter) {
       setMapCenter(searchCenter);
-      setMapZoom(12);
+      setMapZoom(13); // Fixed zoom level
     }
   }, [searchCenter]);
 
@@ -78,6 +78,18 @@ const CaregiverMap = () => {
     }
   };
 
+  const handlePlaceSelect = (place: any) => {
+    console.log('Place selected:', place);
+    const newCenter = {
+      lat: place.center[1],
+      lng: place.center[0]
+    };
+    setMapCenter(newCenter);
+    setMapZoom(14);
+    // Clear selected location since we're showing a new place
+    setSelectedLocation(null);
+  };
+
   const getCategoryColor = (categoryId: string) => {
     return categories.find(cat => cat.id === categoryId)?.color || '#6B7280';
   };
@@ -95,6 +107,8 @@ const CaregiverMap = () => {
           onSelectAll={handleSelectAllCategories}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          mapCenter={mapCenter}
+          onPlaceSelect={handlePlaceSelect}
         />
       </div>
 
