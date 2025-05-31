@@ -35,6 +35,7 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const lastCenterRef = useRef<{ lat: number; lng: number } | null>(null);
 
   console.log('🗺️ CaregiverMapComponent rendered with:', {
     locationsCount: locations.length,
@@ -63,6 +64,9 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
       center: [center.lng, center.lat],
       zoom: zoom
     });
+
+    // Store initial center
+    lastCenterRef.current = center;
 
     // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -96,17 +100,43 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
   // Update map center and zoom when props change
   useEffect(() => {
     console.log('🗺️ Map center/zoom update effect triggered with:', { center, zoom });
-    if (map.current) {
-      console.log('🗺️ Flying to new position:', center, 'zoom:', zoom);
-      map.current.flyTo({
+    if (map.current && lastCenterRef.current) {
+      // Calculate distance between old and new center
+      const oldCenter = lastCenterRef.current;
+      const distance = Math.sqrt(
+        Math.pow(center.lat - oldCenter.lat, 2) + 
+        Math.pow(center.lng - oldCenter.lng, 2)
+      );
+      
+      console.log('🗺️ Distance between centers:', distance);
+      
+      // If the distance is large (cross-country move), use instant jump
+      // If it's small (local area), use gentle animation
+      if (distance > 5) { // Roughly cross-country threshold
+        console.log('🗺️ Large distance detected - using instant jump to avoid motion sickness');
+        map.current.jumpTo({
+          center: [center.lng, center.lat],
+          zoom: zoom
+        });
+      } else {
+        console.log('🗺️ Small distance - using gentle animation');
+        map.current.easeTo({
+          center: [center.lng, center.lat],
+          zoom: zoom,
+          duration: 800, // Slower, gentler transition
+          easing: (t) => t * (2 - t) // Ease-out curve for smoother feel
+        });
+      }
+      
+      // Update last center reference
+      lastCenterRef.current = center;
+    } else if (map.current) {
+      console.log('🗺️ Initial center set or map not initialized yet');
+      map.current.jumpTo({
         center: [center.lng, center.lat],
-        zoom: zoom,
-        speed: 1.2,
-        curve: 1,
-        essential: true
+        zoom: zoom
       });
-    } else {
-      console.log('❌ Map not initialized yet for center/zoom update');
+      lastCenterRef.current = center;
     }
   }, [center, zoom]);
 
