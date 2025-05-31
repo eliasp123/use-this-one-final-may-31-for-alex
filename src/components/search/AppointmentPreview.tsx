@@ -21,7 +21,7 @@ const AppointmentPreview: React.FC<AppointmentPreviewProps> = ({ appointments })
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-3">
         <Calendar className="h-4 w-4 text-blue-600" />
         <h3 className="text-sm font-medium text-gray-800">

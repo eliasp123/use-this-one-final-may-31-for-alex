@@ -30,13 +30,22 @@ const UnifiedSearchResults: React.FC<UnifiedSearchResultsProps> = ({ searchQuery
   }
 
   return (
-    <div className="max-w-lg mx-auto mb-8 space-y-4 relative z-30">
-      {filteredAppointments.length > 0 && (
-        <AppointmentPreview appointments={filteredAppointments} />
-      )}
-      {filteredDocuments.length > 0 && (
-        <DocumentPreview documents={filteredDocuments} />
-      )}
+    <div className="max-w-7xl mx-auto mb-8 space-y-6">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Related Results</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {filteredAppointments.length > 0 && (
+          <div className="w-full">
+            <AppointmentPreview appointments={filteredAppointments} />
+          </div>
+        )}
+        
+        {filteredDocuments.length > 0 && (
+          <div className="w-full">
+            <DocumentPreview documents={filteredDocuments} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
