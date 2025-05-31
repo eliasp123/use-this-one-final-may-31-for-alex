@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -194,9 +193,9 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         }`}
         onClick={handleCardClick}
       >
-        {/* Header - Icon and title with accordion functionality and gray background */}
+        {/* Header - Icon and title with accordion functionality and darker gray background */}
         <div 
-          className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} bg-gray-50 hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer`}
+          className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} bg-gray-100 hover:bg-gray-150 p-2 rounded-lg transition-colors cursor-pointer`}
           onClick={handleHeaderClick}
           onMouseEnter={handleHeaderHover}
           onMouseLeave={handleHeaderLeave}

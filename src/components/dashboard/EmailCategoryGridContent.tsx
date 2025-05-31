@@ -1,4 +1,3 @@
-
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
@@ -29,10 +28,10 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   const allCategories = [...priorityCategories, ...compactCategories];
   const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
   
-  // State to track which cards are expanded - first 9 categories (3 rows) default to open
+  // State to track which cards are expanded - first 3 categories (first row) default to open
   const [expandedCards, setExpandedCards] = useState<Set<string>>(() => {
-    const firstNineCategories = orderedCategories.slice(0, 9);
-    return new Set(firstNineCategories.map(cat => cat.id));
+    const firstThreeCategories = orderedCategories.slice(0, 3);
+    return new Set(firstThreeCategories.map(cat => cat.id));
   });
 
   // Check if all cards are expanded
