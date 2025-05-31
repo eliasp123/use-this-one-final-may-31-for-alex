@@ -1,5 +1,5 @@
 
-import React, { forwardRef, useImperativeHandle, useState, useCallback } from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
 import AccordionCategoryRow from './AccordionCategoryRow';
@@ -15,6 +15,8 @@ interface EmailCategoryGridContentProps {
 export interface EmailCategoryGridContentRef {
   openAll: () => void;
   closeAll: () => void;
+  toggleAll: () => void;
+  allExpanded: boolean;
 }
 
 const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCategoryGridContentProps>(({
@@ -32,6 +34,11 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     new Set(orderedCategories.map(cat => cat.id)) // Default all expanded
   );
 
+  // Check if all cards are expanded
+  const allExpanded = useMemo(() => {
+    return orderedCategories.length > 0 && expandedCards.size === orderedCategories.length;
+  }, [expandedCards.size, orderedCategories.length]);
+
   // Functions to control all card accordions
   const openAll = useCallback(() => {
     setExpandedCards(new Set(orderedCategories.map(cat => cat.id)));
@@ -40,6 +47,14 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   const closeAll = useCallback(() => {
     setExpandedCards(new Set());
   }, []);
+
+  const toggleAll = useCallback(() => {
+    if (allExpanded) {
+      closeAll();
+    } else {
+      openAll();
+    }
+  }, [allExpanded, openAll, closeAll]);
 
   // Function to toggle individual card
   const toggleCard = useCallback((categoryId: string) => {
@@ -60,7 +75,9 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   // Expose accordion controls to parent
   useImperativeHandle(ref, () => ({
     openAll,
-    closeAll
+    closeAll,
+    toggleAll,
+    allExpanded
   }));
 
   // Create rows from ordered categories

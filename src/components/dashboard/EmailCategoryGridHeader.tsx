@@ -11,8 +11,8 @@ interface EmailCategoryGridHeaderProps {
   viewMode: 'grid' | 'list';
   onViewModeChange: (mode: 'grid' | 'list') => void;
   onCollapseAll?: () => void;
-  onOpenAll?: () => void;
-  onCloseAll?: () => void;
+  onToggleAll?: () => void;
+  allExpanded?: boolean;
 }
 
 const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
@@ -23,8 +23,8 @@ const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
   viewMode,
   onViewModeChange,
   onCollapseAll,
-  onOpenAll,
-  onCloseAll
+  onToggleAll,
+  allExpanded = false
 }) => {
   return (
     <div className="text-center space-y-4">
@@ -32,8 +32,8 @@ const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
         <EmailCategoryViewToggle 
           viewMode={viewMode}
           onViewModeChange={onViewModeChange}
-          onOpenAll={viewMode === 'grid' ? onOpenAll : undefined}
-          onCloseAll={viewMode === 'grid' ? onCloseAll : undefined}
+          onToggleAll={viewMode === 'grid' ? onToggleAll : undefined}
+          allExpanded={allExpanded}
           showAccordionControls={viewMode === 'grid'}
         />
         

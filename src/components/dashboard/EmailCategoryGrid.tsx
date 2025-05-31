@@ -28,7 +28,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const listContentRef = useRef<EmailCategoryListContentRef>(null);
-  const gridContentRef = useRef<{ openAll: () => void; closeAll: () => void }>(null);
+  const gridContentRef = useRef<{ toggleAll: () => void; allExpanded: boolean }>(null);
 
   // Search logic
   const allEmails = getAllEmailsWithAttachments();
@@ -74,15 +74,9 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     listContentRef.current?.collapseAll();
   };
 
-  const handleOpenAll = () => {
+  const handleToggleAll = () => {
     if (viewMode === 'grid') {
-      gridContentRef.current?.openAll();
-    }
-  };
-
-  const handleCloseAll = () => {
-    if (viewMode === 'grid') {
-      gridContentRef.current?.closeAll();
+      gridContentRef.current?.toggleAll();
     }
   };
 
@@ -96,8 +90,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onCollapseAll={viewMode === 'list' ? handleCollapseAll : undefined}
-        onOpenAll={viewMode === 'grid' ? handleOpenAll : undefined}
-        onCloseAll={viewMode === 'grid' ? handleCloseAll : undefined}
+        onToggleAll={viewMode === 'grid' ? handleToggleAll : undefined}
+        allExpanded={gridContentRef.current?.allExpanded || false}
       />
 
       <SearchResultsDisplay

@@ -4,16 +4,16 @@ import React from 'react';
 interface EmailCategoryViewToggleProps {
   viewMode: 'grid' | 'list';
   onViewModeChange: (mode: 'grid' | 'list') => void;
-  onOpenAll?: () => void;
-  onCloseAll?: () => void;
+  onToggleAll?: () => void;
+  allExpanded?: boolean;
   showAccordionControls?: boolean;
 }
 
 const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
   viewMode,
   onViewModeChange,
-  onOpenAll,
-  onCloseAll,
+  onToggleAll,
+  allExpanded = false,
   showAccordionControls = false
 }) => {
   return (
@@ -42,27 +42,20 @@ const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
         >
           List
         </span>
+        
+        {/* Dynamic Toggle All Button */}
+        {showAccordionControls && onToggleAll && (
+          <>
+            <span className="text-gray-400">|</span>
+            <button
+              onClick={onToggleAll}
+              className="px-2 py-1 rounded cursor-pointer transition-colors hover:bg-purple-100 text-sm"
+            >
+              {allExpanded ? 'Close All' : 'Open All'}
+            </button>
+          </>
+        )}
       </div>
-
-      {/* Accordion Controls */}
-      {showAccordionControls && (
-        <div className="inline-flex items-center gap-2 text-base text-gray-600 bg-blue-50 rounded-lg px-4 py-2">
-          <span className="text-gray-700 font-medium">Sections:</span>
-          <button
-            onClick={onOpenAll}
-            className="px-2 py-1 rounded cursor-pointer transition-colors hover:bg-blue-100 text-sm"
-          >
-            Open All
-          </button>
-          <span className="text-gray-400">|</span>
-          <button
-            onClick={onCloseAll}
-            className="px-2 py-1 rounded cursor-pointer transition-colors hover:bg-blue-100 text-sm"
-          >
-            Close All
-          </button>
-        </div>
-      )}
     </div>
   );
 };
