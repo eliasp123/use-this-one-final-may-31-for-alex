@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -223,7 +222,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         </div>
 
         {/* Accordion Content - Stats section with consistent height */}
-        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
           isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="flex-1 flex flex-col justify-between">
