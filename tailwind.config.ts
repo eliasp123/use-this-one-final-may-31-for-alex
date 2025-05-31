@@ -65,6 +65,7 @@ export default {
 				},
 				gray: {
 					50: '#f9fafb',
+					75: '#f6f7f8',
 					100: '#f3f4f6',
 					150: '#eaebec',
 					200: '#e5e7eb',
@@ -109,4 +110,3 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
