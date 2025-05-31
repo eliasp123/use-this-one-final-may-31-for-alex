@@ -53,6 +53,7 @@ export const useCaregiverLocations = (
   const { searchLocations } = useMapboxGeocoding();
   const [locations, setLocations] = useState<Location[]>(sampleLocations);
   const [searchResults, setSearchResults] = useState<Location[]>([]);
+  const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number } | null>(null);
 
   // Convert geocoding result to Location format
   const convertGeocodingToLocation = (result: any): Location => {
@@ -94,8 +95,17 @@ export const useCaregiverLocations = (
         const convertedResults = results.map(convertGeocodingToLocation);
         setSearchResults(convertedResults);
         setLocations([...sampleLocations, ...convertedResults]);
+        
+        // Set search center to the first result if available
+        if (convertedResults.length > 0) {
+          setSearchCenter({
+            lat: convertedResults[0].lat,
+            lng: convertedResults[0].lng
+          });
+        }
       } else {
         setSearchResults([]);
+        setSearchCenter(null);
         let filtered = sampleLocations;
         
         if (selectedCategories.length > 0) {
@@ -121,5 +131,5 @@ export const useCaregiverLocations = (
     }
   }, [selectedCategories, searchResults, searchQuery]);
 
-  return { locations };
+  return { locations, searchCenter };
 };

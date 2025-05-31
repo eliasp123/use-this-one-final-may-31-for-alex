@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
@@ -36,7 +35,15 @@ const CaregiverMap = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 34.0522, lng: -118.2437 });
   const [mapZoom, setMapZoom] = useState(12);
   
-  const { locations } = useCaregiverLocations(searchQuery, selectedCategories, mapCenter);
+  const { locations, searchCenter } = useCaregiverLocations(searchQuery, selectedCategories, mapCenter);
+
+  // Update map center when search results are found
+  useEffect(() => {
+    if (searchCenter) {
+      setMapCenter(searchCenter);
+      setMapZoom(12);
+    }
+  }, [searchCenter]);
 
   const handleCategoryToggle = (categoryId: string) => {
     setSelectedCategories(prev => {
