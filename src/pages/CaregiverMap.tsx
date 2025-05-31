@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +5,7 @@ import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
 import IndexActionButtons from './IndexActionButtons';
 import { useToast } from '../hooks/use-toast';
+import { useMapboxGeocoding } from '../hooks/useMapboxGeocoding';
 
 interface Location {
   id: string;
@@ -41,7 +41,7 @@ const categories: Category[] = [
   { id: 'pharmacies', name: 'Pharmacies', color: '#EC4899', icon: <Pill className="h-5 w-5" />, count: 3 }
 ];
 
-// Sample data matching the reference
+// Sample data as fallback
 const sampleLocations: Location[] = [
   {
     id: '1',
@@ -74,30 +74,81 @@ const sampleLocations: Location[] = [
 const CaregiverMap = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { searchLocations, isLoading } = useMapboxGeocoding();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [locations, setLocations] = useState<Location[]>(sampleLocations);
   const [mapCenter, setMapCenter] = useState({ lat: 34.0522, lng: -118.2437 });
   const [mapZoom, setMapZoom] = useState(12);
+  const [searchResults, setSearchResults] = useState<Location[]>([]);
 
+  // Convert geocoding result to Location format
+  const convertGeocodingToLocation = (result: any): Location => {
+    const address = result.place_name;
+    const phone = result.properties?.tel || '(555) 000-0000';
+    const website = result.properties?.website;
+    
+    // Determine category based on place type or properties
+    let category = 'professionals';
+    if (result.properties?.category) {
+      const cat = result.properties.category.toLowerCase();
+      if (cat.includes('hospital')) category = 'hospitals';
+      else if (cat.includes('pharmacy')) category = 'pharmacies';
+      else if (cat.includes('senior') || cat.includes('care')) category = 'senior-living';
+      else if (cat.includes('therapy')) category = 'physical-therapy';
+    }
+
+    return {
+      id: result.id,
+      name: result.text || result.place_name.split(',')[0],
+      category,
+      address,
+      phone,
+      website,
+      rating: 4.0 + Math.random(),
+      hours: 'Hours not available',
+      distance: '0.0 mi',
+      lat: result.center[1],
+      lng: result.center[0]
+    };
+  };
+
+  // Handle search query changes
   useEffect(() => {
-    let filtered = sampleLocations;
-    
+    const performSearch = async () => {
+      if (searchQuery.trim() && searchQuery.length > 2) {
+        console.log('Searching for:', searchQuery);
+        const results = await searchLocations(searchQuery, mapCenter);
+        const convertedResults = results.map(convertGeocodingToLocation);
+        setSearchResults(convertedResults);
+        setLocations([...sampleLocations, ...convertedResults]);
+      } else {
+        setSearchResults([]);
+        let filtered = sampleLocations;
+        
+        if (selectedCategories.length > 0) {
+          filtered = filtered.filter(location => selectedCategories.includes(location.category));
+        }
+        
+        setLocations(filtered);
+      }
+    };
+
+    const debounceTimer = setTimeout(performSearch, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery, searchLocations, mapCenter, selectedCategories]);
+
+  // Filter by categories
+  useEffect(() => {
     if (selectedCategories.length > 0) {
-      filtered = filtered.filter(location => selectedCategories.includes(location.category));
+      const allLocations = [...sampleLocations, ...searchResults];
+      const filtered = allLocations.filter(location => selectedCategories.includes(location.category));
+      setLocations(filtered);
+    } else if (!searchQuery.trim()) {
+      setLocations(sampleLocations);
     }
-    
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(location =>
-        location.name.toLowerCase().includes(query) ||
-        location.address.toLowerCase().includes(query)
-      );
-    }
-    
-    setLocations(filtered);
-  }, [selectedCategories, searchQuery]);
+  }, [selectedCategories, searchResults, searchQuery]);
 
   const handleCategoryToggle = (categoryId: string) => {
     setSelectedCategories(prev => {
@@ -113,7 +164,6 @@ const CaregiverMap = () => {
     console.log('handleSelectAllCategories called');
     setSelectedCategories(prev => {
       const allCategoryIds = categories.map(cat => cat.id);
-      // If all categories are selected, deselect all. Otherwise, select all.
       if (prev.length === allCategoryIds.length) {
         console.log('Deselecting all categories');
         return [];
@@ -143,7 +193,7 @@ const CaregiverMap = () => {
       <div className="bg-teal-700 text-white px-6 py-4">
         <div className="flex items-center justify-between h-[3rem]">
           <div className="text-base font-normal flex items-center">
-            Search Places or Care Categories Below
+            Search Places or Care Categories Below {isLoading && <span className="ml-2 text-sm">(Searching...)</span>}
           </div>
           
           <div className="absolute left-1/2 transform -translate-x-1/2">
@@ -151,7 +201,6 @@ const CaregiverMap = () => {
               <IndexActionButtons
                 onNewEmail={() => {
                   navigate('/');
-                  // This will trigger the compose functionality on the main page
                 }}
                 onViewDocuments={() => navigate('/documents')}
                 onCalendarClick={() => {
@@ -167,7 +216,7 @@ const CaregiverMap = () => {
             </div>
           </div>
           
-          <div className="w-48"></div> {/* Spacer to balance the layout */}
+          <div className="w-48"></div>
         </div>
       </div>
 
@@ -190,6 +239,7 @@ const CaregiverMap = () => {
           <div className="p-4 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">
               {locations.length} location{locations.length !== 1 ? 's' : ''}
+              {searchQuery && <span className="text-sm text-gray-500 block">for "{searchQuery}"</span>}
             </h3>
           </div>
           
