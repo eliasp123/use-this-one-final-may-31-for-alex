@@ -1,6 +1,5 @@
 
 import React, { useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import EmailCategoryCard from '../EmailCategoryCard';
 
@@ -10,11 +9,10 @@ interface DraggableCategoryCardProps {
   onReorder: (dragIndex: number, hoverIndex: number) => void;
   isExpanded: boolean;
   onToggle: () => void;
-}
-
-interface DragItem {
-  type: string;
-  index: number;
+  isDragging?: boolean;
+  isDragOver?: boolean;
+  onDragStart?: (e: React.DragEvent, categoryId: string) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
 }
 
 const DraggableCategoryCard: React.FC<DraggableCategoryCardProps> = ({
@@ -22,68 +20,24 @@ const DraggableCategoryCard: React.FC<DraggableCategoryCardProps> = ({
   index,
   onReorder,
   isExpanded,
-  onToggle
+  onToggle,
+  isDragging = false,
+  isDragOver = false,
+  onDragStart,
+  onDragEnd
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ handlerId }, drop] = useDrop({
-    accept: 'category',
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
-    hover(item: DragItem, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
-
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      onReorder(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: 'category',
-    item: () => {
-      return { index };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  drag(drop(ref));
-
   return (
-    <div
-      ref={ref}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-      data-handler-id={handlerId}
-    >
+    <div ref={ref}>
       <EmailCategoryCard 
         category={category} 
         isExpanded={isExpanded}
         onToggle={onToggle}
+        isDragging={isDragging}
+        isDragOver={isDragOver}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
       />
     </div>
   );

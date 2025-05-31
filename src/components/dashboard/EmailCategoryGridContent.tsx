@@ -1,4 +1,3 @@
-
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo, useEffect } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
@@ -30,6 +29,10 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
 }, ref) => {
   const allCategories = [...priorityCategories, ...compactCategories];
   const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
+  
+  // Drag and drop state
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
   // State to track which cards are expanded - first 3 categories (first row) default to open
   const [expandedCards, setExpandedCards] = useState<Set<string>>(() => {
@@ -87,6 +90,62 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     });
   }, []);
 
+  // Drag and drop handlers
+  const handleDragStart = useCallback((e: React.DragEvent, categoryId: string) => {
+    setDraggedItem(categoryId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', categoryId);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedItem && index !== dragOverIndex) {
+      setDragOverIndex(index);
+    }
+  }, [draggedItem, dragOverIndex]);
+
+  const handleDragEnter = useCallback((e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedItem) {
+      setDragOverIndex(index);
+    }
+  }, [draggedItem]);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    // Only clear drag over index if we're leaving the entire drop zone
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverIndex(null);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    
+    const draggedId = e.dataTransfer.getData('text/plain') || draggedItem;
+    
+    if (!draggedId) {
+      setDraggedItem(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const draggedIndex = orderedCategories.findIndex(cat => cat.id === draggedId);
+
+    if (draggedIndex !== -1 && targetIndex !== draggedIndex) {
+      handleReorder(draggedIndex, targetIndex);
+    }
+
+    setDraggedItem(null);
+    setDragOverIndex(null);
+  }, [draggedItem, orderedCategories, handleReorder]);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedItem(null);
+    setDragOverIndex(null);
+  }, []);
+
   // Calculate rows dynamically based on ordered categories
   const categoriesPerRow = 3;
   
@@ -98,7 +157,7 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     allExpanded
   }), [openAll, closeAll, toggleAll, allExpanded]);
 
-  // Create rows from ordered categories
+  // Create rows from ordered categories with drag and drop support
   const rows = [];
   for (let i = 0; i < orderedCategories.length; i += categoriesPerRow) {
     const rowCategories = orderedCategories.slice(i, i + categoriesPerRow);
@@ -128,6 +187,14 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
           hideHeader={true}
           expandedCards={expandedCards}
           onToggleCard={toggleCard}
+          draggedItem={draggedItem}
+          dragOverIndex={dragOverIndex}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onDragEnd={handleDragEnd}
         />
       ))}
     </div>

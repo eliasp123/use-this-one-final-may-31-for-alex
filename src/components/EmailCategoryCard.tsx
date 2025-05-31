@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, GripVertical } from 'lucide-react';
 import { useEmailPreview } from '../hooks/useEmailPreview';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import { EmailCategory } from '../hooks/useEmailCategoryData';
@@ -12,12 +11,28 @@ interface EmailCategoryCardProps {
   category: EmailCategory;
   isExpanded?: boolean;
   onToggle?: () => void;
+  isDragging?: boolean;
+  isDragOver?: boolean;
+  onDragStart?: (e: React.DragEvent, categoryId: string) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDragEnter?: (e: React.DragEvent) => void;
+  onDragLeave?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
 }
 
 const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ 
   category, 
   isExpanded: externalIsExpanded,
-  onToggle: externalOnToggle 
+  onToggle: externalOnToggle,
+  isDragging = false,
+  isDragOver = false,
+  onDragStart,
+  onDragOver,
+  onDragEnter,
+  onDragLeave,
+  onDrop,
+  onDragEnd
 }) => {
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
@@ -200,11 +215,25 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
     <>
       <div 
         ref={categoryCardRef}
+        draggable
+        onDragStart={(e) => onDragStart?.(e, id)}
+        onDragOver={onDragOver}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onDragEnd={onDragEnd}
         className={`bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px] flex flex-col ${
           isExpanded ? 'p-4 sm:p-5' : 'p-2 sm:p-3'
-        }`}
+        } ${isDragging ? 'opacity-50 scale-95 rotate-1' : ''} ${
+          isDragOver ? 'ring-2 ring-purple-400 ring-opacity-50' : ''
+        } relative`}
         onClick={handleCardClick}
       >
+        {/* Drag handle - visible on hover */}
+        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing z-10">
+          <GripVertical className="w-4 h-4 text-gray-400" />
+        </div>
+
         {/* Header - Icon and title with accordion functionality and conditional gray background */}
         <div 
           className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} ${
