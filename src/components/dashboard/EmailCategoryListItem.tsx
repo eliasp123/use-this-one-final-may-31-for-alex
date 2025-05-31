@@ -126,14 +126,16 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   // Helper function to get the card rect and pass it properly to tooltip
   const getTooltipPositionWithCardData = () => {
     const cardElement = categoryCardRef.current;
-    if (!cardElement) return { ...tooltipPosition, cardWidth: 400 };
+    if (!cardElement) return { ...tooltipPosition, cardWidth: 400, cardTop: tooltipPosition.y };
     
     const cardRect = cardElement.getBoundingClientRect();
     
     return {
       x: cardRect.left, // Card's left edge
-      y: tooltipPosition.y, // Actual hover Y position
-      cardWidth: cardRect.width
+      y: cardRect.top, // Card's TOP edge (not hover Y position)
+      cardWidth: cardRect.width,
+      cardTop: cardRect.top,
+      cardRight: cardRect.right
     };
   };
 

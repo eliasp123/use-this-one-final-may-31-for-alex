@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmailData } from '@/types/email';
@@ -12,7 +11,7 @@ interface EmailPreviewTooltipProps {
   emails: EmailData[];
   status: 'unread' | 'pending' | 'unresponded';
   category: string;
-  position: { x: number; y: number };
+  position: { x: number; y: number; cardWidth?: number; cardTop?: number; cardRight?: number };
   onClose: () => void;
   onMouseEnter: () => void;
   onMouseLeave?: () => void;
@@ -21,7 +20,7 @@ interface EmailPreviewTooltipProps {
   onAddAppointment?: (date: Date) => void;
   hoveredDate?: Date;
   autoFade?: boolean;
-  categoryCardWidth?: number; // Add this to know the actual card width
+  categoryCardWidth?: number;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -37,7 +36,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   onAddAppointment,
   hoveredDate,
   autoFade = false,
-  categoryCardWidth = 400 // Default fallback width
+  categoryCardWidth = 400
 }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
@@ -90,32 +89,50 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Enhanced positioning for horizontal sliding from card edges
-  const tooltipWidth = 531; // Increased by 25% from 425px
-  const tooltipHeight = 756; // Increased by 20% from 630px (which was 50% increase from original 420px)
+  // Dynamic sizing based on number of emails
+  const getTooltipDimensions = () => {
+    const baseWidth = 450;
+    const baseHeaderHeight = 60;
+    const emailItemHeight = 140; // Height per email item
+    const padding = 40;
+    
+    const emailCount = emails.length;
+    const dynamicHeight = baseHeaderHeight + (emailItemHeight * Math.min(emailCount, 4)) + padding;
+    
+    return {
+      width: baseWidth,
+      height: Math.min(dynamicHeight, 600) // Max height cap
+    };
+  };
+
+  const { width: tooltipWidth, height: tooltipHeight } = getTooltipDimensions();
   const screenWidth = window.innerWidth;
   
   // Determine if we should slide left or right based on available space
-  const shouldSlideLeft = position.x + categoryCardWidth + tooltipWidth > screenWidth - 50;
+  const cardLeft = position.x;
+  const cardRight = position.cardRight || (position.x + categoryCardWidth);
+  const shouldSlideLeft = cardRight + tooltipWidth > screenWidth - 20;
   
   let finalLeft: number;
   let finalTop: number;
   
   if (shouldSlideLeft) {
     // Slide out to the left from the left edge of the category card
-    finalLeft = Math.max(10, position.x - tooltipWidth);
+    finalLeft = Math.max(10, cardLeft - tooltipWidth);
   } else {
     // Slide out to the right from the right edge of the category card
-    finalLeft = Math.min(position.x + categoryCardWidth, screenWidth - tooltipWidth - 10);
+    finalLeft = Math.min(cardRight, screenWidth - tooltipWidth - 10);
   }
   
-  // Use the Y position from where the user actually hovered (the status circles)
-  finalTop = Math.max(10, Math.min(position.y, window.innerHeight - tooltipHeight - 10));
+  // Use the card's top position for alignment
+  finalTop = Math.max(10, Math.min(position.cardTop || position.y, window.innerHeight - tooltipHeight - 10));
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
     left: finalLeft,
     top: finalTop,
+    width: tooltipWidth,
+    height: tooltipHeight,
     zIndex: 9999,
   };
 
@@ -123,7 +140,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-2xl border border-gray-200 min-w-[500px] max-w-[531px] max-h-[756px] overflow-hidden"
+      className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden transition-all duration-200 ease-out"
       style={tooltipStyle}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -182,7 +199,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
 
           {/* Appointments List */}
-          <div className="h-[420px]">
+          <div style={{ height: tooltipHeight - 120 }}>
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
@@ -233,7 +250,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Enhanced email design
+        // Enhanced email design with dynamic sizing
         <>
           {/* Header with Close button */}
           <div className="px-3 py-2 border-b border-gray-200">
@@ -260,8 +277,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List */}
-          <div className="h-[456px]">
+          {/* Content List with dynamic height */}
+          <div style={{ height: tooltipHeight - 60 }}>
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
