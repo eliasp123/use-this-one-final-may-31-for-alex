@@ -14,6 +14,7 @@ interface AccordionCategoryRowProps {
   onAddNewCategory?: () => void;
   onReorder: (dragIndex: number, hoverIndex: number) => void;
   startIndex: number;
+  hideHeader?: boolean;
 }
 
 const AccordionCategoryRow: React.FC<AccordionCategoryRowProps> = ({
@@ -24,22 +25,25 @@ const AccordionCategoryRow: React.FC<AccordionCategoryRowProps> = ({
   showAddButton = false,
   onAddNewCategory,
   onReorder,
-  startIndex
+  startIndex,
+  hideHeader = false
 }) => {
   return (
     <div className="space-y-4">
-      {/* Accordion Header */}
-      <button
-        onClick={onToggle}
-        className="flex items-center justify-between w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
-      >
-        <h3 className="text-lg font-medium text-gray-800">{title}</h3>
-        <ChevronDown 
-          className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : ''
-          }`} 
-        />
-      </button>
+      {/* Accordion Header - only show if not hidden */}
+      {!hideHeader && (
+        <button
+          onClick={onToggle}
+          className="flex items-center justify-between w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <h3 className="text-lg font-medium text-gray-800">{title}</h3>
+          <ChevronDown 
+            className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${
+              isOpen ? 'rotate-180' : ''
+            }`} 
+          />
+        </button>
+      )}
 
       {/* Accordion Content */}
       {isOpen && (

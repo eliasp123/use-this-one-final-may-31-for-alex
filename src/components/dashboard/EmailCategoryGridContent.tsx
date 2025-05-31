@@ -53,7 +53,7 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     closeAll
   }));
 
-  // Create rows from ordered categories
+  // Create rows from ordered categories - same as original logic but with accordion
   const rows = [];
   for (let i = 0; i < orderedCategories.length; i += categoriesPerRow) {
     const rowCategories = orderedCategories.slice(i, i + categoriesPerRow);
@@ -61,7 +61,6 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     const isFirstRow = rowIndex === 0;
     
     rows.push({
-      title: isFirstRow ? 'Priority Categories' : `Categories ${rowIndex + 1}`,
       categories: rowCategories,
       startIndex: i,
       showAddButton: (isFirstRow && addButtonInFirstRow) || (!isFirstRow && addButtonInCompactRows && i + categoriesPerRow >= orderedCategories.length)
@@ -73,7 +72,7 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
       {rows.map((row, rowIndex) => (
         <AccordionCategoryRow
           key={`row-${rowIndex}`}
-          title={row.title}
+          title="" // No title - keep original appearance
           categories={row.categories}
           isOpen={accordionStates[rowIndex] || false}
           onToggle={() => toggleRow(rowIndex)}
@@ -81,6 +80,7 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
           onAddNewCategory={onAddNewCategory}
           onReorder={handleReorder}
           startIndex={row.startIndex}
+          hideHeader={true} // Hide the accordion header for seamless appearance
         />
       ))}
     </div>
