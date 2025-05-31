@@ -50,6 +50,11 @@ const DocumentCardGrid = ({ attachment, onMouseEnter, onMouseLeave }: DocumentCa
       onTouchStart={handleCardPress}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      style={{
+        backgroundImage: `radial-gradient(circle, #e5e7eb 1px, transparent 1px)`,
+        backgroundSize: '20px 20px',
+        backgroundPosition: '10px 10px'
+      }}
     >
       <CardContent className="p-0 flex flex-col h-full">
         {/* Top section with icon and file name */}
