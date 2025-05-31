@@ -140,21 +140,21 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
     ...(unread > 0 ? [{
       label: 'Unread messages',
       count: unread,
-      color: 'bg-purple-300',
+      color: 'bg-purple-500',
       status: 'unread' as const,
       navStatus: 'unread'
     }] : []),
     ...(pending > 0 ? [{
       label: 'Pending replies',
       count: pending,
-      color: 'bg-amber-300',
+      color: 'bg-amber-500',
       status: 'pending' as const,
       navStatus: 'pending'
     }] : []),
     ...(notRespondedCount > 0 ? [{
       label: 'Not replied yet',
       count: notRespondedCount,
-      color: 'bg-red-300',
+      color: 'bg-red-500',
       status: 'unresponded' as const,
       navStatus: 'no-response'
     }] : [])
