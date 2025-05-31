@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -114,6 +115,36 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       navStatus: 'no-response'
     }] : [])
   ];
+
+  // Create placeholder rows to ensure consistent height (always 3 rows)
+  const statusRows = [];
+  for (let i = 0; i < 3; i++) {
+    if (i < activeStatuses.length) {
+      const statusItem = activeStatuses[i];
+      statusRows.push(
+        <div 
+          key={statusItem.status}
+          className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
+          onClick={(e) => handleStatusClick(statusItem.navStatus, e)}
+          onMouseEnter={(e) => handleStatusHover(statusItem.status, e)}
+          onMouseLeave={handleStatusLeave}
+        >
+          <span className="text-gray-600">{statusItem.label}</span>
+          <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
+            {statusItem.count}
+          </div>
+        </div>
+      );
+    } else {
+      // Add invisible placeholder rows to maintain consistent height
+      statusRows.push(
+        <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0">
+          <span>Placeholder</span>
+          <div className="w-5 h-5 sm:w-6 sm:h-6"></div>
+        </div>
+      );
+    }
+  }
   
   return (
     <>
@@ -134,26 +165,13 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           </div>
         </div>
 
-        {/* Stats section with fixed height for consistency */}
+        {/* Stats section with consistent height */}
         <div className="flex-1 flex flex-col justify-between">
-          {/* Status rows container with fixed minimum height */}
-          <div className="min-h-[72px] flex flex-col justify-start">
+          {/* Status rows container with fixed height for 3 rows */}
+          <div className="h-[72px] flex flex-col justify-start">
             {activeStatuses.length > 0 ? (
               <div className="space-y-0.5 sm:space-y-1">
-                {activeStatuses.map((statusItem) => (
-                  <div 
-                    key={statusItem.status}
-                    className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
-                    onClick={(e) => handleStatusClick(statusItem.navStatus, e)}
-                    onMouseEnter={(e) => handleStatusHover(statusItem.status, e)}
-                    onMouseLeave={handleStatusLeave}
-                  >
-                    <span className="text-gray-600">{statusItem.label}</span>
-                    <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
-                      {statusItem.count}
-                    </div>
-                  </div>
-                ))}
+                {statusRows}
               </div>
             ) : (
               <div className="text-center py-4">
