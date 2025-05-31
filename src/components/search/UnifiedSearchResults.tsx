@@ -30,7 +30,7 @@ const UnifiedSearchResults: React.FC<UnifiedSearchResultsProps> = ({ searchQuery
   }
 
   return (
-    <div className="max-w-7xl mx-auto mb-8 space-y-6">
+    <div className="container mx-auto px-4 mb-8 space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredAppointments.length > 0 && (
           <div className="w-full">
