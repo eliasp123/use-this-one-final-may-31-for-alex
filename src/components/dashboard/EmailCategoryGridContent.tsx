@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
 import { useAccordionStates } from '../../hooks/useAccordionStates';
@@ -11,19 +11,20 @@ interface EmailCategoryGridContentProps {
   addButtonInFirstRow: boolean;
   addButtonInCompactRows: boolean;
   onAddNewCategory: () => void;
-  onOpenAll: () => void;
-  onCloseAll: () => void;
 }
 
-const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
+export interface EmailCategoryGridContentRef {
+  openAll: () => void;
+  closeAll: () => void;
+}
+
+const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCategoryGridContentProps>(({
   priorityCategories,
   compactCategories,
   addButtonInFirstRow,
   addButtonInCompactRows,
-  onAddNewCategory,
-  onOpenAll,
-  onCloseAll
-}) => {
+  onAddNewCategory
+}, ref) => {
   const allCategories = [...priorityCategories, ...compactCategories];
   const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
   
@@ -46,11 +47,11 @@ const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
     updateRowCount(actualTotalRows);
   }, [actualTotalRows, updateRowCount]);
 
-  // Connect accordion controls to parent
-  useEffect(() => {
-    onOpenAll = openAll;
-    onCloseAll = closeAll;
-  }, [openAll, closeAll]);
+  // Expose accordion controls to parent
+  useImperativeHandle(ref, () => ({
+    openAll,
+    closeAll
+  }));
 
   // Create rows from ordered categories
   const rows = [];
@@ -84,6 +85,8 @@ const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
       ))}
     </div>
   );
-};
+});
+
+EmailCategoryGridContent.displayName = 'EmailCategoryGridContent';
 
 export default EmailCategoryGridContent;

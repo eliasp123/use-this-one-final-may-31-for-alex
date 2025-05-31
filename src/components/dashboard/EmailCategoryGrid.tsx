@@ -28,6 +28,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const listContentRef = useRef<EmailCategoryListContentRef>(null);
+  const gridContentRef = useRef<{ openAll: () => void; closeAll: () => void }>(null);
 
   // Search logic
   const allEmails = getAllEmailsWithAttachments();
@@ -73,9 +74,17 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     listContentRef.current?.collapseAll();
   };
 
-  // Placeholder functions for accordion controls - will be connected via refs
-  let accordionOpenAll = () => {};
-  let accordionCloseAll = () => {};
+  const handleOpenAll = () => {
+    if (viewMode === 'grid') {
+      gridContentRef.current?.openAll();
+    }
+  };
+
+  const handleCloseAll = () => {
+    if (viewMode === 'grid') {
+      gridContentRef.current?.closeAll();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -87,8 +96,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onCollapseAll={viewMode === 'list' ? handleCollapseAll : undefined}
-        onOpenAll={viewMode === 'grid' ? accordionOpenAll : undefined}
-        onCloseAll={viewMode === 'grid' ? accordionCloseAll : undefined}
+        onOpenAll={viewMode === 'grid' ? handleOpenAll : undefined}
+        onCloseAll={viewMode === 'grid' ? handleCloseAll : undefined}
       />
 
       <SearchResultsDisplay
@@ -102,13 +111,12 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
       <div className="pt-3">
         {viewMode === 'grid' ? (
           <EmailCategoryGridContent
+            ref={gridContentRef}
             priorityCategories={priorityCategories}
             compactCategories={compactCategories}
             addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
             addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
             onAddNewCategory={onCategoryAdded || (() => {})}
-            onOpenAll={(fn) => { accordionOpenAll = fn; }}
-            onCloseAll={(fn) => { accordionCloseAll = fn; }}
           />
         ) : (
           <EmailCategoryListContent
