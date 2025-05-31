@@ -1,4 +1,3 @@
-
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
@@ -17,6 +16,7 @@ export interface EmailCategoryGridContentRef {
   closeAll: () => void;
   toggleAll: () => void;
   allExpanded: boolean;
+  onExpandedChange?: (allExpanded: boolean) => void;
 }
 
 const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCategoryGridContentProps>(({
@@ -89,7 +89,7 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     closeAll,
     toggleAll,
     allExpanded
-  }));
+  }), [openAll, closeAll, toggleAll, allExpanded]);
 
   // Create rows from ordered categories
   const rows = [];

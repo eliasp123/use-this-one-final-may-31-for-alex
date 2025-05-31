@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
 import EmailCategoryGridContent, { EmailCategoryGridContentRef } from './EmailCategoryGridContent';
@@ -26,6 +26,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   onCategoryAdded
 }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [allExpanded, setAllExpanded] = useState(false);
   const listContentRef = useRef<EmailCategoryListContentRef>(null);
   const gridContentRef = useRef<EmailCategoryGridContentRef>(null);
 
@@ -76,8 +77,19 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const handleToggleAll = () => {
     if (viewMode === 'grid') {
       gridContentRef.current?.toggleAll();
+      // Update the allExpanded state after toggle
+      setTimeout(() => {
+        setAllExpanded(gridContentRef.current?.allExpanded || false);
+      }, 0);
     }
   };
+
+  // Update allExpanded state whenever the grid content changes
+  React.useEffect(() => {
+    if (viewMode === 'grid' && gridContentRef.current) {
+      setAllExpanded(gridContentRef.current.allExpanded);
+    }
+  }, [viewMode, priorityCategories, compactCategories]);
 
   return (
     <div className="space-y-6">
@@ -90,7 +102,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         onViewModeChange={setViewMode}
         onCollapseAll={viewMode === 'list' ? handleCollapseAll : undefined}
         onToggleAll={viewMode === 'grid' ? handleToggleAll : undefined}
-        allExpanded={gridContentRef.current?.allExpanded || false}
+        allExpanded={allExpanded}
       />
 
       <SearchResultsDisplay
