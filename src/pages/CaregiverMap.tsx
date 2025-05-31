@@ -1,25 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { MapPin, Phone, Globe, Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState } from 'react';
+import { Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
 import CategoryDropdown from '../components/map/CategoryDropdown';
-import IndexActionButtons from './IndexActionButtons';
-import { useToast } from '../hooks/use-toast';
+import CaregiverLocationsList from '../components/map/CaregiverLocationsList';
+import CaregiverMapHeader from '../components/map/CaregiverMapHeader';
+import { useCaregiverLocations } from '../hooks/useCaregiverLocations';
 import { useMapboxGeocoding } from '../hooks/useMapboxGeocoding';
-
-interface Location {
-  id: string;
-  name: string;
-  category: string;
-  address: string;
-  phone: string;
-  website?: string;
-  rating: number;
-  hours: string;
-  distance: string;
-  lat: number;
-  lng: number;
-}
 
 interface Category {
   id: string;
@@ -41,114 +28,15 @@ const categories: Category[] = [
   { id: 'pharmacies', name: 'Pharmacies', color: '#EC4899', icon: <Pill className="h-5 w-5" />, count: 3 }
 ];
 
-// Sample data as fallback
-const sampleLocations: Location[] = [
-  {
-    id: '1',
-    name: 'Sunrise Senior Living Beverly Hills',
-    category: 'senior-living',
-    address: '9131 Pico Blvd, Los Angeles, CA 90035',
-    phone: '(310) 888-3751',
-    website: 'sunriseseniorliving.com',
-    rating: 4.8,
-    hours: 'Open until 6 PM',
-    distance: '0.5 mi',
-    lat: 34.0522,
-    lng: -118.2437
-  },
-  {
-    id: '2',
-    name: 'Visiting Angels Home Care',
-    category: 'home-care',
-    address: '1234 Wilshire Blvd, Los Angeles, CA 90017',
-    phone: '(323) 555-0123',
-    website: 'visitingangels.com',
-    rating: 4.6,
-    hours: '24/7',
-    distance: '1.2 mi',
-    lat: 34.0622,
-    lng: -118.2537
-  }
-];
-
 const CaregiverMap = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { searchLocations, isLoading } = useMapboxGeocoding();
+  const { isLoading } = useMapboxGeocoding();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [locations, setLocations] = useState<Location[]>(sampleLocations);
   const [mapCenter, setMapCenter] = useState({ lat: 34.0522, lng: -118.2437 });
   const [mapZoom, setMapZoom] = useState(12);
-  const [searchResults, setSearchResults] = useState<Location[]>([]);
-
-  // Convert geocoding result to Location format
-  const convertGeocodingToLocation = (result: any): Location => {
-    const address = result.place_name;
-    const phone = result.properties?.tel || '(555) 000-0000';
-    const website = result.properties?.website;
-    
-    // Determine category based on place type or properties
-    let category = 'professionals';
-    if (result.properties?.category) {
-      const cat = result.properties.category.toLowerCase();
-      if (cat.includes('hospital')) category = 'hospitals';
-      else if (cat.includes('pharmacy')) category = 'pharmacies';
-      else if (cat.includes('senior') || cat.includes('care')) category = 'senior-living';
-      else if (cat.includes('therapy')) category = 'physical-therapy';
-    }
-
-    return {
-      id: result.id,
-      name: result.text || result.place_name.split(',')[0],
-      category,
-      address,
-      phone,
-      website,
-      rating: 4.0 + Math.random(),
-      hours: 'Hours not available',
-      distance: '0.0 mi',
-      lat: result.center[1],
-      lng: result.center[0]
-    };
-  };
-
-  // Handle search query changes
-  useEffect(() => {
-    const performSearch = async () => {
-      if (searchQuery.trim() && searchQuery.length > 2) {
-        console.log('Searching for:', searchQuery);
-        const results = await searchLocations(searchQuery, mapCenter);
-        const convertedResults = results.map(convertGeocodingToLocation);
-        setSearchResults(convertedResults);
-        setLocations([...sampleLocations, ...convertedResults]);
-      } else {
-        setSearchResults([]);
-        let filtered = sampleLocations;
-        
-        if (selectedCategories.length > 0) {
-          filtered = filtered.filter(location => selectedCategories.includes(location.category));
-        }
-        
-        setLocations(filtered);
-      }
-    };
-
-    const debounceTimer = setTimeout(performSearch, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [searchQuery, searchLocations, mapCenter, selectedCategories]);
-
-  // Filter by categories
-  useEffect(() => {
-    if (selectedCategories.length > 0) {
-      const allLocations = [...sampleLocations, ...searchResults];
-      const filtered = allLocations.filter(location => selectedCategories.includes(location.category));
-      setLocations(filtered);
-    } else if (!searchQuery.trim()) {
-      setLocations(sampleLocations);
-    }
-  }, [selectedCategories, searchResults, searchQuery]);
+  
+  const { locations } = useCaregiverLocations(searchQuery, selectedCategories, mapCenter);
 
   const handleCategoryToggle = (categoryId: string) => {
     setSelectedCategories(prev => {
@@ -189,36 +77,7 @@ const CaregiverMap = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <div className="bg-teal-700 text-white px-6 py-4">
-        <div className="flex items-center justify-between h-[3rem]">
-          <div className="text-base font-normal flex items-center">
-            Search Places or Care Categories Below {isLoading && <span className="ml-2 text-sm">(Searching...)</span>}
-          </div>
-          
-          <div className="absolute left-1/2 transform -translate-x-1/2">
-            <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200 [&_div]:mt-0">
-              <IndexActionButtons
-                onNewEmail={() => {
-                  navigate('/');
-                }}
-                onViewDocuments={() => navigate('/documents')}
-                onCalendarClick={() => {
-                  navigate('/');
-                  setTimeout(() => {
-                    const calendarSection = document.getElementById('calendar-section');
-                    if (calendarSection) {
-                      calendarSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
-                }}
-              />
-            </div>
-          </div>
-          
-          <div className="w-48"></div>
-        </div>
-      </div>
+      <CaregiverMapHeader isLoading={isLoading} />
 
       {/* Search Bar with Dropdown */}
       <div className="bg-white px-6 py-4 border-b border-gray-200">
@@ -234,67 +93,13 @@ const CaregiverMap = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex">
-        {/* Results Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {locations.length} location{locations.length !== 1 ? 's' : ''}
-              {searchQuery && <span className="text-sm text-gray-500 block">for "{searchQuery}"</span>}
-            </h3>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto">
-            {locations.map((location) => (
-              <div
-                key={location.id}
-                onClick={() => handleLocationSelect(location.id)}
-                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                  selectedLocation === location.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <div 
-                    className="w-6 h-6 rounded-sm mt-1 flex-shrink-0" 
-                    style={{ backgroundColor: getCategoryColor(location.category) }}
-                  />
-                  
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 mb-1">{location.name}</h4>
-                    <p className="text-sm text-gray-600 capitalize mb-2">{location.category.replace('-', ' ')}</p>
-                    
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <div className="flex items-start gap-2">
-                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                        <span>{location.address}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 flex-shrink-0" />
-                        <span>{location.phone}</span>
-                      </div>
-                      
-                      {location.website && (
-                        <div className="flex items-center gap-2">
-                          <Globe className="h-4 w-4 flex-shrink-0" />
-                          <span className="text-blue-600">{location.website}</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="mt-3 flex gap-4">
-                      <button className="bg-teal-600 text-white px-4 py-1 rounded text-sm hover:bg-teal-700 transition-colors">
-                        Directions
-                      </button>
-                      <button className="bg-teal-600 text-white px-4 py-1 rounded text-sm hover:bg-teal-700 transition-colors">
-                        Call
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <CaregiverLocationsList
+          locations={locations}
+          selectedLocation={selectedLocation}
+          onLocationSelect={handleLocationSelect}
+          getCategoryColor={getCategoryColor}
+          searchQuery={searchQuery}
+        />
 
         {/* Map */}
         <div className="flex-1">
