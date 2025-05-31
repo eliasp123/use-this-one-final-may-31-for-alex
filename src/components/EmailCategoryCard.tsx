@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -14,6 +13,7 @@ interface EmailCategoryCardProps {
 const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
+  const categoryCardRef = useRef<HTMLDivElement>(null);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
@@ -36,12 +36,11 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   };
   
   const handleStatusClick = (status: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click from triggering
+    e.stopPropagation();
     navigate(`/emails/${id}/${status}`);
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
-    // Clear any existing timeouts
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -49,39 +48,33 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(hideTimeoutRef.current);
     }
 
-    // Capture the rect information immediately while event.currentTarget is valid
     const rect = event.currentTarget.getBoundingClientRect();
     const position = {
-      x: rect.left + rect.width / 2, // Center horizontally on the card
-      y: rect.top // Top of the hovered element
+      x: rect.left + rect.width / 2,
+      y: rect.top
     };
 
-    // Set timeout to show tooltip after delay
     hoverTimeoutRef.current = setTimeout(() => {
       setTooltipPosition(position);
       setHoveredStatus(status);
-    }, 800); // Reduced to 800ms for better responsiveness
+    }, 800);
   }, []);
 
   const handleStatusLeave = useCallback(() => {
-    // Clear show timeout to prevent showing tooltip
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
     
-    // Only start hide timer if we're not already hiding
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
     
-    // Delay before hiding to allow moving to tooltip
     hideTimeoutRef.current = setTimeout(() => {
       setHoveredStatus(null);
     }, 300);
   }, []);
 
   const handleTooltipClose = useCallback(() => {
-    // Clear all timeouts and immediately hide
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -92,7 +85,6 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   }, []);
 
   const handleTooltipMouseEnter = useCallback(() => {
-    // Cancel hide timeout when mouse enters tooltip
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
     }
@@ -126,6 +118,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   return (
     <>
       <div 
+        ref={categoryCardRef}
         className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px] flex flex-col"
         onClick={handleCardClick}
       >
@@ -196,7 +189,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         </div>
       </div>
 
-      {/* Email Preview Tooltip */}
+      {/* Email Preview Tooltip with category card ref */}
       {hoveredStatus && previewEmails.length > 0 && createPortal(
         <EmailPreviewTooltip
           emails={previewEmails}
@@ -206,6 +199,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
           onClose={handleTooltipClose}
           onMouseEnter={handleTooltipMouseEnter}
           categoryColor={color}
+          categoryCardRef={categoryCardRef}
         />,
         document.body
       )}

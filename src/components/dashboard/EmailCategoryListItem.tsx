@@ -1,4 +1,3 @@
-
 import React, { useMemo, useRef, useEffect } from 'react';
 import { LucideIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -103,42 +102,21 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
   const handleEmailRowHover = (emailId: string, e: React.MouseEvent) => {
     const emailRect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
-    const tooltipWidth = 480; // Approximate tooltip width
-    const tooltipHeight = 300; // Approximate tooltip height
+    const tooltipWidth = 480;
+    const tooltipHeight = 300;
 
-    // Prefer left side positioning
-    let x = emailRect.left - tooltipWidth - 10; // Default to left side
+    let x = emailRect.left - tooltipWidth - 10;
     
-    // Only show on right if not enough space on the left
     if (emailRect.left - tooltipWidth < 20) {
       x = emailRect.right + 10;
     }
 
     const emailRowHeight = emailRect.height;
-    const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2); // Center the tooltip
+    const y = emailRect.top + (emailRowHeight / 2) - (tooltipHeight / 2);
 
     const position = { x, y };
     
-    // Use the tooltip behavior hook which has the proper timing delays
     handleEmailHover(emailId as any, e, id, 1);
-  };
-
-  // Helper function to get the card rect and pass it properly to tooltip
-  const getTooltipPositionWithCardData = () => {
-    const cardElement = categoryCardRef.current;
-    if (!cardElement) return { x: 0, y: 0, cardWidth: 400, cardTop: 0, cardRight: 400 };
-    
-    const cardRect = cardElement.getBoundingClientRect();
-    
-    // Return the exact card positioning data
-    return {
-      x: cardRect.left,
-      y: cardRect.top,
-      cardWidth: cardRect.width,
-      cardTop: cardRect.top,
-      cardRight: cardRect.right,
-      cardHeight: cardRect.height
-    };
   };
 
   // Add back the formatEmailDate function
@@ -178,13 +156,11 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
             <CollapsibleTrigger asChild>
               <div className="p-4 cursor-pointer">
                 <div className="flex items-center justify-between">
-                  {/* Left side - Icon, Title, and Chevron */}
                   <div className="flex items-center">
                     <div className={`w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className={`w-5 h-5 ${textColor}`} />
                     </div>
                     <h3 className="text-base font-medium text-gray-800 group-hover:text-gray-900 transition-colors mr-3">{title}</h3>
-                    {/* Bigger, more prominent chevron */}
                     {isExpanded ? (
                       <ChevronDown className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     ) : (
@@ -192,9 +168,7 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                     )}
                   </div>
 
-                  {/* Right side - Status indicators and total */}
                   <div className="flex items-center gap-4">
-                    {/* Status badges with increased spacing and larger hover areas */}
                     <div className="flex items-center gap-6">
                       {unread > 0 && (
                         <div 
@@ -234,12 +208,10 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                       )}
                     </div>
 
-                    {/* Total count */}
                     <span className="text-sm text-gray-500 font-medium min-w-[60px] text-right">
                       {total} total
                     </span>
 
-                    {/* Progress bar */}
                     <div className="w-20">
                       <div className="w-full bg-gray-100 rounded-full h-1">
                         <div 
@@ -271,7 +243,6 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                             <p className="text-sm font-medium text-gray-900 truncate">
                               {email.subject}
                             </p>
-                            {/* Status indicators for each email */}
                             {statusIndicators.map((indicator, index) => (
                               <span 
                                 key={index}
@@ -279,7 +250,6 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
                               ></span>
                             ))}
                           </div>
-                          {/* Show From/To information */}
                           <p className="text-xs text-gray-600 truncate">
                             From: {email.sender.name} ({email.sender.organization})
                           </p>
@@ -313,20 +283,20 @@ const EmailCategoryListItem: React.FC<EmailCategoryListItemProps> = ({
           </div>
         </Collapsible>
 
-        {/* Email Preview Tooltip for Status Circles - Perfect edge alignment */}
+        {/* Email Preview Tooltip for Status Circles - Using category card ref */}
         {hoveredStatus && previewEmails.length > 0 && createPortal(
           <div data-tooltip="email-preview">
             <EmailPreviewTooltip
               emails={previewEmails}
               status={hoveredStatus}
               category={id}
-              position={getTooltipPositionWithCardData()}
+              position={tooltipPosition}
               onClose={handleTooltipClose}
               onMouseEnter={handleTooltipMouseEnter}
               onMouseLeave={handleTooltipMouseLeave}
               categoryColor={color}
               isEmailRowTooltip={false}
-              categoryCardWidth={categoryCardRef.current?.getBoundingClientRect().width || 400}
+              categoryCardRef={categoryCardRef}
             />
           </div>,
           document.body

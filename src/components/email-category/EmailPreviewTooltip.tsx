@@ -11,7 +11,7 @@ interface EmailPreviewTooltipProps {
   emails: EmailData[];
   status: 'unread' | 'pending' | 'unresponded';
   category: string;
-  position: { 
+  position?: { 
     x: number; 
     y: number; 
     cardWidth?: number; 
@@ -28,6 +28,7 @@ interface EmailPreviewTooltipProps {
   hoveredDate?: Date;
   autoFade?: boolean;
   categoryCardWidth?: number;
+  categoryCardRef?: React.RefObject<HTMLDivElement>;
 }
 
 const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
@@ -43,7 +44,8 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   onAddAppointment,
   hoveredDate,
   autoFade = false,
-  categoryCardWidth = 400
+  categoryCardWidth = 400,
+  categoryCardRef
 }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
@@ -55,7 +57,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     if (autoFade) {
       fadeTimer = setTimeout(() => {
         onClose();
-      }, 1000); // Auto-fade after 1 second for top row tooltips
+      }, 1000);
     }
     
     return () => {
@@ -66,8 +68,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   const handleEmailClick = (emailId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     onClose();
-    
-    // Always navigate to the email list page (top of email summary)
     navigate(`/emails/${category}/${status}`);
   };
 
@@ -89,14 +89,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return format(date, 'h:mm a');
   };
 
-  // Function to get first 4 sentences from content
   const getEmailPreview = (content: string) => {
     const sentences = content.match(/[^\.!?]+[\.!?]+/g) || [];
     const preview = sentences.slice(0, 4).join(' ');
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
-  // Perfect dynamic sizing based on email count
   const getTooltipDimensions = () => {
     const baseWidth = 420;
     const headerHeight = 60;
@@ -104,53 +102,98 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     const padding = 20;
     
     const emailCount = emails.length;
-    const contentHeight = emailItemHeight * Math.min(emailCount, 3); // Show max 3 emails before scrolling
+    const contentHeight = emailItemHeight * Math.min(emailCount, 3);
     const totalHeight = headerHeight + contentHeight + padding;
     
     return {
       width: baseWidth,
-      height: Math.min(totalHeight, 500) // Reasonable max height
+      height: Math.min(totalHeight, 500)
     };
   };
 
-  const { width: tooltipWidth, height: tooltipHeight } = getTooltipDimensions();
-  const screenWidth = window.innerWidth;
-  
-  // Perfect edge alignment - slide from category card edge
-  const cardLeft = position.x;
-  const cardRight = position.cardRight || (position.x + categoryCardWidth);
-  const cardTop = position.cardTop || position.y;
-  const cardHeight = position.cardHeight || 200;
-  
-  // Determine slide direction based on available space
-  const spaceOnRight = screenWidth - cardRight;
-  const spaceOnLeft = cardLeft;
-  const shouldSlideLeft = spaceOnRight < tooltipWidth + 20 && spaceOnLeft > tooltipWidth + 20;
-  
-  let finalLeft: number;
-  let finalTop: number;
-  
-  if (shouldSlideLeft) {
-    // Slide out to the left - align tooltip's RIGHT edge with card's LEFT edge
-    finalLeft = cardLeft - tooltipWidth;
-  } else {
-    // Slide out to the right - align tooltip's LEFT edge with card's RIGHT edge
-    finalLeft = cardRight;
-  }
-  
-  // Perfect height alignment - tooltip top aligns with card top
-  finalTop = cardTop;
-  
-  // Ensure tooltip stays within screen bounds
-  finalLeft = Math.max(10, Math.min(finalLeft, screenWidth - tooltipWidth - 10));
-  finalTop = Math.max(10, Math.min(finalTop, window.innerHeight - tooltipHeight - 10));
+  const calculatePosition = () => {
+    const { width: tooltipWidth, height: tooltipHeight } = getTooltipDimensions();
+    const screenWidth = window.innerWidth;
+    
+    if (categoryCardRef?.current) {
+      const cardRect = categoryCardRef.current.getBoundingClientRect();
+      
+      const spaceOnRight = screenWidth - cardRect.right;
+      const spaceOnLeft = cardRect.left;
+      const shouldSlideLeft = spaceOnRight < tooltipWidth + 20 && spaceOnLeft > tooltipWidth + 20;
+      
+      let finalLeft: number;
+      let finalTop: number;
+      
+      if (shouldSlideLeft) {
+        finalLeft = cardRect.left - tooltipWidth;
+      } else {
+        finalLeft = cardRect.right;
+      }
+      
+      finalTop = cardRect.top;
+      
+      finalLeft = Math.max(10, Math.min(finalLeft, screenWidth - tooltipWidth - 10));
+      finalTop = Math.max(10, Math.min(finalTop, window.innerHeight - tooltipHeight - 10));
+      
+      return {
+        left: finalLeft,
+        top: finalTop,
+        shouldSlideLeft,
+        width: tooltipWidth,
+        height: tooltipHeight
+      };
+    }
+    
+    if (!position) {
+      return {
+        left: 100,
+        top: 100,
+        shouldSlideLeft: false,
+        width: tooltipWidth,
+        height: tooltipHeight
+      };
+    }
+    
+    const cardLeft = position.x;
+    const cardRight = position.cardRight || (position.x + categoryCardWidth);
+    const cardTop = position.cardTop || position.y;
+    
+    const spaceOnRight = screenWidth - cardRight;
+    const spaceOnLeft = cardLeft;
+    const shouldSlideLeft = spaceOnRight < tooltipWidth + 20 && spaceOnLeft > tooltipWidth + 20;
+    
+    let finalLeft: number;
+    let finalTop: number;
+    
+    if (shouldSlideLeft) {
+      finalLeft = cardLeft - tooltipWidth;
+    } else {
+      finalLeft = cardRight;
+    }
+    
+    finalTop = cardTop;
+    
+    finalLeft = Math.max(10, Math.min(finalLeft, screenWidth - tooltipWidth - 10));
+    finalTop = Math.max(10, Math.min(finalTop, window.innerHeight - tooltipHeight - 10));
+    
+    return {
+      left: finalLeft,
+      top: finalTop,
+      shouldSlideLeft,
+      width: tooltipWidth,
+      height: tooltipHeight
+    };
+  };
+
+  const { left, top, shouldSlideLeft, width, height } = calculatePosition();
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
-    left: finalLeft,
-    top: finalTop,
-    width: tooltipWidth,
-    height: tooltipHeight,
+    left,
+    top,
+    width,
+    height,
     zIndex: 9999,
     transform: shouldSlideLeft ? 'translateX(-10px)' : 'translateX(10px)',
     animation: 'slideIn 0.2s ease-out forwards'
@@ -195,9 +238,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
       </style>
       
       {isAppointmentCategory && hoveredDate ? (
-        // Appointment-specific design
         <>
-          {/* Header with date and count */}
           <div className="px-3 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -217,7 +258,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Add Appointment Button */}
           <div className="px-3 py-2 bg-orange-50 border-b border-orange-100">
             <Button
               onClick={handleAddAppointmentClick}
@@ -229,8 +269,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </Button>
           </div>
 
-          {/* Appointments List */}
-          <div style={{ height: tooltipHeight - 120 }}>
+          <div style={{ height: height - 120 }}>
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
@@ -240,14 +279,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded border-b border-gray-100 last:border-b-0"
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Appointment Title */}
                       <div className="mb-2">
                         <h4 className="text-sm font-medium text-amber-700 leading-snug">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Time and Location */}
                       <div className="space-y-1.5 mb-2">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Clock className="w-3 h-3" />
@@ -259,7 +296,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                         </div>
                       </div>
 
-                      {/* Summary */}
                       <div className="bg-amber-50 px-3 py-2 rounded text-xs text-amber-800 leading-snug">
                         {email.content.length > 80 ? 
                           `${email.content.substring(0, 80)}...` : 
@@ -281,9 +317,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           </div>
         </>
       ) : (
-        // Enhanced email design with dynamic sizing
         <>
-          {/* Header with Close button */}
           <div className="px-3 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -308,8 +342,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
             </div>
           </div>
 
-          {/* Content List with dynamic height */}
-          <div style={{ height: tooltipHeight - 60 }}>
+          <div style={{ height: height - 60 }}>
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
                 <div className="space-y-3 p-3 pb-12">
@@ -319,14 +352,12 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded border-b border-gray-100 last:border-b-0"
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      {/* Email Subject */}
                       <div className="mb-2">
                         <h4 className="text-sm font-medium text-amber-700 leading-snug">
                           {email.subject}
                         </h4>
                       </div>
 
-                      {/* Sender, Organization and Date */}
                       <div className="space-y-1.5 mb-2">
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <User className="w-3 h-3" />
@@ -342,7 +373,6 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                         </div>
                       </div>
 
-                      {/* Email Preview */}
                       <div className="bg-amber-50 px-3 py-2 rounded text-xs text-gray-600 leading-snug">
                         {getEmailPreview(email.content)}
                       </div>
