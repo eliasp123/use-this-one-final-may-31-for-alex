@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -204,7 +205,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         >
           {/* Toggle Arrow - positioned in top right */}
           <div className="absolute top-1 right-1">
-            <ChevronDown className={`w-5 h-5 text-orange-600 transition-transform duration-200 ${
+            <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`} strokeWidth={3} />
           </div>
