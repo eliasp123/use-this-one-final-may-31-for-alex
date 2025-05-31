@@ -1,3 +1,4 @@
+
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
@@ -34,19 +35,29 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     return new Set(firstThreeCategories.map(cat => cat.id));
   });
 
-  // Check if all cards are expanded
+  // Check if all CURRENTLY DISPLAYED cards are expanded (relative to what's on this page)
   const allExpanded = useMemo(() => {
-    return orderedCategories.length > 0 && expandedCards.size === orderedCategories.length;
-  }, [expandedCards.size, orderedCategories.length]);
+    if (orderedCategories.length === 0) return false;
+    // Only check against categories that are actually displayed on this page
+    return orderedCategories.every(cat => expandedCards.has(cat.id));
+  }, [expandedCards, orderedCategories]);
 
-  // Functions to control all card accordions
+  // Functions to control accordion for ONLY the categories displayed on this page
   const openAll = useCallback(() => {
+    // Only expand the categories currently displayed on this page
     setExpandedCards(new Set(orderedCategories.map(cat => cat.id)));
   }, [orderedCategories]);
 
   const closeAll = useCallback(() => {
-    setExpandedCards(new Set());
-  }, []);
+    // Only close the categories currently displayed on this page
+    const currentPageCategoryIds = new Set(orderedCategories.map(cat => cat.id));
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      // Remove only the categories that are on the current page
+      currentPageCategoryIds.forEach(id => newSet.delete(id));
+      return newSet;
+    });
+  }, [orderedCategories]);
 
   const toggleAll = useCallback(() => {
     if (allExpanded) {

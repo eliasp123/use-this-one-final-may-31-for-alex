@@ -43,7 +43,7 @@ const EmailCategoryViewToggle: React.FC<EmailCategoryViewToggleProps> = ({
           List
         </span>
         
-        {/* Dynamic Toggle All Button */}
+        {/* Dynamic Toggle All Button - now properly relative to current page */}
         {showAccordionControls && onToggleAll && (
           <>
             <span className="text-gray-400">|</span>
