@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -99,7 +100,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     onSearchChange(value);
     
     // If user starts typing after selecting a location, reset the flow
-    if (hasSelectedLocation && value !== searchQuery) {
+    if (hasSelectedLocation) {
       console.log('🔍 Resetting location selection flow');
       setHasSelectedLocation(false);
       setIsDropdownOpen(false);
@@ -157,12 +158,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           placeholder={getPlaceholderText()}
-          className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent cursor-pointer ${
+          className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent cursor-text ${
             hasSelectedLocation 
               ? 'bg-amber-50 border-amber-300 text-gray-700' 
               : 'bg-white border-gray-300 text-gray-700'
           }`}
-          readOnly={hasSelectedLocation}
         />
       </div>
 
