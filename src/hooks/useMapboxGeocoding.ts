@@ -72,7 +72,7 @@ export const useMapboxGeocoding = () => {
         }
       }
 
-      console.log('Mapbox search URL:', url);
+      console.log('🔍 Mapbox search URL:', url);
 
       const response = await fetch(url);
       
@@ -81,7 +81,7 @@ export const useMapboxGeocoding = () => {
       }
 
       const data: GeocodingResponse = await response.json();
-      console.log('Mapbox search results:', data.features);
+      console.log('🔍 Mapbox search results received:', data.features?.length || 0, 'features');
       
       return data.features;
     } catch (error) {
@@ -99,54 +99,38 @@ export const useMapboxGeocoding = () => {
 
   const searchNearbyPlaces = useCallback(async (
     center: { lat: number; lng: number },
-    categories?: string[],
-    radius: number = 10000 // 10km default
+    searchTerms: string[],
+    radius: number = 15000 // Increased to 15km for better coverage
   ) => {
     setIsLoading(true);
     
     try {
       const accessToken = 'pk.eyJ1IjoiZWxpYXNwMTIzIiwiYSI6ImNtOHFjdXl5eDBqaTkybXEyMGVvaWFsdzIifQ.dg0YQHjrTHMrobBHP35KJQ';
       
-      // Search for general healthcare/service terms near the location
-      const searchTerms = categories?.flatMap(cat => {
-        switch (cat) {
-          case 'hospitals': return ['hospital', 'medical center'];
-          case 'pharmacies': return ['pharmacy', 'cvs', 'walgreens'];
-          case 'senior-living': return ['nursing home', 'senior living'];
-          case 'physical-therapy': return ['physical therapy'];
-          case 'elder-law-attorneys': return ['attorney', 'law office'];
-          case 'home-care': return ['home care'];
-          default: return [];
-        }
-      }) || ['hospital', 'pharmacy', 'medical', 'healthcare'];
-
       const allResults: GeocodingResult[] = [];
 
       // Search for each term
-      for (const term of searchTerms.slice(0, 3)) { // Limit to avoid too many requests
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(term)}.json?access_token=${accessToken}&proximity=${center.lng},${center.lat}&types=poi&limit=10`;
+      for (const term of searchTerms) {
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(term)}.json?access_token=${accessToken}&proximity=${center.lng},${center.lat}&types=poi&limit=15`; // Increased limit
         
+        console.log('🔍 Searching nearby for term:', term);
         const response = await fetch(url);
         if (response.ok) {
           const data: GeocodingResponse = await response.json();
-          allResults.push(...data.features);
+          console.log('🔍 Found', data.features?.length || 0, 'places for term:', term);
+          allResults.push(...(data.features || []));
         }
       }
 
-      // Remove duplicates and filter by distance
-      const uniqueResults = allResults.filter((result, index, self) => 
-        index === self.findIndex(r => r.id === result.id)
-      );
-
-      console.log('Nearby places found:', uniqueResults);
-      return uniqueResults;
+      console.log('🔍 Total nearby places found:', allResults.length);
+      return allResults;
     } catch (error) {
       console.error('Nearby search error:', error);
       return [];
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, []);
 
   return { searchLocations, searchNearbyPlaces, isLoading };
 };

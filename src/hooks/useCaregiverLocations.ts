@@ -81,24 +81,27 @@ export const useCaregiverLocations = (
     });
     
     // Enhanced category detection
-    if (text.includes('hospital') || placeName.includes('hospital') || placeName.includes('medical center')) {
+    if (text.includes('hospital') || placeName.includes('hospital') || placeName.includes('medical center') || placeName.includes('clinic')) {
       category = 'hospitals';
-    } else if (text.includes('pharmacy') || placeName.includes('pharmacy') || text.includes('cvs') || text.includes('walgreens')) {
+    } else if (text.includes('pharmacy') || placeName.includes('pharmacy') || text.includes('cvs') || text.includes('walgreens') || text.includes('rite aid')) {
       category = 'pharmacies';
-    } else if (text.includes('senior') || text.includes('nursing') || text.includes('assisted living')) {
+    } else if (text.includes('senior') || text.includes('nursing') || text.includes('assisted living') || text.includes('memory care')) {
       category = 'senior-living';
-    } else if (text.includes('therapy') || text.includes('rehabilitation') || text.includes('physical therapy')) {
+    } else if (text.includes('therapy') || text.includes('rehabilitation') || text.includes('physical therapy') || text.includes('rehab')) {
       category = 'physical-therapy';
-    } else if (text.includes('attorney') || text.includes('lawyer') || text.includes('law')) {
+    } else if (text.includes('attorney') || text.includes('lawyer') || text.includes('law') || text.includes('legal')) {
       category = 'elder-law-attorneys';
-    } else if (text.includes('care') && (text.includes('home') || text.includes('health'))) {
+    } else if ((text.includes('care') && (text.includes('home') || text.includes('health'))) || text.includes('caregiver')) {
       category = 'home-care';
+    } else if (text.includes('government') || text.includes('va ') || text.includes('veterans') || text.includes('social security')) {
+      category = 'government-va';
     } else if (properties.category) {
       const cat = properties.category.toLowerCase();
       if (cat.includes('hospital') || cat.includes('medical')) category = 'hospitals';
       else if (cat.includes('pharmacy')) category = 'pharmacies';
       else if (cat.includes('senior') || cat.includes('care')) category = 'senior-living';
       else if (cat.includes('therapy')) category = 'physical-therapy';
+      else if (cat.includes('legal') || cat.includes('law')) category = 'elder-law-attorneys';
     }
 
     console.log('🏗️ Assigned category:', category, 'to', result.text);
@@ -140,22 +143,56 @@ export const useCaregiverLocations = (
           console.log('🏗️ Setting search center to:', newCenter);
           setSearchCenter(newCenter);
           
-          // Then search for nearby places in selected categories
-          let nearbyResults: any[] = [];
+          // Enhanced search terms for better coverage
+          const comprehensiveSearchTerms = [
+            'hospital', 'medical center', 'clinic', 'urgent care',
+            'pharmacy', 'cvs', 'walgreens', 'rite aid',
+            'nursing home', 'assisted living', 'senior living', 'memory care',
+            'physical therapy', 'rehabilitation', 'therapy',
+            'attorney', 'lawyer', 'legal services', 'law office',
+            'home care', 'healthcare', 'caregiver services',
+            'government office', 'veterans affairs', 'social security'
+          ];
+          
+          // If categories are selected, filter search terms
+          let searchTermsToUse = comprehensiveSearchTerms;
           if (selectedCategories.length > 0) {
-            console.log('🏗️ Searching nearby places for categories:', selectedCategories);
-            nearbyResults = await searchNearbyPlaces(newCenter, selectedCategories);
-          } else {
-            // If no categories selected, search for general healthcare places
-            console.log('🏗️ No categories selected, searching for general healthcare places');
-            nearbyResults = await searchNearbyPlaces(newCenter, ['hospitals', 'pharmacies', 'senior-living']);
+            searchTermsToUse = selectedCategories.flatMap(cat => {
+              switch (cat) {
+                case 'hospitals': return ['hospital', 'medical center', 'clinic', 'urgent care'];
+                case 'pharmacies': return ['pharmacy', 'cvs', 'walgreens', 'rite aid'];
+                case 'senior-living': return ['nursing home', 'assisted living', 'senior living', 'memory care'];
+                case 'physical-therapy': return ['physical therapy', 'rehabilitation', 'therapy'];
+                case 'elder-law-attorneys': return ['attorney', 'lawyer', 'legal services', 'law office'];
+                case 'home-care': return ['home care', 'healthcare', 'caregiver services'];
+                case 'government-va': return ['government office', 'veterans affairs', 'social security'];
+                default: return [];
+              }
+            });
           }
           
-          console.log('🏗️ Nearby results:', nearbyResults.length);
+          console.log('🏗️ Using search terms:', searchTermsToUse);
           
-          // Combine location results with nearby results, prioritizing nearby places
-          const allResults = [...nearbyResults, ...locationResults.slice(1)];
-          const convertedResults = allResults.map(convertGeocodingToLocation);
+          // Search for nearby places with more comprehensive terms
+          let nearbyResults: any[] = [];
+          for (const term of searchTermsToUse.slice(0, 8)) { // Increased from 3 to 8
+            console.log('🏗️ Searching for:', term);
+            const termResults = await searchNearbyPlaces(newCenter, [term]);
+            console.log('🏗️ Found', termResults.length, 'results for', term);
+            nearbyResults.push(...termResults);
+          }
+          
+          console.log('🏗️ Total nearby results before deduplication:', nearbyResults.length);
+          
+          // Remove duplicates by ID
+          const uniqueResults = nearbyResults.filter((result, index, self) => 
+            index === self.findIndex(r => r.id === result.id)
+          );
+          
+          console.log('🏗️ Unique nearby results:', uniqueResults.length);
+          
+          // Convert all results
+          const convertedResults = uniqueResults.map(convertGeocodingToLocation);
           
           // Filter by selected categories if any
           let filteredResults = convertedResults;
@@ -163,9 +200,10 @@ export const useCaregiverLocations = (
             filteredResults = convertedResults.filter(location => 
               selectedCategories.includes(location.category)
             );
-            console.log('🏗️ Filtered by categories:', filteredResults.length);
+            console.log('🏗️ Filtered by categories:', filteredResults.length, 'from', convertedResults.length);
           }
           
+          console.log('🏗️ Final results to display:', filteredResults.length);
           setSearchResults(filteredResults);
           setLocations(filteredResults.length > 0 ? filteredResults : sampleLocations);
         } else {
