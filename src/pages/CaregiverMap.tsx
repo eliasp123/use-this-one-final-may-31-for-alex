@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Scale, Briefcase, CreditCard, Home, Activity, Building2, Building, Cross, Pill } from 'lucide-react';
 import CaregiverMapComponent from '../components/map/CaregiverMapComponent';
@@ -37,53 +38,69 @@ const CaregiverMap = () => {
   
   const { locations, searchCenter } = useCaregiverLocations(searchQuery, selectedCategories, mapCenter);
 
+  console.log('🏠 CaregiverMap rendered with state:', {
+    selectedCategories: selectedCategories.length,
+    selectedLocation,
+    searchQuery,
+    mapCenter,
+    mapZoom,
+    locationsCount: locations.length,
+    isLoading
+  });
+
   // Update map center when search results are found
   useEffect(() => {
+    console.log('🏠 Search center effect triggered with searchCenter:', searchCenter);
     if (searchCenter) {
+      console.log('🏠 Updating map center to:', searchCenter);
       setMapCenter(searchCenter);
-      setMapZoom(13); // Fixed zoom level
+      setMapZoom(13);
     }
   }, [searchCenter]);
 
   const handleCategoryToggle = (categoryId: string) => {
+    console.log('🏠 Category toggle:', categoryId);
     setSelectedCategories(prev => {
-      if (prev.includes(categoryId)) {
-        return prev.filter(id => id !== categoryId);
-      } else {
-        return [...prev, categoryId];
-      }
+      const newSelection = prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId];
+      console.log('🏠 Updated selected categories:', newSelection);
+      return newSelection;
     });
   };
 
   const handleSelectAllCategories = () => {
-    console.log('handleSelectAllCategories called');
+    console.log('🏠 handleSelectAllCategories called');
     setSelectedCategories(prev => {
       const allCategoryIds = categories.map(cat => cat.id);
       if (prev.length === allCategoryIds.length) {
-        console.log('Deselecting all categories');
+        console.log('🏠 Deselecting all categories');
         return [];
       } else {
-        console.log('Selecting all categories');
+        console.log('🏠 Selecting all categories');
         return allCategoryIds;
       }
     });
   };
 
   const handleLocationSelect = (locationId: string) => {
+    console.log('🏠 Location selected:', locationId);
     setSelectedLocation(locationId);
     const location = locations.find(loc => loc.id === locationId);
     if (location) {
+      console.log('🏠 Setting map center to location:', location.name, location.lat, location.lng);
       setMapCenter({ lat: location.lat, lng: location.lng });
       setMapZoom(16);
     }
   };
 
   const handlePlaceSelect = (place: any) => {
-    console.log('Place selected:', place);
+    console.log('🏠 Place selected:', place);
     const newCenter = {
       lat: place.center[1],
       lng: place.center[0]
     };
+    console.log('🏠 Setting map center to place:', place.place_name, newCenter);
     setMapCenter(newCenter);
     setMapZoom(14);
     // Clear selected location since we're showing a new place
@@ -91,7 +108,9 @@ const CaregiverMap = () => {
   };
 
   const getCategoryColor = (categoryId: string) => {
-    return categories.find(cat => cat.id === categoryId)?.color || '#6B7280';
+    const color = categories.find(cat => cat.id === categoryId)?.color || '#6B7280';
+    console.log('🏠 Getting category color for:', categoryId, '→', color);
+    return color;
   };
 
   return (

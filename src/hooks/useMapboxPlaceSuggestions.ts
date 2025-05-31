@@ -15,18 +15,23 @@ export const useMapboxPlaceSuggestions = () => {
   const debounceTimer = useRef<NodeJS.Timeout>();
 
   const getSuggestions = useCallback(async (query: string, center?: { lat: number; lng: number }) => {
+    console.log('🔍 useMapboxPlaceSuggestions - getSuggestions called with:', { query, center });
+    
     if (!query.trim() || query.length < 2) {
+      console.log('🔍 Query too short, clearing suggestions');
       setSuggestions([]);
       return;
     }
 
     // Clear previous timer
     if (debounceTimer.current) {
+      console.log('🔍 Clearing previous debounce timer');
       clearTimeout(debounceTimer.current);
     }
 
     // Debounce the API call
     debounceTimer.current = setTimeout(async () => {
+      console.log('🔍 Starting debounced API call for:', query);
       setIsLoading(true);
       
       try {
@@ -36,26 +41,35 @@ export const useMapboxPlaceSuggestions = () => {
         
         if (center) {
           url += `&proximity=${center.lng},${center.lat}`;
+          console.log('🔍 Added proximity to URL:', `${center.lng},${center.lat}`);
         }
 
+        console.log('🔍 Making API call to:', url);
         const response = await fetch(url);
         
         if (response.ok) {
           const data = await response.json();
+          console.log('✅ Mapbox API response received:', {
+            featuresCount: data.features?.length || 0,
+            features: data.features?.map((f: any) => ({ id: f.id, text: f.text, place_name: f.place_name }))
+          });
           setSuggestions(data.features || []);
         } else {
+          console.error('❌ Mapbox API error response:', response.status, response.statusText);
           setSuggestions([]);
         }
       } catch (error) {
-        console.error('Place suggestions error:', error);
+        console.error('❌ Place suggestions error:', error);
         setSuggestions([]);
       } finally {
         setIsLoading(false);
+        console.log('🔍 API call completed');
       }
     }, 300); // 300ms debounce
   }, []);
 
   const clearSuggestions = useCallback(() => {
+    console.log('🔍 Clearing suggestions');
     setSuggestions([]);
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);

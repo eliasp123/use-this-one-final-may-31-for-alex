@@ -55,6 +55,12 @@ export const useCaregiverLocations = (
   const [searchResults, setSearchResults] = useState<Location[]>([]);
   const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number } | null>(null);
 
+  console.log('🏗️ useCaregiverLocations called with:', {
+    searchQuery,
+    selectedCategories: selectedCategories.length,
+    mapCenter
+  });
+
   // Convert geocoding result to Location format
   const convertGeocodingToLocation = (result: any): Location => {
     const address = result.place_name;
@@ -66,6 +72,13 @@ export const useCaregiverLocations = (
     const text = result.text?.toLowerCase() || '';
     const placeName = result.place_name?.toLowerCase() || '';
     const properties = result.properties || {};
+    
+    console.log('🏗️ Converting geocoding result:', {
+      id: result.id,
+      text: result.text,
+      place_name: result.place_name,
+      properties
+    });
     
     // Enhanced category detection
     if (text.includes('hospital') || placeName.includes('hospital') || placeName.includes('medical center')) {
@@ -88,6 +101,8 @@ export const useCaregiverLocations = (
       else if (cat.includes('therapy')) category = 'physical-therapy';
     }
 
+    console.log('🏗️ Assigned category:', category, 'to', result.text);
+
     return {
       id: result.id,
       name: result.text || result.place_name.split(',')[0],
@@ -105,12 +120,15 @@ export const useCaregiverLocations = (
 
   // Handle search query changes
   useEffect(() => {
+    console.log('🏗️ Search effect triggered with:', { searchQuery, selectedCategories });
+    
     const performSearch = async () => {
       if (searchQuery.trim() && searchQuery.length > 2) {
-        console.log('Searching for:', searchQuery);
+        console.log('🏗️ Performing search for:', searchQuery);
         
         // First search for the location itself
         const locationResults = await searchLocations(searchQuery, mapCenter);
+        console.log('🏗️ Location results:', locationResults.length);
         
         if (locationResults.length > 0) {
           const firstResult = locationResults[0];
@@ -119,16 +137,21 @@ export const useCaregiverLocations = (
             lng: firstResult.center[0]
           };
           
+          console.log('🏗️ Setting search center to:', newCenter);
           setSearchCenter(newCenter);
           
           // Then search for nearby places in selected categories
           let nearbyResults: any[] = [];
           if (selectedCategories.length > 0) {
+            console.log('🏗️ Searching nearby places for categories:', selectedCategories);
             nearbyResults = await searchNearbyPlaces(newCenter, selectedCategories);
           } else {
             // If no categories selected, search for general healthcare places
+            console.log('🏗️ No categories selected, searching for general healthcare places');
             nearbyResults = await searchNearbyPlaces(newCenter, ['hospitals', 'pharmacies', 'senior-living']);
           }
+          
+          console.log('🏗️ Nearby results:', nearbyResults.length);
           
           // Combine location results with nearby results, prioritizing nearby places
           const allResults = [...nearbyResults, ...locationResults.slice(1)];
@@ -140,23 +163,27 @@ export const useCaregiverLocations = (
             filteredResults = convertedResults.filter(location => 
               selectedCategories.includes(location.category)
             );
+            console.log('🏗️ Filtered by categories:', filteredResults.length);
           }
           
           setSearchResults(filteredResults);
           setLocations(filteredResults.length > 0 ? filteredResults : sampleLocations);
         } else {
           // No location found, just show sample data
+          console.log('🏗️ No location found, showing sample data');
           setSearchResults([]);
           setSearchCenter(null);
           setLocations(sampleLocations);
         }
       } else {
+        console.log('🏗️ Search query too short, resetting');
         setSearchResults([]);
         setSearchCenter(null);
         let filtered = sampleLocations;
         
         if (selectedCategories.length > 0) {
           filtered = filtered.filter(location => selectedCategories.includes(location.category));
+          console.log('🏗️ Filtered sample locations by categories:', filtered.length);
         }
         
         setLocations(filtered);
@@ -164,15 +191,21 @@ export const useCaregiverLocations = (
     };
 
     const debounceTimer = setTimeout(performSearch, 300);
-    return () => clearTimeout(debounceTimer);
+    return () => {
+      console.log('🏗️ Clearing search debounce timer');
+      clearTimeout(debounceTimer);
+    };
   }, [searchQuery, searchLocations, searchNearbyPlaces, mapCenter, selectedCategories]);
 
   // Filter by categories
   useEffect(() => {
+    console.log('🏗️ Category filter effect triggered with:', selectedCategories);
     if (selectedCategories.length > 0 && !searchQuery.trim()) {
       const filtered = sampleLocations.filter(location => selectedCategories.includes(location.category));
+      console.log('🏗️ Filtered locations by categories:', filtered.length);
       setLocations(filtered);
     } else if (!searchQuery.trim()) {
+      console.log('🏗️ No search query, showing all sample locations');
       setLocations(sampleLocations);
     }
   }, [selectedCategories, searchQuery]);

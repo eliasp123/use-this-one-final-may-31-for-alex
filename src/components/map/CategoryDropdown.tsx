@@ -42,6 +42,15 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
   const { suggestions, getSuggestions, clearSuggestions } = useMapboxPlaceSuggestions();
 
+  console.log('🔍 CategoryDropdown rendered with:', {
+    searchQuery,
+    selectedCategories: selectedCategories.length,
+    isDropdownOpen,
+    showAutocomplete,
+    suggestionsCount: suggestions.length,
+    mapCenter
+  });
+
   // Filter categories based on search query for autocomplete
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -52,17 +61,28 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const hasCategoryMatches = filteredCategories.length > 0;
   const hasPlaceMatches = suggestions.length > 0;
 
+  console.log('🔍 Search state:', {
+    shouldShowSuggestions,
+    hasCategoryMatches,
+    hasPlaceMatches,
+    filteredCategoriesCount: filteredCategories.length
+  });
+
   // Auto-check categories based on search query
   useEffect(() => {
+    console.log('🔍 Auto-check categories effect triggered with searchQuery:', searchQuery);
     if (searchQuery.trim() && searchQuery.length > 2) {
       const matchingCategories = categories.filter(category =>
         category.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
       );
       
+      console.log('🔍 Matching categories found:', matchingCategories.map(c => c.name));
+      
       // Auto-check the first matching category if it's not already selected
       if (matchingCategories.length > 0) {
         const firstMatch = matchingCategories[0];
         if (!selectedCategories.includes(firstMatch.id)) {
+          console.log('✅ Auto-selecting category:', firstMatch.name);
           onCategoryToggle(firstMatch.id);
         }
       }
@@ -71,9 +91,17 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 
   // Get place suggestions when typing
   useEffect(() => {
+    console.log('🔍 Place suggestions effect triggered:', {
+      shouldShowSuggestions,
+      hasCategoryMatches,
+      searchQuery
+    });
+    
     if (shouldShowSuggestions && !hasCategoryMatches) {
+      console.log('🔍 Getting Mapbox suggestions for:', searchQuery);
       getSuggestions(searchQuery, mapCenter);
     } else {
+      console.log('🔍 Clearing suggestions');
       clearSuggestions();
     }
   }, [searchQuery, shouldShowSuggestions, hasCategoryMatches, getSuggestions, clearSuggestions, mapCenter]);
@@ -82,6 +110,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        console.log('🔍 Clicking outside, closing dropdown');
         setIsDropdownOpen(false);
         setShowAutocomplete(false);
       }
@@ -92,6 +121,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   }, []);
 
   const handleInputFocus = () => {
+    console.log('🔍 Input focused');
     setIsFocused(true);
     setIsDropdownOpen(true);
     if (searchQuery) {
@@ -100,11 +130,13 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   };
 
   const handleInputBlur = () => {
+    console.log('🔍 Input blurred');
     setIsFocused(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    console.log('🔍 Search input changed to:', value);
     onSearchChange(value);
     setShowAutocomplete(value.length > 0);
     if (value.length > 0) {
@@ -116,12 +148,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   };
 
   const handleCategorySelect = (categoryName: string) => {
+    console.log('🔍 Category selected from autocomplete:', categoryName);
     onSearchChange(categoryName);
     setShowAutocomplete(false);
     setIsDropdownOpen(true);
   };
 
   const handlePlaceSelect = (place: any) => {
+    console.log('🔍 Place selected from autocomplete:', place);
     onPlaceSelect(place);
     onSearchChange(place.place_name);
     setShowAutocomplete(false);
@@ -134,14 +168,14 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   const handleSelectAllClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Select all clicked, current state:', { selectedCategories, allCategoriesSelected });
+    console.log('🔍 Select all clicked, current state:', { selectedCategories, allCategoriesSelected });
     onSelectAll();
   };
 
   const handleGoClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Go button clicked');
+    console.log('🔍 Go button clicked');
     setIsDropdownOpen(false);
     setShowAutocomplete(false);
   };
