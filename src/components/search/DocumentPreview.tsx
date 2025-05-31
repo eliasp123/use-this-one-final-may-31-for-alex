@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { AttachmentWithContext } from '../../utils/attachmentUtils';
 
@@ -8,6 +8,8 @@ interface DocumentPreviewProps {
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ documents }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   if (documents.length === 0) {
     return null;
   }
@@ -29,6 +31,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ documents }) => {
     });
   };
 
+  const displayedDocuments = isExpanded ? documents : documents.slice(0, 3);
+  const remainingCount = documents.length - 3;
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-3">
@@ -39,7 +44,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ documents }) => {
       </div>
       
       <div className="space-y-2">
-        {documents.slice(0, 3).map((document) => (
+        {displayedDocuments.map((document) => (
           <div key={`${document.emailId}-${document.name}`} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">{document.name}</p>
@@ -55,10 +60,22 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ documents }) => {
           </div>
         ))}
         
-        {documents.length > 3 && (
-          <p className="text-xs text-gray-500 text-center pt-1">
-            +{documents.length - 3} more documents
-          </p>
+        {remainingCount > 0 && !isExpanded && (
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="text-xs text-blue-600 hover:text-blue-800 text-center pt-1 w-full cursor-pointer hover:underline"
+          >
+            +{remainingCount} more documents
+          </button>
+        )}
+        
+        {isExpanded && documents.length > 3 && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="text-xs text-gray-500 hover:text-gray-700 text-center pt-1 w-full cursor-pointer hover:underline"
+          >
+            Show less
+          </button>
         )}
       </div>
     </div>

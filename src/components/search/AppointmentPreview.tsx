@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { Appointment } from '../../types/appointment';
 
@@ -8,6 +8,8 @@ interface AppointmentPreviewProps {
 }
 
 const AppointmentPreview: React.FC<AppointmentPreviewProps> = ({ appointments }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   if (appointments.length === 0) {
     return null;
   }
@@ -20,6 +22,9 @@ const AppointmentPreview: React.FC<AppointmentPreviewProps> = ({ appointments })
     });
   };
 
+  const displayedAppointments = isExpanded ? appointments : appointments.slice(0, 3);
+  const remainingCount = appointments.length - 3;
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-3">
@@ -30,7 +35,7 @@ const AppointmentPreview: React.FC<AppointmentPreviewProps> = ({ appointments })
       </div>
       
       <div className="space-y-2">
-        {appointments.slice(0, 3).map((appointment) => (
+        {displayedAppointments.map((appointment) => (
           <div key={appointment.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
             <div className="flex-1">
               <p className="text-sm font-medium text-gray-900">{appointment.title}</p>
@@ -43,10 +48,22 @@ const AppointmentPreview: React.FC<AppointmentPreviewProps> = ({ appointments })
           </div>
         ))}
         
-        {appointments.length > 3 && (
-          <p className="text-xs text-gray-500 text-center pt-1">
-            +{appointments.length - 3} more appointments
-          </p>
+        {remainingCount > 0 && !isExpanded && (
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="text-xs text-blue-600 hover:text-blue-800 text-center pt-1 w-full cursor-pointer hover:underline"
+          >
+            +{remainingCount} more appointments
+          </button>
+        )}
+        
+        {isExpanded && appointments.length > 3 && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="text-xs text-gray-500 hover:text-gray-700 text-center pt-1 w-full cursor-pointer hover:underline"
+          >
+            Show less
+          </button>
         )}
       </div>
     </div>
