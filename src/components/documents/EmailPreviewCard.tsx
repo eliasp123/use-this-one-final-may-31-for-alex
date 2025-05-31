@@ -43,7 +43,7 @@ const EmailPreviewCard: React.FC<EmailPreviewCardProps> = ({
 
   return (
     <div
-      className={`fixed z-50 w-80 ${slideClass} pointer-events-none`}
+      className={`fixed z-[60] w-80 ${slideClass} pointer-events-none`}
       style={positionStyles}
     >
       <Card className="shadow-2xl border-2 border-gray-300 bg-white">

@@ -13,6 +13,12 @@ const UnifiedSearchResults: React.FC<UnifiedSearchResultsProps> = ({ searchQuery
   const { filteredAppointments } = useAppointmentFiltering({ searchQuery });
   const { filteredDocuments } = useDocumentFiltering({ searchQuery });
 
+  console.log('UnifiedSearchResults render:', { 
+    searchQuery: searchQuery.trim(), 
+    appointmentsCount: filteredAppointments.length,
+    documentsCount: filteredDocuments.length 
+  });
+
   // Don't show anything if there's no search query
   if (!searchQuery.trim()) {
     return null;
@@ -24,7 +30,7 @@ const UnifiedSearchResults: React.FC<UnifiedSearchResultsProps> = ({ searchQuery
   }
 
   return (
-    <div className="max-w-lg mx-auto mb-8 space-y-4 relative z-40">
+    <div className="max-w-lg mx-auto mb-8 space-y-4 relative z-30">
       {filteredAppointments.length > 0 && (
         <AppointmentPreview appointments={filteredAppointments} />
       )}

@@ -19,6 +19,8 @@ const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  console.log('Index render with searchQuery:', searchQuery);
+
   const handleNewEmail = (emailData: any) => {
     console.log('New email to be sent:', emailData);
     
@@ -103,7 +105,7 @@ const Index = () => {
         </div>
         
         {/* Search Bar with Autocomplete - reverted to original size */}
-        <div className="max-w-xs sm:max-w-md mx-auto mb-26 sm:mb-32">
+        <div className="max-w-xs sm:max-w-md mx-auto mb-8">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
