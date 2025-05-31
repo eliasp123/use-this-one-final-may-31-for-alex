@@ -8,7 +8,7 @@ export const useCalendarHover = () => {
   const [currentCalendarMonth, setCurrentCalendarMonth] = useState<Date>(new Date());
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isTooltipHovered, setIsTooltipHovered] = useState(false);
-  const [hoveredDayRef, setHoveredDayRef] = useState<HTMLElement | null>(null);
+  const hoveredDayRef = useRef<HTMLDivElement | null>(null);
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (targetDate: Date) => {
@@ -33,7 +33,7 @@ export const useCalendarHover = () => {
     hideTimeoutRef.current = setTimeout(() => {
       if (!isTooltipHovered) {
         setHoveredDate(null);
-        setHoveredDayRef(null);
+        hoveredDayRef.current = null;
       }
     }, 300);
   };
@@ -103,7 +103,7 @@ export const useCalendarHover = () => {
             clearHideTimeout();
             
             // Store the day button reference for positioning
-            setHoveredDayRef(dayButton);
+            hoveredDayRef.current = dayButton as HTMLDivElement;
             
             // Only update if date changed
             if (!hoveredDate || hoveredDate.getTime() !== hoveredDateObj.getTime()) {
@@ -136,7 +136,7 @@ export const useCalendarHover = () => {
   const handleAddAppointmentFromTooltip = (targetDate: Date, onDateSelect: (date: Date) => void, onAddAppointment: () => void) => {
     clearHideTimeout();
     setHoveredDate(null);
-    setHoveredDayRef(null);
+    hoveredDayRef.current = null;
     setIsTooltipHovered(false);
     onDateSelect(targetDate);
     onAddAppointment();
@@ -146,7 +146,7 @@ export const useCalendarHover = () => {
   const handleCalendarMonthChange = (newMonth: Date) => {
     setCurrentCalendarMonth(newMonth);
     setHoveredDate(null); // Clear hover when month changes
-    setHoveredDayRef(null);
+    hoveredDayRef.current = null;
     setIsTooltipHovered(false);
   };
 

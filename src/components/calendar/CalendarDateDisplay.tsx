@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
@@ -68,8 +67,8 @@ const CalendarDateDisplay = ({
   };
 
   // Check if tooltip should be shown in top row (where we want auto-fade)
-  const isTooltipInTopRow = hoveredDate && hoveredDayRef && 
-    hoveredDayRef.getBoundingClientRect().y < 150; // Approximate threshold for top row
+  const isTooltipInTopRow = hoveredDate && hoveredDayRef.current && 
+    hoveredDayRef.current.getBoundingClientRect().y < 150; // Approximate threshold for top row
 
   // Get appointments for the hovered date
   const hoveredDateAppointments = hoveredDate ? getAppointmentsForDate(hoveredDate) : [];
@@ -154,7 +153,7 @@ const CalendarDateDisplay = ({
               />
 
               {/* Only show EmailPreviewTooltip when there are appointments for the hovered date */}
-              {hoveredDate && hoveredDateAppointments.length > 0 && hoveredDayRef && (
+              {hoveredDate && hoveredDateAppointments.length > 0 && hoveredDayRef.current && (
                 <EmailPreviewTooltip
                   emails={hoveredDateAppointments.map(appointment => ({
                     id: appointment.id.toString(),
@@ -182,7 +181,7 @@ const CalendarDateDisplay = ({
                   onAddAppointment={handleAddAppointmentFromTooltipLocal}
                   hoveredDate={hoveredDate}
                   autoFade={isTooltipInTopRow}
-                  categoryCardRef={{ current: hoveredDayRef }}
+                  categoryCardRef={hoveredDayRef}
                 />
               )}
             </div>
