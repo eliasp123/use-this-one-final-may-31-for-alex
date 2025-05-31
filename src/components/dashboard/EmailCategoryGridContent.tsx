@@ -1,8 +1,7 @@
 
-import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
-import { useAccordionStates } from '../../hooks/useAccordionStates';
 import AccordionCategoryRow from './AccordionCategoryRow';
 
 interface EmailCategoryGridContentProps {
@@ -30,30 +29,20 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   
   // Calculate rows dynamically based on ordered categories
   const categoriesPerRow = 3;
-  const totalRows = Math.ceil(orderedCategories.length / categoriesPerRow);
-  const hasAddButton = addButtonInFirstRow || addButtonInCompactRows;
-  const actualTotalRows = hasAddButton ? totalRows + 1 : totalRows;
   
-  const { 
-    accordionStates, 
-    toggleRow, 
-    openAll, 
-    closeAll, 
-    updateRowCount 
-  } = useAccordionStates(actualTotalRows);
-
-  // Update row count when categories change
-  useEffect(() => {
-    updateRowCount(actualTotalRows);
-  }, [actualTotalRows, updateRowCount]);
-
-  // Expose accordion controls to parent
+  // Expose accordion controls to parent (these will control individual card accordions)
   useImperativeHandle(ref, () => ({
-    openAll,
-    closeAll
+    openAll: () => {
+      // Could implement card-level accordion control here if needed
+      console.log('Open all card accordions');
+    },
+    closeAll: () => {
+      // Could implement card-level accordion control here if needed
+      console.log('Close all card accordions');
+    }
   }));
 
-  // Create rows from ordered categories with accordion functionality
+  // Create rows from ordered categories
   const rows = [];
   for (let i = 0; i < orderedCategories.length; i += categoriesPerRow) {
     const rowCategories = orderedCategories.slice(i, i + categoriesPerRow);
@@ -72,15 +61,15 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
       {rows.map((row, rowIndex) => (
         <AccordionCategoryRow
           key={`row-${rowIndex}`}
-          title={`Row ${rowIndex + 1}`}
+          title=""
           categories={row.categories}
-          isOpen={accordionStates[rowIndex] || false}
-          onToggle={() => toggleRow(rowIndex)}
+          isOpen={true}
+          onToggle={() => {}}
           showAddButton={row.showAddButton}
           onAddNewCategory={onAddNewCategory}
           onReorder={handleReorder}
           startIndex={row.startIndex}
-          hideHeader={false} // Show accordion headers
+          hideHeader={true}
         />
       ))}
     </div>
