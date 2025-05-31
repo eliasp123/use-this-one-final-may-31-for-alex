@@ -50,7 +50,7 @@ export const useCaregiverLocations = (
   selectedCategories: string[],
   mapCenter: { lat: number; lng: number }
 ) => {
-  const { searchLocations } = useMapboxGeocoding();
+  const { searchLocations, searchNearbyPlaces } = useMapboxGeocoding();
   const [locations, setLocations] = useState<Location[]>(sampleLocations);
   const [searchResults, setSearchResults] = useState<Location[]>([]);
   const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number } | null>(null);
@@ -61,11 +61,28 @@ export const useCaregiverLocations = (
     const phone = result.properties?.tel || '(555) 000-0000';
     const website = result.properties?.website;
     
-    // Determine category based on place type or properties
+    // Determine category based on place type, properties, or text
     let category = 'professionals';
-    if (result.properties?.category) {
-      const cat = result.properties.category.toLowerCase();
-      if (cat.includes('hospital')) category = 'hospitals';
+    const text = result.text?.toLowerCase() || '';
+    const placeName = result.place_name?.toLowerCase() || '';
+    const properties = result.properties || {};
+    
+    // Enhanced category detection
+    if (text.includes('hospital') || placeName.includes('hospital') || placeName.includes('medical center')) {
+      category = 'hospitals';
+    } else if (text.includes('pharmacy') || placeName.includes('pharmacy') || text.includes('cvs') || text.includes('walgreens')) {
+      category = 'pharmacies';
+    } else if (text.includes('senior') || text.includes('nursing') || text.includes('assisted living')) {
+      category = 'senior-living';
+    } else if (text.includes('therapy') || text.includes('rehabilitation') || text.includes('physical therapy')) {
+      category = 'physical-therapy';
+    } else if (text.includes('attorney') || text.includes('lawyer') || text.includes('law')) {
+      category = 'elder-law-attorneys';
+    } else if (text.includes('care') && (text.includes('home') || text.includes('health'))) {
+      category = 'home-care';
+    } else if (properties.category) {
+      const cat = properties.category.toLowerCase();
+      if (cat.includes('hospital') || cat.includes('medical')) category = 'hospitals';
       else if (cat.includes('pharmacy')) category = 'pharmacies';
       else if (cat.includes('senior') || cat.includes('care')) category = 'senior-living';
       else if (cat.includes('therapy')) category = 'physical-therapy';
@@ -91,17 +108,47 @@ export const useCaregiverLocations = (
     const performSearch = async () => {
       if (searchQuery.trim() && searchQuery.length > 2) {
         console.log('Searching for:', searchQuery);
-        const results = await searchLocations(searchQuery, mapCenter);
-        const convertedResults = results.map(convertGeocodingToLocation);
-        setSearchResults(convertedResults);
-        setLocations([...sampleLocations, ...convertedResults]);
         
-        // Set search center to the first result if available
-        if (convertedResults.length > 0) {
-          setSearchCenter({
-            lat: convertedResults[0].lat,
-            lng: convertedResults[0].lng
-          });
+        // First search for the location itself
+        const locationResults = await searchLocations(searchQuery, mapCenter);
+        
+        if (locationResults.length > 0) {
+          const firstResult = locationResults[0];
+          const newCenter = {
+            lat: firstResult.center[1],
+            lng: firstResult.center[0]
+          };
+          
+          setSearchCenter(newCenter);
+          
+          // Then search for nearby places in selected categories
+          let nearbyResults: any[] = [];
+          if (selectedCategories.length > 0) {
+            nearbyResults = await searchNearbyPlaces(newCenter, selectedCategories);
+          } else {
+            // If no categories selected, search for general healthcare places
+            nearbyResults = await searchNearbyPlaces(newCenter, ['hospitals', 'pharmacies', 'senior-living']);
+          }
+          
+          // Combine location results with nearby results, prioritizing nearby places
+          const allResults = [...nearbyResults, ...locationResults.slice(1)];
+          const convertedResults = allResults.map(convertGeocodingToLocation);
+          
+          // Filter by selected categories if any
+          let filteredResults = convertedResults;
+          if (selectedCategories.length > 0) {
+            filteredResults = convertedResults.filter(location => 
+              selectedCategories.includes(location.category)
+            );
+          }
+          
+          setSearchResults(filteredResults);
+          setLocations(filteredResults.length > 0 ? filteredResults : sampleLocations);
+        } else {
+          // No location found, just show sample data
+          setSearchResults([]);
+          setSearchCenter(null);
+          setLocations(sampleLocations);
         }
       } else {
         setSearchResults([]);
@@ -118,18 +165,17 @@ export const useCaregiverLocations = (
 
     const debounceTimer = setTimeout(performSearch, 300);
     return () => clearTimeout(debounceTimer);
-  }, [searchQuery, searchLocations, mapCenter, selectedCategories]);
+  }, [searchQuery, searchLocations, searchNearbyPlaces, mapCenter, selectedCategories]);
 
   // Filter by categories
   useEffect(() => {
-    if (selectedCategories.length > 0) {
-      const allLocations = [...sampleLocations, ...searchResults];
-      const filtered = allLocations.filter(location => selectedCategories.includes(location.category));
+    if (selectedCategories.length > 0 && !searchQuery.trim()) {
+      const filtered = sampleLocations.filter(location => selectedCategories.includes(location.category));
       setLocations(filtered);
     } else if (!searchQuery.trim()) {
       setLocations(sampleLocations);
     }
-  }, [selectedCategories, searchResults, searchQuery]);
+  }, [selectedCategories, searchQuery]);
 
   return { locations, searchCenter };
 };
