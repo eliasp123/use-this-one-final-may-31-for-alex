@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -227,20 +228,14 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
                 {activeStatuses.map((status) => (
                   <div 
                     key={status.status}
-                    className={`relative flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer group/tooltip`}
+                    className={`relative group/status flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleStatusClick(status.navStatus, e);
                     }}
+                    title={`${status.count} ${status.label.toLowerCase()}`}
                   >
                     {status.count}
-                    {/* Pretty tooltip on hover with higher z-index */}
-                    <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-white border border-orange-200 rounded-lg shadow-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none z-[9999] whitespace-nowrap">
-                      <div className="text-gray-800 text-xs font-medium">
-                        {status.count} {status.label.toLowerCase()}
-                      </div>
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-orange-200"></div>
-                    </div>
                   </div>
                 ))}
               </div>
