@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -197,11 +198,18 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         <div 
           className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} ${
             isExpanded ? 'bg-gray-75 hover:bg-gray-100' : 'hover:bg-gray-50'
-          } p-2 rounded-lg transition-colors cursor-pointer`}
+          } p-2 rounded-lg transition-colors cursor-pointer relative`}
           onClick={handleHeaderClick}
           onMouseEnter={handleHeaderHover}
           onMouseLeave={handleHeaderLeave}
         >
+          {/* Toggle Arrow - positioned in top right */}
+          <div className="absolute top-1 right-1">
+            <ChevronDown className={`w-5 h-5 text-gray-700 font-bold transition-transform duration-200 ${
+              isExpanded ? 'rotate-180' : 'rotate-0'
+            }`} strokeWidth={3} />
+          </div>
+          
           <div className="flex items-center flex-col text-center">
             <div className={`${isExpanded ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-2`}>
               <Icon className={`${isExpanded ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-5 h-5 sm:w-6 sm:h-6'} ${textColor} group-hover:animate-pulse`} />
