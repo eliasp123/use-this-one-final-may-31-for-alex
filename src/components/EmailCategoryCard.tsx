@@ -2,6 +2,7 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
+import { ChevronDown } from 'lucide-react';
 import { useEmailPreview } from '../hooks/useEmailPreview';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import { EmailCategory } from '../hooks/useEmailCategoryData';
@@ -17,8 +18,10 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const categoryCardRef = useRef<HTMLDivElement>(null);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [isExpanded, setIsExpanded] = useState(true); // Default to expanded
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
+  const expandTimeoutRef = useRef<NodeJS.Timeout>();
   
   // Get the actual count of unresponded emails for this category
   const { getFilteredUnrespondedEmails } = useFilteredEmailData();
@@ -35,6 +38,28 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   const handleCardClick = () => {
     navigate(`/emails/${id}/all`);
   };
+  
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleHeaderHover = useCallback(() => {
+    if (expandTimeoutRef.current) {
+      clearTimeout(expandTimeoutRef.current);
+    }
+    
+    expandTimeoutRef.current = setTimeout(() => {
+      setIsExpanded(true);
+    }, 300);
+  }, []);
+
+  const handleHeaderLeave = useCallback(() => {
+    if (expandTimeoutRef.current) {
+      clearTimeout(expandTimeoutRef.current);
+    }
+    // Don't auto-close on leave - stays open until manually closed
+  }, []);
   
   const handleStatusClick = (status: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -153,48 +178,64 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
         className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group hover:translate-y-[-4px] flex flex-col"
         onClick={handleCardClick}
       >
-        {/* Header - Icon and title on the same row */}
-        <div className="flex items-center mb-4 sm:mb-5">
-          <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-            <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor} group-hover:animate-pulse`} />
-          </div>
-          
-          {/* Title next to the icon */}
-          <div className="flex items-center ml-3 sm:ml-4">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 group-hover:text-gray-900 transition-colors">{title}</h3>
-          </div>
-        </div>
-
-        {/* Stats section with consistent height */}
-        <div className="flex-1 flex flex-col justify-between">
-          {/* Status rows container with fixed height for exactly 3 rows */}
-          <div className="h-[96px] flex flex-col justify-start">
-            <div className="space-y-1">
-              {statusRows}
+        {/* Header - Icon and title with accordion functionality */}
+        <div 
+          className="flex items-center justify-between mb-4 sm:mb-5 hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer"
+          onClick={handleHeaderClick}
+          onMouseEnter={handleHeaderHover}
+          onMouseLeave={handleHeaderLeave}
+        >
+          <div className="flex items-center">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+              <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor} group-hover:animate-pulse`} />
+            </div>
+            
+            {/* Title next to the icon */}
+            <div className="flex items-center ml-3 sm:ml-4">
+              <h3 className="text-base sm:text-lg font-medium text-gray-800 group-hover:text-gray-900 transition-colors">{title}</h3>
             </div>
           </div>
 
-          {/* Bottom sections - always positioned consistently */}
-          <div className="mt-4 space-y-4">
-            {/* Progress indicator - only show if there's activity */}
-            {activeStatuses.length > 0 && (
-              <div>
-                <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
-                  <div 
-                    className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
-                    style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
-                </p>
+          {/* Chevron indicator */}
+          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+            isExpanded ? 'rotate-180' : 'rotate-0'
+          }`} />
+        </div>
+
+        {/* Accordion Content - Stats section with consistent height */}
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <div className="flex-1 flex flex-col justify-between">
+            {/* Status rows container with fixed height for exactly 3 rows */}
+            <div className="h-[96px] flex flex-col justify-start">
+              <div className="space-y-1">
+                {statusRows}
               </div>
-            )}
-            
-            {/* Total conversations - styled with category color and white text */}
-            <div className={`flex items-center justify-between text-xs sm:text-sm p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
-              <span className="text-white font-medium">Total conversations</span>
-              <span className="text-white font-bold">{total}</span>
+            </div>
+
+            {/* Bottom sections - always positioned consistently */}
+            <div className="mt-4 space-y-4">
+              {/* Progress indicator - only show if there's activity */}
+              {activeStatuses.length > 0 && (
+                <div>
+                  <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
+                    <div 
+                      className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
+                      style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
+                  </p>
+                </div>
+              )}
+              
+              {/* Total conversations - styled with category color and white text */}
+              <div className={`flex items-center justify-between text-xs sm:text-sm p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
+                <span className="text-white font-medium">Total conversations</span>
+                <span className="text-white font-bold">{total}</span>
+              </div>
             </div>
           </div>
         </div>
