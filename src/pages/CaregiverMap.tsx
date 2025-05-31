@@ -141,10 +141,10 @@ const CaregiverMap = () => {
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
       <div className="bg-teal-700 text-white px-6 py-4">
-        <div className="flex items-center justify-between min-h-[2rem]">
+        <div className="flex items-center justify-between h-[3rem]">
           <div className="w-48"></div> {/* Spacer to balance the layout */}
           
-          <div className="text-base font-normal text-center">
+          <div className="text-base font-normal text-center flex items-center">
             Search Places or Care Categories Below
           </div>
           
