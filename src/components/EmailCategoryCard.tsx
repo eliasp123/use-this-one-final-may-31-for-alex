@@ -147,7 +147,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       navStatus: 'pending'
     }] : []),
     ...(notRespondedCount > 0 ? [{
-      label: 'Has not responded yet',
+      label: 'Not replied yet',
       count: notRespondedCount,
       color: 'bg-red-500',
       status: 'unresponded' as const,
@@ -234,8 +234,8 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
               </div>
             </div>
 
-            {/* Bottom sections - always positioned consistently */}
-            <div className="mt-4 space-y-4">
+            {/* Bottom sections - always positioned consistently with more spacing */}
+            <div className="mt-6 space-y-4">
               {/* Progress indicator - only show if there's activity */}
               {activeStatuses.length > 0 && (
                 <div>
