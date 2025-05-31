@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -209,7 +208,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
             <div className="border-t border-gray-200 pt-3">
               <div className="w-full flex items-center gap-2 p-2 bg-teal-700 text-white rounded-md hover:bg-teal-800 transition-colors cursor-pointer">
                 <div
-                  className="flex items-center gap-2 flex-1"
+                  className="flex items-center gap-2"
                   onClick={handleSelectAllClick}
                 >
                   <Checkbox
@@ -220,12 +219,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
                     {allCategoriesSelected ? 'Deselect all categories' : 'Or select all categories'}
                   </span>
                 </div>
-                <span className="text-white">|</span>
                 <button
                   onClick={handleGoClick}
-                  className="text-white text-sm font-medium hover:underline"
+                  className="ml-2 text-white text-sm font-medium hover:underline"
                 >
-                  Go →
+                  | Go →
                 </button>
               </div>
             </div>
