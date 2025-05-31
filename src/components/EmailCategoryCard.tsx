@@ -196,7 +196,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         {/* Header - Icon and title with accordion functionality and conditional gray background */}
         <div 
           className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} ${
-            isExpanded ? 'bg-gray-75 hover:bg-gray-100' : 'hover:bg-gray-50'
+            isExpanded ? 'bg-gray-50 hover:bg-gray-100' : 'hover:bg-gray-50'
           } p-2 rounded-lg transition-colors cursor-pointer relative`}
           onClick={handleHeaderClick}
           onMouseEnter={handleHeaderHover}
