@@ -142,30 +142,32 @@ const CaregiverMap = () => {
       {/* Header */}
       <div className="bg-teal-700 text-white px-6 py-4">
         <div className="flex items-center justify-between h-[3rem]">
-          <div className="w-48"></div> {/* Spacer to balance the layout */}
-          
-          <div className="text-base font-normal text-center flex items-center">
+          <div className="text-base font-normal flex items-center">
             Search Places or Care Categories Below
           </div>
           
-          <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200 [&_div]:mt-0">
-            <IndexActionButtons
-              onNewEmail={() => {
-                navigate('/');
-                // This will trigger the compose functionality on the main page
-              }}
-              onViewDocuments={() => navigate('/documents')}
-              onCalendarClick={() => {
-                navigate('/');
-                setTimeout(() => {
-                  const calendarSection = document.getElementById('calendar-section');
-                  if (calendarSection) {
-                    calendarSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-            />
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <div className="[&_button]:text-white [&_button:hover]:text-gray-200 [&_svg]:text-white [&_button:hover_svg]:text-gray-200 [&_div]:mt-0">
+              <IndexActionButtons
+                onNewEmail={() => {
+                  navigate('/');
+                  // This will trigger the compose functionality on the main page
+                }}
+                onViewDocuments={() => navigate('/documents')}
+                onCalendarClick={() => {
+                  navigate('/');
+                  setTimeout(() => {
+                    const calendarSection = document.getElementById('calendar-section');
+                    if (calendarSection) {
+                      calendarSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 100);
+                }}
+              />
+            </div>
           </div>
+          
+          <div className="w-48"></div> {/* Spacer to balance the layout */}
         </div>
       </div>
 
