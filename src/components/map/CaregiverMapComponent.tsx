@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -45,7 +44,7 @@ const CaregiverMapComponent: React.FC<CaregiverMapComponentProps> = ({
     // Initialize map
     map.current = new mapboxgl.Map({
       container: mapRef.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/eliasp123/cmbblm5l2003d01qvb0ht1coj',
       center: [center.lng, center.lat],
       zoom: zoom
     });
