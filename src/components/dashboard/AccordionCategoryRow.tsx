@@ -45,8 +45,10 @@ const AccordionCategoryRow: React.FC<AccordionCategoryRowProps> = ({
         </button>
       )}
 
-      {/* Accordion Content */}
-      {isOpen && (
+      {/* Accordion Content - using transition for smooth open/close */}
+      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        isOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
+      }`}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
           {categories.map((category, index) => (
             <DraggableCategoryCard
@@ -64,7 +66,7 @@ const AccordionCategoryRow: React.FC<AccordionCategoryRowProps> = ({
             />
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

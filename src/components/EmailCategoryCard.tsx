@@ -116,7 +116,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     }] : [])
   ];
 
-  // Create placeholder rows to ensure consistent height (always 3 rows)
+  // Always create exactly 3 status rows for consistent height
   const statusRows = [];
   for (let i = 0; i < 3; i++) {
     if (i < activeStatuses.length) {
@@ -138,7 +138,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
     } else {
       // Add invisible placeholder rows to maintain consistent height
       statusRows.push(
-        <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0">
+        <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0 pointer-events-none">
           <span>Placeholder</span>
           <div className="w-5 h-5 sm:w-6 sm:h-6"></div>
         </div>
@@ -167,18 +167,11 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
 
         {/* Stats section with consistent height */}
         <div className="flex-1 flex flex-col justify-between">
-          {/* Status rows container with fixed height for 3 rows */}
-          <div className="h-[72px] flex flex-col justify-start">
-            {activeStatuses.length > 0 ? (
-              <div className="space-y-0.5 sm:space-y-1">
-                {statusRows}
-              </div>
-            ) : (
-              <div className="text-center py-4">
-                <p className="text-gray-500 text-sm">All caught up!</p>
-                <p className="text-gray-400 text-xs mt-1">No pending items</p>
-              </div>
-            )}
+          {/* Status rows container with fixed height for exactly 3 rows */}
+          <div className="h-[96px] flex flex-col justify-start">
+            <div className="space-y-1">
+              {statusRows}
+            </div>
           </div>
 
           {/* Bottom sections - always positioned consistently */}
