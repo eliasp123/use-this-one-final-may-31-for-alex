@@ -174,7 +174,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
           onMouseLeave={handleStatusLeave}
         >
           <span className="text-gray-600">{statusItem.label}</span>
-          <div className={`flex items-center justify-center w-4 h-4 sm:w-4 sm:h-4 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
+          <div className={`flex items-center justify-center w-5 h-5 sm:w-5 sm:h-5 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
           onClick={(e) => {
             e.stopPropagation();
             handleStatusClick(statusItem.navStatus, e);
@@ -190,7 +190,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       statusRows.push(
         <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0 pointer-events-none">
           <span>Placeholder</span>
-          <div className="w-4 h-4 sm:w-4 sm:h-4"></div>
+          <div className="w-5 h-5 sm:w-5 sm:h-5"></div>
         </div>
       );
     }
