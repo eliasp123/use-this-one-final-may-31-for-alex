@@ -89,25 +89,49 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     return format(date, 'h:mm a');
   };
 
-  const getEmailPreview = (content: string) => {
+  const getEmailPreview = (content: string, isFullPreview = false) => {
+    if (isFullPreview && emails.length === 1) {
+      // For single email, show more content
+      const sentences = content.match(/[^\.!?]+[\.!?]+/g) || [];
+      const preview = sentences.slice(0, 8).join(' '); // Show up to 8 sentences
+      return preview.length > 400 ? `${preview.substring(0, 400)}...` : preview;
+    }
+    
+    // For multiple emails, keep shorter preview
     const sentences = content.match(/[^\.!?]+[\.!?]+/g) || [];
     const preview = sentences.slice(0, 4).join(' ');
     return preview.length > 200 ? `${preview.substring(0, 200)}...` : preview;
   };
 
   const getTooltipDimensions = () => {
-    const baseWidth = 420;
+    const baseWidth = 480; // Increased from 420
     const headerHeight = 60;
-    const emailItemHeight = emails.length === 1 ? 120 : 140;
     const padding = 20;
     
     const emailCount = emails.length;
-    const contentHeight = emailItemHeight * Math.min(emailCount, 3);
+    
+    let emailItemHeight: number;
+    let contentHeight: number;
+    
+    if (emailCount === 1) {
+      // Single email gets much more space
+      emailItemHeight = 200; // Increased significantly
+      contentHeight = emailItemHeight;
+    } else if (emailCount === 2) {
+      // Two emails get moderate space each
+      emailItemHeight = 160;
+      contentHeight = emailItemHeight * 2;
+    } else {
+      // Multiple emails get compact space
+      emailItemHeight = 140;
+      contentHeight = emailItemHeight * Math.min(emailCount, 3);
+    }
+    
     const totalHeight = headerHeight + contentHeight + padding;
     
     return {
       width: baseWidth,
-      height: Math.min(totalHeight, 500)
+      height: Math.min(totalHeight, 600) // Increased max height
     };
   };
 
@@ -200,6 +224,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
   };
 
   const isAppointmentCategory = category === "appointments";
+  const isSingleEmail = emails.length === 1;
 
   return (
     <div 
@@ -345,20 +370,24 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
           <div style={{ height: height - 60 }}>
             <ScrollArea className="h-full custom-scrollbar">
               {emails.length > 0 ? (
-                <div className="space-y-3 p-3 pb-12">
+                <div className={`space-y-3 p-3 pb-12 ${isSingleEmail ? 'space-y-4' : ''}`}>
                   {emails.map((email, index) => (
                     <div
                       key={email.id}
-                      className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded border-b border-gray-100 last:border-b-0"
+                      className={`cursor-pointer hover:bg-gray-50 transition-colors rounded border-b border-gray-100 last:border-b-0 ${
+                        isSingleEmail ? 'p-3' : 'p-2'
+                      }`}
                       onClick={(e) => handleEmailClick(email.id, e)}
                     >
-                      <div className="mb-2">
-                        <h4 className="text-sm font-medium text-amber-700 leading-snug">
+                      <div className={isSingleEmail ? 'mb-3' : 'mb-2'}>
+                        <h4 className={`font-medium text-amber-700 leading-snug ${
+                          isSingleEmail ? 'text-base mb-2' : 'text-sm'
+                        }`}>
                           {email.subject}
                         </h4>
                       </div>
 
-                      <div className="space-y-1.5 mb-2">
+                      <div className={`space-y-1.5 ${isSingleEmail ? 'mb-3' : 'mb-2'}`}>
                         <div className="flex items-center gap-2 text-xs text-gray-600">
                           <User className="w-3 h-3" />
                           <span className="leading-snug">{email.sender.name}</span>
@@ -373,8 +402,10 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                         </div>
                       </div>
 
-                      <div className="bg-amber-50 px-3 py-2 rounded text-xs text-gray-600 leading-snug">
-                        {getEmailPreview(email.content)}
+                      <div className={`bg-amber-50 rounded text-gray-600 leading-snug ${
+                        isSingleEmail ? 'px-4 py-3 text-sm' : 'px-3 py-2 text-xs'
+                      }`}>
+                        {getEmailPreview(email.content, isSingleEmail)}
                       </div>
                     </div>
                   ))}
