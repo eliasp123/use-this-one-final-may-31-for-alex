@@ -73,6 +73,10 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
     listContentRef.current?.collapseAll();
   };
 
+  // Placeholder functions for accordion controls - will be connected via refs
+  let accordionOpenAll = () => {};
+  let accordionCloseAll = () => {};
+
   return (
     <div className="space-y-6">
       <EmailCategoryGridHeader 
@@ -83,6 +87,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onCollapseAll={viewMode === 'list' ? handleCollapseAll : undefined}
+        onOpenAll={viewMode === 'grid' ? accordionOpenAll : undefined}
+        onCloseAll={viewMode === 'grid' ? accordionCloseAll : undefined}
       />
 
       <SearchResultsDisplay
@@ -101,6 +107,8 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
             addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
             addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
             onAddNewCategory={onCategoryAdded || (() => {})}
+            onOpenAll={(fn) => { accordionOpenAll = fn; }}
+            onCloseAll={(fn) => { accordionCloseAll = fn; }}
           />
         ) : (
           <EmailCategoryListContent

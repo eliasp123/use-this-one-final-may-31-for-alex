@@ -1,20 +1,9 @@
 
-import React from 'react';
-import EmailCategoryCard from '../EmailCategoryCard';
-import CompactCategoryItem from './CompactCategoryItem';
-import AddNewCategoryButton from './AddNewCategoryButton';
-
-interface EmailCategory {
-  id: string;
-  title: string;
-  icon: any;
-  unread: number;
-  pending: number;
-  total: number;
-  color: string;
-  bgColor: string;
-  textColor: string;
-}
+import React, { useEffect } from 'react';
+import { EmailCategory } from '../../hooks/useEmailCategoryData';
+import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
+import { useAccordionStates } from '../../hooks/useAccordionStates';
+import AccordionCategoryRow from './AccordionCategoryRow';
 
 interface EmailCategoryGridContentProps {
   priorityCategories: EmailCategory[];
@@ -22,6 +11,8 @@ interface EmailCategoryGridContentProps {
   addButtonInFirstRow: boolean;
   addButtonInCompactRows: boolean;
   onAddNewCategory: () => void;
+  onOpenAll: () => void;
+  onCloseAll: () => void;
 }
 
 const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
@@ -29,49 +20,68 @@ const EmailCategoryGridContent: React.FC<EmailCategoryGridContentProps> = ({
   compactCategories,
   addButtonInFirstRow,
   addButtonInCompactRows,
-  onAddNewCategory
+  onAddNewCategory,
+  onOpenAll,
+  onCloseAll
 }) => {
+  const allCategories = [...priorityCategories, ...compactCategories];
+  const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
+  
+  // Calculate rows dynamically based on ordered categories
+  const categoriesPerRow = 3;
+  const totalRows = Math.ceil(orderedCategories.length / categoriesPerRow);
+  const hasAddButton = addButtonInFirstRow || addButtonInCompactRows;
+  const actualTotalRows = hasAddButton ? totalRows + 1 : totalRows;
+  
+  const { 
+    accordionStates, 
+    toggleRow, 
+    openAll, 
+    closeAll, 
+    updateRowCount 
+  } = useAccordionStates(actualTotalRows);
+
+  // Update row count when categories change
+  useEffect(() => {
+    updateRowCount(actualTotalRows);
+  }, [actualTotalRows, updateRowCount]);
+
+  // Connect accordion controls to parent
+  useEffect(() => {
+    onOpenAll = openAll;
+    onCloseAll = closeAll;
+  }, [openAll, closeAll]);
+
+  // Create rows from ordered categories
+  const rows = [];
+  for (let i = 0; i < orderedCategories.length; i += categoriesPerRow) {
+    const rowCategories = orderedCategories.slice(i, i + categoriesPerRow);
+    const rowIndex = Math.floor(i / categoriesPerRow);
+    const isFirstRow = rowIndex === 0;
+    
+    rows.push({
+      title: isFirstRow ? 'Priority Categories' : `Categories ${rowIndex + 1}`,
+      categories: rowCategories,
+      startIndex: i,
+      showAddButton: (isFirstRow && addButtonInFirstRow) || (!isFirstRow && addButtonInCompactRows && i + categoriesPerRow >= orderedCategories.length)
+    });
+  }
+
   return (
     <div className="space-y-8">
-      {/* Priority Categories Section - Full Cards (First Row Only) */}
-      {(priorityCategories.length > 0 || addButtonInFirstRow) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-          {priorityCategories.map((category) => (
-            <EmailCategoryCard
-              key={category.id}
-              category={category}
-            />
-          ))}
-          
-          {addButtonInFirstRow && (
-            <AddNewCategoryButton 
-              onClick={onAddNewCategory}
-              categoriesInRow={priorityCategories.length}
-            />
-          )}
-        </div>
-      )}
-
-      {/* Compact Categories Section */}
-      {(compactCategories.length > 0 || addButtonInCompactRows) && (
-        <div className="space-y-8" data-section="more-categories">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            {compactCategories.map((category) => (
-              <CompactCategoryItem
-                key={category.id}
-                category={category}
-              />
-            ))}
-            
-            {addButtonInCompactRows && (
-              <AddNewCategoryButton 
-                onClick={onAddNewCategory}
-                categoriesInRow={compactCategories.length % 3}
-              />
-            )}
-          </div>
-        </div>
-      )}
+      {rows.map((row, rowIndex) => (
+        <AccordionCategoryRow
+          key={`row-${rowIndex}`}
+          title={row.title}
+          categories={row.categories}
+          isOpen={accordionStates[rowIndex] || false}
+          onToggle={() => toggleRow(rowIndex)}
+          showAddButton={row.showAddButton}
+          onAddNewCategory={onAddNewCategory}
+          onReorder={handleReorder}
+          startIndex={row.startIndex}
+        />
+      ))}
     </div>
   );
 };
