@@ -195,28 +195,21 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       >
         {/* Header - Icon and title with accordion functionality */}
         <div 
-          className={`flex items-center ${isExpanded ? 'justify-between mb-4 sm:mb-5' : 'justify-center'} hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer`}
+          className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer`}
           onClick={handleHeaderClick}
           onMouseEnter={handleHeaderHover}
           onMouseLeave={handleHeaderLeave}
         >
-          <div className={`flex items-center ${!isExpanded ? 'flex-col text-center' : ''}`}>
-            <div className={`${isExpanded ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${!isExpanded ? 'mb-2' : ''}`}>
+          <div className="flex items-center flex-col text-center">
+            <div className={`${isExpanded ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-2`}>
               <Icon className={`${isExpanded ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-5 h-5 sm:w-6 sm:h-6'} ${textColor} group-hover:animate-pulse`} />
             </div>
             
-            {/* Title positioning based on expanded state */}
-            <div className={`flex items-center ${isExpanded ? 'ml-3 sm:ml-4' : ''}`}>
+            {/* Title always centered below icon */}
+            <div className="flex items-center">
               <h3 className={`${isExpanded ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} font-medium text-gray-800 group-hover:text-gray-900 transition-colors`}>{title}</h3>
             </div>
           </div>
-
-          {/* Chevron indicator - only show when expanded */}
-          {isExpanded && (
-            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-              isExpanded ? 'rotate-180' : 'rotate-0'
-            }`} />
-          )}
         </div>
 
         {/* Accordion Content - Stats section with consistent height */}
