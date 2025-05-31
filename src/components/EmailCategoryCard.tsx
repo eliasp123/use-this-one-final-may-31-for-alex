@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -135,21 +134,21 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
     ...(unread > 0 ? [{
       label: 'Unread messages',
       count: unread,
-      color: 'bg-purple-500',
+      color: 'bg-purple-400',
       status: 'unread' as const,
       navStatus: 'unread'
     }] : []),
     ...(pending > 0 ? [{
       label: 'Pending replies',
       count: pending,
-      color: 'bg-amber-500',
+      color: 'bg-amber-400',
       status: 'pending' as const,
       navStatus: 'pending'
     }] : []),
     ...(notRespondedCount > 0 ? [{
       label: 'Not replied yet',
       count: notRespondedCount,
-      color: 'bg-red-500',
+      color: 'bg-red-400',
       status: 'unresponded' as const,
       navStatus: 'no-response'
     }] : [])
@@ -169,7 +168,13 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
           onMouseLeave={handleStatusLeave}
         >
           <span className="text-gray-600">{statusItem.label}</span>
-          <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-105`}>
+          <div className={`flex items-center justify-center w-3 h-3 sm:w-4 sm:h-4 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleStatusClick(statusItem.navStatus, e);
+          }}
+          title={`${statusItem.count} ${statusItem.label.toLowerCase()}`}
+          >
             {statusItem.count}
           </div>
         </div>
@@ -179,7 +184,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       statusRows.push(
         <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0 pointer-events-none">
           <span>Placeholder</span>
-          <div className="w-5 h-5 sm:w-6 sm:h-6"></div>
+          <div className="w-3 h-3 sm:w-4 sm:h-4"></div>
         </div>
       );
     }
@@ -228,7 +233,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
                 {activeStatuses.map((status) => (
                   <div 
                     key={status.status}
-                    className={`relative group/status flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
+                    className={`relative group/status flex items-center justify-center w-3 h-3 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleStatusClick(status.navStatus, e);
