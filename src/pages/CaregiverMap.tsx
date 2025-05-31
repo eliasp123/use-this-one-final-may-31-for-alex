@@ -35,6 +35,7 @@ const CaregiverMap = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mapCenter, setMapCenter] = useState({ lat: 34.0522, lng: -118.2437 });
   const [mapZoom, setMapZoom] = useState(12);
+  const [hasUserSelectedLocation, setHasUserSelectedLocation] = useState(false);
   
   const { locations, searchCenter } = useCaregiverLocations(searchQuery, selectedCategories, mapCenter);
 
@@ -45,6 +46,7 @@ const CaregiverMap = () => {
     mapCenter,
     mapZoom,
     locationsCount: locations.length,
+    hasUserSelectedLocation,
     isLoading
   });
 
@@ -95,7 +97,7 @@ const CaregiverMap = () => {
   };
 
   const handlePlaceSelect = (place: any) => {
-    console.log('🏠 Place selected:', place);
+    console.log('🏠 Place selected for search area:', place);
     const newCenter = {
       lat: place.center[1],
       lng: place.center[0]
@@ -103,6 +105,7 @@ const CaregiverMap = () => {
     console.log('🏠 Setting map center to place:', place.place_name, newCenter);
     setMapCenter(newCenter);
     setMapZoom(14);
+    setHasUserSelectedLocation(true);
     // Clear selected location since we're showing a new place
     setSelectedLocation(null);
   };

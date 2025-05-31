@@ -36,7 +36,7 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [hasSelectedLocation, setHasSelectedLocation] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -45,66 +45,20 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   console.log('🔍 CategoryDropdown rendered with:', {
     searchQuery,
     selectedCategories: selectedCategories.length,
+    hasSelectedLocation,
     isDropdownOpen,
-    showAutocomplete,
-    suggestionsCount: suggestions.length,
-    mapCenter
+    suggestionsCount: suggestions.length
   });
 
-  // Filter categories based on search query for autocomplete
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Determine if we should show suggestions
-  const shouldShowSuggestions = searchQuery.trim().length > 1;
-  const hasCategoryMatches = filteredCategories.length > 0;
-  const hasPlaceMatches = suggestions.length > 0;
-
-  console.log('🔍 Search state:', {
-    shouldShowSuggestions,
-    hasCategoryMatches,
-    hasPlaceMatches,
-    filteredCategoriesCount: filteredCategories.length
-  });
-
-  // Auto-check categories based on search query
+  // Get place suggestions when typing (only when no location selected yet)
   useEffect(() => {
-    console.log('🔍 Auto-check categories effect triggered with searchQuery:', searchQuery);
-    if (searchQuery.trim() && searchQuery.length > 2) {
-      const matchingCategories = categories.filter(category =>
-        category.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
-      );
-      
-      console.log('🔍 Matching categories found:', matchingCategories.map(c => c.name));
-      
-      // Auto-check the first matching category if it's not already selected
-      if (matchingCategories.length > 0) {
-        const firstMatch = matchingCategories[0];
-        if (!selectedCategories.includes(firstMatch.id)) {
-          console.log('✅ Auto-selecting category:', firstMatch.name);
-          onCategoryToggle(firstMatch.id);
-        }
-      }
-    }
-  }, [searchQuery, categories, selectedCategories, onCategoryToggle]);
-
-  // Get place suggestions when typing
-  useEffect(() => {
-    console.log('🔍 Place suggestions effect triggered:', {
-      shouldShowSuggestions,
-      hasCategoryMatches,
-      searchQuery
-    });
-    
-    if (shouldShowSuggestions && !hasCategoryMatches) {
-      console.log('🔍 Getting Mapbox suggestions for:', searchQuery);
+    if (!hasSelectedLocation && searchQuery.trim().length > 2) {
+      console.log('🔍 Getting location suggestions for:', searchQuery);
       getSuggestions(searchQuery, mapCenter);
     } else {
-      console.log('🔍 Clearing suggestions');
       clearSuggestions();
     }
-  }, [searchQuery, shouldShowSuggestions, hasCategoryMatches, getSuggestions, clearSuggestions, mapCenter]);
+  }, [searchQuery, hasSelectedLocation, getSuggestions, clearSuggestions, mapCenter]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -112,7 +66,6 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         console.log('🔍 Clicking outside, closing dropdown');
         setIsDropdownOpen(false);
-        setShowAutocomplete(false);
       }
     };
 
@@ -121,11 +74,10 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   }, []);
 
   const handleInputFocus = () => {
-    console.log('🔍 Input focused');
+    console.log('🔍 Input focused, hasSelectedLocation:', hasSelectedLocation);
     setIsFocused(true);
-    setIsDropdownOpen(true);
-    if (searchQuery) {
-      setShowAutocomplete(true);
+    if (hasSelectedLocation) {
+      setIsDropdownOpen(true);
     }
   };
 
@@ -138,38 +90,22 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     const value = e.target.value;
     console.log('🔍 Search input changed to:', value);
     onSearchChange(value);
-    setShowAutocomplete(value.length > 0);
-    if (value.length > 0) {
+    
+    // If user starts typing after selecting a location, reset the flow
+    if (hasSelectedLocation && value !== searchQuery) {
+      console.log('🔍 Resetting location selection flow');
+      setHasSelectedLocation(false);
       setIsDropdownOpen(false);
-    } else {
-      setIsDropdownOpen(true);
-      clearSuggestions();
     }
   };
 
-  const handleCategorySelect = (categoryName: string) => {
-    console.log('🔍 Category selected from autocomplete:', categoryName);
-    onSearchChange(categoryName);
-    setShowAutocomplete(false);
-    setIsDropdownOpen(true);
-  };
-
   const handlePlaceSelect = (place: any) => {
-    console.log('🔍 Place selected from autocomplete:', place);
+    console.log('🔍 Location selected:', place.place_name);
     onPlaceSelect(place);
     onSearchChange(place.place_name);
-    setShowAutocomplete(false);
-    setIsDropdownOpen(false);
-  };
-
-  // Check if all categories are selected
-  const allCategoriesSelected = selectedCategories.length === categories.length;
-
-  const handleSelectAllClick = (event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    console.log('🔍 Select all clicked, current state:', { selectedCategories, allCategoriesSelected });
-    onSelectAll();
+    setHasSelectedLocation(true);
+    setIsDropdownOpen(true); // Show categories dropdown
+    clearSuggestions();
   };
 
   const handleGoClick = (event: React.MouseEvent) => {
@@ -177,8 +113,28 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
     event.stopPropagation();
     console.log('🔍 Go button clicked');
     setIsDropdownOpen(false);
-    setShowAutocomplete(false);
   };
+
+  const handleSelectAllClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('🔍 Select all clicked');
+    onSelectAll();
+  };
+
+  // Check if all categories are selected
+  const allCategoriesSelected = selectedCategories.length === categories.length;
+
+  // Determine placeholder text
+  const getPlaceholderText = () => {
+    if (hasSelectedLocation) {
+      return "Location set - select categories below";
+    }
+    return "Type the city and state you need to search";
+  };
+
+  // Determine if we should show location suggestions
+  const shouldShowLocationSuggestions = !hasSelectedLocation && suggestions.length > 0 && searchQuery.trim().length > 2;
 
   return (
     <div ref={dropdownRef} className="relative w-full">
@@ -192,26 +148,57 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          placeholder="Search categories or places..."
-          className="w-full h-12 pl-12 pr-4 text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+          placeholder={getPlaceholderText()}
+          className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
+            hasSelectedLocation 
+              ? 'bg-green-50 border-green-300 text-green-800' 
+              : 'bg-white border-gray-300'
+          }`}
+          readOnly={hasSelectedLocation}
         />
+        
+        {/* Location selected indicator */}
+        {hasSelectedLocation && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-green-600 font-medium">Location set</span>
+              <button
+                onClick={() => {
+                  console.log('🔍 Clearing location selection');
+                  setHasSelectedLocation(false);
+                  setIsDropdownOpen(false);
+                  onSearchChange('');
+                }}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Autocomplete Dropdown */}
-      {showAutocomplete && (hasCategoryMatches || hasPlaceMatches) && (
+      {/* Location Suggestions (Step 1) */}
+      {shouldShowLocationSuggestions && (
         <AutocompleteList
-          categories={filteredCategories}
+          categories={[]}
           mapboxPlaces={suggestions}
-          onCategorySelect={handleCategorySelect}
+          onCategorySelect={() => {}}
           onPlaceSelect={handlePlaceSelect}
         />
       )}
 
-      {/* Category Dropdown */}
-      {isDropdownOpen && !showAutocomplete && (
+      {/* Category Dropdown (Step 2) */}
+      {hasSelectedLocation && isDropdownOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-4">
-            {/* Category Groups */}
+            <div className="mb-4">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Select the types of services you're looking for:
+              </h3>
+            </div>
+            
+            {/* Category Grid */}
             <CategoryGrid
               categories={categories}
               selectedCategories={selectedCategories}
