@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -38,7 +39,7 @@ const AppointmentFormDatePicker = ({
   // Use calendar hover functionality for tooltips
   const {
     hoveredDate,
-    tooltipPosition,
+    hoveredDayRef,
     getAppointmentsForDate,
     handleCalendarMouseMove,
     handleCalendarMouseLeave,
@@ -46,6 +47,19 @@ const AppointmentFormDatePicker = ({
     handleTooltipMouseLeave,
     handleCalendarMonthChange
   } = useCalendarHover();
+
+  // Calculate tooltip position based on the hovered day element
+  const getTooltipPosition = () => {
+    if (!hoveredDayRef.current) return { x: 0, y: 0 };
+    
+    const rect = hoveredDayRef.current.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width / 2,
+      y: rect.top - 10
+    };
+  };
+
+  const tooltipPosition = getTooltipPosition();
 
   return (
     <>
@@ -91,14 +105,14 @@ const AppointmentFormDatePicker = ({
       </div>
 
       {/* Tooltip Portal - only show when calendar is open and hovering */}
-      {datePickerOpen && hoveredDate && createPortal(
+      {datePickerOpen && hoveredDate && hoveredDayRef.current && createPortal(
         <div 
           className="fixed bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-[320px] z-[99999]"
           style={{
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
             transform: 'translate(-50%, -100%)',
-            pointerEvents: 'none', // Critical: prevent tooltip from blocking clicks
+            pointerEvents: 'auto',
           }}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
