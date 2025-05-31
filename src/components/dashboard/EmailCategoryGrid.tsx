@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState, useRef, useCallback } from 'react';
 import { useEmailCategoryGridLogic } from './useEmailCategoryGridLogic';
 import EmailCategoryGridHeader from './EmailCategoryGridHeader';
 import EmailCategoryGridContent, { EmailCategoryGridContentRef } from './EmailCategoryGridContent';
@@ -77,19 +78,13 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
   const handleToggleAll = () => {
     if (viewMode === 'grid') {
       gridContentRef.current?.toggleAll();
-      // Update the allExpanded state after toggle
-      setTimeout(() => {
-        setAllExpanded(gridContentRef.current?.allExpanded || false);
-      }, 0);
     }
   };
 
-  // Update allExpanded state whenever the grid content changes
-  React.useEffect(() => {
-    if (viewMode === 'grid' && gridContentRef.current) {
-      setAllExpanded(gridContentRef.current.allExpanded);
-    }
-  }, [viewMode, priorityCategories, compactCategories]);
+  // Callback to receive expanded state changes from grid content
+  const handleExpandedChange = useCallback((expanded: boolean) => {
+    setAllExpanded(expanded);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -122,6 +117,7 @@ const EmailCategoryGrid: React.FC<EmailCategoryGridProps> = ({
             addButtonInFirstRow={addButtonInFirstRow && !hasSearchQuery}
             addButtonInCompactRows={addButtonInCompactRows && !hasSearchQuery}
             onAddNewCategory={onCategoryAdded || (() => {})}
+            onExpandedChange={handleExpandedChange}
           />
         ) : (
           <EmailCategoryListContent

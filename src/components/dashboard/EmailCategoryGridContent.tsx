@@ -1,4 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react';
+
+import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo, useEffect } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
 import AccordionCategoryRow from './AccordionCategoryRow';
@@ -9,6 +10,7 @@ interface EmailCategoryGridContentProps {
   addButtonInFirstRow: boolean;
   addButtonInCompactRows: boolean;
   onAddNewCategory: () => void;
+  onExpandedChange?: (allExpanded: boolean) => void;
 }
 
 export interface EmailCategoryGridContentRef {
@@ -16,7 +18,6 @@ export interface EmailCategoryGridContentRef {
   closeAll: () => void;
   toggleAll: () => void;
   allExpanded: boolean;
-  onExpandedChange?: (allExpanded: boolean) => void;
 }
 
 const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCategoryGridContentProps>(({
@@ -24,7 +25,8 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   compactCategories,
   addButtonInFirstRow,
   addButtonInCompactRows,
-  onAddNewCategory
+  onAddNewCategory,
+  onExpandedChange
 }, ref) => {
   const allCategories = [...priorityCategories, ...compactCategories];
   const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
@@ -41,6 +43,11 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
     // Only check against categories that are actually displayed on this page
     return orderedCategories.every(cat => expandedCards.has(cat.id));
   }, [expandedCards, orderedCategories]);
+
+  // Notify parent whenever allExpanded state changes
+  useEffect(() => {
+    onExpandedChange?.(allExpanded);
+  }, [allExpanded, onExpandedChange]);
 
   // Functions to control accordion for ONLY the categories displayed on this page
   const openAll = useCallback(() => {
