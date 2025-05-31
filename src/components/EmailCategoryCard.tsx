@@ -168,7 +168,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
           onMouseLeave={handleStatusLeave}
         >
           <span className="text-gray-600">{statusItem.label}</span>
-          <div className={`flex items-center justify-center w-3 h-3 sm:w-4 sm:h-4 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
+          <div className={`flex items-center justify-center w-4 h-4 sm:w-4 sm:h-4 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
           onClick={(e) => {
             e.stopPropagation();
             handleStatusClick(statusItem.navStatus, e);
@@ -184,7 +184,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       statusRows.push(
         <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0 pointer-events-none">
           <span>Placeholder</span>
-          <div className="w-3 h-3 sm:w-4 sm:h-4"></div>
+          <div className="w-4 h-4 sm:w-4 sm:h-4"></div>
         </div>
       );
     }
@@ -233,7 +233,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
                 {activeStatuses.map((status) => (
                   <div 
                     key={status.status}
-                    className={`relative group/status flex items-center justify-center w-3 h-3 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
+                    className={`relative group/status flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleStatusClick(status.navStatus, e);
