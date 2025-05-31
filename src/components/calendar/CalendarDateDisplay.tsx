@@ -71,6 +71,9 @@ const CalendarDateDisplay = ({
   const isTooltipInTopRow = hoveredDate && 
     tooltipPosition.y < 150; // Approximate threshold for top row
 
+  // Get appointments for the hovered date
+  const hoveredDateAppointments = hoveredDate ? getAppointmentsForDate(hoveredDate) : [];
+
   return (
     <>
       <div className="h-[745px] shadow-sm border border-gray-100 overflow-hidden flex bg-white rounded-lg">
@@ -150,10 +153,10 @@ const CalendarDateDisplay = ({
                 }}
               />
 
-              {/* Use shared EmailPreviewTooltip component */}
-              {hoveredDate && (
+              {/* Only show EmailPreviewTooltip when there are appointments for the hovered date */}
+              {hoveredDate && hoveredDateAppointments.length > 0 && (
                 <EmailPreviewTooltip
-                  emails={getAppointmentsForDate(hoveredDate).map(appointment => ({
+                  emails={hoveredDateAppointments.map(appointment => ({
                     id: appointment.id.toString(),
                     subject: appointment.title,
                     sender: {
