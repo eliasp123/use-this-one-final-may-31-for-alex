@@ -99,7 +99,10 @@ const AccordionCategoryRow: React.FC<AccordionCategoryRowProps> = ({
           })}
           
           {showAddButton && (
-            <AddNewCategoryButton onClick={onAddNewCategory} />
+            <AddNewCategoryButton 
+              onClick={onAddNewCategory} 
+              categoriesInRow={categories.length}
+            />
           )}
         </div>
       )}
