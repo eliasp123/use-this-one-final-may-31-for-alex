@@ -115,15 +115,15 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     
     if (emailCount === 1) {
       // Single email gets much more space
-      emailItemHeight = 200; // Increased significantly
+      emailItemHeight = 220; // Increased to accommodate better line spacing
       contentHeight = emailItemHeight;
     } else if (emailCount === 2) {
       // Two emails get moderate space each
-      emailItemHeight = 160;
+      emailItemHeight = 170; // Increased slightly
       contentHeight = emailItemHeight * 2;
     } else {
       // Multiple emails get compact space
-      emailItemHeight = 140;
+      emailItemHeight = 150; // Increased slightly
       contentHeight = emailItemHeight * Math.min(emailCount, 3);
     }
     
@@ -131,7 +131,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
     
     return {
       width: baseWidth,
-      height: Math.min(totalHeight, 600) // Increased max height
+      height: Math.min(totalHeight, 650) // Increased max height
     };
   };
 
@@ -403,7 +403,7 @@ const EmailPreviewTooltip: React.FC<EmailPreviewTooltipProps> = ({
                       </div>
 
                       <div className={`bg-amber-50 rounded text-gray-600 leading-snug ${
-                        isSingleEmail ? 'px-4 py-3 text-sm' : 'px-3 py-2 text-xs'
+                        isSingleEmail ? 'px-4 py-3 text-sm leading-relaxed' : 'px-3 py-2 text-xs leading-relaxed'
                       }`}>
                         {getEmailPreview(email.content, isSingleEmail)}
                       </div>
