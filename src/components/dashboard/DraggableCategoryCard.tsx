@@ -1,5 +1,6 @@
 
 import React, { useRef } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import EmailCategoryCard from '../EmailCategoryCard';
 
@@ -7,60 +8,83 @@ interface DraggableCategoryCardProps {
   category: EmailCategory;
   index: number;
   onReorder: (dragIndex: number, hoverIndex: number) => void;
+  isExpanded: boolean;
+  onToggle: () => void;
+}
+
+interface DragItem {
+  type: string;
+  index: number;
 }
 
 const DraggableCategoryCard: React.FC<DraggableCategoryCardProps> = ({
   category,
   index,
-  onReorder
+  onReorder,
+  isExpanded,
+  onToggle
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = React.useState(false);
 
-  const handleDragStart = (e: React.DragEvent) => {
-    setIsDragging(true);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', index.toString());
-    
-    // Add visual feedback
-    if (ref.current) {
-      ref.current.style.opacity = '0.5';
-    }
-  };
+  const [{ handlerId }, drop] = useDrop({
+    accept: 'category',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
 
-  const handleDragEnd = (e: React.DragEvent) => {
-    setIsDragging(false);
-    if (ref.current) {
-      ref.current.style.opacity = '1';
-    }
-  };
+      if (dragIndex === hoverIndex) {
+        return;
+      }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const dragIndex = parseInt(e.dataTransfer.getData('text/plain'));
-    if (dragIndex !== index) {
-      onReorder(dragIndex, index);
-    }
-  };
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      onReorder(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'category',
+    item: () => {
+      return { index };
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  drag(drop(ref));
 
   return (
     <div
       ref={ref}
-      draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      className={`cursor-move transition-all duration-200 ${
-        isDragging ? 'scale-95 rotate-1 shadow-lg' : ''
-      }`}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      data-handler-id={handlerId}
     >
-      <EmailCategoryCard category={category} />
+      <EmailCategoryCard 
+        category={category} 
+        isExpanded={isExpanded}
+        onToggle={onToggle}
+      />
     </div>
   );
 };

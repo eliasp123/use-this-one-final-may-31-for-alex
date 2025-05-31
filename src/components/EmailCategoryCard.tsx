@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
@@ -10,15 +10,26 @@ import EmailPreviewTooltip from './email-category/EmailPreviewTooltip';
 
 interface EmailCategoryCardProps {
   category: EmailCategory;
+  isExpanded?: boolean;
+  onToggle?: () => void;
 }
 
-const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
+const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ 
+  category, 
+  isExpanded: externalIsExpanded,
+  onToggle: externalOnToggle 
+}) => {
   const { id, title, icon: Icon, unread, pending, total, color, bgColor, textColor } = category;
   const navigate = useNavigate();
   const categoryCardRef = useRef<HTMLDivElement>(null);
   const [hoveredStatus, setHoveredStatus] = useState<'unread' | 'pending' | 'unresponded' | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [isExpanded, setIsExpanded] = useState(true); // Default to expanded
+  
+  // Use external state if provided, otherwise use internal state
+  const [internalIsExpanded, setInternalIsExpanded] = useState(true);
+  const isExpanded = externalIsExpanded !== undefined ? externalIsExpanded : internalIsExpanded;
+  const onToggle = externalOnToggle || (() => setInternalIsExpanded(!internalIsExpanded));
+  
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const hideTimeoutRef = useRef<NodeJS.Timeout>();
   const expandTimeoutRef = useRef<NodeJS.Timeout>();
@@ -41,7 +52,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
   
   const handleHeaderClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsExpanded(!isExpanded);
+    onToggle();
   };
 
   const handleHeaderHover = useCallback(() => {
@@ -49,10 +60,13 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({ category }) => {
       clearTimeout(expandTimeoutRef.current);
     }
     
-    expandTimeoutRef.current = setTimeout(() => {
-      setIsExpanded(true);
-    }, 300);
-  }, []);
+    // Only auto-expand if using internal state (not externally controlled)
+    if (externalIsExpanded === undefined) {
+      expandTimeoutRef.current = setTimeout(() => {
+        setInternalIsExpanded(true);
+      }, 300);
+    }
+  }, [externalIsExpanded]);
 
   const handleHeaderLeave = useCallback(() => {
     if (expandTimeoutRef.current) {

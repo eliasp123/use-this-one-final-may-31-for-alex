@@ -1,5 +1,5 @@
 
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useCallback } from 'react';
 import { EmailCategory } from '../../hooks/useEmailCategoryData';
 import { usePersistentCategoryOrder } from '../../hooks/usePersistentCategoryOrder';
 import AccordionCategoryRow from './AccordionCategoryRow';
@@ -27,19 +27,40 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
   const allCategories = [...priorityCategories, ...compactCategories];
   const { orderedCategories, handleReorder } = usePersistentCategoryOrder(allCategories);
   
+  // State to track which cards are expanded
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(
+    new Set(orderedCategories.map(cat => cat.id)) // Default all expanded
+  );
+
+  // Functions to control all card accordions
+  const openAll = useCallback(() => {
+    setExpandedCards(new Set(orderedCategories.map(cat => cat.id)));
+  }, [orderedCategories]);
+
+  const closeAll = useCallback(() => {
+    setExpandedCards(new Set());
+  }, []);
+
+  // Function to toggle individual card
+  const toggleCard = useCallback((categoryId: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  }, []);
+
   // Calculate rows dynamically based on ordered categories
   const categoriesPerRow = 3;
   
-  // Expose accordion controls to parent (these will control individual card accordions)
+  // Expose accordion controls to parent
   useImperativeHandle(ref, () => ({
-    openAll: () => {
-      // Could implement card-level accordion control here if needed
-      console.log('Open all card accordions');
-    },
-    closeAll: () => {
-      // Could implement card-level accordion control here if needed
-      console.log('Close all card accordions');
-    }
+    openAll,
+    closeAll
   }));
 
   // Create rows from ordered categories
@@ -70,6 +91,8 @@ const EmailCategoryGridContent = forwardRef<EmailCategoryGridContentRef, EmailCa
           onReorder={handleReorder}
           startIndex={row.startIndex}
           hideHeader={true}
+          expandedCards={expandedCards}
+          onToggleCard={toggleCard}
         />
       ))}
     </div>
