@@ -234,8 +234,8 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
                     }}
                   >
                     {status.count}
-                    {/* Pretty tooltip on hover */}
-                    <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-white border border-orange-200 rounded-lg shadow-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-nowrap">
+                    {/* Pretty tooltip on hover with higher z-index */}
+                    <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-white border border-orange-200 rounded-lg shadow-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none z-[9999] whitespace-nowrap">
                       <div className="text-gray-800 text-xs font-medium">
                         {status.count} {status.label.toLowerCase()}
                       </div>
