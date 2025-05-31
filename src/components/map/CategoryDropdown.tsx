@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -160,31 +159,11 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
           placeholder={getPlaceholderText()}
           className={`w-full h-12 pl-12 pr-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent cursor-pointer ${
             hasSelectedLocation 
-              ? 'bg-green-50 border-green-300 text-green-800' 
-              : 'bg-white border-gray-300'
+              ? 'bg-amber-50 border-amber-300 text-gray-700' 
+              : 'bg-white border-gray-300 text-gray-700'
           }`}
           readOnly={hasSelectedLocation}
         />
-        
-        {/* Location selected indicator */}
-        {hasSelectedLocation && (
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-green-600 font-medium">Location set</span>
-              <button
-                onClick={() => {
-                  console.log('🔍 Clearing location selection');
-                  setHasSelectedLocation(false);
-                  setIsDropdownOpen(false);
-                  onSearchChange('');
-                }}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                Change
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Location Suggestions (Step 1) */}
