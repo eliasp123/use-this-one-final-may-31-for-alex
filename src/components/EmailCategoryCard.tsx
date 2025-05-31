@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -80,6 +81,11 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
   };
 
   const handleStatusHover = useCallback((status: 'unread' | 'pending' | 'unresponded', event: React.MouseEvent) => {
+    // Don't show tooltip hover when card is collapsed
+    if (!isExpanded) {
+      return;
+    }
+
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
@@ -97,7 +103,7 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       setTooltipPosition(position);
       setHoveredStatus(status);
     }, 800);
-  }, []);
+  }, [isExpanded]);
 
   const handleStatusLeave = useCallback(() => {
     if (hoverTimeoutRef.current) {
@@ -134,21 +140,21 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
     ...(unread > 0 ? [{
       label: 'Unread messages',
       count: unread,
-      color: 'bg-purple-400',
+      color: 'bg-purple-300',
       status: 'unread' as const,
       navStatus: 'unread'
     }] : []),
     ...(pending > 0 ? [{
       label: 'Pending replies',
       count: pending,
-      color: 'bg-amber-400',
+      color: 'bg-amber-300',
       status: 'pending' as const,
       navStatus: 'pending'
     }] : []),
     ...(notRespondedCount > 0 ? [{
       label: 'Not replied yet',
       count: notRespondedCount,
-      color: 'bg-red-400',
+      color: 'bg-red-300',
       status: 'unresponded' as const,
       navStatus: 'no-response'
     }] : [])
