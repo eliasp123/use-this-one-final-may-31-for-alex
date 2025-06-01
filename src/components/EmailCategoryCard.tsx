@@ -1,12 +1,14 @@
 
-import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import { ChevronDown, GripVertical } from 'lucide-react';
 import { useEmailPreview } from '../hooks/useEmailPreview';
 import { useFilteredEmailData } from '../hooks/useFilteredEmailData';
 import { EmailCategory } from '../hooks/useEmailCategoryData';
 import EmailPreviewTooltip from './email-category/EmailPreviewTooltip';
+import EmailCategoryCardHeader from './email-category/EmailCategoryCardHeader';
+import EmailCategoryCardContent from './email-category/EmailCategoryCardContent';
+import EmailCategoryCardDragHandle from './email-category/EmailCategoryCardDragHandle';
 
 interface EmailCategoryCardProps {
   category: EmailCategory;
@@ -178,42 +180,6 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
       navStatus: 'no-response'
     }] : [])
   ];
-
-  // Always create exactly 3 status rows for consistent height
-  const statusRows = [];
-  for (let i = 0; i < 3; i++) {
-    if (i < activeStatuses.length) {
-      const statusItem = activeStatuses[i];
-      statusRows.push(
-        <div 
-          key={statusItem.status}
-          className="flex items-center justify-between text-xs sm:text-sm hover:bg-gray-50 p-1.5 rounded transition-colors"
-          onClick={(e) => handleStatusClick(statusItem.navStatus, e)}
-          onMouseEnter={(e) => handleStatusHover(statusItem.status, e)}
-          onMouseLeave={handleStatusLeave}
-        >
-          <span className="text-gray-600">{statusItem.label}</span>
-          <div className={`flex items-center justify-center w-5 h-5 sm:w-5 sm:h-5 ${statusItem.color} rounded-full text-white text-xs font-medium transition-transform group-hover:scale-110`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleStatusClick(statusItem.navStatus, e);
-          }}
-          title={`${statusItem.count} ${statusItem.label.toLowerCase()}`}
-          >
-            {statusItem.count}
-          </div>
-        </div>
-      );
-    } else {
-      // Add invisible placeholder rows to maintain consistent height
-      statusRows.push(
-        <div key={`placeholder-${i}`} className="flex items-center justify-between text-xs sm:text-sm p-1.5 opacity-0 pointer-events-none">
-          <span>Placeholder</span>
-          <div className="w-5 h-5 sm:w-5 sm:h-5"></div>
-        </div>
-      );
-    }
-  }
   
   return (
     <>
@@ -233,86 +199,37 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
         } relative`}
         onClick={handleCardClick}
       >
-        {/* Drag handle - visible on hover */}
-        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing z-10">
-          <GripVertical className="w-4 h-4 text-gray-400" />
-        </div>
+        {/* Drag handle */}
+        <EmailCategoryCardDragHandle />
 
-        {/* Header - Icon and title with accordion functionality and conditional gray background */}
-        <div 
-          className={`flex items-center justify-center ${isExpanded ? 'mb-4 sm:mb-5' : ''} ${
-            isExpanded ? 'bg-gray-50 hover:bg-gray-100' : 'hover:bg-gray-50'
-          } p-2 rounded-lg transition-colors cursor-pointer relative`}
-          onClick={handleHeaderClick}
-          onMouseEnter={handleHeaderHover}
-          onMouseLeave={handleHeaderLeave}
-        >
-          {/* Toggle Arrow - positioned in top right */}
-          <div className="absolute top-1 right-1">
-            <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
-              isExpanded ? 'rotate-180' : 'rotate-0'
-            }`} strokeWidth={3} />
-          </div>
-          
-          <div className="flex items-center flex-col text-center">
-            <div className={`${isExpanded ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-2`}>
-              <Icon className={`${isExpanded ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-5 h-5 sm:w-6 sm:h-6'} ${textColor} group-hover:animate-pulse`} />
-            </div>
-            
-            {/* Title always centered below icon with parenthetical count */}
-            <div className="flex items-center">
-              <h3 className={`${isExpanded ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} font-medium text-gray-800 group-hover:text-gray-900 transition-colors`}>
-                {title}
-                {!isExpanded && totalNeedingAttention > 0 && (
-                  <span className="text-gray-500 font-normal"> ({totalNeedingAttention})</span>
-                )}
-              </h3>
-            </div>
+        {/* Header */}
+        <EmailCategoryCardHeader
+          title={title}
+          icon={Icon}
+          bgColor={bgColor}
+          textColor={textColor}
+          isExpanded={isExpanded}
+          totalNeedingAttention={totalNeedingAttention}
+          onHeaderClick={handleHeaderClick}
+          onHeaderHover={handleHeaderHover}
+          onHeaderLeave={handleHeaderLeave}
+        />
 
-            {/* Status indicators - only show when collapsed and there are active statuses (REMOVED - replaced with parenthetical) */}
-          </div>
-        </div>
-
-        {/* Accordion Content - Stats section with consistent height */}
-        <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
-          isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
-          <div className="flex-1 flex flex-col justify-between">
-            {/* Status rows container with fixed height for exactly 3 rows */}
-            <div className="h-[96px] flex flex-col justify-start">
-              <div className="space-y-1">
-                {statusRows}
-              </div>
-            </div>
-
-            {/* Bottom sections - always positioned consistently with more spacing */}
-            <div className="mt-6 space-y-4">
-              {/* Progress indicator - only show if there's activity */}
-              {activeStatuses.length > 0 && (
-                <div>
-                  <div className="w-full bg-gray-100 rounded-full h-1 group-hover:bg-gray-200 transition-colors">
-                    <div 
-                      className={`h-1 rounded-full bg-gradient-to-r ${color} transition-all duration-300 group-hover:scale-x-105`}
-                      style={{ width: `${Math.min((unread + pending) / total * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {unread + pending > 0 ? `${unread + pending} items need attention` : 'All caught up!'}
-                  </p>
-                </div>
-              )}
-              
-              {/* Total conversations - styled with category color and white text */}
-              <div className={`flex items-center justify-between text-xs sm:text-sm p-2 rounded-lg bg-gradient-to-r ${color} group-hover:shadow-lg transition-shadow`}>
-                <span className="text-white font-medium">Total conversations</span>
-                <span className="text-white font-bold">{total}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Accordion Content */}
+        <EmailCategoryCardContent
+          isExpanded={isExpanded}
+          activeStatuses={activeStatuses}
+          unread={unread}
+          pending={pending}
+          total={total}
+          color={color}
+          onStatusClick={handleStatusClick}
+          onStatusHover={handleStatusHover}
+          onStatusLeave={handleStatusLeave}
+        />
       </div>
 
-      {/* Email Preview Tooltip with category card ref */}
+      {/* Email Preview Tooltip */}
       {hoveredStatus && previewEmails.length > 0 && createPortal(
         <EmailPreviewTooltip
           emails={previewEmails}
