@@ -132,6 +132,7 @@ const CompactCategoryItem: React.FC<CompactCategoryItemProps> = ({ category }) =
           onHeaderClick={handleHeaderClick}
           onHeaderHover={handleHeaderHover}
           onHeaderLeave={handleHeaderLeave}
+          notRespondedCount={notRespondedCount}
         />
 
         {/* Expanded Content */}

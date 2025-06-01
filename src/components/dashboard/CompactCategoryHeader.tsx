@@ -20,6 +20,7 @@ interface CompactCategoryHeaderProps {
   onHeaderClick: (e: React.MouseEvent) => void;
   onHeaderHover: () => void;
   onHeaderLeave: () => void;
+  notRespondedCount?: number;
 }
 
 const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
@@ -27,9 +28,13 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
   isExpanded,
   onHeaderClick,
   onHeaderHover,
-  onHeaderLeave
+  onHeaderLeave,
+  notRespondedCount = 0
 }) => {
   const { title, icon: Icon, unread, pending, total, bgColor, textColor } = category;
+  
+  // Calculate total items needing attention
+  const totalNeedingAttention = unread + pending + notRespondedCount;
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 hover:shadow-md transition-all duration-300">
@@ -43,7 +48,12 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
           <div className={`w-12 h-12 sm:w-14 sm:h-14 ${bgColor} rounded-xl sm:rounded-2xl flex items-center justify-center mr-3 sm:mr-4`}>
             <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor}`} />
           </div>
-          <h3 className="text-base sm:text-lg font-medium text-gray-800">{title}</h3>
+          <h3 className="text-base sm:text-lg font-medium text-gray-800">
+            {title}
+            {totalNeedingAttention > 0 && (
+              <span className="text-gray-500 font-normal"> ({totalNeedingAttention})</span>
+            )}
+          </h3>
         </div>
         
         <div className="flex items-center gap-2">
@@ -57,6 +67,11 @@ const CompactCategoryHeader: React.FC<CompactCategoryHeaderProps> = ({
             {pending > 0 && (
               <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-amber-500 rounded-full text-white text-xs font-medium">
                 {pending}
+              </div>
+            )}
+            {notRespondedCount > 0 && (
+              <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full text-white text-xs font-medium">
+                {notRespondedCount}
               </div>
             )}
             <span className="text-xs sm:text-sm text-gray-500 text-right font-medium">
