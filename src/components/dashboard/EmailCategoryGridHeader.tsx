@@ -27,7 +27,7 @@ const EmailCategoryGridHeader: React.FC<EmailCategoryGridHeaderProps> = ({
   allExpanded = false
 }) => {
   return (
-    <div className="text-center space-y-4">
+    <div className="text-center space-y-4 mb-8">
       <div className="flex items-center justify-center gap-4">
         <EmailCategoryViewToggle 
           viewMode={viewMode}
