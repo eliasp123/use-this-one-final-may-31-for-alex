@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -54,6 +55,9 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
   const notRespondedCount = useMemo(() => {
     return getFilteredUnrespondedEmails(id).length;
   }, [id, getFilteredUnrespondedEmails]);
+  
+  // Calculate total items needing attention
+  const totalNeedingAttention = unread + pending + notRespondedCount;
   
   // Get preview emails for the currently hovered status
   const { previewEmails } = useEmailPreview({ 
@@ -255,31 +259,17 @@ const EmailCategoryCard: React.FC<EmailCategoryCardProps> = ({
               <Icon className={`${isExpanded ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-5 h-5 sm:w-6 sm:h-6'} ${textColor} group-hover:animate-pulse`} />
             </div>
             
-            {/* Title always centered below icon */}
+            {/* Title always centered below icon with parenthetical count */}
             <div className="flex items-center">
-              <h3 className={`${isExpanded ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} font-medium text-gray-800 group-hover:text-gray-900 transition-colors`}>{title}</h3>
+              <h3 className={`${isExpanded ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} font-medium text-gray-800 group-hover:text-gray-900 transition-colors`}>
+                {title}
+                {!isExpanded && totalNeedingAttention > 0 && (
+                  <span className="text-gray-500 font-normal"> ({totalNeedingAttention})</span>
+                )}
+              </h3>
             </div>
 
-            {/* Status indicators - only show when collapsed and there are active statuses */}
-            <div className={`transition-all duration-500 ease-in-out ${
-              !isExpanded && activeStatuses.length > 0 ? 'max-h-8 opacity-100 mt-2' : 'max-h-0 opacity-0'
-            } overflow-hidden`}>
-              <div className="flex items-center justify-center gap-2">
-                {activeStatuses.map((status) => (
-                  <div 
-                    key={status.status}
-                    className={`relative group/status flex items-center justify-center w-4 h-4 ${status.color} rounded-full text-white text-xs font-medium hover:scale-110 transition-transform cursor-pointer`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStatusClick(status.navStatus, e);
-                    }}
-                    title={`${status.count} ${status.label.toLowerCase()}`}
-                  >
-                    {status.count}
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Status indicators - only show when collapsed and there are active statuses (REMOVED - replaced with parenthetical) */}
           </div>
         </div>
 
