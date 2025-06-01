@@ -82,7 +82,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                       <span className={`${!email.read ? 'font-medium' : ''} break-words ${isTablet ? 'text-sm' : ''}`}>
                         {email.subject}
                       </span>
-                      <span className={`text-gray-500 break-words line-clamp-3 bg-amber-50/30 px-2 py-1 rounded ${isTablet ? 'text-xs' : 'text-sm'}`}>
+                      <span className={`text-gray-500 break-words line-clamp-3 bg-amber-50 px-2 py-1 rounded ${isTablet ? 'text-xs' : 'text-sm'}`}>
                         {email.content.substring(0, isTablet ? 180 : 240)}...
                       </span>
                     </div>
