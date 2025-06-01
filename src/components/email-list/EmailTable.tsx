@@ -62,7 +62,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
             emails.map((email) => (
               <React.Fragment key={email.id}>
                 <TableRow 
-                  className={`cursor-pointer hover:bg-gray-50 ${!email.read ? 'font-medium bg-blue-50/30' : ''}`}
+                  className={`cursor-pointer hover:bg-amber-100 bg-amber-50/30 ${!email.read ? 'font-medium' : ''}`}
                   onClick={() => handleRowClick(email.id)}
                 >
                   <TableCell className="py-4">
@@ -103,7 +103,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                 
                 {/* Attachments row - now with light amber background */}
                 {email.attachments && email.attachments.length > 0 && (
-                  <TableRow className="border-t-0 hover:bg-amber-50/70 bg-amber-50/40 cursor-pointer" onClick={() => handleRowClick(email.id)}>
+                  <TableRow className="border-t-0 hover:bg-amber-100 bg-amber-50/40 cursor-pointer" onClick={() => handleRowClick(email.id)}>
                     <TableCell colSpan={4} className="py-3 pl-8 pr-4">
                       <div className="flex items-center gap-2 mb-1">
                         <Paperclip className="w-4 h-4 text-gray-500" />
