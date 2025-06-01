@@ -62,7 +62,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
             emails.map((email) => (
               <React.Fragment key={email.id}>
                 <TableRow 
-                  className={`cursor-pointer hover:bg-amber-100 bg-amber-50/30 ${!email.read ? 'font-medium' : ''}`}
+                  className={`cursor-pointer hover:bg-gray-50 ${!email.read ? 'font-medium' : ''}`}
                   onClick={() => handleRowClick(email.id)}
                 >
                   <TableCell className="py-4">
@@ -82,7 +82,7 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                       <span className={`${!email.read ? 'font-medium' : ''} break-words ${isTablet ? 'text-sm' : ''}`}>
                         {email.subject}
                       </span>
-                      <span className={`text-gray-500 break-words line-clamp-3 ${isTablet ? 'text-xs' : 'text-sm'}`}>
+                      <span className={`text-gray-500 break-words line-clamp-3 bg-amber-50/30 px-2 py-1 rounded ${isTablet ? 'text-xs' : 'text-sm'}`}>
                         {email.content.substring(0, isTablet ? 180 : 240)}...
                       </span>
                     </div>
@@ -101,9 +101,9 @@ const EmailTable: React.FC<EmailTableProps> = ({ emails, formatDate }) => {
                   </TableCell>
                 </TableRow>
                 
-                {/* Attachments row - now with light amber background */}
+                {/* Attachments row */}
                 {email.attachments && email.attachments.length > 0 && (
-                  <TableRow className="border-t-0 hover:bg-amber-100 bg-amber-50/40 cursor-pointer" onClick={() => handleRowClick(email.id)}>
+                  <TableRow className="border-t-0 hover:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(email.id)}>
                     <TableCell colSpan={4} className="py-3 pl-8 pr-4">
                       <div className="flex items-center gap-2 mb-1">
                         <Paperclip className="w-4 h-4 text-gray-500" />
